@@ -84,3 +84,13 @@ module "crowdstrike_realtime_visibility" {
   }
 }
 
+module "crowdstrike_sensor_management" {
+  count                    = var.enable_sensor_management ? 1 : 0
+  source                   = "./modules/sensor-management"
+  client_id                = var.client_id
+  client_secret            = var.client_secret
+  external_id              = crowdstrike_cspm_aws_account.account.external_id
+  intermediate_role_arn    = crowdstrike_cspm_aws_account.account.intermediate_role_arn
+  credentials_storage_mode = var.credentials_storage_mode
+  permissions_boundary     = var.permissions_boundary
+}
