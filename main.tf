@@ -62,6 +62,7 @@ module "crowdstrike_asset_inventory" {
   external_id           = crowdstrike_cspm_aws_account.account.external_id
   intermediate_role_arn = crowdstrike_cspm_aws_account.account.intermediate_role_arn
   role_name             = split("/", crowdstrike_cspm_aws_account.account.iam_role_arn)[1]
+  permissions_boundary  = var.permissions_boundary
 
   providers = {
     aws = aws

@@ -1,7 +1,13 @@
+data "aws_caller_identity" "current" {}
 data "aws_partition" "current" {}
 
+locals {
+  account_id    = data.aws_caller_identity.current.account_id
+  aws_partition = data.aws_partition.current.partition
+}
+
 # Data resource to be used as the assume role policy below.
-data "aws_iam_policy_document" "cs_iam_assume_role_policy" {
+data "aws_iam_policy_document" "this" {
   statement {
     effect  = "Allow"
     actions = ["sts:AssumeRole"]
@@ -18,18 +24,21 @@ data "aws_iam_policy_document" "cs_iam_assume_role_policy" {
 }
 
 # Create IAM role policy giving the CrowdStrike IAM role read access to AWS resources.
-resource "aws_iam_role" "cs_iam_role" {
-  name               = var.role_name
-  assume_role_policy = data.aws_iam_policy_document.cs_iam_assume_role_policy.json
+resource "aws_iam_role" "this" {
+  name                 = var.role_name
+  assume_role_policy   = data.aws_iam_policy_document.this.json
+  permissions_boundary = var.permissions_boundary != "" ? "arn:${local.aws_partition}:iam::${local.account_id}:policy/${var.permissions_boundary}" : null
 }
 
-resource "aws_iam_role_policy" "cspm_config" {
+resource "aws_iam_role_policy" "this" {
   name = "cspm_config"
-  role = aws_iam_role.cs_iam_role.id
+  role = aws_iam_role.this.id
   policy = jsonencode({
     Version = "2012-10-17"
     Statement = [
       {
+        Effect   = "Allow"
+        Resource = "*"
         Action = [
           "ecr:BatchGetImage",
           "ecr:GetDownloadUrlForLayer",
@@ -41,16 +50,24 @@ resource "aws_iam_role_policy" "cspm_config" {
           "eks:Describe*",
           "elasticfilesystem:DescribeAccessPoints",
           "lambda:GetFunction",
-          "sns:GetSubscriptionAttributes"
+          "sns:GetSubscriptionAttributes",
+          "backup:DescribeBackupVault",
+          "backup:DescribeRecoveryPoint"
         ]
+      },
+      {
         Effect   = "Allow"
-        Resource = "*"
+        Resource = "*arn:${data.aws_partition.current.partition}:apigateway:*::/restapis/*"
+        Action = [
+          "apigateway:Get"
+        ]
       }
     ]
   })
 }
 
-resource "aws_iam_role_policy_attachment" "cs_iam_role_attach" {
-  role       = aws_iam_role.cs_iam_role.name
+resource "aws_iam_role_policy_attachment" "this" {
+  role       = aws_iam_role.this.name
   policy_arn = "arn:${data.aws_partition.current.partition}:iam::aws:policy/SecurityAudit"
 }
+
