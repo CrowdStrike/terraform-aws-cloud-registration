@@ -13,7 +13,7 @@ variable "eventbus_arn" {
   type = string
 }
 
-variable "profile" {
+variable "aws_profile" {
   type = string
 }
 

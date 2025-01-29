@@ -89,7 +89,7 @@ locals {
 }
 
 
-resource "aws_cloudwatch_event_rule" "crowdstrike-eventbus-event-rule-us-east-1" {
+resource "aws_cloudwatch_event_rule" "us-east-1" {
   count         = contains(local.available_regions, "us-east-1") && !var.is_gov ? 1 : 0
   provider      = aws.us-east-1
   name          = local.rule_name
@@ -99,19 +99,19 @@ resource "aws_cloudwatch_event_rule" "crowdstrike-eventbus-event-rule-us-east-1"
   ]
 }
 
-resource "aws_cloudwatch_event_target" "crowdstrike-eventbus-event-target-us-east-1" {
+resource "aws_cloudwatch_event_target" "us-east-1" {
   count     = contains(local.available_regions, "us-east-1") && !var.is_gov ? 1 : 0
   provider  = aws.us-east-1
   target_id = local.target_id
   arn       = var.eventbus_arn
-  rule      = aws_cloudwatch_event_rule.crowdstrike-eventbus-event-rule-us-east-1.0.name
+  rule      = aws_cloudwatch_event_rule.us-east-1.0.name
   role_arn  = aws_iam_role.this.arn
   depends_on = [
     aws_iam_role.this
   ]
 }
 
-resource "aws_cloudwatch_event_rule" "crowdstrike-eventbus-event-rule-us-east-2" {
+resource "aws_cloudwatch_event_rule" "us-east-2" {
   count         = contains(local.available_regions, "us-east-2") && !var.is_gov ? 1 : 0
   provider      = aws.us-east-2
   name          = local.rule_name
@@ -121,19 +121,19 @@ resource "aws_cloudwatch_event_rule" "crowdstrike-eventbus-event-rule-us-east-2"
   ]
 }
 
-resource "aws_cloudwatch_event_target" "crowdstrike-eventbus-event-target-us-east-2" {
+resource "aws_cloudwatch_event_target" "us-east-2" {
   count     = contains(local.available_regions, "us-east-2") && !var.is_gov ? 1 : 0
   provider  = aws.us-east-2
   target_id = local.target_id
   arn       = var.eventbus_arn
-  rule      = aws_cloudwatch_event_rule.crowdstrike-eventbus-event-rule-us-east-2.0.name
+  rule      = aws_cloudwatch_event_rule.us-east-2.0.name
   role_arn  = aws_iam_role.this.arn
   depends_on = [
     aws_iam_role.this
   ]
 }
 
-resource "aws_cloudwatch_event_rule" "crowdstrike-eventbus-event-rule-us-west-1" {
+resource "aws_cloudwatch_event_rule" "us-west-1" {
   count         = contains(local.available_regions, "us-west-1") && !var.is_gov ? 1 : 0
   provider      = aws.us-west-1
   name          = local.rule_name
@@ -143,19 +143,19 @@ resource "aws_cloudwatch_event_rule" "crowdstrike-eventbus-event-rule-us-west-1"
   ]
 }
 
-resource "aws_cloudwatch_event_target" "crowdstrike-eventbus-event-target-us-west-1" {
+resource "aws_cloudwatch_event_target" "us-west-1" {
   count     = contains(local.available_regions, "us-west-1") && !var.is_gov ? 1 : 0
   provider  = aws.us-west-1
   target_id = local.target_id
   arn       = var.eventbus_arn
-  rule      = aws_cloudwatch_event_rule.crowdstrike-eventbus-event-rule-us-west-1.0.name
+  rule      = aws_cloudwatch_event_rule.us-west-1.0.name
   role_arn  = aws_iam_role.this.arn
   depends_on = [
     aws_iam_role.this
   ]
 }
 
-resource "aws_cloudwatch_event_rule" "crowdstrike-eventbus-event-rule-us-west-2" {
+resource "aws_cloudwatch_event_rule" "us-west-2" {
   count         = contains(local.available_regions, "us-west-2") && !var.is_gov ? 1 : 0
   provider      = aws.us-west-2
   name          = local.rule_name
@@ -165,19 +165,19 @@ resource "aws_cloudwatch_event_rule" "crowdstrike-eventbus-event-rule-us-west-2"
   ]
 }
 
-resource "aws_cloudwatch_event_target" "crowdstrike-eventbus-event-target-us-west-2" {
+resource "aws_cloudwatch_event_target" "us-west-2" {
   count     = contains(local.available_regions, "us-west-2") && !var.is_gov ? 1 : 0
   provider  = aws.us-west-2
   target_id = local.target_id
   arn       = var.eventbus_arn
-  rule      = aws_cloudwatch_event_rule.crowdstrike-eventbus-event-rule-us-west-2.0.name
+  rule      = aws_cloudwatch_event_rule.us-west-2.0.name
   role_arn  = aws_iam_role.this.arn
   depends_on = [
     aws_iam_role.this
   ]
 }
 
-resource "aws_cloudwatch_event_rule" "crowdstrike-eventbus-event-rule-af-south-1" {
+resource "aws_cloudwatch_event_rule" "af-south-1" {
   count         = contains(local.available_regions, "af-south-1") && !var.is_gov ? 1 : 0
   provider      = aws.af-south-1
   name          = local.rule_name
@@ -187,19 +187,19 @@ resource "aws_cloudwatch_event_rule" "crowdstrike-eventbus-event-rule-af-south-1
   ]
 }
 
-resource "aws_cloudwatch_event_target" "crowdstrike-eventbus-event-target-af-south-1" {
+resource "aws_cloudwatch_event_target" "af-south-1" {
   count     = contains(local.available_regions, "af-south-1") && !var.is_gov ? 1 : 0
   provider  = aws.af-south-1
   target_id = local.target_id
   arn       = var.eventbus_arn
-  rule      = aws_cloudwatch_event_rule.crowdstrike-eventbus-event-rule-af-south-1.0.name
+  rule      = aws_cloudwatch_event_rule.af-south-1.0.name
   role_arn  = aws_iam_role.this.arn
   depends_on = [
     aws_iam_role.this
   ]
 }
 
-resource "aws_cloudwatch_event_rule" "crowdstrike-eventbus-event-rule-ap-east-1" {
+resource "aws_cloudwatch_event_rule" "ap-east-1" {
   count         = contains(local.available_regions, "ap-east-1") && !var.is_gov ? 1 : 0
   provider      = aws.ap-east-1
   name          = local.rule_name
@@ -209,19 +209,19 @@ resource "aws_cloudwatch_event_rule" "crowdstrike-eventbus-event-rule-ap-east-1"
   ]
 }
 
-resource "aws_cloudwatch_event_target" "crowdstrike-eventbus-event-target-ap-east-1" {
+resource "aws_cloudwatch_event_target" "ap-east-1" {
   count     = contains(local.available_regions, "ap-east-1") && !var.is_gov ? 1 : 0
   provider  = aws.ap-east-1
   target_id = local.target_id
   arn       = var.eventbus_arn
-  rule      = aws_cloudwatch_event_rule.crowdstrike-eventbus-event-rule-ap-east-1.0.name
+  rule      = aws_cloudwatch_event_rule.ap-east-1.0.name
   role_arn  = aws_iam_role.this.arn
   depends_on = [
     aws_iam_role.this
   ]
 }
 
-resource "aws_cloudwatch_event_rule" "crowdstrike-eventbus-event-rule-ap-south-1" {
+resource "aws_cloudwatch_event_rule" "ap-south-1" {
   count         = contains(local.available_regions, "ap-south-1") && !var.is_gov ? 1 : 0
   provider      = aws.ap-south-1
   name          = local.rule_name
@@ -231,19 +231,19 @@ resource "aws_cloudwatch_event_rule" "crowdstrike-eventbus-event-rule-ap-south-1
   ]
 }
 
-resource "aws_cloudwatch_event_target" "crowdstrike-eventbus-event-target-ap-south-1" {
+resource "aws_cloudwatch_event_target" "ap-south-1" {
   count     = contains(local.available_regions, "ap-south-1") && !var.is_gov ? 1 : 0
   provider  = aws.ap-south-1
   target_id = local.target_id
   arn       = var.eventbus_arn
-  rule      = aws_cloudwatch_event_rule.crowdstrike-eventbus-event-rule-ap-south-1.0.name
+  rule      = aws_cloudwatch_event_rule.ap-south-1.0.name
   role_arn  = aws_iam_role.this.arn
   depends_on = [
     aws_iam_role.this
   ]
 }
 
-resource "aws_cloudwatch_event_rule" "crowdstrike-eventbus-event-rule-ap-south-2" {
+resource "aws_cloudwatch_event_rule" "ap-south-2" {
   count         = contains(local.available_regions, "ap-south-2") && !var.is_gov ? 1 : 0
   provider      = aws.ap-south-2
   name          = local.rule_name
@@ -253,19 +253,19 @@ resource "aws_cloudwatch_event_rule" "crowdstrike-eventbus-event-rule-ap-south-2
   ]
 }
 
-resource "aws_cloudwatch_event_target" "crowdstrike-eventbus-event-target-ap-south-2" {
+resource "aws_cloudwatch_event_target" "ap-south-2" {
   count     = contains(local.available_regions, "ap-south-2") && !var.is_gov ? 1 : 0
   provider  = aws.ap-south-2
   target_id = local.target_id
   arn       = var.eventbus_arn
-  rule      = aws_cloudwatch_event_rule.crowdstrike-eventbus-event-rule-ap-south-2.0.name
+  rule      = aws_cloudwatch_event_rule.ap-south-2.0.name
   role_arn  = aws_iam_role.this.arn
   depends_on = [
     aws_iam_role.this
   ]
 }
 
-resource "aws_cloudwatch_event_rule" "crowdstrike-eventbus-event-rule-ap-southeast-1" {
+resource "aws_cloudwatch_event_rule" "ap-southeast-1" {
   count         = contains(local.available_regions, "ap-southeast-1") && !var.is_gov ? 1 : 0
   provider      = aws.ap-southeast-1
   name          = local.rule_name
@@ -275,19 +275,19 @@ resource "aws_cloudwatch_event_rule" "crowdstrike-eventbus-event-rule-ap-southea
   ]
 }
 
-resource "aws_cloudwatch_event_target" "crowdstrike-eventbus-event-target-ap-southeast-1" {
+resource "aws_cloudwatch_event_target" "ap-southeast-1" {
   count     = contains(local.available_regions, "ap-southeast-1") && !var.is_gov ? 1 : 0
   provider  = aws.ap-southeast-1
   target_id = local.target_id
   arn       = var.eventbus_arn
-  rule      = aws_cloudwatch_event_rule.crowdstrike-eventbus-event-rule-ap-southeast-1.0.name
+  rule      = aws_cloudwatch_event_rule.ap-southeast-1.0.name
   role_arn  = aws_iam_role.this.arn
   depends_on = [
     aws_iam_role.this
   ]
 }
 
-resource "aws_cloudwatch_event_rule" "crowdstrike-eventbus-event-rule-ap-southeast-2" {
+resource "aws_cloudwatch_event_rule" "ap-southeast-2" {
   count         = contains(local.available_regions, "ap-southeast-2") && !var.is_gov ? 1 : 0
   provider      = aws.ap-southeast-2
   name          = local.rule_name
@@ -297,19 +297,19 @@ resource "aws_cloudwatch_event_rule" "crowdstrike-eventbus-event-rule-ap-southea
   ]
 }
 
-resource "aws_cloudwatch_event_target" "crowdstrike-eventbus-event-target-ap-southeast-2" {
+resource "aws_cloudwatch_event_target" "ap-southeast-2" {
   count     = contains(local.available_regions, "ap-southeast-2") && !var.is_gov ? 1 : 0
   provider  = aws.ap-southeast-2
   target_id = local.target_id
   arn       = var.eventbus_arn
-  rule      = aws_cloudwatch_event_rule.crowdstrike-eventbus-event-rule-ap-southeast-2.0.name
+  rule      = aws_cloudwatch_event_rule.ap-southeast-2.0.name
   role_arn  = aws_iam_role.this.arn
   depends_on = [
     aws_iam_role.this
   ]
 }
 
-resource "aws_cloudwatch_event_rule" "crowdstrike-eventbus-event-rule-ap-southeast-3" {
+resource "aws_cloudwatch_event_rule" "ap-southeast-3" {
   count         = contains(local.available_regions, "ap-southeast-3") && !var.is_gov ? 1 : 0
   provider      = aws.ap-southeast-3
   name          = local.rule_name
@@ -319,19 +319,19 @@ resource "aws_cloudwatch_event_rule" "crowdstrike-eventbus-event-rule-ap-southea
   ]
 }
 
-resource "aws_cloudwatch_event_target" "crowdstrike-eventbus-event-target-ap-southeast-3" {
+resource "aws_cloudwatch_event_target" "ap-southeast-3" {
   count     = contains(local.available_regions, "ap-southeast-3") && !var.is_gov ? 1 : 0
   provider  = aws.ap-southeast-3
   target_id = local.target_id
   arn       = var.eventbus_arn
-  rule      = aws_cloudwatch_event_rule.crowdstrike-eventbus-event-rule-ap-southeast-3.0.name
+  rule      = aws_cloudwatch_event_rule.ap-southeast-3.0.name
   role_arn  = aws_iam_role.this.arn
   depends_on = [
     aws_iam_role.this
   ]
 }
 
-resource "aws_cloudwatch_event_rule" "crowdstrike-eventbus-event-rule-ap-southeast-4" {
+resource "aws_cloudwatch_event_rule" "ap-southeast-4" {
   count         = contains(local.available_regions, "ap-southeast-4") && !var.is_gov ? 1 : 0
   provider      = aws.ap-southeast-4
   name          = local.rule_name
@@ -341,19 +341,19 @@ resource "aws_cloudwatch_event_rule" "crowdstrike-eventbus-event-rule-ap-southea
   ]
 }
 
-resource "aws_cloudwatch_event_target" "crowdstrike-eventbus-event-target-ap-southeast-4" {
+resource "aws_cloudwatch_event_target" "ap-southeast-4" {
   count     = contains(local.available_regions, "ap-southeast-4") && !var.is_gov ? 1 : 0
   provider  = aws.ap-southeast-4
   target_id = local.target_id
   arn       = var.eventbus_arn
-  rule      = aws_cloudwatch_event_rule.crowdstrike-eventbus-event-rule-ap-southeast-4.0.name
+  rule      = aws_cloudwatch_event_rule.ap-southeast-4.0.name
   role_arn  = aws_iam_role.this.arn
   depends_on = [
     aws_iam_role.this
   ]
 }
 
-resource "aws_cloudwatch_event_rule" "crowdstrike-eventbus-event-rule-ap-northeast-1" {
+resource "aws_cloudwatch_event_rule" "ap-northeast-1" {
   count         = contains(local.available_regions, "ap-northeast-1") && !var.is_gov ? 1 : 0
   provider      = aws.ap-northeast-1
   name          = local.rule_name
@@ -363,19 +363,19 @@ resource "aws_cloudwatch_event_rule" "crowdstrike-eventbus-event-rule-ap-northea
   ]
 }
 
-resource "aws_cloudwatch_event_target" "crowdstrike-eventbus-event-target-ap-northeast-1" {
+resource "aws_cloudwatch_event_target" "ap-northeast-1" {
   count     = contains(local.available_regions, "ap-northeast-1") && !var.is_gov ? 1 : 0
   provider  = aws.ap-northeast-1
   target_id = local.target_id
   arn       = var.eventbus_arn
-  rule      = aws_cloudwatch_event_rule.crowdstrike-eventbus-event-rule-ap-northeast-1.0.name
+  rule      = aws_cloudwatch_event_rule.ap-northeast-1.0.name
   role_arn  = aws_iam_role.this.arn
   depends_on = [
     aws_iam_role.this
   ]
 }
 
-resource "aws_cloudwatch_event_rule" "crowdstrike-eventbus-event-rule-ap-northeast-2" {
+resource "aws_cloudwatch_event_rule" "ap-northeast-2" {
   count         = contains(local.available_regions, "ap-northeast-2") && !var.is_gov ? 1 : 0
   provider      = aws.ap-northeast-2
   name          = local.rule_name
@@ -385,19 +385,19 @@ resource "aws_cloudwatch_event_rule" "crowdstrike-eventbus-event-rule-ap-northea
   ]
 }
 
-resource "aws_cloudwatch_event_target" "crowdstrike-eventbus-event-target-ap-northeast-2" {
+resource "aws_cloudwatch_event_target" "ap-northeast-2" {
   count     = contains(local.available_regions, "ap-northeast-2") && !var.is_gov ? 1 : 0
   provider  = aws.ap-northeast-2
   target_id = local.target_id
   arn       = var.eventbus_arn
-  rule      = aws_cloudwatch_event_rule.crowdstrike-eventbus-event-rule-ap-northeast-2.0.name
+  rule      = aws_cloudwatch_event_rule.ap-northeast-2.0.name
   role_arn  = aws_iam_role.this.arn
   depends_on = [
     aws_iam_role.this
   ]
 }
 
-resource "aws_cloudwatch_event_rule" "crowdstrike-eventbus-event-rule-ap-northeast-3" {
+resource "aws_cloudwatch_event_rule" "ap-northeast-3" {
   count         = contains(local.available_regions, "ap-northeast-3") && !var.is_gov ? 1 : 0
   provider      = aws.ap-northeast-3
   name          = local.rule_name
@@ -407,19 +407,19 @@ resource "aws_cloudwatch_event_rule" "crowdstrike-eventbus-event-rule-ap-northea
   ]
 }
 
-resource "aws_cloudwatch_event_target" "crowdstrike-eventbus-event-target-ap-northeast-3" {
+resource "aws_cloudwatch_event_target" "ap-northeast-3" {
   count     = contains(local.available_regions, "ap-northeast-3") && !var.is_gov ? 1 : 0
   provider  = aws.ap-northeast-3
   target_id = local.target_id
   arn       = var.eventbus_arn
-  rule      = aws_cloudwatch_event_rule.crowdstrike-eventbus-event-rule-ap-northeast-3.0.name
+  rule      = aws_cloudwatch_event_rule.ap-northeast-3.0.name
   role_arn  = aws_iam_role.this.arn
   depends_on = [
     aws_iam_role.this
   ]
 }
 
-resource "aws_cloudwatch_event_rule" "crowdstrike-eventbus-event-rule-ca-central-1" {
+resource "aws_cloudwatch_event_rule" "ca-central-1" {
   count         = contains(local.available_regions, "ca-central-1") && !var.is_gov ? 1 : 0
   provider      = aws.ca-central-1
   name          = local.rule_name
@@ -429,19 +429,19 @@ resource "aws_cloudwatch_event_rule" "crowdstrike-eventbus-event-rule-ca-central
   ]
 }
 
-resource "aws_cloudwatch_event_target" "crowdstrike-eventbus-event-target-ca-central-1" {
+resource "aws_cloudwatch_event_target" "ca-central-1" {
   count     = contains(local.available_regions, "ca-central-1") && !var.is_gov ? 1 : 0
   provider  = aws.ca-central-1
   target_id = local.target_id
   arn       = var.eventbus_arn
-  rule      = aws_cloudwatch_event_rule.crowdstrike-eventbus-event-rule-ca-central-1.0.name
+  rule      = aws_cloudwatch_event_rule.ca-central-1.0.name
   role_arn  = aws_iam_role.this.arn
   depends_on = [
     aws_iam_role.this
   ]
 }
 
-resource "aws_cloudwatch_event_rule" "crowdstrike-eventbus-event-rule-eu-central-1" {
+resource "aws_cloudwatch_event_rule" "eu-central-1" {
   count         = contains(local.available_regions, "eu-central-1") && !var.is_gov ? 1 : 0
   provider      = aws.eu-central-1
   name          = local.rule_name
@@ -451,19 +451,19 @@ resource "aws_cloudwatch_event_rule" "crowdstrike-eventbus-event-rule-eu-central
   ]
 }
 
-resource "aws_cloudwatch_event_target" "crowdstrike-eventbus-event-target-eu-central-1" {
+resource "aws_cloudwatch_event_target" "eu-central-1" {
   count     = contains(local.available_regions, "eu-central-1") && !var.is_gov ? 1 : 0
   provider  = aws.eu-central-1
   target_id = local.target_id
   arn       = var.eventbus_arn
-  rule      = aws_cloudwatch_event_rule.crowdstrike-eventbus-event-rule-eu-central-1.0.name
+  rule      = aws_cloudwatch_event_rule.eu-central-1.0.name
   role_arn  = aws_iam_role.this.arn
   depends_on = [
     aws_iam_role.this
   ]
 }
 
-resource "aws_cloudwatch_event_rule" "crowdstrike-eventbus-event-rule-eu-west-1" {
+resource "aws_cloudwatch_event_rule" "eu-west-1" {
   count         = contains(local.available_regions, "eu-west-1") && !var.is_gov ? 1 : 0
   provider      = aws.eu-west-1
   name          = local.rule_name
@@ -473,19 +473,19 @@ resource "aws_cloudwatch_event_rule" "crowdstrike-eventbus-event-rule-eu-west-1"
   ]
 }
 
-resource "aws_cloudwatch_event_target" "crowdstrike-eventbus-event-target-eu-west-1" {
+resource "aws_cloudwatch_event_target" "eu-west-1" {
   count     = contains(local.available_regions, "eu-west-1") && !var.is_gov ? 1 : 0
   provider  = aws.eu-west-1
   target_id = local.target_id
   arn       = var.eventbus_arn
-  rule      = aws_cloudwatch_event_rule.crowdstrike-eventbus-event-rule-eu-west-1.0.name
+  rule      = aws_cloudwatch_event_rule.eu-west-1.0.name
   role_arn  = aws_iam_role.this.arn
   depends_on = [
     aws_iam_role.this
   ]
 }
 
-resource "aws_cloudwatch_event_rule" "crowdstrike-eventbus-event-rule-eu-west-2" {
+resource "aws_cloudwatch_event_rule" "eu-west-2" {
   count         = contains(local.available_regions, "eu-west-2") && !var.is_gov ? 1 : 0
   provider      = aws.eu-west-2
   name          = local.rule_name
@@ -495,19 +495,19 @@ resource "aws_cloudwatch_event_rule" "crowdstrike-eventbus-event-rule-eu-west-2"
   ]
 }
 
-resource "aws_cloudwatch_event_target" "crowdstrike-eventbus-event-target-eu-west-2" {
+resource "aws_cloudwatch_event_target" "eu-west-2" {
   count     = contains(local.available_regions, "eu-west-2") && !var.is_gov ? 1 : 0
   provider  = aws.eu-west-2
   target_id = local.target_id
   arn       = var.eventbus_arn
-  rule      = aws_cloudwatch_event_rule.crowdstrike-eventbus-event-rule-eu-west-2.0.name
+  rule      = aws_cloudwatch_event_rule.eu-west-2.0.name
   role_arn  = aws_iam_role.this.arn
   depends_on = [
     aws_iam_role.this
   ]
 }
 
-resource "aws_cloudwatch_event_rule" "crowdstrike-eventbus-event-rule-eu-west-3" {
+resource "aws_cloudwatch_event_rule" "eu-west-3" {
   count         = contains(local.available_regions, "eu-west-3") && !var.is_gov ? 1 : 0
   provider      = aws.eu-west-3
   name          = local.rule_name
@@ -517,19 +517,19 @@ resource "aws_cloudwatch_event_rule" "crowdstrike-eventbus-event-rule-eu-west-3"
   ]
 }
 
-resource "aws_cloudwatch_event_target" "crowdstrike-eventbus-event-target-eu-west-3" {
+resource "aws_cloudwatch_event_target" "eu-west-3" {
   count     = contains(local.available_regions, "eu-west-3") && !var.is_gov ? 1 : 0
   provider  = aws.eu-west-3
   target_id = local.target_id
   arn       = var.eventbus_arn
-  rule      = aws_cloudwatch_event_rule.crowdstrike-eventbus-event-rule-eu-west-3.0.name
+  rule      = aws_cloudwatch_event_rule.eu-west-3.0.name
   role_arn  = aws_iam_role.this.arn
   depends_on = [
     aws_iam_role.this
   ]
 }
 
-resource "aws_cloudwatch_event_rule" "crowdstrike-eventbus-event-rule-eu-south-1" {
+resource "aws_cloudwatch_event_rule" "eu-south-1" {
   count         = contains(local.available_regions, "eu-south-1") && !var.is_gov ? 1 : 0
   provider      = aws.eu-south-1
   name          = local.rule_name
@@ -539,19 +539,19 @@ resource "aws_cloudwatch_event_rule" "crowdstrike-eventbus-event-rule-eu-south-1
   ]
 }
 
-resource "aws_cloudwatch_event_target" "crowdstrike-eventbus-event-target-eu-south-1" {
+resource "aws_cloudwatch_event_target" "eu-south-1" {
   count     = contains(local.available_regions, "eu-south-1") && !var.is_gov ? 1 : 0
   provider  = aws.eu-south-1
   target_id = local.target_id
   arn       = var.eventbus_arn
-  rule      = aws_cloudwatch_event_rule.crowdstrike-eventbus-event-rule-eu-south-1.0.name
+  rule      = aws_cloudwatch_event_rule.eu-south-1.0.name
   role_arn  = aws_iam_role.this.arn
   depends_on = [
     aws_iam_role.this
   ]
 }
 
-resource "aws_cloudwatch_event_rule" "crowdstrike-eventbus-event-rule-eu-south-2" {
+resource "aws_cloudwatch_event_rule" "eu-south-2" {
   count         = contains(local.available_regions, "eu-south-2") && !var.is_gov ? 1 : 0
   provider      = aws.eu-south-2
   name          = local.rule_name
@@ -561,19 +561,19 @@ resource "aws_cloudwatch_event_rule" "crowdstrike-eventbus-event-rule-eu-south-2
   ]
 }
 
-resource "aws_cloudwatch_event_target" "crowdstrike-eventbus-event-target-eu-south-2" {
+resource "aws_cloudwatch_event_target" "eu-south-2" {
   count     = contains(local.available_regions, "eu-south-2") && !var.is_gov ? 1 : 0
   provider  = aws.eu-south-2
   target_id = local.target_id
   arn       = var.eventbus_arn
-  rule      = aws_cloudwatch_event_rule.crowdstrike-eventbus-event-rule-eu-south-2.0.name
+  rule      = aws_cloudwatch_event_rule.eu-south-2.0.name
   role_arn  = aws_iam_role.this.arn
   depends_on = [
     aws_iam_role.this
   ]
 }
 
-resource "aws_cloudwatch_event_rule" "crowdstrike-eventbus-event-rule-eu-north-1" {
+resource "aws_cloudwatch_event_rule" "eu-north-1" {
   count         = contains(local.available_regions, "eu-north-1") && !var.is_gov ? 1 : 0
   provider      = aws.eu-north-1
   name          = local.rule_name
@@ -583,19 +583,19 @@ resource "aws_cloudwatch_event_rule" "crowdstrike-eventbus-event-rule-eu-north-1
   ]
 }
 
-resource "aws_cloudwatch_event_target" "crowdstrike-eventbus-event-target-eu-north-1" {
+resource "aws_cloudwatch_event_target" "eu-north-1" {
   count     = contains(local.available_regions, "eu-north-1") && !var.is_gov ? 1 : 0
   provider  = aws.eu-north-1
   target_id = local.target_id
   arn       = var.eventbus_arn
-  rule      = aws_cloudwatch_event_rule.crowdstrike-eventbus-event-rule-eu-north-1.0.name
+  rule      = aws_cloudwatch_event_rule.eu-north-1.0.name
   role_arn  = aws_iam_role.this.arn
   depends_on = [
     aws_iam_role.this
   ]
 }
 
-resource "aws_cloudwatch_event_rule" "crowdstrike-eventbus-event-rule-eu-central-2" {
+resource "aws_cloudwatch_event_rule" "eu-central-2" {
   count         = contains(local.available_regions, "eu-central-2") && !var.is_gov ? 1 : 0
   provider      = aws.eu-central-2
   name          = local.rule_name
@@ -605,19 +605,19 @@ resource "aws_cloudwatch_event_rule" "crowdstrike-eventbus-event-rule-eu-central
   ]
 }
 
-resource "aws_cloudwatch_event_target" "crowdstrike-eventbus-event-target-eu-central-2" {
+resource "aws_cloudwatch_event_target" "eu-central-2" {
   count     = contains(local.available_regions, "eu-central-2") && !var.is_gov ? 1 : 0
   provider  = aws.eu-central-2
   target_id = local.target_id
   arn       = var.eventbus_arn
-  rule      = aws_cloudwatch_event_rule.crowdstrike-eventbus-event-rule-eu-central-2.0.name
+  rule      = aws_cloudwatch_event_rule.eu-central-2.0.name
   role_arn  = aws_iam_role.this.arn
   depends_on = [
     aws_iam_role.this
   ]
 }
 
-resource "aws_cloudwatch_event_rule" "crowdstrike-eventbus-event-rule-me-south-1" {
+resource "aws_cloudwatch_event_rule" "me-south-1" {
   count         = contains(local.available_regions, "me-south-1") && !var.is_gov ? 1 : 0
   provider      = aws.me-south-1
   name          = local.rule_name
@@ -627,19 +627,19 @@ resource "aws_cloudwatch_event_rule" "crowdstrike-eventbus-event-rule-me-south-1
   ]
 }
 
-resource "aws_cloudwatch_event_target" "crowdstrike-eventbus-event-target-me-south-1" {
+resource "aws_cloudwatch_event_target" "me-south-1" {
   count     = contains(local.available_regions, "me-south-1") && !var.is_gov ? 1 : 0
   provider  = aws.me-south-1
   target_id = local.target_id
   arn       = var.eventbus_arn
-  rule      = aws_cloudwatch_event_rule.crowdstrike-eventbus-event-rule-me-south-1.0.name
+  rule      = aws_cloudwatch_event_rule.me-south-1.0.name
   role_arn  = aws_iam_role.this.arn
   depends_on = [
     aws_iam_role.this
   ]
 }
 
-resource "aws_cloudwatch_event_rule" "crowdstrike-eventbus-event-rule-me-central-1" {
+resource "aws_cloudwatch_event_rule" "me-central-1" {
   count         = contains(local.available_regions, "me-central-1") && !var.is_gov ? 1 : 0
   provider      = aws.me-central-1
   name          = local.rule_name
@@ -649,19 +649,19 @@ resource "aws_cloudwatch_event_rule" "crowdstrike-eventbus-event-rule-me-central
   ]
 }
 
-resource "aws_cloudwatch_event_target" "crowdstrike-eventbus-event-target-me-central-1" {
+resource "aws_cloudwatch_event_target" "me-central-1" {
   count     = contains(local.available_regions, "me-central-1") && !var.is_gov ? 1 : 0
   provider  = aws.me-central-1
   target_id = local.target_id
   arn       = var.eventbus_arn
-  rule      = aws_cloudwatch_event_rule.crowdstrike-eventbus-event-rule-me-central-1.0.name
+  rule      = aws_cloudwatch_event_rule.me-central-1.0.name
   role_arn  = aws_iam_role.this.arn
   depends_on = [
     aws_iam_role.this
   ]
 }
 
-resource "aws_cloudwatch_event_rule" "crowdstrike-eventbus-event-rule-sa-east-1" {
+resource "aws_cloudwatch_event_rule" "sa-east-1" {
   count         = contains(local.available_regions, "sa-east-1") && !var.is_gov ? 1 : 0
   provider      = aws.sa-east-1
   name          = local.rule_name
@@ -671,12 +671,12 @@ resource "aws_cloudwatch_event_rule" "crowdstrike-eventbus-event-rule-sa-east-1"
   ]
 }
 
-resource "aws_cloudwatch_event_target" "crowdstrike-eventbus-event-target-sa-east-1" {
+resource "aws_cloudwatch_event_target" "sa-east-1" {
   count     = contains(local.available_regions, "sa-east-1") && !var.is_gov ? 1 : 0
   provider  = aws.sa-east-1
   target_id = local.target_id
   arn       = var.eventbus_arn
-  rule      = aws_cloudwatch_event_rule.crowdstrike-eventbus-event-rule-sa-east-1.0.name
+  rule      = aws_cloudwatch_event_rule.sa-east-1.0.name
   role_arn  = aws_iam_role.this.arn
   depends_on = [
     aws_iam_role.this

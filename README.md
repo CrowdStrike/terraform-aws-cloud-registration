@@ -39,7 +39,6 @@
 
 | Name | Description |
 |------|-------------|
-| <a name="output_crowdstrike_cloudtrail"></a> [crowdstrike\_cloudtrail](#output\_crowdstrike\_cloudtrail) | n/a |
 | <a name="output_crowdstrike_reader_role"></a> [crowdstrike\_reader\_role](#output\_crowdstrike\_reader\_role) | n/a |
 
 ## Usage

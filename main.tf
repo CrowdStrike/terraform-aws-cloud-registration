@@ -70,10 +70,10 @@ module "crowdstrike_asset_inventory" {
 }
 
 module "crowdstrike_realtime_visibility" {
-  # count  = var.behavior_assessment_enabled ? 1 : 0
+  count  = var.enable_realtime_visibility ? 1 : 0
   source = "./modules/realtime-visibility/"
 
-  profile                 = var.aws_profile
+  aws_profile             = var.aws_profile
   use_existing_cloudtrail = var.use_existing_cloudtrail
   cloudtrail_bucket_name  = crowdstrike_cspm_aws_account.account.cloudtrail_bucket_name
   eventbus_arn            = crowdstrike_cspm_aws_account.account.eventbus_arn
@@ -82,6 +82,34 @@ module "crowdstrike_realtime_visibility" {
 
   providers = {
     aws = aws
+
+    aws.us-east-1      = aws.us-east-1
+    aws.us-east-2      = aws.us-east-2
+    aws.us-west-1      = aws.us-west-1
+    aws.us-west-2      = aws.us-west-2
+    aws.af-south-1     = aws.af-south-1
+    aws.ap-east-1      = aws.ap-east-1
+    aws.ap-south-1     = aws.ap-south-1
+    aws.ap-south-2     = aws.ap-south-2
+    aws.ap-southeast-1 = aws.ap-southeast-1
+    aws.ap-southeast-2 = aws.ap-southeast-2
+    aws.ap-southeast-3 = aws.ap-southeast-3
+    aws.ap-southeast-4 = aws.ap-southeast-4
+    aws.ap-northeast-1 = aws.ap-northeast-1
+    aws.ap-northeast-2 = aws.ap-northeast-2
+    aws.ap-northeast-3 = aws.ap-northeast-3
+    aws.ca-central-1   = aws.ca-central-1
+    aws.eu-central-1   = aws.eu-central-1
+    aws.eu-west-1      = aws.eu-west-1
+    aws.eu-west-2      = aws.eu-west-2
+    aws.eu-west-3      = aws.eu-west-3
+    aws.eu-south-1     = aws.eu-south-1
+    aws.eu-south-2     = aws.eu-south-2
+    aws.eu-north-1     = aws.eu-north-1
+    aws.eu-central-2   = aws.eu-central-2
+    aws.me-south-1     = aws.me-south-1
+    aws.me-central-1   = aws.me-central-1
+    aws.sa-east-1      = aws.sa-east-1
   }
 }
 
