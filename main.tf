@@ -1,6 +1,6 @@
 provider "crowdstrike" {
-  client_id     = var.client_id
-  client_secret = var.client_secret
+  client_id     = var.falcon_client_id
+  client_secret = var.falcon_client_secret
 }
 
 provider "aws" {
@@ -44,24 +44,38 @@ locals {
 }
 
 # Provision AWS account in Falcon.
-resource "crowdstrike_cspm_aws_account" "account" {
+resource "crowdstrike_cloud_aws_account" "this" {
   account_id                         = data.aws_caller_identity.current.account_id
   organization_id                    = var.organization_id
   target_ous                         = var.organizational_unit_ids
   is_organization_management_account = var.organization_id != null && var.organization_id != "" ? true : false
-  cloudtrail_region                  = var.aws_region
-  enable_realtime_visibility         = var.enable_realtime_visibility
-  enable_sensor_management           = var.enable_sensor_management
-  enable_dspm                        = var.enable_dspm
-  dspm_role_name                     = var.dspm_role_name
+  account_type                       = "commercial"
+  asset_inventory = {
+    enabled   = true
+    role_name = var.custom_role_name
+  }
+  realtime_visibility = {
+    enabled           = var.enable_realtime_visibility
+    cloudtrail_region = var.aws_region
+  }
+  idp = {
+    enabled = var.enable_idp
+  }
+  sensor_management = {
+    enabled = var.enable_sensor_management
+  }
+  dspm = {
+    enabled   = var.enable_dspm
+    role_name = var.dspm_custom_role
+  }
 }
 
 module "crowdstrike_asset_inventory" {
   source = "./modules/asset-inventory/"
 
-  external_id           = crowdstrike_cspm_aws_account.account.external_id
-  intermediate_role_arn = crowdstrike_cspm_aws_account.account.intermediate_role_arn
-  role_name             = split("/", crowdstrike_cspm_aws_account.account.iam_role_arn)[1]
+  external_id           = crowdstrike_cloud_aws_account.this.external_id
+  intermediate_role_arn = crowdstrike_cloud_aws_account.this.intermediate_role_arn
+  role_name             = split("/", crowdstrike_cloud_aws_account.this.iam_role_arn)[1]
   permissions_boundary  = var.permissions_boundary
 
   providers = {
@@ -70,15 +84,16 @@ module "crowdstrike_asset_inventory" {
 }
 
 module "crowdstrike_realtime_visibility" {
-  count  = var.enable_realtime_visibility ? 1 : 0
+  count  = var.enable_realtime_visibility || var.enable_idp ? 1 : 0
   source = "./modules/realtime-visibility/"
 
   aws_profile             = var.aws_profile
   use_existing_cloudtrail = var.use_existing_cloudtrail
-  cloudtrail_bucket_name  = crowdstrike_cspm_aws_account.account.cloudtrail_bucket_name
-  eventbus_arn            = crowdstrike_cspm_aws_account.account.eventbus_arn
+  cloudtrail_bucket_name  = crowdstrike_cloud_aws_account.this.cloudtrail_bucket_name
+  eventbus_arn            = crowdstrike_cloud_aws_account.this.eventbus_arn
   excluded_regions        = local.excluded_regions
   is_gov                  = false
+  is_commercial           = crowdstrike_cloud_aws_account.this.account_type == "commercial"
 
   providers = {
     aws = aws
@@ -116,10 +131,10 @@ module "crowdstrike_realtime_visibility" {
 module "crowdstrike_sensor_management" {
   count                    = var.enable_sensor_management ? 1 : 0
   source                   = "./modules/sensor-management"
-  client_id                = var.client_id
-  client_secret            = var.client_secret
-  external_id              = crowdstrike_cspm_aws_account.account.external_id
-  intermediate_role_arn    = crowdstrike_cspm_aws_account.account.intermediate_role_arn
+  client_id                = var.falcon_client_id
+  client_secret            = var.falcon_client_secret
+  external_id              = crowdstrike_cloud_aws_account.this.external_id
+  intermediate_role_arn    = crowdstrike_cloud_aws_account.this.intermediate_role_arn
   credentials_storage_mode = var.credentials_storage_mode
   permissions_boundary     = var.permissions_boundary
 }

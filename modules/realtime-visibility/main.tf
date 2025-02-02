@@ -1,3 +1,11 @@
+data "aws_caller_identity" "current" {}
+data "aws_partition" "current" {}
+
+locals {
+  account_id    = data.aws_caller_identity.current.account_id
+  aws_partition = data.aws_partition.current.partition
+}
+
 resource "aws_cloudtrail" "this" {
   count                         = var.use_existing_cloudtrail ? 0 : 1
   name                          = "crowdstrike-cloudtrail"
@@ -7,8 +15,6 @@ resource "aws_cloudtrail" "this" {
   is_multi_region_trail         = true
   enable_logging                = true
 }
-
-data "aws_partition" "current" {}
 
 resource "aws_iam_role" "this" {
   name = "CrowdStrikeCSPMEventBridge"
@@ -25,6 +31,7 @@ resource "aws_iam_role" "this" {
       }
     ]
   })
+  permissions_boundary = var.permissions_boundary != "" ? "arn:${local.aws_partition}:iam::${local.account_id}:policy/${var.permissions_boundary}" : null
 }
 
 resource "aws_iam_role_policy" "inline_policy" {
