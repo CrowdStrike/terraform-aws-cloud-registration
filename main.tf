@@ -94,3 +94,15 @@ module "crowdstrike_sensor_management" {
   credentials_storage_mode = var.credentials_storage_mode
   permissions_boundary     = var.permissions_boundary
 }
+
+module "dspm" {
+  count = var.enable_dspm ? 1 : 0
+  source = "./modules/dspm"
+  client_id                = var.client_id
+  client_secret            = var.client_secret
+  external_id           = crowdstrike_cspm_aws_account.account.external_id
+  cs_role_name = split("/", crowdstrike_cspm_aws_account.account.iam_role_arn)[1]
+  cs_account_number = split(":", crowdstrike_cspm_aws_account.account.iam_role_arn)[4]
+  dspm_role_name = crowdstrike_cspm_aws_account.account.dspm_role_name
+  region = var.aws_region
+}
