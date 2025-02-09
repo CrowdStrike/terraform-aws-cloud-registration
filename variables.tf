@@ -1,3 +1,15 @@
+variable "falcon_client_id" {
+  type        = string
+  sensitive   = true
+  description = "Falcon API Client ID"
+}
+
+variable "falcon_client_secret" {
+  type        = string
+  sensitive   = true
+  description = "Falcon API Client Secret"
+}
+
 variable "aws_profile" {
   type        = string
   description = "AWS profile to be used when creating resources"
@@ -6,18 +18,6 @@ variable "aws_profile" {
 variable "aws_region" {
   type        = string
   description = "AWS region to be used when creating resources"
-}
-
-variable "client_id" {
-  type        = string
-  sensitive   = true
-  description = "Falcon API Client ID"
-}
-
-variable "client_secret" {
-  type        = string
-  sensitive   = true
-  description = "Falcon API Client Secret"
 }
 
 variable "is_commercial" {
@@ -32,6 +32,12 @@ variable "is_gov" {
   description = "Set to true if this is a gov account"
 }
 
+variable "custom_role_name" {
+  type        = string
+  default     = ""
+  description = "Custom role name for Asset Inventory integration"
+}
+
 variable "permissions_boundary" {
   type        = string
   default     = ""
@@ -41,13 +47,13 @@ variable "permissions_boundary" {
 variable "organization_id" {
   type        = string
   default     = ""
-  description = "The Organizational IDs"
+  description = "The AWS Organization ID. Leave blank if when onboarding single account"
 }
 
 variable "organizational_unit_ids" {
   type        = list(string)
   default     = []
-  description = "The Organizational Unit IDs"
+  description = "The Organizational Unit IDs. Leave blank when deploying to root OU"
 }
 
 ########################
@@ -57,7 +63,7 @@ variable "organizational_unit_ids" {
 variable "enable_realtime_visibility" {
   type        = bool
   default     = false
-  description = "Set to true to enable behavior assessment"
+  description = "Set to true to enable realtime visibility"
 }
 
 variable "use_existing_cloudtrail" {
@@ -66,13 +72,22 @@ variable "use_existing_cloudtrail" {
   description = "tbd"
 }
 
+########################
+# identity protection  #
+########################
+variable "enable_idp" {
+  type        = bool
+  default     = false
+  description = "Set to true to enable Identity Protection"
+}
+
 #############################
 # 1 click sensor management #
 #############################
 
 variable "enable_sensor_management" {
   type        = bool
-  description = "TBD"
+  description = "Set to true to enable 1Click Sensor Management"
 }
 
 variable "credentials_storage_mode" {
@@ -95,7 +110,7 @@ variable "enable_dspm" {
   description = " Set to true to enable Data Security Posture Managment"
 }
 
-variable "dspm_role_name" {
+variable "dspm_custom_role" {
   type        = string
   default     = ""
   description = "The custom IAM role name for Data Security Posture Managment integration"
