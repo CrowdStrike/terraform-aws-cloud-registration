@@ -6,7 +6,7 @@ data "aws_iam_policy_document" "assume_role" {
 
     principals {
       type        = "AWS"
-      identifiers = ["arn:aws:iam::${var.cs_account_number}:role/${var.cs_role_name}"]
+      identifiers = [var.cs_role_arn]
     }
 
     effect = "Allow"

@@ -66,7 +66,8 @@ resource "crowdstrike_cloud_aws_account" "this" {
   }
   dspm = {
     enabled   = var.enable_dspm
-    role_name = var.dspm_custom_role
+    role_name = var.dspm_role_name
+    regions = var.dspm_regions
   }
 }
 
@@ -142,11 +143,43 @@ module "crowdstrike_sensor_management" {
 module "dspm" {
   count = var.enable_dspm ? 1 : 0
   source = "./modules/dspm"
-  client_id                = var.client_id
-  client_secret            = var.client_secret
-  external_id           = crowdstrike_cspm_aws_account.account.external_id
-  cs_role_name = split("/", crowdstrike_cspm_aws_account.account.iam_role_arn)[1]
-  cs_account_number = split(":", crowdstrike_cspm_aws_account.account.iam_role_arn)[4]
-  dspm_role_name = crowdstrike_cspm_aws_account.account.dspm_role_name
+  client_id                = var.falcon_client_id
+  client_secret            = var.falcon_client_secret
+  external_id           = crowdstrike_cloud_aws_account.this.external_id
+  cs_role_arn = crowdstrike_cloud_aws_account.this.intermediate_role_arn
+  dspm_role_name = crowdstrike_cloud_aws_account.this.dspm.role_name
   region = var.aws_region
+  dspm_regions = crowdstrike_cloud_aws_account.this.dspm.regions
+  aws_profile             = var.aws_profile
+  providers = {
+    aws = aws
+
+    aws.us-east-1      = aws.us-east-1
+    aws.us-east-2      = aws.us-east-2
+    aws.us-west-1      = aws.us-west-1
+    aws.us-west-2      = aws.us-west-2
+    aws.af-south-1     = aws.af-south-1
+    aws.ap-east-1      = aws.ap-east-1
+    aws.ap-south-1     = aws.ap-south-1
+    aws.ap-south-2     = aws.ap-south-2
+    aws.ap-southeast-1 = aws.ap-southeast-1
+    aws.ap-southeast-2 = aws.ap-southeast-2
+    aws.ap-southeast-3 = aws.ap-southeast-3
+    aws.ap-southeast-4 = aws.ap-southeast-4
+    aws.ap-northeast-1 = aws.ap-northeast-1
+    aws.ap-northeast-2 = aws.ap-northeast-2
+    aws.ap-northeast-3 = aws.ap-northeast-3
+    aws.ca-central-1   = aws.ca-central-1
+    aws.eu-central-1   = aws.eu-central-1
+    aws.eu-west-1      = aws.eu-west-1
+    aws.eu-west-2      = aws.eu-west-2
+    aws.eu-west-3      = aws.eu-west-3
+    aws.eu-south-1     = aws.eu-south-1
+    aws.eu-south-2     = aws.eu-south-2
+    aws.eu-north-1     = aws.eu-north-1
+    aws.eu-central-2   = aws.eu-central-2
+    aws.me-south-1     = aws.me-south-1
+    aws.me-central-1   = aws.me-central-1
+    aws.sa-east-1      = aws.sa-east-1
+  }
 }

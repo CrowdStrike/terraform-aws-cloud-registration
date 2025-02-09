@@ -26,22 +26,17 @@ variable "client_secret" {
   nullable = false
 }
 
-variable "cs_account_number" {
-  description = "CrowdStrike account number"
+variable "cs_role_arn" {
+  description = "ARN of the CrowdStrike assuming role"
   type        = string
   nullable    = false
 
   validation {
-    condition     = can(regex("^[0-9]{12}$", var.cs_account_number))
-    error_message = "The provided value for the field cs_account_number must be a valid AWS account number."
+    condition     = can(regex("^arn:aws:iam::[0-9]{12}:role/[a-zA-Z0-9+=,.@\\-_/]+$", var.cs_role_arn))
+    error_message = "The provided value for cs_role_arn must be a valid AWS IAM role ARN."
   }
 }
 
-variable "cs_role_name" {
-  description = "Name of CrowdStrike assuming role"
-  type = string
-  nullable = false
-}
 
 variable "external_id" {
   description = "Unique ID for customer"
@@ -62,6 +57,7 @@ variable "region" {
   description = "The region from which the DSPM terraform roles module will run"
   type = string
   default = "us-east-1"
+  condition = contains(local.aws_regions_set, region)
 }
 
 variable "aws_profile" {
@@ -83,8 +79,8 @@ variable "dspm_regions" {
   validation {
     condition = alltrue([
       for region in var.dspm_regions :
-      can(regex("^(?:us|eu|ap|sa|ca|af|me|il)-(?:north|south|east|west|central|northeast|southeast|southwest|northwest)-[1-4]$", region))
+      contains(local.aws_regions_set, region)
     ])
-    error_message = "Each element in the dspm_regions list must be a valid AWS region (e.g., 'us-east-1', 'eu-west-2')."
+    error_message = "Each element in the dspm_regions list must be a valid AWS region (e.g., 'us-east-1', 'eu-west-2') that is supported by DSPM."
   }
 }

@@ -26,21 +26,15 @@ variable "client_secret" {
   nullable = false
 }
 
-variable "cs_account_number" {
-  description = "CrowdStrike account number"
+variable "cs_role_arn" {
+  description = "ARN of the CrowdStrike assuming role"
   type        = string
   nullable    = false
 
   validation {
-    condition     = can(regex("^[0-9]{12}$", var.cs_account_number))
-    error_message = "The provided value for the field cs_account_number must be a valid AWS account number."
+    condition     = can(regex("^arn:aws:iam::[0-9]{12}:role/[a-zA-Z0-9+=,.@\\-_/]+$", var.cs_role_arn))
+    error_message = "The provided value for cs_role_arn must be a valid AWS IAM role ARN."
   }
-}
-
-variable "cs_role_name" {
-  description = "Name of CrowdStrike assuming role"
-  type = string
-  nullable = false
 }
 
 variable "external_id" {

@@ -110,8 +110,27 @@ variable "enable_dspm" {
   description = " Set to true to enable Data Security Posture Managment"
 }
 
-variable "dspm_custom_role" {
+variable "dspm_role_name" {
+  description = "The unique name of the IAM role that DSPM will be assuming"
   type        = string
-  default     = ""
-  description = "The custom IAM role name for Data Security Posture Managment integration"
+  default     = "CrowdStrikeDSPMIntegrationRole"
+}
+
+variable "dspm_regions" {
+  description = "The regions in which DSPM scanning environments will be created"
+  type        = list(string)
+  default     = ["us-east-1"]
+
+  validation {
+    condition     = length(var.dspm_regions) > 0
+    error_message = "At least one DSPM region must be specified."
+  }
+
+  validation {
+    condition = alltrue([
+      for region in var.dspm_regions :
+      can(regex("^(?:us|eu|ap|sa|ca|af|me|il)-(?:north|south|east|west|central|northeast|southeast|southwest|northwest)-[1-4]$", region))
+    ])
+    error_message = "Each element in the dspm_regions list must be a valid AWS region (e.g., 'us-east-1', 'eu-west-2') that is supported by DSPM."
+  }
 }
