@@ -14,11 +14,6 @@ variable "eventbus_arn" {
   description = ""
 }
 
-variable "aws_profile" {
-  type        = string
-  description = "The AWS profile used for this account"
-}
-
 variable "is_gov" {
   type        = bool
   default     = false

@@ -9,6 +9,12 @@ provider "aws" {
 }
 
 data "aws_caller_identity" "current" {}
+data "aws_partition" "current" {}
+
+locals {
+  account_id    = data.aws_caller_identity.current.account_id
+  aws_partition = data.aws_partition.current.partition
+}
 
 locals {
   # Uncomment regions to exclude from IOA Provisioning (EventBridge Rules).  This will be useful if your organization leverages SCPs to deny specific regions.
@@ -45,25 +51,30 @@ locals {
 
 # Provision AWS account in Falcon.
 resource "crowdstrike_cloud_aws_account" "this" {
-  account_id                         = data.aws_caller_identity.current.account_id
+  account_id                         = local.account_id
   organization_id                    = var.organization_id
   target_ous                         = var.organizational_unit_ids
   is_organization_management_account = var.organization_id != null && var.organization_id != "" ? true : false
-  account_type                       = "commercial"
+  account_type                       = local.aws_partition == "aws-us-gov" ? "gov" : "commercial"
+
   asset_inventory = {
     enabled   = true
     role_name = var.custom_role_name
   }
+
   realtime_visibility = {
     enabled           = var.enable_realtime_visibility
     cloudtrail_region = var.aws_region
   }
+
   idp = {
     enabled = var.enable_idp
   }
+
   sensor_management = {
     enabled = var.enable_sensor_management
   }
+
   dspm = {
     enabled   = var.enable_dspm
     role_name = var.dspm_custom_role
@@ -87,7 +98,6 @@ module "crowdstrike_realtime_visibility" {
   count  = var.enable_realtime_visibility || var.enable_idp ? 1 : 0
   source = "./modules/realtime-visibility/"
 
-  aws_profile             = var.aws_profile
   use_existing_cloudtrail = var.use_existing_cloudtrail
   cloudtrail_bucket_name  = crowdstrike_cloud_aws_account.this.cloudtrail_bucket_name
   eventbus_arn            = crowdstrike_cloud_aws_account.this.eventbus_arn
@@ -129,12 +139,11 @@ module "crowdstrike_realtime_visibility" {
 }
 
 module "crowdstrike_sensor_management" {
-  count                    = var.enable_sensor_management ? 1 : 0
-  source                   = "./modules/sensor-management"
-  client_id                = var.falcon_client_id
-  client_secret            = var.falcon_client_secret
-  external_id              = crowdstrike_cloud_aws_account.this.external_id
-  intermediate_role_arn    = crowdstrike_cloud_aws_account.this.intermediate_role_arn
-  credentials_storage_mode = var.credentials_storage_mode
-  permissions_boundary     = var.permissions_boundary
+  count                 = var.enable_sensor_management ? 1 : 0
+  source                = "./modules/sensor-management"
+  falcon_client_id      = var.falcon_client_id
+  falcon_client_secret  = var.falcon_client_secret
+  external_id           = crowdstrike_cloud_aws_account.this.external_id
+  intermediate_role_arn = crowdstrike_cloud_aws_account.this.intermediate_role_arn
+  permissions_boundary  = var.permissions_boundary
 }

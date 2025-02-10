@@ -110,6 +110,11 @@ variable "enable_dspm" {
   description = " Set to true to enable Data Security Posture Managment"
 }
 
+variable "dspm_regions" {
+  type        = list(string)
+  description = "The list of regions where DSPM should be enabled"
+}
+
 variable "dspm_custom_role" {
   type        = string
   default     = ""
