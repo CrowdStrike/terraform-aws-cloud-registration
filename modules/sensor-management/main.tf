@@ -83,7 +83,7 @@ resource "aws_iam_role_policy" "orchestrator" {
   role = aws_iam_role.orchestrator.id
   policy = jsonencode({
     Version = "2012-10-17"
-    Statement = concat([
+    Statement = [
       {
         Action = [
           "ssm:SendCommand"
@@ -105,19 +105,16 @@ resource "aws_iam_role_policy" "orchestrator" {
           "arn:aws:logs:*:*:log-group:/aws/lambda/cs-*:log-stream:*"
         ]
         Sid = "Logging"
+      },
+      {
+        Action = [
+          "secretsmanager:GetSecretValue"
+        ]
+        Effect   = "Allow"
+        Resource = "arn:aws:secretsmanager:${local.aws_region}:${local.account_id}:secret:/CrowdStrike/CSPM/SensorManagement/FalconAPICredentials-??????"
+        Sid      = "GetFalconCredentials"
       }
-      ],
-      var.credentials_storage_mode == "secret" ? [
-        {
-          Action = [
-            "secretsmanager:GetSecretValue"
-          ]
-          Effect   = "Allow"
-          Resource = "arn:aws:secretsmanager:${local.aws_region}:${local.account_id}:secret:/CrowdStrike/CSPM/SensorManagement/FalconAPICredentials-??????"
-          Sid      = "GetFalconCredentials"
-        }
-      ] : []
-    )
+    ]
   })
 }
 
@@ -127,22 +124,19 @@ resource "aws_cloudwatch_log_group" "crowdstrike_sensor_management" {
 }
 
 resource "aws_secretsmanager_secret" "this" {
-  count                   = var.credentials_storage_mode == "secret" ? 1 : 0
   name                    = "/CrowdStrike/CSPM/SensorManagement/FalconAPICredentials"
   description             = "Falcon API credentials. Used by the 1-Click sensor management orchestrator"
   recovery_window_in_days = 0
 }
 
 resource "aws_secretsmanager_secret_version" "this" {
-  count     = var.credentials_storage_mode == "secret" ? 1 : 0
-  secret_id = aws_secretsmanager_secret.this[0].id
+  secret_id = aws_secretsmanager_secret.this.id
   secret_string = jsonencode({
-    ClientSecret = var.client_secret
+    ClientSecret = var.falcon_client_id
   })
 }
 
 resource "aws_lambda_function" "this" {
-  count         = var.credentials_storage_mode == "secret" ? 1 : 0
   function_name = "cs-horizon-sensor-installation-orchestrator"
   role          = aws_iam_role.orchestrator.arn
   handler       = "bootstrap"
@@ -157,9 +151,8 @@ resource "aws_lambda_function" "this" {
 
   environment {
     variables = {
-      CS_CLIENT_ID                  = var.client_id
-      CS_CLIENT_SECRET              = var.credentials_storage_mode == "lambda" ? var.client_secret : null
-      CS_API_CREDENTIALS_AWS_SECRET = var.credentials_storage_mode == "secret" ? "/CrowdStrike/CSPM/SensorManagement/FalconAPICredentials" : null
+      CS_CLIENT_ID                  = var.falcon_client_id
+      CS_API_CREDENTIALS_AWS_SECRET = "/CrowdStrike/CSPM/SensorManagement/FalconAPICredentials"
       CS_MODE                       = "force_auth"
     }
   }

@@ -8,27 +8,16 @@ variable "intermediate_role_arn" {
   description = "ARN of CrowdStrike's intermediate role"
 }
 
-variable "client_id" {
+variable "falcon_client_id" {
   type        = string
   sensitive   = true
   description = "Falcon API Client ID"
 }
 
-variable "client_secret" {
+variable "falcon_client_secret" {
   type        = string
   sensitive   = true
   description = "Falcon API Client Secret"
-}
-
-variable "credentials_storage_mode" {
-  type        = string
-  default     = "secret"
-  description = "Storage mode for Falcon API credentials: 'lambda' (Lambda environment variables) or 'secret' (AWS Secret)"
-
-  validation {
-    condition     = contains(["lambda", "secret"], var.credentials_storage_mode)
-    error_message = "credentials_storage_mode must be 'lambda' or 'secret'"
-  }
 }
 
 variable "permissions_boundary" {
