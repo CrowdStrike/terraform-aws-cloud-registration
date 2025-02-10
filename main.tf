@@ -1,19 +1,6 @@
-provider "crowdstrike" {
-  client_id     = var.falcon_client_id
-  client_secret = var.falcon_client_secret
-}
-
-provider "aws" {
-  profile = var.aws_profile
-  region  = var.aws_region
-}
-
-data "aws_caller_identity" "current" {}
-data "aws_partition" "current" {}
-
 locals {
-  account_id    = data.aws_caller_identity.current.account_id
-  aws_partition = data.aws_partition.current.partition
+  # account_id    = data.aws_caller_identity.current.account_id
+  # aws_partition = data.aws_partition.current.partition
 }
 
 locals {
@@ -49,44 +36,24 @@ locals {
   ]
 }
 
-# Provision AWS account in Falcon.
-resource "crowdstrike_cloud_aws_account" "this" {
-  account_id                         = local.account_id
-  organization_id                    = var.organization_id
-  target_ous                         = var.organizational_unit_ids
-  is_organization_management_account = var.organization_id != null && var.organization_id != "" ? true : false
-  account_type                       = local.aws_partition == "aws-us-gov" ? "gov" : "commercial"
+data "crowdstrike_cloud_aws_accounts" "target" {
+  # account_id      = var.account_id
+  # organization_id = length(var.account_id) != 0 ? null : var.organization_id
+  organization_id = var.organization_id
+}
 
-  asset_inventory = {
-    enabled   = true
-    role_name = var.custom_role_name
-  }
-
-  realtime_visibility = {
-    enabled           = var.enable_realtime_visibility
-    cloudtrail_region = var.aws_region
-  }
-
-  idp = {
-    enabled = var.enable_idp
-  }
-
-  sensor_management = {
-    enabled = var.enable_sensor_management
-  }
-
-  dspm = {
-    enabled   = var.enable_dspm
-    role_name = var.dspm_custom_role
-  }
+locals {
+  # if we target by account_id, it will be the only account returned
+  # if we target by organization_id, we pick the first one because all accounts will have the same settings
+  account = try(data.crowdstrike_cloud_aws_accounts.target.accounts[0])
 }
 
 module "crowdstrike_asset_inventory" {
   source = "./modules/asset-inventory/"
 
-  external_id           = crowdstrike_cloud_aws_account.this.external_id
-  intermediate_role_arn = crowdstrike_cloud_aws_account.this.intermediate_role_arn
-  role_name             = split("/", crowdstrike_cloud_aws_account.this.iam_role_arn)[1]
+  external_id           = var.external_id
+  intermediate_role_arn = local.account.intermediate_role_arn
+  role_name             = split("/", local.account.iam_role_arn)[1]
   permissions_boundary  = var.permissions_boundary
 
   providers = {
@@ -99,11 +66,11 @@ module "crowdstrike_realtime_visibility" {
   source = "./modules/realtime-visibility/"
 
   use_existing_cloudtrail = var.use_existing_cloudtrail
-  cloudtrail_bucket_name  = crowdstrike_cloud_aws_account.this.cloudtrail_bucket_name
-  eventbus_arn            = crowdstrike_cloud_aws_account.this.eventbus_arn
+  cloudtrail_bucket_name  = local.account.cloudtrail_bucket_name
+  eventbus_arn            = local.account.eventbus_arn
   excluded_regions        = local.excluded_regions
   is_gov                  = false
-  is_commercial           = crowdstrike_cloud_aws_account.this.account_type == "commercial"
+  is_commercial           = local.account.account_type == "commercial"
 
   providers = {
     aws = aws
@@ -143,7 +110,11 @@ module "crowdstrike_sensor_management" {
   source                = "./modules/sensor-management"
   falcon_client_id      = var.falcon_client_id
   falcon_client_secret  = var.falcon_client_secret
-  external_id           = crowdstrike_cloud_aws_account.this.external_id
-  intermediate_role_arn = crowdstrike_cloud_aws_account.this.intermediate_role_arn
+  external_id           = local.account.external_id
+  intermediate_role_arn = local.account.intermediate_role_arn
   permissions_boundary  = var.permissions_boundary
+
+  providers = {
+    aws = aws
+  }
 }
