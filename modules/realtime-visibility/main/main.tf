@@ -14,10 +14,11 @@ resource "aws_cloudtrail" "this" {
   include_global_service_events = true
   is_multi_region_trail         = true
   enable_logging                = true
+  is_organization_trail         = var.is_organization_trail
 }
 
 resource "aws_iam_role" "this" {
-  name = "CrowdStrikeCSPMEventBridge"
+  name = var.role_name
   assume_role_policy = jsonencode({
     "Version" : "2012-10-17",
     "Statement" : [
