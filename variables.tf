@@ -19,6 +19,10 @@ variable "aws_region" {
   type        = string
   description = "AWS region to be used when creating resources"
 }
+variable "external_id" {
+  type        = string
+  description = ""
+}
 
 variable "is_commercial" {
   type        = bool
@@ -44,10 +48,24 @@ variable "permissions_boundary" {
   description = "The name of the policy used to set the permissions boundary for IAM roles"
 }
 
+variable "account_id" {
+  type        = string
+  default     = ""
+  description = "The AWS 12 digit account ID"
+  # validation {
+  #   condition     = length(var.account_id) == 0 && can(regex("^[0-9]{12}$", var.account_id))
+  #   error_message = "account_id must be either empty or the 12-digit AWS account ID"
+  # }
+}
+
 variable "organization_id" {
   type        = string
   default     = ""
   description = "The AWS Organization ID. Leave blank if when onboarding single account"
+  # validation {
+  #   condition     = length(var.account_id) != 0 || length(var.organization_id) != 0
+  #   error_message = "you must provide at least one of these variables: account_id, organization_id"
+  # }
 }
 
 variable "organizational_unit_ids" {
@@ -88,17 +106,6 @@ variable "enable_idp" {
 variable "enable_sensor_management" {
   type        = bool
   description = "Set to true to enable 1Click Sensor Management"
-}
-
-variable "credentials_storage_mode" {
-  type        = string
-  default     = "secret"
-  description = "Storage mode for Falcon API credentials: 'lambda' (Lambda environment variables) or 'secret' (AWS Secret)"
-
-  validation {
-    condition     = contains(["lambda", "secret"], var.credentials_storage_mode)
-    error_message = "credentials_storage_mode must be 'lambda' or 'secret'"
-  }
 }
 
 ###################
