@@ -62,6 +62,10 @@ module "realtime_visibility_rules" {
   eventbus_arn         = local.eventbus_arn
   eventbridge_role_arn = module.realtime_visibility_main.0.eventbridge_role_arn
 
+  depends_on = [
+    module.realtime_visibility_main
+  ]
+
   providers = {
     aws = aws
   }

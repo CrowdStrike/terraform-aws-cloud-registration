@@ -1,6 +1,8 @@
 provider "aws" {
-  profile = var.aws_profile
-  region  = var.primary_region
+  assume_role {
+    role_arn = var.aws_role_arn
+  }
+  region = var.primary_region
 }
 data "aws_region" "current" {}
 
