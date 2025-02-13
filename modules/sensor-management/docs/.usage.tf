@@ -1,23 +1,37 @@
 terraform {
   required_version = ">= 0.15"
+  required_providers {
+    aws = {
+      source  = "hashicorp/aws"
+      version = ">= 4.45"
+    }
+    crowdstrike = {
+      source = "crowdstrike/crowdstrike"
+    }
+  }
 }
 
-module "crowdstrike_fcs" {
-  # source = "https://cs-dev-cloudconnect-templates.s3.amazonaws.com/terraform/modules/terraform-cspm-aws/0.1.2/terraform-cspm-aws.tar.gz"
-  source = "./fcs"
-
-  aws_profile                 = var.aws_profile
-  aws_region                  = var.aws_region
-  client_id                   = var.client_id
-  client_secret               = var.client_secret
-  permissions_boundary        = var.permissions_boundary
-  behavior_assessment_enabled = var.behavior_assessment_enabled
-  sensor_management_enabled   = var.sensor_management_enabled
-
-  # TODO: remove this
-  api_url = var.api_url
+provider "aws" {
 }
 
-output "crowdstrike_reader_role" {
-  value = module.crowdstrike_fcs.crowdstrike_reader_role
+provider "crowdstrike" {
+  client_id     = var.falcon_client_id
+  client_secret = var.falcon_client_secret
+}
+
+data "crowdstrike_cloud_aws_accounts" "target" {
+  account_id      = var.account_id
+}
+
+module "sensor_management" {
+  source                = "../sensor-management/"
+  falcon_client_id      = var.falcon_client_id
+  falcon_client_secret  = var.falcon_client_secret
+  external_id           = data.crowdstrike_cloud_aws_accounts.accounts.0.external_id
+  intermediate_role_arn = data.crowdstrike_cloud_aws_accounts.accounts.0.intermediate_role_arn
+  permissions_boundary  = var.permissions_boundary
+
+  providers = {
+    aws = aws
+  }
 }

@@ -1,6 +1,7 @@
 formatter: markdown table
 recursive:
   enabled: true
+  path: modules
 sections:
   hide:
     - requirements
