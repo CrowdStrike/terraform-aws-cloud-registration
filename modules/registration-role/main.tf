@@ -66,6 +66,7 @@ module "realtime_visibility_main" {
   use_existing_cloudtrail = var.use_existing_cloudtrail
   is_organization_trail   = length(var.organization_id) > 0
   cloudtrail_bucket_name  = local.cloudtrail_bucket_name
+  role_name               = "crowdstrike-event-bridge"
 
   providers = {
     aws = aws
