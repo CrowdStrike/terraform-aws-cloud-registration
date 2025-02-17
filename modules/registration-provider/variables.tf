@@ -63,6 +63,12 @@ variable "use_existing_cloudtrail" {
   description = "Set to true if you already have a cloudtrail"
 }
 
+variable "eventbridge_role_name" {
+  type        = string
+  default     = "CrowdStrikeCSPMEventBridge"
+  description = "The eventbridge role name"
+}
+
 variable "enable_idp" {
   type        = bool
   default     = false

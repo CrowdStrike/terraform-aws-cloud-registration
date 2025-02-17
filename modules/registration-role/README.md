@@ -3,6 +3,8 @@
 
 [![Twitter URL](https://img.shields.io/twitter/url?label=Follow%20%40CrowdStrike&style=social&url=https%3A%2F%2Ftwitter.com%2FCrowdStrike)](https://twitter.com/CrowdStrike)<br/>
 
+# Terraform Modules Documentation
+
 ## Providers
 
 | Name | Version |
@@ -13,36 +15,36 @@
 
 | Name | Source | Version |
 |------|--------|---------|
-| <a name="module_asset_inventory"></a> [asset\_inventory](#module\_asset\_inventory) | ../asset-inventory/ | n/a |
-| <a name="module_realtime_visibility_main"></a> [realtime\_visibility\_main](#module\_realtime\_visibility\_main) | ../realtime-visibility/main/ | n/a |
-| <a name="module_rules_af-south-1"></a> [rules\_af-south-1](#module\_rules\_af-south-1) | ../realtime-visibility/rules/ | n/a |
-| <a name="module_rules_ap-east-1"></a> [rules\_ap-east-1](#module\_rules\_ap-east-1) | ../realtime-visibility/rules/ | n/a |
-| <a name="module_rules_ap-northeast-1"></a> [rules\_ap-northeast-1](#module\_rules\_ap-northeast-1) | ../realtime-visibility/rules/ | n/a |
-| <a name="module_rules_ap-northeast-2"></a> [rules\_ap-northeast-2](#module\_rules\_ap-northeast-2) | ../realtime-visibility/rules/ | n/a |
-| <a name="module_rules_ap-northeast-3"></a> [rules\_ap-northeast-3](#module\_rules\_ap-northeast-3) | ../realtime-visibility/rules/ | n/a |
-| <a name="module_rules_ap-south-1"></a> [rules\_ap-south-1](#module\_rules\_ap-south-1) | ../realtime-visibility/rules/ | n/a |
-| <a name="module_rules_ap-south-2"></a> [rules\_ap-south-2](#module\_rules\_ap-south-2) | ../realtime-visibility/rules/ | n/a |
-| <a name="module_rules_ap-southeast-1"></a> [rules\_ap-southeast-1](#module\_rules\_ap-southeast-1) | ../realtime-visibility/rules/ | n/a |
-| <a name="module_rules_ap-southeast-2"></a> [rules\_ap-southeast-2](#module\_rules\_ap-southeast-2) | ../realtime-visibility/rules/ | n/a |
-| <a name="module_rules_ap-southeast-3"></a> [rules\_ap-southeast-3](#module\_rules\_ap-southeast-3) | ../realtime-visibility/rules/ | n/a |
-| <a name="module_rules_ap-southeast-4"></a> [rules\_ap-southeast-4](#module\_rules\_ap-southeast-4) | ../realtime-visibility/rules/ | n/a |
-| <a name="module_rules_ca-central-1"></a> [rules\_ca-central-1](#module\_rules\_ca-central-1) | ../realtime-visibility/rules/ | n/a |
-| <a name="module_rules_eu-central-1"></a> [rules\_eu-central-1](#module\_rules\_eu-central-1) | ../realtime-visibility/rules/ | n/a |
-| <a name="module_rules_eu-central-2"></a> [rules\_eu-central-2](#module\_rules\_eu-central-2) | ../realtime-visibility/rules/ | n/a |
-| <a name="module_rules_eu-north-1"></a> [rules\_eu-north-1](#module\_rules\_eu-north-1) | ../realtime-visibility/rules/ | n/a |
-| <a name="module_rules_eu-south-1"></a> [rules\_eu-south-1](#module\_rules\_eu-south-1) | ../realtime-visibility/rules/ | n/a |
-| <a name="module_rules_eu-south-2"></a> [rules\_eu-south-2](#module\_rules\_eu-south-2) | ../realtime-visibility/rules/ | n/a |
-| <a name="module_rules_eu-west-1"></a> [rules\_eu-west-1](#module\_rules\_eu-west-1) | ../realtime-visibility/rules/ | n/a |
-| <a name="module_rules_eu-west-2"></a> [rules\_eu-west-2](#module\_rules\_eu-west-2) | ../realtime-visibility/rules/ | n/a |
-| <a name="module_rules_eu-west-3"></a> [rules\_eu-west-3](#module\_rules\_eu-west-3) | ../realtime-visibility/rules/ | n/a |
-| <a name="module_rules_me-central-1"></a> [rules\_me-central-1](#module\_rules\_me-central-1) | ../realtime-visibility/rules/ | n/a |
-| <a name="module_rules_me-south-1"></a> [rules\_me-south-1](#module\_rules\_me-south-1) | ../realtime-visibility/rules/ | n/a |
-| <a name="module_rules_sa-east-1"></a> [rules\_sa-east-1](#module\_rules\_sa-east-1) | ../realtime-visibility/rules/ | n/a |
-| <a name="module_rules_us-east-1"></a> [rules\_us-east-1](#module\_rules\_us-east-1) | ../realtime-visibility/rules/ | n/a |
-| <a name="module_rules_us-east-2"></a> [rules\_us-east-2](#module\_rules\_us-east-2) | ../realtime-visibility/rules/ | n/a |
-| <a name="module_rules_us-west-1"></a> [rules\_us-west-1](#module\_rules\_us-west-1) | ../realtime-visibility/rules/ | n/a |
-| <a name="module_rules_us-west-2"></a> [rules\_us-west-2](#module\_rules\_us-west-2) | ../realtime-visibility/rules/ | n/a |
-| <a name="module_sensor_management"></a> [sensor\_management](#module\_sensor\_management) | ../sensor-management/ | n/a |
+| <a name="module_asset_inventory"></a> [asset\_inventory](#module\_asset\_inventory) | https://cs-dev-cloudconnect-templates.s3.amazonaws.com/terraform/modules/cs-aws-integration-terraform/0.1.0/cs-aws-integration-terraform-asset-inventory.tar.gz | n/a |
+| <a name="module_realtime_visibility_main"></a> [realtime\_visibility\_main](#module\_realtime\_visibility\_main) | https://cs-dev-cloudconnect-templates.s3.amazonaws.com/terraform/modules/cs-aws-integration-terraform/0.1.0/cs-aws-integration-terraform-realtime-visibility.tar.gz | n/a |
+| <a name="module_rules_af-south-1"></a> [rules\_af-south-1](#module\_rules\_af-south-1) | https://cs-dev-cloudconnect-templates.s3.amazonaws.com/terraform/modules/cs-aws-integration-terraform/0.1.0/cs-aws-integration-terraform-realtime-visibility-rules.tar.gz | n/a |
+| <a name="module_rules_ap-east-1"></a> [rules\_ap-east-1](#module\_rules\_ap-east-1) | https://cs-dev-cloudconnect-templates.s3.amazonaws.com/terraform/modules/cs-aws-integration-terraform/0.1.0/cs-aws-integration-terraform-realtime-visibility-rules.tar.gz | n/a |
+| <a name="module_rules_ap-northeast-1"></a> [rules\_ap-northeast-1](#module\_rules\_ap-northeast-1) | https://cs-dev-cloudconnect-templates.s3.amazonaws.com/terraform/modules/cs-aws-integration-terraform/0.1.0/cs-aws-integration-terraform-realtime-visibility-rules.tar.gz | n/a |
+| <a name="module_rules_ap-northeast-2"></a> [rules\_ap-northeast-2](#module\_rules\_ap-northeast-2) | https://cs-dev-cloudconnect-templates.s3.amazonaws.com/terraform/modules/cs-aws-integration-terraform/0.1.0/cs-aws-integration-terraform-realtime-visibility-rules.tar.gz | n/a |
+| <a name="module_rules_ap-northeast-3"></a> [rules\_ap-northeast-3](#module\_rules\_ap-northeast-3) | https://cs-dev-cloudconnect-templates.s3.amazonaws.com/terraform/modules/cs-aws-integration-terraform/0.1.0/cs-aws-integration-terraform-realtime-visibility-rules.tar.gz | n/a |
+| <a name="module_rules_ap-south-1"></a> [rules\_ap-south-1](#module\_rules\_ap-south-1) | https://cs-dev-cloudconnect-templates.s3.amazonaws.com/terraform/modules/cs-aws-integration-terraform/0.1.0/cs-aws-integration-terraform-realtime-visibility-rules.tar.gz | n/a |
+| <a name="module_rules_ap-south-2"></a> [rules\_ap-south-2](#module\_rules\_ap-south-2) | https://cs-dev-cloudconnect-templates.s3.amazonaws.com/terraform/modules/cs-aws-integration-terraform/0.1.0/cs-aws-integration-terraform-realtime-visibility-rules.tar.gz | n/a |
+| <a name="module_rules_ap-southeast-1"></a> [rules\_ap-southeast-1](#module\_rules\_ap-southeast-1) | https://cs-dev-cloudconnect-templates.s3.amazonaws.com/terraform/modules/cs-aws-integration-terraform/0.1.0/cs-aws-integration-terraform-realtime-visibility-rules.tar.gz | n/a |
+| <a name="module_rules_ap-southeast-2"></a> [rules\_ap-southeast-2](#module\_rules\_ap-southeast-2) | https://cs-dev-cloudconnect-templates.s3.amazonaws.com/terraform/modules/cs-aws-integration-terraform/0.1.0/cs-aws-integration-terraform-realtime-visibility-rules.tar.gz | n/a |
+| <a name="module_rules_ap-southeast-3"></a> [rules\_ap-southeast-3](#module\_rules\_ap-southeast-3) | https://cs-dev-cloudconnect-templates.s3.amazonaws.com/terraform/modules/cs-aws-integration-terraform/0.1.0/cs-aws-integration-terraform-realtime-visibility-rules.tar.gz | n/a |
+| <a name="module_rules_ap-southeast-4"></a> [rules\_ap-southeast-4](#module\_rules\_ap-southeast-4) | https://cs-dev-cloudconnect-templates.s3.amazonaws.com/terraform/modules/cs-aws-integration-terraform/0.1.0/cs-aws-integration-terraform-realtime-visibility-rules.tar.gz | n/a |
+| <a name="module_rules_ca-central-1"></a> [rules\_ca-central-1](#module\_rules\_ca-central-1) | https://cs-dev-cloudconnect-templates.s3.amazonaws.com/terraform/modules/cs-aws-integration-terraform/0.1.0/cs-aws-integration-terraform-realtime-visibility-rules.tar.gz | n/a |
+| <a name="module_rules_eu-central-1"></a> [rules\_eu-central-1](#module\_rules\_eu-central-1) | https://cs-dev-cloudconnect-templates.s3.amazonaws.com/terraform/modules/cs-aws-integration-terraform/0.1.0/cs-aws-integration-terraform-realtime-visibility-rules.tar.gz | n/a |
+| <a name="module_rules_eu-central-2"></a> [rules\_eu-central-2](#module\_rules\_eu-central-2) | https://cs-dev-cloudconnect-templates.s3.amazonaws.com/terraform/modules/cs-aws-integration-terraform/0.1.0/cs-aws-integration-terraform-realtime-visibility-rules.tar.gz | n/a |
+| <a name="module_rules_eu-north-1"></a> [rules\_eu-north-1](#module\_rules\_eu-north-1) | https://cs-dev-cloudconnect-templates.s3.amazonaws.com/terraform/modules/cs-aws-integration-terraform/0.1.0/cs-aws-integration-terraform-realtime-visibility-rules.tar.gz | n/a |
+| <a name="module_rules_eu-south-1"></a> [rules\_eu-south-1](#module\_rules\_eu-south-1) | https://cs-dev-cloudconnect-templates.s3.amazonaws.com/terraform/modules/cs-aws-integration-terraform/0.1.0/cs-aws-integration-terraform-realtime-visibility-rules.tar.gz | n/a |
+| <a name="module_rules_eu-south-2"></a> [rules\_eu-south-2](#module\_rules\_eu-south-2) | https://cs-dev-cloudconnect-templates.s3.amazonaws.com/terraform/modules/cs-aws-integration-terraform/0.1.0/cs-aws-integration-terraform-realtime-visibility-rules.tar.gz | n/a |
+| <a name="module_rules_eu-west-1"></a> [rules\_eu-west-1](#module\_rules\_eu-west-1) | https://cs-dev-cloudconnect-templates.s3.amazonaws.com/terraform/modules/cs-aws-integration-terraform/0.1.0/cs-aws-integration-terraform-realtime-visibility-rules.tar.gz | n/a |
+| <a name="module_rules_eu-west-2"></a> [rules\_eu-west-2](#module\_rules\_eu-west-2) | https://cs-dev-cloudconnect-templates.s3.amazonaws.com/terraform/modules/cs-aws-integration-terraform/0.1.0/cs-aws-integration-terraform-realtime-visibility-rules.tar.gz | n/a |
+| <a name="module_rules_eu-west-3"></a> [rules\_eu-west-3](#module\_rules\_eu-west-3) | https://cs-dev-cloudconnect-templates.s3.amazonaws.com/terraform/modules/cs-aws-integration-terraform/0.1.0/cs-aws-integration-terraform-realtime-visibility-rules.tar.gz | n/a |
+| <a name="module_rules_me-central-1"></a> [rules\_me-central-1](#module\_rules\_me-central-1) | https://cs-dev-cloudconnect-templates.s3.amazonaws.com/terraform/modules/cs-aws-integration-terraform/0.1.0/cs-aws-integration-terraform-realtime-visibility-rules.tar.gz | n/a |
+| <a name="module_rules_me-south-1"></a> [rules\_me-south-1](#module\_rules\_me-south-1) | https://cs-dev-cloudconnect-templates.s3.amazonaws.com/terraform/modules/cs-aws-integration-terraform/0.1.0/cs-aws-integration-terraform-realtime-visibility-rules.tar.gz | n/a |
+| <a name="module_rules_sa-east-1"></a> [rules\_sa-east-1](#module\_rules\_sa-east-1) | https://cs-dev-cloudconnect-templates.s3.amazonaws.com/terraform/modules/cs-aws-integration-terraform/0.1.0/cs-aws-integration-terraform-realtime-visibility-rules.tar.gz | n/a |
+| <a name="module_rules_us-east-1"></a> [rules\_us-east-1](#module\_rules\_us-east-1) | https://cs-dev-cloudconnect-templates.s3.amazonaws.com/terraform/modules/cs-aws-integration-terraform/0.1.0/cs-aws-integration-terraform-realtime-visibility-rules.tar.gz | n/a |
+| <a name="module_rules_us-east-2"></a> [rules\_us-east-2](#module\_rules\_us-east-2) | https://cs-dev-cloudconnect-templates.s3.amazonaws.com/terraform/modules/cs-aws-integration-terraform/0.1.0/cs-aws-integration-terraform-realtime-visibility-rules.tar.gz | n/a |
+| <a name="module_rules_us-west-1"></a> [rules\_us-west-1](#module\_rules\_us-west-1) | https://cs-dev-cloudconnect-templates.s3.amazonaws.com/terraform/modules/cs-aws-integration-terraform/0.1.0/cs-aws-integration-terraform-realtime-visibility-rules.tar.gz | n/a |
+| <a name="module_rules_us-west-2"></a> [rules\_us-west-2](#module\_rules\_us-west-2) | https://cs-dev-cloudconnect-templates.s3.amazonaws.com/terraform/modules/cs-aws-integration-terraform/0.1.0/cs-aws-integration-terraform-realtime-visibility-rules.tar.gz | n/a |
+| <a name="module_sensor_management"></a> [sensor\_management](#module\_sensor\_management) | https://cs-dev-cloudconnect-templates.s3.amazonaws.com/terraform/modules/cs-aws-integration-terraform/0.1.0/cs-aws-integration-terraform-sensor-management.tar.gz | n/a |
 ## Resources
 
 | Name | Type |
@@ -133,9 +135,10 @@ resource "crowdstrike_cloud_aws_account" "this" {
   provider = crowdstrike
 }
 
-# Bring your own role
-module "fcs_management_acct" {
-  source = "../../../cs-aws-integration-terraform/modules/registration-role/"
+# Make sure to replace the `aws_role_arn` with the role for your management account
+# Update `sts_region` accordingly if needed
+module "fcs_management_account" {
+  source = "https://cs-dev-cloudconnect-templates.s3.amazonaws.com/terraform/modules/cs-aws-integration-terraform/0.1.0/cs-aws-integration-terraform-registration-role.tar.gz"
 
   falcon_client_id           = var.falcon_client_id
   falcon_client_secret       = var.falcon_client_secret
@@ -160,8 +163,11 @@ module "fcs_management_acct" {
   }
 }
 
-module "fcs_child_acct" {
-  source = "../../../cs-aws-integration-terraform/modules/registration-role/"
+# Duplicate this module for each account in the organization that you want to register
+# Make sure to replace the `aws_role_arn` with the role for your child account
+# Update `sts_region` accordingly if needed
+module "fcs_child_account" {
+  source = "https://cs-dev-cloudconnect-templates.s3.amazonaws.com/terraform/modules/cs-aws-integration-terraform/0.1.0/cs-aws-integration-terraform-registration-role.tar.gz"
 
   falcon_client_id           = var.falcon_client_id
   falcon_client_secret       = var.falcon_client_secret
@@ -185,5 +191,6 @@ module "fcs_child_acct" {
     crowdstrike = crowdstrike
   }
 }
+
 ```
 <!-- END_TF_DOCS -->

@@ -50,9 +50,10 @@ resource "crowdstrike_cloud_aws_account" "this" {
   provider = crowdstrike
 }
 
-# Bring your own role
-module "fcs_management_acct" {
-  source = "../../../cs-aws-integration-terraform/modules/registration-role/"
+# Make sure to replace the `aws_role_arn` with the role for your management account
+# Update `sts_region` accordingly if needed
+module "fcs_management_account" {
+  source = "https://cs-dev-cloudconnect-templates.s3.amazonaws.com/terraform/modules/cs-aws-integration-terraform/0.1.0/cs-aws-integration-terraform-registration-role.tar.gz"
 
   falcon_client_id           = var.falcon_client_id
   falcon_client_secret       = var.falcon_client_secret
@@ -77,8 +78,11 @@ module "fcs_management_acct" {
   }
 }
 
-module "fcs_child_acct" {
-  source = "../../../cs-aws-integration-terraform/modules/registration-role/"
+# Duplicate this module for each account in the organization that you want to register
+# Make sure to replace the `aws_role_arn` with the role for your child account
+# Update `sts_region` accordingly if needed
+module "fcs_child_account" {
+  source = "https://cs-dev-cloudconnect-templates.s3.amazonaws.com/terraform/modules/cs-aws-integration-terraform/0.1.0/cs-aws-integration-terraform-registration-role.tar.gz"
 
   falcon_client_id           = var.falcon_client_id
   falcon_client_secret       = var.falcon_client_secret
@@ -102,3 +106,4 @@ module "fcs_child_acct" {
     crowdstrike = crowdstrike
   }
 }
+

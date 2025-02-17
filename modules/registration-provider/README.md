@@ -3,6 +3,8 @@
 
 [![Twitter URL](https://img.shields.io/twitter/url?label=Follow%20%40CrowdStrike&style=social&url=https%3A%2F%2Ftwitter.com%2FCrowdStrike)](https://twitter.com/CrowdStrike)<br/>
 
+# Terraform Modules Documentation
+
 ## Providers
 
 | Name | Version |
@@ -13,14 +15,15 @@
 
 | Name | Source | Version |
 |------|--------|---------|
-| <a name="module_asset_inventory"></a> [asset\_inventory](#module\_asset\_inventory) | ../asset-inventory/ | n/a |
-| <a name="module_realtime_visibility_main"></a> [realtime\_visibility\_main](#module\_realtime\_visibility\_main) | ../realtime-visibility/main/ | n/a |
-| <a name="module_realtime_visibility_rules"></a> [realtime\_visibility\_rules](#module\_realtime\_visibility\_rules) | ../realtime-visibility/rules/ | n/a |
-| <a name="module_sensor_management"></a> [sensor\_management](#module\_sensor\_management) | ../sensor-management/ | n/a |
+| <a name="module_asset_inventory"></a> [asset\_inventory](#module\_asset\_inventory) | https://cs-dev-cloudconnect-templates.s3.amazonaws.com/terraform/modules/cs-aws-integration-terraform/0.1.0/cs-aws-integration-terraform-asset-inventory.tar.gz | n/a |
+| <a name="module_realtime_visibility"></a> [realtime\_visibility](#module\_realtime\_visibility) | https://cs-dev-cloudconnect-templates.s3.amazonaws.com/terraform/modules/cs-aws-integration-terraform/0.1.0/cs-aws-integration-terraform-realtime-visibility.tar.gz | n/a |
+| <a name="module_realtime_visibility_rules"></a> [realtime\_visibility\_rules](#module\_realtime\_visibility\_rules) | https://cs-dev-cloudconnect-templates.s3.amazonaws.com/terraform/modules/cs-aws-integration-terraform/0.1.0/cs-aws-integration-terraform-realtime-visibility-rules.tar.gz | n/a |
+| <a name="module_sensor_management"></a> [sensor\_management](#module\_sensor\_management) | https://cs-dev-cloudconnect-templates.s3.amazonaws.com/terraform/modules/cs-aws-integration-terraform/0.1.0/cs-aws-integration-terraform-sensor-management.tar.gz | n/a |
 ## Resources
 
 | Name | Type |
 |------|------|
+| [aws_partition.current](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/partition) | data source |
 | [aws_region.current](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/region) | data source |
 | [crowdstrike_cloud_aws_accounts.target](https://registry.terraform.io/providers/crowdstrike/crowdstrike/latest/docs/data-sources/cloud_aws_accounts) | data source |
 ## Inputs
@@ -31,6 +34,7 @@
 | <a name="input_enable_idp"></a> [enable\_idp](#input\_enable\_idp) | Set to true to install Identity Protection resources | `bool` | `false` | no |
 | <a name="input_enable_realtime_visibility"></a> [enable\_realtime\_visibility](#input\_enable\_realtime\_visibility) | Set to true to install realtime visibility resources | `bool` | `false` | no |
 | <a name="input_enable_sensor_management"></a> [enable\_sensor\_management](#input\_enable\_sensor\_management) | Set to true to install 1Click Sensor Management resources | `bool` | n/a | yes |
+| <a name="input_eventbridge_role_name"></a> [eventbridge\_role\_name](#input\_eventbridge\_role\_name) | The eventbridge role name | `string` | `"CrowdStrikeCSPMEventBridge"` | no |
 | <a name="input_falcon_client_id"></a> [falcon\_client\_id](#input\_falcon\_client\_id) | Falcon API Client ID | `string` | n/a | yes |
 | <a name="input_falcon_client_secret"></a> [falcon\_client\_secret](#input\_falcon\_client\_secret) | Falcon API Client Secret | `string` | n/a | yes |
 | <a name="input_is_primary_region"></a> [is\_primary\_region](#input\_is\_primary\_region) | The AWS region where resources should be deployed | `bool` | n/a | yes |
@@ -69,20 +73,19 @@ provider "aws" {
 }
 
 data "aws_region" "current" {
-  provider = aws.webid
 }
 
 locals {
   is_primary_region = var.aws_region == data.aws_region.current.name
 }
+
 # Provision AWS account in Falcon.
 resource "crowdstrike_cloud_aws_account" "this" {
-  count      = local.is_primary_region ? 1 : 0
+  count                              = local.is_primary_region ? 1 : 0
   account_id                         = var.account_id
   organization_id                    = var.organization_id
   target_ous                         = var.organizational_unit_ids
   is_organization_management_account = var.organization_id != null && var.organization_id != "" ? true : false
-  account_type = "commercial"
 
   asset_inventory = {
     enabled   = true
@@ -111,11 +114,11 @@ resource "crowdstrike_cloud_aws_account" "this" {
 
 
 module "fcs_onboard" {
-  source = "../../../cs-aws-integration-terraform/modules/registration-byop/"
-
+  source                     = "https://cs-dev-cloudconnect-templates.s3.amazonaws.com/terraform/modules/cs-aws-integration-terraform/0.1.0/cs-aws-integration-terraform-registration-provider.tar.gz"
   falcon_client_id           = var.falcon_client_id
   falcon_client_secret       = var.falcon_client_secret
   account_id                 = var.account_id
+  organization_id            = var.organization_id
   permissions_boundary       = var.permissions_boundary
   primary_region             = var.aws_region
   is_primary_region          = local.is_primary_region
@@ -131,5 +134,6 @@ module "fcs_onboard" {
     crowdstrike = crowdstrike
   }
 }
+
 ```
 <!-- END_TF_DOCS -->

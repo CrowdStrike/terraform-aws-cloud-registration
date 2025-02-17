@@ -50,12 +50,13 @@ resource "crowdstrike_cloud_aws_account" "this" {
   provider = crowdstrike
 }
 
+# Make sure to replace `aws_profile` with the correct profile for your management account
 module "management_account" {
-  source = "../../../cs-aws-integration-terraform/modules/registration-profile/"
+  source = "https://cs-dev-cloudconnect-templates.s3.amazonaws.com/terraform/modules/cs-aws-integration-terraform/0.1.0/cs-aws-integration-terraform-registration-profile.tar.gz"
 
   falcon_client_id           = var.falcon_client_id
   falcon_client_secret       = var.falcon_client_secret
-  aws_profile                = "management-profile"
+  aws_profile                = "<management-profile>"
   account_id                 = var.account_id
   permissions_boundary       = var.permissions_boundary
   primary_region             = var.aws_region
@@ -75,12 +76,15 @@ module "management_account" {
     crowdstrike = crowdstrike
   }
 }
+
+# Duplicate this module for each account in the organization that you want to register.
+# Make sure to replace `aws_profile` with the correct profile for your child account
 module "child_account" {
-  source = "../../../cs-aws-integration-terraform/modules/registration-profile/"
+  source = "https://cs-dev-cloudconnect-templates.s3.amazonaws.com/terraform/modules/cs-aws-integration-terraform/0.1.0/cs-aws-integration-terraform-registration-profile.tar.gz"
 
   falcon_client_id           = var.falcon_client_id
   falcon_client_secret       = var.falcon_client_secret
-  aws_profile                = "child-profile"
+  aws_profile                = "<child-profile>"
   organization_id            = var.organization_id
   permissions_boundary       = var.permissions_boundary
   primary_region             = var.aws_region

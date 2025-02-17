@@ -22,20 +22,19 @@ provider "aws" {
 }
 
 data "aws_region" "current" {
-  provider = aws.webid
 }
 
 locals {
   is_primary_region = var.aws_region == data.aws_region.current.name
 }
+
 # Provision AWS account in Falcon.
 resource "crowdstrike_cloud_aws_account" "this" {
-  count      = local.is_primary_region ? 1 : 0
+  count                              = local.is_primary_region ? 1 : 0
   account_id                         = var.account_id
   organization_id                    = var.organization_id
   target_ous                         = var.organizational_unit_ids
   is_organization_management_account = var.organization_id != null && var.organization_id != "" ? true : false
-  account_type = "commercial"
 
   asset_inventory = {
     enabled   = true
@@ -64,11 +63,11 @@ resource "crowdstrike_cloud_aws_account" "this" {
 
 
 module "fcs_onboard" {
-  source = "../../../cs-aws-integration-terraform/modules/registration-byop/"
-
+  source                     = "https://cs-dev-cloudconnect-templates.s3.amazonaws.com/terraform/modules/cs-aws-integration-terraform/0.1.0/cs-aws-integration-terraform-registration-provider.tar.gz"
   falcon_client_id           = var.falcon_client_id
   falcon_client_secret       = var.falcon_client_secret
   account_id                 = var.account_id
+  organization_id            = var.organization_id
   permissions_boundary       = var.permissions_boundary
   primary_region             = var.aws_region
   is_primary_region          = local.is_primary_region
@@ -84,3 +83,4 @@ module "fcs_onboard" {
     crowdstrike = crowdstrike
   }
 }
+

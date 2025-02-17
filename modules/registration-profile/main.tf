@@ -31,7 +31,7 @@ locals {
 }
 
 module "asset_inventory" {
-  source = "../asset-inventory/"
+  source = "https://cs-dev-cloudconnect-templates.s3.amazonaws.com/terraform/modules/cs-aws-integration-terraform/0.1.0/cs-aws-integration-terraform-asset-inventory.tar.gz"
 
   external_id           = local.external_id
   intermediate_role_arn = local.intermediate_role_arn
@@ -45,7 +45,7 @@ module "asset_inventory" {
 
 module "sensor_management" {
   count                 = var.enable_sensor_management ? 1 : 0
-  source                = "../sensor-management/"
+  source                = "https://cs-dev-cloudconnect-templates.s3.amazonaws.com/terraform/modules/cs-aws-integration-terraform/0.1.0/cs-aws-integration-terraform-sensor-management.tar.gz"
   falcon_client_id      = var.falcon_client_id
   falcon_client_secret  = var.falcon_client_secret
   external_id           = local.external_id
@@ -59,7 +59,7 @@ module "sensor_management" {
 
 module "realtime_visibility_main" {
   count  = (var.enable_realtime_visibility || var.enable_idp) ? 1 : 0
-  source = "../realtime-visibility/main/"
+  source = "https://cs-dev-cloudconnect-templates.s3.amazonaws.com/terraform/modules/cs-aws-integration-terraform/0.1.0/cs-aws-integration-terraform-realtime-visibility.tar.gz"
 
   use_existing_cloudtrail = var.use_existing_cloudtrail
   is_organization_trail   = length(var.organization_id) > 0
@@ -83,7 +83,7 @@ locals {
 }
 
 module "rules_us-east-1" {
-  source = "../realtime-visibility/rules/"
+  source = "https://cs-dev-cloudconnect-templates.s3.amazonaws.com/terraform/modules/cs-aws-integration-terraform/0.1.0/cs-aws-integration-terraform-realtime-visibility-rules.tar.gz"
 
   count                = contains(local.available_regions, "us-east-1") && !var.is_gov ? 1 : 0
   eventbus_arn         = local.eventbus_arn
@@ -95,7 +95,7 @@ module "rules_us-east-1" {
 }
 
 module "rules_us-east-2" {
-  source = "../realtime-visibility/rules/"
+  source = "https://cs-dev-cloudconnect-templates.s3.amazonaws.com/terraform/modules/cs-aws-integration-terraform/0.1.0/cs-aws-integration-terraform-realtime-visibility-rules.tar.gz"
   count  = contains(local.available_regions, "us-east-2") && !var.is_gov ? 1 : 0
 
   eventbus_arn         = local.eventbus_arn
@@ -107,7 +107,7 @@ module "rules_us-east-2" {
 }
 
 module "rules_us-west-1" {
-  source = "../realtime-visibility/rules/"
+  source = "https://cs-dev-cloudconnect-templates.s3.amazonaws.com/terraform/modules/cs-aws-integration-terraform/0.1.0/cs-aws-integration-terraform-realtime-visibility-rules.tar.gz"
   count  = contains(local.available_regions, "us-west-1") && !var.is_gov ? 1 : 0
 
   eventbus_arn         = local.eventbus_arn
@@ -119,7 +119,7 @@ module "rules_us-west-1" {
 }
 
 module "rules_us-west-2" {
-  source = "../realtime-visibility/rules/"
+  source = "https://cs-dev-cloudconnect-templates.s3.amazonaws.com/terraform/modules/cs-aws-integration-terraform/0.1.0/cs-aws-integration-terraform-realtime-visibility-rules.tar.gz"
   count  = contains(local.available_regions, "us-west-2") && !var.is_gov ? 1 : 0
 
   eventbus_arn         = local.eventbus_arn
@@ -131,7 +131,7 @@ module "rules_us-west-2" {
 }
 
 module "rules_af-south-1" {
-  source = "../realtime-visibility/rules/"
+  source = "https://cs-dev-cloudconnect-templates.s3.amazonaws.com/terraform/modules/cs-aws-integration-terraform/0.1.0/cs-aws-integration-terraform-realtime-visibility-rules.tar.gz"
   count  = contains(local.available_regions, "af-south-1") && !var.is_gov ? 1 : 0
 
   eventbus_arn         = local.eventbus_arn
@@ -143,7 +143,7 @@ module "rules_af-south-1" {
 }
 
 module "rules_ap-east-1" {
-  source = "../realtime-visibility/rules/"
+  source = "https://cs-dev-cloudconnect-templates.s3.amazonaws.com/terraform/modules/cs-aws-integration-terraform/0.1.0/cs-aws-integration-terraform-realtime-visibility-rules.tar.gz"
   count  = contains(local.available_regions, "ap-east-1") && !var.is_gov ? 1 : 0
 
   eventbus_arn         = local.eventbus_arn
@@ -155,7 +155,7 @@ module "rules_ap-east-1" {
 }
 
 module "rules_ap-south-1" {
-  source = "../realtime-visibility/rules/"
+  source = "https://cs-dev-cloudconnect-templates.s3.amazonaws.com/terraform/modules/cs-aws-integration-terraform/0.1.0/cs-aws-integration-terraform-realtime-visibility-rules.tar.gz"
   count  = contains(local.available_regions, "ap-south-1") && !var.is_gov ? 1 : 0
 
   eventbus_arn         = local.eventbus_arn
@@ -167,7 +167,7 @@ module "rules_ap-south-1" {
 }
 
 module "rules_ap-south-2" {
-  source = "../realtime-visibility/rules/"
+  source = "https://cs-dev-cloudconnect-templates.s3.amazonaws.com/terraform/modules/cs-aws-integration-terraform/0.1.0/cs-aws-integration-terraform-realtime-visibility-rules.tar.gz"
   count  = contains(local.available_regions, "ap-south-2") && !var.is_gov ? 1 : 0
 
   eventbus_arn         = local.eventbus_arn
@@ -179,7 +179,7 @@ module "rules_ap-south-2" {
 }
 
 module "rules_ap-southeast-1" {
-  source = "../realtime-visibility/rules/"
+  source = "https://cs-dev-cloudconnect-templates.s3.amazonaws.com/terraform/modules/cs-aws-integration-terraform/0.1.0/cs-aws-integration-terraform-realtime-visibility-rules.tar.gz"
   count  = contains(local.available_regions, "ap-southeast-1") && !var.is_gov ? 1 : 0
 
   eventbus_arn         = local.eventbus_arn
@@ -191,7 +191,7 @@ module "rules_ap-southeast-1" {
 }
 
 module "rules_ap-southeast-2" {
-  source = "../realtime-visibility/rules/"
+  source = "https://cs-dev-cloudconnect-templates.s3.amazonaws.com/terraform/modules/cs-aws-integration-terraform/0.1.0/cs-aws-integration-terraform-realtime-visibility-rules.tar.gz"
   count  = contains(local.available_regions, "ap-southeast-2") && !var.is_gov ? 1 : 0
 
   eventbus_arn         = local.eventbus_arn
@@ -203,7 +203,7 @@ module "rules_ap-southeast-2" {
 }
 
 module "rules_ap-southeast-3" {
-  source = "../realtime-visibility/rules/"
+  source = "https://cs-dev-cloudconnect-templates.s3.amazonaws.com/terraform/modules/cs-aws-integration-terraform/0.1.0/cs-aws-integration-terraform-realtime-visibility-rules.tar.gz"
   count  = contains(local.available_regions, "ap-southeast-3") && !var.is_gov ? 1 : 0
 
   eventbus_arn         = local.eventbus_arn
@@ -215,7 +215,7 @@ module "rules_ap-southeast-3" {
 }
 
 module "rules_ap-southeast-4" {
-  source = "../realtime-visibility/rules/"
+  source = "https://cs-dev-cloudconnect-templates.s3.amazonaws.com/terraform/modules/cs-aws-integration-terraform/0.1.0/cs-aws-integration-terraform-realtime-visibility-rules.tar.gz"
   count  = contains(local.available_regions, "ap-southeast-4") && !var.is_gov ? 1 : 0
 
   eventbus_arn         = local.eventbus_arn
@@ -227,7 +227,7 @@ module "rules_ap-southeast-4" {
 }
 
 module "rules_ap-northeast-1" {
-  source = "../realtime-visibility/rules/"
+  source = "https://cs-dev-cloudconnect-templates.s3.amazonaws.com/terraform/modules/cs-aws-integration-terraform/0.1.0/cs-aws-integration-terraform-realtime-visibility-rules.tar.gz"
   count  = contains(local.available_regions, "ap-northeast-1") && !var.is_gov ? 1 : 0
 
   eventbus_arn         = local.eventbus_arn
@@ -239,7 +239,7 @@ module "rules_ap-northeast-1" {
 }
 
 module "rules_ap-northeast-2" {
-  source = "../realtime-visibility/rules/"
+  source = "https://cs-dev-cloudconnect-templates.s3.amazonaws.com/terraform/modules/cs-aws-integration-terraform/0.1.0/cs-aws-integration-terraform-realtime-visibility-rules.tar.gz"
   count  = contains(local.available_regions, "ap-northeast-2") && !var.is_gov ? 1 : 0
 
   eventbus_arn         = local.eventbus_arn
@@ -251,7 +251,7 @@ module "rules_ap-northeast-2" {
 }
 
 module "rules_ap-northeast-3" {
-  source = "../realtime-visibility/rules/"
+  source = "https://cs-dev-cloudconnect-templates.s3.amazonaws.com/terraform/modules/cs-aws-integration-terraform/0.1.0/cs-aws-integration-terraform-realtime-visibility-rules.tar.gz"
   count  = contains(local.available_regions, "ap-northeast-3") && !var.is_gov ? 1 : 0
 
   eventbus_arn         = local.eventbus_arn
@@ -263,7 +263,7 @@ module "rules_ap-northeast-3" {
 }
 
 module "rules_ca-central-1" {
-  source = "../realtime-visibility/rules/"
+  source = "https://cs-dev-cloudconnect-templates.s3.amazonaws.com/terraform/modules/cs-aws-integration-terraform/0.1.0/cs-aws-integration-terraform-realtime-visibility-rules.tar.gz"
   count  = contains(local.available_regions, "ca-central-1") && !var.is_gov ? 1 : 0
 
   eventbus_arn         = local.eventbus_arn
@@ -275,7 +275,7 @@ module "rules_ca-central-1" {
 }
 
 module "rules_eu-central-1" {
-  source = "../realtime-visibility/rules/"
+  source = "https://cs-dev-cloudconnect-templates.s3.amazonaws.com/terraform/modules/cs-aws-integration-terraform/0.1.0/cs-aws-integration-terraform-realtime-visibility-rules.tar.gz"
   count  = contains(local.available_regions, "eu-central-1") && !var.is_gov ? 1 : 0
 
   eventbus_arn         = local.eventbus_arn
@@ -287,7 +287,7 @@ module "rules_eu-central-1" {
 }
 
 module "rules_eu-west-1" {
-  source = "../realtime-visibility/rules/"
+  source = "https://cs-dev-cloudconnect-templates.s3.amazonaws.com/terraform/modules/cs-aws-integration-terraform/0.1.0/cs-aws-integration-terraform-realtime-visibility-rules.tar.gz"
   count  = contains(local.available_regions, "eu-west-1") && !var.is_gov ? 1 : 0
 
   eventbus_arn         = local.eventbus_arn
@@ -299,7 +299,7 @@ module "rules_eu-west-1" {
 }
 
 module "rules_eu-west-2" {
-  source = "../realtime-visibility/rules/"
+  source = "https://cs-dev-cloudconnect-templates.s3.amazonaws.com/terraform/modules/cs-aws-integration-terraform/0.1.0/cs-aws-integration-terraform-realtime-visibility-rules.tar.gz"
   count  = contains(local.available_regions, "eu-west-2") && !var.is_gov ? 1 : 0
 
   eventbus_arn         = local.eventbus_arn
@@ -311,7 +311,7 @@ module "rules_eu-west-2" {
 }
 
 module "rules_eu-west-3" {
-  source = "../realtime-visibility/rules/"
+  source = "https://cs-dev-cloudconnect-templates.s3.amazonaws.com/terraform/modules/cs-aws-integration-terraform/0.1.0/cs-aws-integration-terraform-realtime-visibility-rules.tar.gz"
   count  = contains(local.available_regions, "eu-west-3") && !var.is_gov ? 1 : 0
 
   eventbus_arn         = local.eventbus_arn
@@ -323,7 +323,7 @@ module "rules_eu-west-3" {
 }
 
 module "rules_eu-south-1" {
-  source = "../realtime-visibility/rules/"
+  source = "https://cs-dev-cloudconnect-templates.s3.amazonaws.com/terraform/modules/cs-aws-integration-terraform/0.1.0/cs-aws-integration-terraform-realtime-visibility-rules.tar.gz"
   count  = contains(local.available_regions, "eu-south-1") && !var.is_gov ? 1 : 0
 
   eventbus_arn         = local.eventbus_arn
@@ -335,7 +335,7 @@ module "rules_eu-south-1" {
 }
 
 module "rules_eu-south-2" {
-  source = "../realtime-visibility/rules/"
+  source = "https://cs-dev-cloudconnect-templates.s3.amazonaws.com/terraform/modules/cs-aws-integration-terraform/0.1.0/cs-aws-integration-terraform-realtime-visibility-rules.tar.gz"
   count  = contains(local.available_regions, "eu-south-2") && !var.is_gov ? 1 : 0
 
   eventbus_arn         = local.eventbus_arn
@@ -347,7 +347,7 @@ module "rules_eu-south-2" {
 }
 
 module "rules_eu-north-1" {
-  source = "../realtime-visibility/rules/"
+  source = "https://cs-dev-cloudconnect-templates.s3.amazonaws.com/terraform/modules/cs-aws-integration-terraform/0.1.0/cs-aws-integration-terraform-realtime-visibility-rules.tar.gz"
   count  = contains(local.available_regions, "eu-north-1") && !var.is_gov ? 1 : 0
 
   eventbus_arn         = local.eventbus_arn
@@ -359,7 +359,7 @@ module "rules_eu-north-1" {
 }
 
 module "rules_eu-central-2" {
-  source = "../realtime-visibility/rules/"
+  source = "https://cs-dev-cloudconnect-templates.s3.amazonaws.com/terraform/modules/cs-aws-integration-terraform/0.1.0/cs-aws-integration-terraform-realtime-visibility-rules.tar.gz"
   count  = contains(local.available_regions, "eu-central-2") && !var.is_gov ? 1 : 0
 
   eventbus_arn         = local.eventbus_arn
@@ -371,7 +371,7 @@ module "rules_eu-central-2" {
 }
 
 module "rules_me-south-1" {
-  source = "../realtime-visibility/rules/"
+  source = "https://cs-dev-cloudconnect-templates.s3.amazonaws.com/terraform/modules/cs-aws-integration-terraform/0.1.0/cs-aws-integration-terraform-realtime-visibility-rules.tar.gz"
   count  = contains(local.available_regions, "me-south-1") && !var.is_gov ? 1 : 0
 
   eventbus_arn         = local.eventbus_arn
@@ -383,7 +383,7 @@ module "rules_me-south-1" {
 }
 
 module "rules_me-central-1" {
-  source = "../realtime-visibility/rules/"
+  source = "https://cs-dev-cloudconnect-templates.s3.amazonaws.com/terraform/modules/cs-aws-integration-terraform/0.1.0/cs-aws-integration-terraform-realtime-visibility-rules.tar.gz"
   count  = contains(local.available_regions, "me-central-1") && !var.is_gov ? 1 : 0
 
   eventbus_arn         = local.eventbus_arn
@@ -394,7 +394,7 @@ module "rules_me-central-1" {
   }
 }
 module "rules_sa-east-1" {
-  source = "../realtime-visibility/rules/"
+  source = "https://cs-dev-cloudconnect-templates.s3.amazonaws.com/terraform/modules/cs-aws-integration-terraform/0.1.0/cs-aws-integration-terraform-realtime-visibility-rules.tar.gz"
   count  = contains(local.available_regions, "sa-east-1") && !var.is_gov ? 1 : 0
 
   eventbus_arn         = local.eventbus_arn
