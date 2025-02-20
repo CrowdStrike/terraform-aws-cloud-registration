@@ -62,7 +62,7 @@ module "realtime_visibility" {
 }
 
 module "realtime_visibility_rules" {
-  count  = (var.is_primary_region && (var.enable_realtime_visibility || var.enable_idp)) ? 1 : 0
+  count  = (var.enable_realtime_visibility || var.enable_idp) ? 1 : 0
   source = "https://cs-dev-cloudconnect-templates.s3.amazonaws.com/terraform/modules/cs-aws-integration-terraform/0.1.0/cs-aws-integration-terraform-realtime-visibility-rules.tar.gz"
 
   eventbus_arn         = local.eventbus_arn

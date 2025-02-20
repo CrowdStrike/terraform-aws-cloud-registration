@@ -115,3 +115,21 @@ variable "cloudtrail_bucket_name" {
   default     = ""
   description = ""
 }
+
+variable "enable_dspm" {
+  type        = bool
+  default     = false
+  description = " Set to true to enable Data Security Posture Managment"
+}
+
+variable "dspm_regions" {
+  type        = list(string)
+  default     = []
+  description = "The list of regions where DSPM should be enabled"
+}
+
+variable "dspm_role_arn" {
+  type        = string
+  default     = ""
+  description = "The role ARN used for Data Security Posture Managment integration"
+}
