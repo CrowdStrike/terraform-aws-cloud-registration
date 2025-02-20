@@ -1,7 +1,7 @@
 data "aws_region" "current" {}
 data "aws_partition" "current" {}
 
-data "crowdstrike_cloud_aws_accounts" "target" {
+data "crowdstrike_cloud_aws_account" "target" {
   account_id      = var.account_id
   organization_id = length(var.account_id) != 0 ? null : var.organization_id
 }
@@ -9,7 +9,7 @@ data "crowdstrike_cloud_aws_accounts" "target" {
 locals {
   # if we target by account_id, it will be the only account returned
   # if we target by organization_id, we pick the first one because all accounts will have the same settings
-  account       = try(data.crowdstrike_cloud_aws_accounts.target.accounts[0])
+  account       = try(data.crowdstrike_cloud_aws_account.target.accounts[0])
   aws_partition = data.aws_partition.current.partition
 
   external_id           = local.account.external_id
