@@ -18,7 +18,10 @@ locals {
           "anything-but" : [
             "InvokeExecution",
             "Invoke",
-            "UploadPart"
+            "UploadPart",
+            "PutObject",
+            "InitiateReplication",
+            "Publish"
           ]
         }
       ],
@@ -51,13 +54,15 @@ locals {
           "eventName" : [
             {
               "anything-but" : [
-                "GetObject",
                 "Encrypt",
                 "Decrypt",
-                "HeadObject",
-                "ListObjects",
                 "GenerateDataKey",
                 "Sign",
+                "GetObject",
+                "HeadObject",
+                "ListObjects",
+                "GetObjectTagging",
+                "GetOjectAcl",
                 "AssumeRole"
               ]
             }

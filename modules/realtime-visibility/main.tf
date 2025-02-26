@@ -1,20 +1,11 @@
 data "aws_caller_identity" "current" {}
+data "aws_region" "current" {}
 data "aws_partition" "current" {}
 
 locals {
   account_id    = data.aws_caller_identity.current.account_id
+  aws_region    = data.aws_region.current.name
   aws_partition = data.aws_partition.current.partition
-}
-
-resource "aws_cloudtrail" "this" {
-  count                         = var.use_existing_cloudtrail ? 0 : 1
-  name                          = "crowdstrike-cloudtrail"
-  s3_bucket_name                = var.cloudtrail_bucket_name
-  s3_key_prefix                 = ""
-  include_global_service_events = true
-  is_multi_region_trail         = true
-  enable_logging                = true
-  is_organization_trail         = var.is_organization_trail
 }
 
 resource "aws_iam_role" "this" {
@@ -45,9 +36,21 @@ resource "aws_iam_role_policy" "inline_policy" {
         "Action" : [
           "events:PutEvents"
         ],
-        "Resource" : "arn:aws:events:*:*:event-bus/cs-*"
+        "Resource" : "arn:${local.aws_partition}:events:*:*:event-bus/cs-*"
         "Effect" : "Allow"
       }
     ]
   })
 }
+
+resource "aws_cloudtrail" "this" {
+  count                         = var.use_existing_cloudtrail ? 0 : 1
+  name                          = "crowdstrike-cloudtrail"
+  s3_bucket_name                = var.cloudtrail_bucket_name
+  s3_key_prefix                 = ""
+  include_global_service_events = true
+  is_multi_region_trail         = true
+  enable_logging                = true
+  is_organization_trail         = var.is_organization_trail
+}
+
