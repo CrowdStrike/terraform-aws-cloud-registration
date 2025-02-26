@@ -86,6 +86,7 @@ module "dspm-roles" {
   client_id = var.falcon_client_id
   client_secret = var.falcon_client_secret
   external_id = local.external_id
+  dspm_regions = var.dspm_regions
 }
 
 module "dspm-environments" {

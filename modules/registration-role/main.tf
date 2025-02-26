@@ -73,7 +73,7 @@ module "realtime_visibility_main" {
 }
 
 module "dspm-roles" {
-  count  = var.enable_dspm ? 1 : 0
+  count  = (var.enable_dspm && !var.is_gov) ? 1 : 0
   source = "https://cs-dev-cloudconnect-templates.s3.amazonaws.com/terraform/modules/cs-aws-integration-terraform/0.1.0/cs-aws-integration-terraform-dspm-roles.tar.gz"
   dspm_role_name = var.dspm_role_name
   dspm_scanner_role_name = var.dspm_scanner_role_name
@@ -81,5 +81,6 @@ module "dspm-roles" {
   client_id = var.falcon_client_id
   client_secret = var.falcon_client_secret
   external_id = local.external_id
+  dspm_regions = var.dspm_regions
 }
 

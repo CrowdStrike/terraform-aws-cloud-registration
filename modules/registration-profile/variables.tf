@@ -39,10 +39,10 @@ variable "organization_id" {
   type        = string
   default     = ""
   description = "The AWS Organization ID. Leave blank if when onboarding single account"
-  validation {
-    condition     = length(var.account_id) != 0 || length(var.organization_id) != 0
-    error_message = "you must provide at least one of these variables: account_id, organization_id"
-  }
+#   validation {
+#     condition     = length(var.account_id) != 0 || length(var.organization_id) != 0
+#     error_message = "you must provide at least one of these variables: account_id, organization_id"
+#   }
 }
 
 variable "permissions_boundary" {
