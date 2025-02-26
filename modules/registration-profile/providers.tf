@@ -1,4 +1,3 @@
-
 provider "aws" {
   profile                     = var.aws_profile
   alias                       = "us-east-1"

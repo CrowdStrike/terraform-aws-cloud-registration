@@ -1,16 +1,21 @@
 formatter: markdown table
 recursive:
   enabled: true
+  path: modules
 sections:
   hide:
     - requirements
 output:
   file: README.md
+  mode: inject
 header-from: docs/.header.md
 content: |-
   {{ .Header }}
 
+  # Terraform Modules Documentation
+
   {{ .Providers }}
+  {{ .Modules }}
   {{ .Resources }}
   {{ .Inputs }}
   {{ .Outputs }}
