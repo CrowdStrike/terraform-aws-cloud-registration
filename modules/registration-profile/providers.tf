@@ -187,4 +187,17 @@ provider "aws" {
   skip_credentials_validation = true
   skip_requesting_account_id  = true
 }
-
+provider "aws" {
+  profile                     = var.aws_profile
+  alias                       = "us-gov-east-1"
+  region                      = "us-gov-east-1"
+  skip_credentials_validation = true
+  skip_requesting_account_id  = true
+}
+provider "aws" {
+  profile                     = var.aws_profile
+  alias                       = "us-gov-west-1"
+  region                      = "us-gov-west-1"
+  skip_credentials_validation = true
+  skip_requesting_account_id  = true
+}

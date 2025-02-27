@@ -57,7 +57,7 @@ resource "aws_iam_role_policy" "this" {
       },
       {
         Effect   = "Allow"
-        Resource = "*arn:${data.aws_partition.current.partition}:apigateway:*::/restapis/*"
+        Resource = "arn:${data.aws_partition.current.partition}:apigateway:*::/restapis/*"
         Action = [
           "apigateway:Get"
         ]

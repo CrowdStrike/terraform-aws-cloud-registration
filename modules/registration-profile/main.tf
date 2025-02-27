@@ -3,6 +3,7 @@ provider "aws" {
   region  = var.primary_region
 }
 data "aws_region" "current" {}
+data "aws_partition" "current" {}
 
 data "crowdstrike_cloud_aws_account" "target" {
   account_id      = var.account_id
@@ -15,6 +16,7 @@ locals {
   account = try(
     data.crowdstrike_cloud_aws_account.target.accounts[0],
     {
+      account_id             = ""
       external_id            = ""
       intermediate_role_arn  = ""
       iam_role_arn           = ""
@@ -28,6 +30,10 @@ locals {
   iam_role_arn           = coalesce(var.iam_role_arn, local.account.iam_role_arn)
   eventbus_arn           = coalesce(var.eventbus_arn, local.account.eventbus_arn)
   cloudtrail_bucket_name = var.use_existing_cloudtrail ? "" : coalesce(var.cloudtrail_bucket_name, local.account.cloudtrail_bucket_name)
+
+  aws_region        = data.aws_region.current.name
+  aws_partition     = data.aws_partition.current.partition
+  is_gov_commercial = var.is_gov && local.aws_partition == "aws"
 }
 
 module "asset_inventory" {
@@ -64,6 +70,10 @@ module "realtime_visibility_main" {
   use_existing_cloudtrail = var.use_existing_cloudtrail
   is_organization_trail   = length(var.organization_id) > 0
   cloudtrail_bucket_name  = local.cloudtrail_bucket_name
+  is_gov                  = var.is_gov
+  falcon_client_id        = var.falcon_client_id
+  falcon_client_secret    = var.falcon_client_secret
+
 
   providers = {
     aws = aws

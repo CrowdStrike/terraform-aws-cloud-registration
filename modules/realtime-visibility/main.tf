@@ -3,9 +3,10 @@ data "aws_region" "current" {}
 data "aws_partition" "current" {}
 
 locals {
-  account_id    = data.aws_caller_identity.current.account_id
-  aws_region    = data.aws_region.current.name
-  aws_partition = data.aws_partition.current.partition
+  account_id        = data.aws_caller_identity.current.account_id
+  aws_region        = data.aws_region.current.name
+  aws_partition     = data.aws_partition.current.partition
+  is_gov_commercial = var.is_gov && local.aws_partition == "aws"
 }
 
 resource "aws_iam_role" "this" {
@@ -36,7 +37,7 @@ resource "aws_iam_role_policy" "inline_policy" {
         "Action" : [
           "events:PutEvents"
         ],
-        "Resource" : "arn:${local.aws_partition}:events:*:*:event-bus/cs-*"
+        "Resource" : !local.is_gov_commercial ? "arn:${local.aws_partition}:events:*:*:event-bus/cs-*" : "arn:aws:events:*:*:event-bus/default"
         "Effect" : "Allow"
       }
     ]
@@ -46,7 +47,7 @@ resource "aws_iam_role_policy" "inline_policy" {
 resource "aws_cloudtrail" "this" {
   count                         = var.use_existing_cloudtrail ? 0 : 1
   name                          = "crowdstrike-cloudtrail"
-  s3_bucket_name                = var.cloudtrail_bucket_name
+  s3_bucket_name                = !local.is_gov_commercial ? var.cloudtrail_bucket_name : aws_s3_bucket.s3.0.bucket
   s3_key_prefix                 = ""
   include_global_service_events = true
   is_multi_region_trail         = true

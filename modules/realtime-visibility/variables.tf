@@ -26,3 +26,21 @@ variable "role_name" {
   default     = "CrowdStrikeCSPMEventBridge"
   description = "The eventbridge role name"
 }
+
+variable "is_gov" {
+  type        = bool
+  default     = false
+  description = "Set to true if registering in gov-cloud"
+}
+
+variable "falcon_client_id" {
+  type        = string
+  sensitive   = true
+  description = "Falcon API Client ID"
+}
+
+variable "falcon_client_secret" {
+  type        = string
+  sensitive   = true
+  description = "Falcon API Client Secret"
+}

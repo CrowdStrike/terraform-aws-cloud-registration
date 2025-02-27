@@ -28,7 +28,7 @@ variable "primary_region" {
 
 variable "is_gov" {
   type        = bool
-  description = "Set to true if this is a gov account"
+  description = "Set to true if registering in gov-cloud"
 }
 
 variable "account_id" {

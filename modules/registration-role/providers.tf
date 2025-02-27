@@ -294,4 +294,25 @@ provider "aws" {
   skip_requesting_account_id  = true
   sts_region                  = var.sts_region
 }
-
+provider "aws" {
+  assume_role {
+    role_arn     = var.aws_role_arn
+    session_name = "TerraformSession"
+  }
+  alias                       = "us-gov-east-1"
+  region                      = "us-gov-east-1"
+  skip_credentials_validation = true
+  skip_requesting_account_id  = true
+  sts_region                  = var.sts_region
+}
+provider "aws" {
+  assume_role {
+    role_arn     = var.aws_role_arn
+    session_name = "TerraformSession"
+  }
+  alias                       = "us-gov-west-1"
+  region                      = "us-gov-west-1"
+  skip_credentials_validation = true
+  skip_requesting_account_id  = true
+  sts_region                  = var.sts_region
+}
