@@ -10,7 +10,7 @@
 | Name | Version |
 |------|---------|
 | <a name="provider_aws"></a> [aws](#provider\_aws) | >= 4.45 |
-| <a name="provider_crowdstrike"></a> [crowdstrike](#provider\_crowdstrike) | n/a |
+| <a name="provider_crowdstrike"></a> [crowdstrike](#provider\_crowdstrike) | >= 0.0.15 |
 ## Modules
 
 | Name | Source | Version |
