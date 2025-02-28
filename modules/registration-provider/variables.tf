@@ -10,9 +10,10 @@ variable "falcon_client_secret" {
   description = "Falcon API Client Secret"
 }
 
-variable "primary_region" {
-  type        = string
-  description = "The AWS region where resources should be deployed"
+variable "is_gov" {
+  type        = bool
+  default     = false
+  description = "Set to true if you are deploying in gov Falcon"
 }
 
 variable "is_primary_region" {
@@ -39,6 +40,17 @@ variable "organization_id" {
     error_message = "you must provide at least one of these variables: account_id, organization_id"
   }
 }
+
+variable "account_type" {
+  type        = string
+  default     = "commercial"
+  description = "Account type can be either 'commercial' or 'gov'"
+  validation {
+    condition     = var.account_type == "commercial" || var.account_type == "gov"
+    error_message = "must be either 'commercial' or 'gov'"
+  }
+}
+
 
 variable "permissions_boundary" {
   type        = string

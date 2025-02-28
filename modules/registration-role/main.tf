@@ -5,6 +5,7 @@ provider "aws" {
   region = var.primary_region
 }
 data "aws_region" "current" {}
+data "aws_partition" "current" {}
 
 data "crowdstrike_cloud_aws_account" "target" {
   account_id      = var.account_id
@@ -30,6 +31,10 @@ locals {
   iam_role_arn           = coalesce(var.iam_role_arn, local.account.iam_role_arn)
   eventbus_arn           = coalesce(var.eventbus_arn, local.account.eventbus_arn)
   cloudtrail_bucket_name = var.use_existing_cloudtrail ? "" : coalesce(var.cloudtrail_bucket_name, local.account.cloudtrail_bucket_name)
+
+  aws_region        = data.aws_region.current.name
+  aws_partition     = data.aws_partition.current.partition
+  is_gov_commercial = var.is_gov && local.aws_partition == "aws"
 }
 
 module "asset_inventory" {

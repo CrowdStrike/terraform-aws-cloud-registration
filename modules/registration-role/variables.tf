@@ -15,12 +15,6 @@ variable "aws_role_arn" {
   description = "ARN of the IAM Role to assume for region providers"
 }
 
-variable "sts_region" {
-  type        = string
-  default     = null
-  description = "(Optional) AWS Region for STS. If unset, AWS will use the same Region for STS as other non-STS operations"
-}
-
 variable "primary_region" {
   type        = string
   description = "The AWS region where resources should be deployed"
@@ -45,10 +39,6 @@ variable "organization_id" {
   type        = string
   default     = ""
   description = "The AWS Organization ID. Leave blank if when onboarding single account"
-  validation {
-    condition     = length(var.account_id) != 0 || length(var.organization_id) != 0
-    error_message = "you must provide at least one of these variables: account_id, organization_id"
-  }
 }
 
 variable "permissions_boundary" {
@@ -74,10 +64,10 @@ variable "use_existing_cloudtrail" {
   description = "Set to true if you already have a cloudtrail"
 }
 
-variable "excluded_regions" {
+variable "realtime_visibility_regions" {
   type        = list(string)
   default     = []
-  description = "The regions to be excluded for Realtime Visibility monitoring"
+  description = "The list of regions  Realtime Visibility monitoring"
 }
 
 variable "enable_idp" {

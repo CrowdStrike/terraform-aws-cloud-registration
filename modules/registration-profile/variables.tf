@@ -38,7 +38,7 @@ variable "account_id" {
 variable "organization_id" {
   type        = string
   default     = ""
-  description = "The AWS Organization ID. Leave blank if when onboarding single account"
+  description = "The AWS Organization ID. Leave blank when onboarding single account"
   validation {
     condition     = length(var.account_id) != 0 || length(var.organization_id) != 0
     error_message = "you must provide at least one of these variables: account_id, organization_id"
@@ -68,10 +68,10 @@ variable "use_existing_cloudtrail" {
   description = "Set to true if you already have a cloudtrail"
 }
 
-variable "excluded_regions" {
+variable "realtime_visibility_regions" {
   type        = list(string)
   default     = []
-  description = "The regions to be excluded for Realtime Visibility monitoring"
+  description = "The list of regions to onboard Realtime Visibility monitoring"
 }
 
 variable "enable_idp" {

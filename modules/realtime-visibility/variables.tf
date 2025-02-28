@@ -33,6 +33,12 @@ variable "is_gov" {
   description = "Set to true if registering in gov-cloud"
 }
 
+variable "is_gov_commercial" {
+  type        = bool
+  default     = false
+  description = "Set to true if this is a commercial account in gov-cloud"
+}
+
 variable "falcon_client_id" {
   type        = string
   sensitive   = true

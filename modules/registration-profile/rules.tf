@@ -7,7 +7,7 @@ data "aws_regions" "available" {
 }
 
 locals {
-  available_regions    = [for region in data.aws_regions.available.names : region if !contains(var.excluded_regions, region)]
+  available_regions    = [for region in data.aws_regions.available.names : region if length(var.realtime_visibility_regions) == 0 || contains(var.realtime_visibility_regions, region)]
   default_eventbus_arn = "arn:aws:events:${local.aws_region}:${local.account.account_id}:event-bus/default"
 
   region_config = {

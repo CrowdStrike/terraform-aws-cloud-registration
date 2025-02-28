@@ -7,7 +7,15 @@ data "aws_regions" "available" {
 }
 
 locals {
-  available_regions = [for region in data.aws_regions.available.names : region if !contains(var.excluded_regions, region)]
+  available_regions    = [for region in data.aws_regions.available.names : region if length(var.var.realtime_visibility_regions) == 0 || contains(var.realtime_visibility_regions, region)]
+  default_eventbus_arn = "arn:aws:events:${local.aws_region}:${local.account.account_id}:event-bus/default"
+
+  region_config = {
+    for region in local.available_regions : region => {
+      eventbus_arn         = local.is_gov_commercial ? (region == local.aws_region ? try(module.realtime_visibility_main[0].eventbridge_lambda_alias, "") : local.default_eventbus_arn) : local.eventbus_arn
+      eventbridge_role_arn = local.is_gov_commercial && region == local.aws_region ? null : try(module.realtime_visibility_main[0].eventbridge_role_arn, "")
+    }
+  }
 }
 
 module "rules_us-east-1" {
