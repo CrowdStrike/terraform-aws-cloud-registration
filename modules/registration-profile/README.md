@@ -1,5 +1,5 @@
 <!-- BEGIN_TF_DOCS -->
-![CrowdStrike FalconPy](https://raw.githubusercontent.com/CrowdStrike/falconpy/main/docs/asset/cs-logo.png)
+![CrowdStrike Registration with AWS profile terraform module](https://raw.githubusercontent.com/CrowdStrike/falconpy/main/docs/asset/cs-logo.png)
 
 [![Twitter URL](https://img.shields.io/twitter/url?label=Follow%20%40CrowdStrike&style=social&url=https%3A%2F%2Ftwitter.com%2FCrowdStrike)](https://twitter.com/CrowdStrike)<br/>
 
@@ -15,44 +15,71 @@
 
 | Name | Source | Version |
 |------|--------|---------|
-| <a name="module_asset_inventory"></a> [asset\_inventory](#module\_asset\_inventory) | https://cs-dev-cloudconnect-templates.s3.amazonaws.com/terraform/modules/cs-aws-integration-terraform/0.1.0/cs-aws-integration-terraform-asset-inventory.tar.gz | n/a |
-| <a name="module_realtime_visibility_main"></a> [realtime\_visibility\_main](#module\_realtime\_visibility\_main) | https://cs-dev-cloudconnect-templates.s3.amazonaws.com/terraform/modules/cs-aws-integration-terraform/0.1.0/cs-aws-integration-terraform-realtime-visibility.tar.gz | n/a |
-| <a name="module_rules_af-south-1"></a> [rules\_af-south-1](#module\_rules\_af-south-1) | https://cs-dev-cloudconnect-templates.s3.amazonaws.com/terraform/modules/cs-aws-integration-terraform/0.1.0/cs-aws-integration-terraform-realtime-visibility-rules.tar.gz | n/a |
-| <a name="module_rules_ap-east-1"></a> [rules\_ap-east-1](#module\_rules\_ap-east-1) | https://cs-dev-cloudconnect-templates.s3.amazonaws.com/terraform/modules/cs-aws-integration-terraform/0.1.0/cs-aws-integration-terraform-realtime-visibility-rules.tar.gz | n/a |
-| <a name="module_rules_ap-northeast-1"></a> [rules\_ap-northeast-1](#module\_rules\_ap-northeast-1) | https://cs-dev-cloudconnect-templates.s3.amazonaws.com/terraform/modules/cs-aws-integration-terraform/0.1.0/cs-aws-integration-terraform-realtime-visibility-rules.tar.gz | n/a |
-| <a name="module_rules_ap-northeast-2"></a> [rules\_ap-northeast-2](#module\_rules\_ap-northeast-2) | https://cs-dev-cloudconnect-templates.s3.amazonaws.com/terraform/modules/cs-aws-integration-terraform/0.1.0/cs-aws-integration-terraform-realtime-visibility-rules.tar.gz | n/a |
-| <a name="module_rules_ap-northeast-3"></a> [rules\_ap-northeast-3](#module\_rules\_ap-northeast-3) | https://cs-dev-cloudconnect-templates.s3.amazonaws.com/terraform/modules/cs-aws-integration-terraform/0.1.0/cs-aws-integration-terraform-realtime-visibility-rules.tar.gz | n/a |
-| <a name="module_rules_ap-south-1"></a> [rules\_ap-south-1](#module\_rules\_ap-south-1) | https://cs-dev-cloudconnect-templates.s3.amazonaws.com/terraform/modules/cs-aws-integration-terraform/0.1.0/cs-aws-integration-terraform-realtime-visibility-rules.tar.gz | n/a |
-| <a name="module_rules_ap-south-2"></a> [rules\_ap-south-2](#module\_rules\_ap-south-2) | https://cs-dev-cloudconnect-templates.s3.amazonaws.com/terraform/modules/cs-aws-integration-terraform/0.1.0/cs-aws-integration-terraform-realtime-visibility-rules.tar.gz | n/a |
-| <a name="module_rules_ap-southeast-1"></a> [rules\_ap-southeast-1](#module\_rules\_ap-southeast-1) | https://cs-dev-cloudconnect-templates.s3.amazonaws.com/terraform/modules/cs-aws-integration-terraform/0.1.0/cs-aws-integration-terraform-realtime-visibility-rules.tar.gz | n/a |
-| <a name="module_rules_ap-southeast-2"></a> [rules\_ap-southeast-2](#module\_rules\_ap-southeast-2) | https://cs-dev-cloudconnect-templates.s3.amazonaws.com/terraform/modules/cs-aws-integration-terraform/0.1.0/cs-aws-integration-terraform-realtime-visibility-rules.tar.gz | n/a |
-| <a name="module_rules_ap-southeast-3"></a> [rules\_ap-southeast-3](#module\_rules\_ap-southeast-3) | https://cs-dev-cloudconnect-templates.s3.amazonaws.com/terraform/modules/cs-aws-integration-terraform/0.1.0/cs-aws-integration-terraform-realtime-visibility-rules.tar.gz | n/a |
-| <a name="module_rules_ap-southeast-4"></a> [rules\_ap-southeast-4](#module\_rules\_ap-southeast-4) | https://cs-dev-cloudconnect-templates.s3.amazonaws.com/terraform/modules/cs-aws-integration-terraform/0.1.0/cs-aws-integration-terraform-realtime-visibility-rules.tar.gz | n/a |
-| <a name="module_rules_ca-central-1"></a> [rules\_ca-central-1](#module\_rules\_ca-central-1) | https://cs-dev-cloudconnect-templates.s3.amazonaws.com/terraform/modules/cs-aws-integration-terraform/0.1.0/cs-aws-integration-terraform-realtime-visibility-rules.tar.gz | n/a |
-| <a name="module_rules_eu-central-1"></a> [rules\_eu-central-1](#module\_rules\_eu-central-1) | https://cs-dev-cloudconnect-templates.s3.amazonaws.com/terraform/modules/cs-aws-integration-terraform/0.1.0/cs-aws-integration-terraform-realtime-visibility-rules.tar.gz | n/a |
-| <a name="module_rules_eu-central-2"></a> [rules\_eu-central-2](#module\_rules\_eu-central-2) | https://cs-dev-cloudconnect-templates.s3.amazonaws.com/terraform/modules/cs-aws-integration-terraform/0.1.0/cs-aws-integration-terraform-realtime-visibility-rules.tar.gz | n/a |
-| <a name="module_rules_eu-north-1"></a> [rules\_eu-north-1](#module\_rules\_eu-north-1) | https://cs-dev-cloudconnect-templates.s3.amazonaws.com/terraform/modules/cs-aws-integration-terraform/0.1.0/cs-aws-integration-terraform-realtime-visibility-rules.tar.gz | n/a |
-| <a name="module_rules_eu-south-1"></a> [rules\_eu-south-1](#module\_rules\_eu-south-1) | https://cs-dev-cloudconnect-templates.s3.amazonaws.com/terraform/modules/cs-aws-integration-terraform/0.1.0/cs-aws-integration-terraform-realtime-visibility-rules.tar.gz | n/a |
-| <a name="module_rules_eu-south-2"></a> [rules\_eu-south-2](#module\_rules\_eu-south-2) | https://cs-dev-cloudconnect-templates.s3.amazonaws.com/terraform/modules/cs-aws-integration-terraform/0.1.0/cs-aws-integration-terraform-realtime-visibility-rules.tar.gz | n/a |
-| <a name="module_rules_eu-west-1"></a> [rules\_eu-west-1](#module\_rules\_eu-west-1) | https://cs-dev-cloudconnect-templates.s3.amazonaws.com/terraform/modules/cs-aws-integration-terraform/0.1.0/cs-aws-integration-terraform-realtime-visibility-rules.tar.gz | n/a |
-| <a name="module_rules_eu-west-2"></a> [rules\_eu-west-2](#module\_rules\_eu-west-2) | https://cs-dev-cloudconnect-templates.s3.amazonaws.com/terraform/modules/cs-aws-integration-terraform/0.1.0/cs-aws-integration-terraform-realtime-visibility-rules.tar.gz | n/a |
-| <a name="module_rules_eu-west-3"></a> [rules\_eu-west-3](#module\_rules\_eu-west-3) | https://cs-dev-cloudconnect-templates.s3.amazonaws.com/terraform/modules/cs-aws-integration-terraform/0.1.0/cs-aws-integration-terraform-realtime-visibility-rules.tar.gz | n/a |
-| <a name="module_rules_me-central-1"></a> [rules\_me-central-1](#module\_rules\_me-central-1) | https://cs-dev-cloudconnect-templates.s3.amazonaws.com/terraform/modules/cs-aws-integration-terraform/0.1.0/cs-aws-integration-terraform-realtime-visibility-rules.tar.gz | n/a |
-| <a name="module_rules_me-south-1"></a> [rules\_me-south-1](#module\_rules\_me-south-1) | https://cs-dev-cloudconnect-templates.s3.amazonaws.com/terraform/modules/cs-aws-integration-terraform/0.1.0/cs-aws-integration-terraform-realtime-visibility-rules.tar.gz | n/a |
-| <a name="module_rules_sa-east-1"></a> [rules\_sa-east-1](#module\_rules\_sa-east-1) | https://cs-dev-cloudconnect-templates.s3.amazonaws.com/terraform/modules/cs-aws-integration-terraform/0.1.0/cs-aws-integration-terraform-realtime-visibility-rules.tar.gz | n/a |
-| <a name="module_rules_us-east-1"></a> [rules\_us-east-1](#module\_rules\_us-east-1) | https://cs-dev-cloudconnect-templates.s3.amazonaws.com/terraform/modules/cs-aws-integration-terraform/0.1.0/cs-aws-integration-terraform-realtime-visibility-rules.tar.gz | n/a |
-| <a name="module_rules_us-east-2"></a> [rules\_us-east-2](#module\_rules\_us-east-2) | https://cs-dev-cloudconnect-templates.s3.amazonaws.com/terraform/modules/cs-aws-integration-terraform/0.1.0/cs-aws-integration-terraform-realtime-visibility-rules.tar.gz | n/a |
-| <a name="module_rules_us-gov-east-1"></a> [rules\_us-gov-east-1](#module\_rules\_us-gov-east-1) | https://cs-dev-cloudconnect-templates.s3.amazonaws.com/terraform/modules/cs-aws-integration-terraform/0.1.0/cs-aws-integration-terraform-realtime-visibility-rules.tar.gz | n/a |
-| <a name="module_rules_us-gov-west-1"></a> [rules\_us-gov-west-1](#module\_rules\_us-gov-west-1) | https://cs-dev-cloudconnect-templates.s3.amazonaws.com/terraform/modules/cs-aws-integration-terraform/0.1.0/cs-aws-integration-terraform-realtime-visibility-rules.tar.gz | n/a |
-| <a name="module_rules_us-west-1"></a> [rules\_us-west-1](#module\_rules\_us-west-1) | https://cs-dev-cloudconnect-templates.s3.amazonaws.com/terraform/modules/cs-aws-integration-terraform/0.1.0/cs-aws-integration-terraform-realtime-visibility-rules.tar.gz | n/a |
-| <a name="module_rules_us-west-2"></a> [rules\_us-west-2](#module\_rules\_us-west-2) | https://cs-dev-cloudconnect-templates.s3.amazonaws.com/terraform/modules/cs-aws-integration-terraform/0.1.0/cs-aws-integration-terraform-realtime-visibility-rules.tar.gz | n/a |
-| <a name="module_sensor_management"></a> [sensor\_management](#module\_sensor\_management) | https://cs-dev-cloudconnect-templates.s3.amazonaws.com/terraform/modules/cs-aws-integration-terraform/0.1.0/cs-aws-integration-terraform-sensor-management.tar.gz | n/a |
+| <a name="module_asset_inventory"></a> [asset\_inventory](#module\_asset\_inventory) | ../asset-inventory/ | n/a |
+| <a name="module_dspm-environment-af-south-1"></a> [dspm-environment-af-south-1](#module\_dspm-environment-af-south-1) | ../dspm-environments/ | n/a |
+| <a name="module_dspm-environment-ap-east-1"></a> [dspm-environment-ap-east-1](#module\_dspm-environment-ap-east-1) | ../dspm-environments/ | n/a |
+| <a name="module_dspm-environment-ap-northeast-1"></a> [dspm-environment-ap-northeast-1](#module\_dspm-environment-ap-northeast-1) | ../dspm-environments/ | n/a |
+| <a name="module_dspm-environment-ap-northeast-2"></a> [dspm-environment-ap-northeast-2](#module\_dspm-environment-ap-northeast-2) | ../dspm-environments/ | n/a |
+| <a name="module_dspm-environment-ap-northeast-3"></a> [dspm-environment-ap-northeast-3](#module\_dspm-environment-ap-northeast-3) | ../dspm-environments/ | n/a |
+| <a name="module_dspm-environment-ap-south-1"></a> [dspm-environment-ap-south-1](#module\_dspm-environment-ap-south-1) | ../dspm-environments/ | n/a |
+| <a name="module_dspm-environment-ap-south-2"></a> [dspm-environment-ap-south-2](#module\_dspm-environment-ap-south-2) | ../dspm-environments/ | n/a |
+| <a name="module_dspm-environment-ap-southeast-1"></a> [dspm-environment-ap-southeast-1](#module\_dspm-environment-ap-southeast-1) | ../dspm-environments/ | n/a |
+| <a name="module_dspm-environment-ap-southeast-2"></a> [dspm-environment-ap-southeast-2](#module\_dspm-environment-ap-southeast-2) | ../dspm-environments/ | n/a |
+| <a name="module_dspm-environment-ap-southeast-3"></a> [dspm-environment-ap-southeast-3](#module\_dspm-environment-ap-southeast-3) | ../dspm-environments/ | n/a |
+| <a name="module_dspm-environment-ap-southeast-4"></a> [dspm-environment-ap-southeast-4](#module\_dspm-environment-ap-southeast-4) | ../dspm-environments/ | n/a |
+| <a name="module_dspm-environment-ca-central-1"></a> [dspm-environment-ca-central-1](#module\_dspm-environment-ca-central-1) | ../dspm-environments/ | n/a |
+| <a name="module_dspm-environment-eu-central-1"></a> [dspm-environment-eu-central-1](#module\_dspm-environment-eu-central-1) | ../dspm-environments/ | n/a |
+| <a name="module_dspm-environment-eu-central-2"></a> [dspm-environment-eu-central-2](#module\_dspm-environment-eu-central-2) | ../dspm-environments/ | n/a |
+| <a name="module_dspm-environment-eu-north-1"></a> [dspm-environment-eu-north-1](#module\_dspm-environment-eu-north-1) | ../dspm-environments/ | n/a |
+| <a name="module_dspm-environment-eu-south-1"></a> [dspm-environment-eu-south-1](#module\_dspm-environment-eu-south-1) | ../dspm-environments/ | n/a |
+| <a name="module_dspm-environment-eu-south-2"></a> [dspm-environment-eu-south-2](#module\_dspm-environment-eu-south-2) | ../dspm-environments/ | n/a |
+| <a name="module_dspm-environment-eu-west-1"></a> [dspm-environment-eu-west-1](#module\_dspm-environment-eu-west-1) | ../dspm-environments/ | n/a |
+| <a name="module_dspm-environment-eu-west-2"></a> [dspm-environment-eu-west-2](#module\_dspm-environment-eu-west-2) | ../dspm-environments/ | n/a |
+| <a name="module_dspm-environment-eu-west-3"></a> [dspm-environment-eu-west-3](#module\_dspm-environment-eu-west-3) | ../dspm-environments/ | n/a |
+| <a name="module_dspm-environment-me-central-1"></a> [dspm-environment-me-central-1](#module\_dspm-environment-me-central-1) | ../dspm-environments/ | n/a |
+| <a name="module_dspm-environment-me-south-1"></a> [dspm-environment-me-south-1](#module\_dspm-environment-me-south-1) | ../dspm-environments/ | n/a |
+| <a name="module_dspm-environment-sa-east-1"></a> [dspm-environment-sa-east-1](#module\_dspm-environment-sa-east-1) | ../dspm-environments/ | n/a |
+| <a name="module_dspm-environment-us-east-1"></a> [dspm-environment-us-east-1](#module\_dspm-environment-us-east-1) | ../dspm-environments/ | n/a |
+| <a name="module_dspm-environment-us-east-2"></a> [dspm-environment-us-east-2](#module\_dspm-environment-us-east-2) | ../dspm-environments/ | n/a |
+| <a name="module_dspm-environment-us-west-1"></a> [dspm-environment-us-west-1](#module\_dspm-environment-us-west-1) | ../dspm-environments/ | n/a |
+| <a name="module_dspm-environment-us-west-2"></a> [dspm-environment-us-west-2](#module\_dspm-environment-us-west-2) | ../dspm-environments/ | n/a |
+| <a name="module_dspm_roles"></a> [dspm\_roles](#module\_dspm\_roles) | ../dspm-roles/ | n/a |
+| <a name="module_realtime_visibility_main"></a> [realtime\_visibility\_main](#module\_realtime\_visibility\_main) | ../realtime-visibility/ | n/a |
+| <a name="module_rules_af-south-1"></a> [rules\_af-south-1](#module\_rules\_af-south-1) | ../realtime-visibility-rules/ | n/a |
+| <a name="module_rules_ap-east-1"></a> [rules\_ap-east-1](#module\_rules\_ap-east-1) | ../realtime-visibility-rules/ | n/a |
+| <a name="module_rules_ap-northeast-1"></a> [rules\_ap-northeast-1](#module\_rules\_ap-northeast-1) | ../realtime-visibility-rules/ | n/a |
+| <a name="module_rules_ap-northeast-2"></a> [rules\_ap-northeast-2](#module\_rules\_ap-northeast-2) | ../realtime-visibility-rules/ | n/a |
+| <a name="module_rules_ap-northeast-3"></a> [rules\_ap-northeast-3](#module\_rules\_ap-northeast-3) | ../realtime-visibility-rules/ | n/a |
+| <a name="module_rules_ap-south-1"></a> [rules\_ap-south-1](#module\_rules\_ap-south-1) | ../realtime-visibility-rules/ | n/a |
+| <a name="module_rules_ap-south-2"></a> [rules\_ap-south-2](#module\_rules\_ap-south-2) | ../realtime-visibility-rules/ | n/a |
+| <a name="module_rules_ap-southeast-1"></a> [rules\_ap-southeast-1](#module\_rules\_ap-southeast-1) | ../realtime-visibility-rules/ | n/a |
+| <a name="module_rules_ap-southeast-2"></a> [rules\_ap-southeast-2](#module\_rules\_ap-southeast-2) | ../realtime-visibility-rules/ | n/a |
+| <a name="module_rules_ap-southeast-3"></a> [rules\_ap-southeast-3](#module\_rules\_ap-southeast-3) | ../realtime-visibility-rules/ | n/a |
+| <a name="module_rules_ap-southeast-4"></a> [rules\_ap-southeast-4](#module\_rules\_ap-southeast-4) | ../realtime-visibility-rules/ | n/a |
+| <a name="module_rules_ca-central-1"></a> [rules\_ca-central-1](#module\_rules\_ca-central-1) | ../realtime-visibility-rules/ | n/a |
+| <a name="module_rules_eu-central-1"></a> [rules\_eu-central-1](#module\_rules\_eu-central-1) | ../realtime-visibility-rules/ | n/a |
+| <a name="module_rules_eu-central-2"></a> [rules\_eu-central-2](#module\_rules\_eu-central-2) | ../realtime-visibility-rules/ | n/a |
+| <a name="module_rules_eu-north-1"></a> [rules\_eu-north-1](#module\_rules\_eu-north-1) | ../realtime-visibility-rules/ | n/a |
+| <a name="module_rules_eu-south-1"></a> [rules\_eu-south-1](#module\_rules\_eu-south-1) | ../realtime-visibility-rules/ | n/a |
+| <a name="module_rules_eu-south-2"></a> [rules\_eu-south-2](#module\_rules\_eu-south-2) | ../realtime-visibility-rules/ | n/a |
+| <a name="module_rules_eu-west-1"></a> [rules\_eu-west-1](#module\_rules\_eu-west-1) | ../realtime-visibility-rules/ | n/a |
+| <a name="module_rules_eu-west-2"></a> [rules\_eu-west-2](#module\_rules\_eu-west-2) | ../realtime-visibility-rules/ | n/a |
+| <a name="module_rules_eu-west-3"></a> [rules\_eu-west-3](#module\_rules\_eu-west-3) | ../realtime-visibility-rules/ | n/a |
+| <a name="module_rules_me-central-1"></a> [rules\_me-central-1](#module\_rules\_me-central-1) | ../realtime-visibility-rules/ | n/a |
+| <a name="module_rules_me-south-1"></a> [rules\_me-south-1](#module\_rules\_me-south-1) | ../realtime-visibility-rules/ | n/a |
+| <a name="module_rules_sa-east-1"></a> [rules\_sa-east-1](#module\_rules\_sa-east-1) | ../realtime-visibility-rules/ | n/a |
+| <a name="module_rules_us-east-1"></a> [rules\_us-east-1](#module\_rules\_us-east-1) | ../realtime-visibility-rules/ | n/a |
+| <a name="module_rules_us-east-2"></a> [rules\_us-east-2](#module\_rules\_us-east-2) | ../realtime-visibility-rules/ | n/a |
+| <a name="module_rules_us-gov-east-1"></a> [rules\_us-gov-east-1](#module\_rules\_us-gov-east-1) | ../realtime-visibility-rules/ | n/a |
+| <a name="module_rules_us-gov-west-1"></a> [rules\_us-gov-west-1](#module\_rules\_us-gov-west-1) | ../realtime-visibility-rules/ | n/a |
+| <a name="module_rules_us-west-1"></a> [rules\_us-west-1](#module\_rules\_us-west-1) | ../realtime-visibility-rules/ | n/a |
+| <a name="module_rules_us-west-2"></a> [rules\_us-west-2](#module\_rules\_us-west-2) | ../realtime-visibility-rules/ | n/a |
+| <a name="module_sensor_management"></a> [sensor\_management](#module\_sensor\_management) | ../sensor-management/ | n/a |
 ## Resources
 
 | Name | Type |
 |------|------|
 | [aws_partition.current](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/partition) | data source |
-| [aws_region.current](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/region) | data source |
 | [aws_regions.available](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/regions) | data source |
 | [crowdstrike_cloud_aws_account.target](https://registry.terraform.io/providers/crowdstrike/crowdstrike/latest/docs/data-sources/cloud_aws_account) | data source |
 ## Inputs
@@ -60,10 +87,12 @@
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
 | <a name="input_account_id"></a> [account\_id](#input\_account\_id) | The AWS 12 digit account ID | `string` | `""` | no |
+| <a name="input_account_type"></a> [account\_type](#input\_account\_type) | Account type can be either 'commercial' or 'gov' | `string` | `"commercial"` | no |
 | <a name="input_aws_profile"></a> [aws\_profile](#input\_aws\_profile) | The AWS profile to be used for this registration | `string` | n/a | yes |
 | <a name="input_cloudtrail_bucket_name"></a> [cloudtrail\_bucket\_name](#input\_cloudtrail\_bucket\_name) | n/a | `string` | `""` | no |
-| <a name="input_dspm_regions"></a> [dspm\_regions](#input\_dspm\_regions) | The list of regions where DSPM should be enabled | `list(string)` | `[]` | no |
-| <a name="input_dspm_role_arn"></a> [dspm\_role\_arn](#input\_dspm\_role\_arn) | The role ARN used for Data Security Posture Managment integration | `string` | `""` | no |
+| <a name="input_dspm_regions"></a> [dspm\_regions](#input\_dspm\_regions) | The regions in which DSPM scanning environments will be created | `list(string)` | <pre>[<br/>  "us-east-1"<br/>]</pre> | no |
+| <a name="input_dspm_role_name"></a> [dspm\_role\_name](#input\_dspm\_role\_name) | The unique name of the IAM role that DSPM will be assuming | `string` | `"CrowdStrikeDSPMIntegrationRole"` | no |
+| <a name="input_dspm_scanner_role_name"></a> [dspm\_scanner\_role\_name](#input\_dspm\_scanner\_role\_name) | The unique name of the IAM role that CrowdStrike Scanner will be assuming | `string` | `"CrowdStrikeDSPMScannerRole"` | no |
 | <a name="input_enable_dspm"></a> [enable\_dspm](#input\_enable\_dspm) | Set to true to enable Data Security Posture Managment | `bool` | `false` | no |
 | <a name="input_enable_idp"></a> [enable\_idp](#input\_enable\_idp) | Set to true to install Identity Protection resources | `bool` | `false` | no |
 | <a name="input_enable_realtime_visibility"></a> [enable\_realtime\_visibility](#input\_enable\_realtime\_visibility) | Set to true to install realtime visibility resources | `bool` | `false` | no |
@@ -75,8 +104,8 @@
 | <a name="input_falcon_client_secret"></a> [falcon\_client\_secret](#input\_falcon\_client\_secret) | Falcon API Client Secret | `string` | n/a | yes |
 | <a name="input_iam_role_arn"></a> [iam\_role\_arn](#input\_iam\_role\_arn) | The ARN of the reader role | `string` | `""` | no |
 | <a name="input_intermediate_role_arn"></a> [intermediate\_role\_arn](#input\_intermediate\_role\_arn) | The intermediate role that is allowed to assume the reader role | `string` | `""` | no |
-| <a name="input_is_gov"></a> [is\_gov](#input\_is\_gov) | Set to true if this is a gov account | `bool` | n/a | yes |
-| <a name="input_organization_id"></a> [organization\_id](#input\_organization\_id) | The AWS Organization ID. Leave blank if when onboarding single account | `string` | `""` | no |
+| <a name="input_is_gov"></a> [is\_gov](#input\_is\_gov) | Set to true if this is a gov account | `bool` | `false` | no |
+| <a name="input_organization_id"></a> [organization\_id](#input\_organization\_id) | The AWS Organization ID. Leave blank when onboarding single account | `string` | `""` | no |
 | <a name="input_permissions_boundary"></a> [permissions\_boundary](#input\_permissions\_boundary) | The name of the policy used to set the permissions boundary for IAM roles | `string` | `""` | no |
 | <a name="input_primary_region"></a> [primary\_region](#input\_primary\_region) | The AWS region where resources should be deployed | `string` | n/a | yes |
 | <a name="input_realtime_visibility_regions"></a> [realtime\_visibility\_regions](#input\_realtime\_visibility\_regions) | The list of regions to onboard Realtime Visibility monitoring | `list(string)` | `[]` | no |
@@ -96,99 +125,111 @@ terraform {
       version = ">= 4.45"
     }
     crowdstrike = {
-      source = "crowdstrike/crowdstrike"
-      # version = ">= 0.1.1"
+      source  = "crowdstrike/crowdstrike"
+      version = ">= 0.0.15"
     }
   }
 }
 
-provider "crowdstrike" {
-  client_id     = var.falcon_client_id
-  client_secret = var.falcon_client_secret
+locals {
+  falcon_client_id           = "<your-falcon-client-id>"
+  falcon_client_secret       = "<your-falcon-client-secret>"
+  account_id                 = "<your aws account id>"
+  organization_id            = "<your aws organization id>"
+  enable_realtime_visibility = true
+  primary_region             = "us-east-1"
+  enable_idp                 = true
+  enable_sensor_management   = true
+  enable_dspm                = true
+  dspm_regions               = ["us-east-1", "us-east-2"]
+  use_existing_cloudtrail    = true
 }
 
+provider "crowdstrike" {
+  client_id     = local.falcon_client_id
+  client_secret = local.falcon_client_secret
+}
 
 # Provision AWS account in Falcon.
 resource "crowdstrike_cloud_aws_account" "this" {
-  account_id                         = var.account_id
-  organization_id                    = var.organization_id
-  target_ous                         = var.organizational_unit_ids
-  is_organization_management_account = var.organization_id != null && var.organization_id != "" ? true : false
+  account_id                         = local.account_id
+  organization_id                    = local.organization_id
+  is_organization_management_account = true
 
   asset_inventory = {
-    enabled   = true
-    role_name = var.custom_role_name
+    enabled = true
   }
 
   realtime_visibility = {
-    enabled           = var.enable_realtime_visibility
-    cloudtrail_region = var.aws_region
+    enabled                 = local.enable_realtime_visibility
+    cloudtrail_region       = local.primary_region
+    use_existing_cloudtrail = local.use_existing_cloudtrail
   }
 
   idp = {
-    enabled = var.enable_idp
+    enabled = local.enable_idp
   }
 
   sensor_management = {
-    enabled = var.enable_sensor_management
+    enabled = local.enable_sensor_management
   }
 
   dspm = {
-    enabled   = var.enable_dspm
-    role_name = var.dspm_role_name
+    enabled = local.enable_dspm
   }
   provider = crowdstrike
 }
 
-# Make sure to replace `aws_profile` with the correct profile for your management account
-module "management_account" {
-  source = "https://cs-dev-cloudconnect-templates.s3.amazonaws.com/terraform/modules/cs-aws-integration-terraform/0.1.0/cs-aws-integration-terraform-registration-profile.tar.gz"
+module "fcs_management_account" {
+  source                      = "CrowdStrike/fcs/aws//modules/registration-profile"
+  aws_profile                 = "<aws profile for your management account>"
+  falcon_client_id            = local.falcon_client_id
+  falcon_client_secret        = local.falcon_client_secret
+  account_id                  = local.account_id
+  organization_id             = local.organization_id
+  primary_region              = local.primary_region
+  enable_sensor_management    = local.enable_sensor_management
+  enable_realtime_visibility  = local.enable_realtime_visibility
+  enable_idp                  = local.enable_idp
+  realtime_visibility_regions = ["all"]
+  use_existing_cloudtrail     = local.use_existing_cloudtrail
+  enable_dspm                 = local.enable_dspm
+  dspm_regions                = local.dspm_regions
 
-  falcon_client_id           = var.falcon_client_id
-  falcon_client_secret       = var.falcon_client_secret
-  aws_profile                = "<management-profile>"
-  account_id                 = var.account_id
-  permissions_boundary       = var.permissions_boundary
-  primary_region             = var.aws_region
-  is_gov                     = var.is_gov
-  enable_sensor_management   = var.enable_sensor_management
-  enable_realtime_visibility = var.enable_realtime_visibility
-  enable_idp                 = var.enable_idp
-  use_existing_cloudtrail    = var.use_existing_cloudtrail
-  iam_role_arn               = crowdstrike_cloud_aws_account.this.iam_role_arn
-  external_id                = crowdstrike_cloud_aws_account.this.external_id
-  intermediate_role_arn      = crowdstrike_cloud_aws_account.this.intermediate_role_arn
-  eventbus_arn               = crowdstrike_cloud_aws_account.this.eventbus_arn
-  cloudtrail_bucket_name     = crowdstrike_cloud_aws_account.this.cloudtrail_bucket_name
-  excluded_regions           = []
+  iam_role_arn           = crowdstrike_cloud_aws_account.this.iam_role_arn
+  external_id            = crowdstrike_cloud_aws_account.this.external_id
+  intermediate_role_arn  = crowdstrike_cloud_aws_account.this.intermediate_role_arn
+  eventbus_arn           = crowdstrike_cloud_aws_account.this.eventbus_arn
+  cloudtrail_bucket_name = crowdstrike_cloud_aws_account.this.cloudtrail_bucket_name
 
   providers = {
     crowdstrike = crowdstrike
   }
 }
 
-# Duplicate this module for each account in the organization that you want to register.
-# Make sure to replace `aws_profile` with the correct profile for your child account
-module "child_account" {
-  source = "https://cs-dev-cloudconnect-templates.s3.amazonaws.com/terraform/modules/cs-aws-integration-terraform/0.1.0/cs-aws-integration-terraform-registration-profile.tar.gz"
+# for each child account you want to onboard
+# - duplicate this module
+# - replace `aws_profile` with the correct profile for your child account
+module "fcs_child_account_1" {
+  source                      = "CrowdStrike/fcs/aws//modules/registration-profile"
+  aws_profile                 = "<aws profile for this child account>"
+  falcon_client_id            = local.falcon_client_id
+  falcon_client_secret        = local.falcon_client_secret
+  organization_id             = local.organization_id
+  primary_region              = local.primary_region
+  enable_sensor_management    = local.enable_sensor_management
+  enable_realtime_visibility  = local.enable_realtime_visibility
+  enable_idp                  = local.enable_idp
+  realtime_visibility_regions = ["all"]
+  use_existing_cloudtrail     = true # use the cloudtrail at the org level
+  enable_dspm                 = local.enable_dspm
+  dspm_regions                = local.dspm_regions
 
-  falcon_client_id           = var.falcon_client_id
-  falcon_client_secret       = var.falcon_client_secret
-  aws_profile                = "<child-profile>"
-  organization_id            = var.organization_id
-  permissions_boundary       = var.permissions_boundary
-  primary_region             = var.aws_region
-  is_gov                     = var.is_gov
-  enable_sensor_management   = var.enable_sensor_management
-  enable_realtime_visibility = var.enable_realtime_visibility
-  enable_idp                 = var.enable_idp
-  use_existing_cloudtrail    = true # use the cloudtrail at the org level
-  cloudtrail_bucket_name     = ""   # not needed for child accounts
-  iam_role_arn               = crowdstrike_cloud_aws_account.this.iam_role_arn
-  external_id                = crowdstrike_cloud_aws_account.this.external_id
-  intermediate_role_arn      = crowdstrike_cloud_aws_account.this.intermediate_role_arn
-  eventbus_arn               = crowdstrike_cloud_aws_account.this.eventbus_arn
-  excluded_regions           = []
+  iam_role_arn           = crowdstrike_cloud_aws_account.this.iam_role_arn
+  external_id            = crowdstrike_cloud_aws_account.this.external_id
+  intermediate_role_arn  = crowdstrike_cloud_aws_account.this.intermediate_role_arn
+  eventbus_arn           = crowdstrike_cloud_aws_account.this.eventbus_arn
+  cloudtrail_bucket_name = "" # not needed for child accounts
 
   providers = {
     crowdstrike = crowdstrike

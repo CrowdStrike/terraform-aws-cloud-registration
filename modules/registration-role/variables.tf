@@ -10,9 +10,9 @@ variable "falcon_client_secret" {
   description = "Falcon API Client Secret"
 }
 
-variable "aws_role_arn" {
+variable "cross_account_role_name" {
   type        = string
-  description = "ARN of the IAM Role to assume for region providers"
+  description = "The name of the IAM role used for cross account role switching"
 }
 
 variable "primary_region" {
@@ -22,12 +22,22 @@ variable "primary_region" {
 
 variable "is_gov" {
   type        = bool
+  default     = false
   description = "Set to true if registering in gov-cloud"
+}
+
+variable "account_type" {
+  type        = string
+  default     = "commercial"
+  description = "Account type can be either 'commercial' or 'gov'"
+  validation {
+    condition     = var.account_type == "commercial" || var.account_type == "gov"
+    error_message = "must be either 'commercial' or 'gov'"
+  }
 }
 
 variable "account_id" {
   type        = string
-  default     = ""
   description = "The AWS 12 digit account ID"
   validation {
     condition     = length(var.account_id) == 0 || can(regex("^[0-9]{12}$", var.account_id))

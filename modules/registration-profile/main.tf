@@ -1,14 +1,13 @@
+locals {
+  aws_partition     = var.account_type == "gov" ? "aws-us-gov" : "aws"
+  is_gov_commercial = var.is_gov && var.account_type == "commercial"
+}
+
 provider "aws" {
   profile = var.aws_profile
   region  = var.primary_region
 }
 
-provider "crowdstrike" {
-  client_id     = var.falcon_client_id
-  client_secret = var.falcon_client_secret
-}
-
-data "aws_region" "current" {}
 data "aws_partition" "current" {}
 
 data "crowdstrike_cloud_aws_account" "target" {
@@ -36,10 +35,6 @@ locals {
   iam_role_arn           = coalesce(var.iam_role_arn, local.account.iam_role_arn)
   eventbus_arn           = coalesce(var.eventbus_arn, local.account.eventbus_arn)
   cloudtrail_bucket_name = var.use_existing_cloudtrail ? "" : coalesce(var.cloudtrail_bucket_name, local.account.cloudtrail_bucket_name)
-
-  aws_region        = data.aws_region.current.name
-  aws_partition     = data.aws_partition.current.partition
-  is_gov_commercial = var.is_gov && local.aws_partition == "aws"
 }
 
 module "asset_inventory" {
@@ -76,6 +71,7 @@ module "realtime_visibility_main" {
   is_organization_trail   = length(var.organization_id) > 0
   cloudtrail_bucket_name  = local.cloudtrail_bucket_name
   is_gov                  = var.is_gov
+  is_gov_commercial       = local.is_gov_commercial
   falcon_client_id        = var.falcon_client_id
   falcon_client_secret    = var.falcon_client_secret
 
@@ -85,7 +81,7 @@ module "realtime_visibility_main" {
   }
 }
 
-module "dspm-roles" {
+module "dspm_roles" {
   count                  = (var.enable_dspm && !var.is_gov) ? 1 : 0
   source                 = "../dspm-roles/"
   dspm_role_name         = var.dspm_role_name

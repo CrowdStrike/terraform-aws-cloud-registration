@@ -22,6 +22,7 @@ variable "primary_region" {
 
 variable "is_gov" {
   type        = bool
+  default     = false
   description = "Set to true if this is a gov account"
 }
 
@@ -32,6 +33,16 @@ variable "account_id" {
   validation {
     condition     = length(var.account_id) == 0 || can(regex("^[0-9]{12}$", var.account_id))
     error_message = "account_id must be either empty or the 12-digit AWS account ID"
+  }
+}
+
+variable "account_type" {
+  type        = string
+  default     = "commercial"
+  description = "Account type can be either 'commercial' or 'gov'"
+  validation {
+    condition     = var.account_type == "commercial" || var.account_type == "gov"
+    error_message = "must be either 'commercial' or 'gov'"
   }
 }
 

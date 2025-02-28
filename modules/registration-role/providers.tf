@@ -1,6 +1,6 @@
 provider "aws" {
   assume_role {
-    role_arn     = var.aws_role_arn
+    role_arn     = local.cross_account_role_arn
     session_name = "TerraformSession"
   }
   alias                       = "us-east-1"
@@ -11,7 +11,7 @@ provider "aws" {
 }
 provider "aws" {
   assume_role {
-    role_arn     = var.aws_role_arn
+    role_arn     = local.cross_account_role_arn
     session_name = "TerraformSession"
   }
   alias                       = "us-east-2"
@@ -21,7 +21,7 @@ provider "aws" {
 }
 provider "aws" {
   assume_role {
-    role_arn     = var.aws_role_arn
+    role_arn     = local.cross_account_role_arn
     session_name = "TerraformSession"
   }
   alias                       = "us-west-1"
@@ -32,7 +32,7 @@ provider "aws" {
 }
 provider "aws" {
   assume_role {
-    role_arn     = var.aws_role_arn
+    role_arn     = local.cross_account_role_arn
     session_name = "TerraformSession"
   }
   alias                       = "us-west-2"
@@ -43,7 +43,7 @@ provider "aws" {
 }
 provider "aws" {
   assume_role {
-    role_arn     = var.aws_role_arn
+    role_arn     = local.cross_account_role_arn
     session_name = "TerraformSession"
   }
   alias                       = "af-south-1"
@@ -54,7 +54,7 @@ provider "aws" {
 }
 provider "aws" {
   assume_role {
-    role_arn     = var.aws_role_arn
+    role_arn     = local.cross_account_role_arn
     session_name = "TerraformSession"
   }
   alias                       = "ap-east-1"
@@ -65,7 +65,7 @@ provider "aws" {
 }
 provider "aws" {
   assume_role {
-    role_arn     = var.aws_role_arn
+    role_arn     = local.cross_account_role_arn
     session_name = "TerraformSession"
   }
   alias                       = "ap-south-1"
@@ -76,7 +76,7 @@ provider "aws" {
 }
 provider "aws" {
   assume_role {
-    role_arn     = var.aws_role_arn
+    role_arn     = local.cross_account_role_arn
     session_name = "TerraformSession"
   }
   alias                       = "ap-south-2"
@@ -87,7 +87,7 @@ provider "aws" {
 }
 provider "aws" {
   assume_role {
-    role_arn     = var.aws_role_arn
+    role_arn     = local.cross_account_role_arn
     session_name = "TerraformSession"
   }
   alias                       = "ap-southeast-1"
@@ -98,7 +98,7 @@ provider "aws" {
 }
 provider "aws" {
   assume_role {
-    role_arn     = var.aws_role_arn
+    role_arn     = local.cross_account_role_arn
     session_name = "TerraformSession"
   }
   alias                       = "ap-southeast-2"
@@ -109,7 +109,7 @@ provider "aws" {
 }
 provider "aws" {
   assume_role {
-    role_arn     = var.aws_role_arn
+    role_arn     = local.cross_account_role_arn
     session_name = "TerraformSession"
   }
   alias                       = "ap-southeast-3"
@@ -120,7 +120,7 @@ provider "aws" {
 }
 provider "aws" {
   assume_role {
-    role_arn     = var.aws_role_arn
+    role_arn     = local.cross_account_role_arn
     session_name = "TerraformSession"
   }
   alias                       = "ap-southeast-4"
@@ -131,7 +131,7 @@ provider "aws" {
 }
 provider "aws" {
   assume_role {
-    role_arn     = var.aws_role_arn
+    role_arn     = local.cross_account_role_arn
     session_name = "TerraformSession"
   }
   alias                       = "ap-northeast-1"
@@ -142,7 +142,7 @@ provider "aws" {
 }
 provider "aws" {
   assume_role {
-    role_arn     = var.aws_role_arn
+    role_arn     = local.cross_account_role_arn
     session_name = "TerraformSession"
   }
   alias                       = "ap-northeast-2"
@@ -153,7 +153,7 @@ provider "aws" {
 }
 provider "aws" {
   assume_role {
-    role_arn     = var.aws_role_arn
+    role_arn     = local.cross_account_role_arn
     session_name = "TerraformSession"
   }
   alias                       = "ap-northeast-3"
@@ -164,7 +164,7 @@ provider "aws" {
 }
 provider "aws" {
   assume_role {
-    role_arn     = var.aws_role_arn
+    role_arn     = local.cross_account_role_arn
     session_name = "TerraformSession"
   }
   alias                       = "ca-central-1"
@@ -175,7 +175,7 @@ provider "aws" {
 }
 provider "aws" {
   assume_role {
-    role_arn     = var.aws_role_arn
+    role_arn     = local.cross_account_role_arn
     session_name = "TerraformSession"
   }
   alias                       = "eu-central-1"
@@ -186,7 +186,7 @@ provider "aws" {
 }
 provider "aws" {
   assume_role {
-    role_arn     = var.aws_role_arn
+    role_arn     = local.cross_account_role_arn
     session_name = "TerraformSession"
   }
   alias                       = "eu-west-1"
@@ -197,7 +197,7 @@ provider "aws" {
 }
 provider "aws" {
   assume_role {
-    role_arn     = var.aws_role_arn
+    role_arn     = local.cross_account_role_arn
     session_name = "TerraformSession"
   }
   alias                       = "eu-west-2"
@@ -208,7 +208,7 @@ provider "aws" {
 }
 provider "aws" {
   assume_role {
-    role_arn     = var.aws_role_arn
+    role_arn     = local.cross_account_role_arn
     session_name = "TerraformSession"
   }
   alias                       = "eu-west-3"
@@ -219,7 +219,7 @@ provider "aws" {
 }
 provider "aws" {
   assume_role {
-    role_arn     = var.aws_role_arn
+    role_arn     = local.cross_account_role_arn
     session_name = "TerraformSession"
   }
   alias                       = "eu-south-1"
@@ -230,7 +230,7 @@ provider "aws" {
 }
 provider "aws" {
   assume_role {
-    role_arn     = var.aws_role_arn
+    role_arn     = local.cross_account_role_arn
     session_name = "TerraformSession"
   }
   alias                       = "eu-south-2"
@@ -241,7 +241,7 @@ provider "aws" {
 }
 provider "aws" {
   assume_role {
-    role_arn     = var.aws_role_arn
+    role_arn     = local.cross_account_role_arn
     session_name = "TerraformSession"
   }
   alias                       = "eu-north-1"
@@ -252,7 +252,7 @@ provider "aws" {
 }
 provider "aws" {
   assume_role {
-    role_arn     = var.aws_role_arn
+    role_arn     = local.cross_account_role_arn
     session_name = "TerraformSession"
   }
   alias                       = "eu-central-2"
@@ -263,7 +263,7 @@ provider "aws" {
 }
 provider "aws" {
   assume_role {
-    role_arn     = var.aws_role_arn
+    role_arn     = local.cross_account_role_arn
     session_name = "TerraformSession"
   }
   alias                       = "me-south-1"
@@ -274,7 +274,7 @@ provider "aws" {
 }
 provider "aws" {
   assume_role {
-    role_arn     = var.aws_role_arn
+    role_arn     = local.cross_account_role_arn
     session_name = "TerraformSession"
   }
   alias                       = "me-central-1"
@@ -285,7 +285,7 @@ provider "aws" {
 }
 provider "aws" {
   assume_role {
-    role_arn     = var.aws_role_arn
+    role_arn     = local.cross_account_role_arn
     session_name = "TerraformSession"
   }
   alias                       = "sa-east-1"
@@ -296,7 +296,7 @@ provider "aws" {
 }
 provider "aws" {
   assume_role {
-    role_arn     = var.aws_role_arn
+    role_arn     = local.cross_account_role_arn
     session_name = "TerraformSession"
   }
   alias                       = "us-gov-east-1"
@@ -307,7 +307,7 @@ provider "aws" {
 }
 provider "aws" {
   assume_role {
-    role_arn     = var.aws_role_arn
+    role_arn     = local.cross_account_role_arn
     session_name = "TerraformSession"
   }
   alias                       = "us-gov-west-1"

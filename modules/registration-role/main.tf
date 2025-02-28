@@ -1,11 +1,19 @@
+locals {
+  aws_partition          = var.account_type == "gov" ? "aws-us-gov" : "aws"
+  is_gov_commercial      = var.is_gov && var.account_type == "commercial"
+  cross_account_role_arn = "arn:${local.aws_partition}:iam::${var.account_id}:role/${var.cross_account_role_name}"
+}
+
 provider "aws" {
   assume_role {
-    role_arn = var.aws_role_arn
+    role_arn     = local.cross_account_role_arn
+    session_name = "TerraformSession"
   }
-  region = var.primary_region
+  region                      = var.primary_region
+  skip_credentials_validation = true
+  skip_requesting_account_id  = true
+  sts_region                  = var.primary_region
 }
-data "aws_region" "current" {}
-data "aws_partition" "current" {}
 
 data "crowdstrike_cloud_aws_account" "target" {
   account_id      = var.account_id
@@ -18,6 +26,7 @@ locals {
   account = try(
     data.crowdstrike_cloud_aws_account.target.accounts[0],
     {
+      account_id             = ""
       external_id            = ""
       intermediate_role_arn  = ""
       iam_role_arn           = ""
@@ -31,15 +40,10 @@ locals {
   iam_role_arn           = coalesce(var.iam_role_arn, local.account.iam_role_arn)
   eventbus_arn           = coalesce(var.eventbus_arn, local.account.eventbus_arn)
   cloudtrail_bucket_name = var.use_existing_cloudtrail ? "" : coalesce(var.cloudtrail_bucket_name, local.account.cloudtrail_bucket_name)
-
-  aws_region        = data.aws_region.current.name
-  aws_partition     = data.aws_partition.current.partition
-  is_gov_commercial = var.is_gov && local.aws_partition == "aws"
 }
 
 module "asset_inventory" {
-  source = "../asset-inventory/"
-
+  source                = "../asset-inventory/"
   external_id           = local.external_id
   intermediate_role_arn = local.intermediate_role_arn
   role_name             = split("/", local.iam_role_arn)[1]
@@ -65,12 +69,15 @@ module "sensor_management" {
 }
 
 module "realtime_visibility_main" {
-  count  = (var.enable_realtime_visibility || var.enable_idp) ? 1 : 0
-  source = "../realtime-visibility/"
-
+  count                   = (var.enable_realtime_visibility || var.enable_idp) ? 1 : 0
+  source                  = "../realtime-visibility/"
+  falcon_client_id        = var.falcon_client_id
+  falcon_client_secret    = var.falcon_client_secret
   use_existing_cloudtrail = var.use_existing_cloudtrail
   is_organization_trail   = length(var.organization_id) > 0
   cloudtrail_bucket_name  = local.cloudtrail_bucket_name
+  is_gov                  = var.is_gov
+  is_gov_commercial       = local.is_gov_commercial
 
   providers = {
     aws = aws

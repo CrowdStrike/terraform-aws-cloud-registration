@@ -6,99 +6,111 @@ terraform {
       version = ">= 4.45"
     }
     crowdstrike = {
-      source = "crowdstrike/crowdstrike"
-      # version = ">= 0.1.1"
+      source  = "crowdstrike/crowdstrike"
+      version = ">= 0.0.15"
     }
   }
 }
 
-provider "crowdstrike" {
-  client_id     = var.falcon_client_id
-  client_secret = var.falcon_client_secret
+locals {
+  falcon_client_id           = "<your-falcon-client-id>"
+  falcon_client_secret       = "<your-falcon-client-secret>"
+  account_id                 = "<your aws account id>"
+  organization_id            = "<your aws organization id>"
+  enable_realtime_visibility = true
+  primary_region             = "us-east-1"
+  enable_idp                 = true
+  enable_sensor_management   = true
+  enable_dspm                = true
+  dspm_regions               = ["us-east-1", "us-east-2"]
+  use_existing_cloudtrail    = true
 }
 
+provider "crowdstrike" {
+  client_id     = local.falcon_client_id
+  client_secret = local.falcon_client_secret
+}
 
 # Provision AWS account in Falcon.
 resource "crowdstrike_cloud_aws_account" "this" {
-  account_id                         = var.account_id
-  organization_id                    = var.organization_id
-  target_ous                         = var.organizational_unit_ids
-  is_organization_management_account = var.organization_id != null && var.organization_id != "" ? true : false
+  account_id                         = local.account_id
+  organization_id                    = local.organization_id
+  is_organization_management_account = true
 
   asset_inventory = {
-    enabled   = true
-    role_name = var.custom_role_name
+    enabled = true
   }
 
   realtime_visibility = {
-    enabled           = var.enable_realtime_visibility
-    cloudtrail_region = var.aws_region
+    enabled                 = local.enable_realtime_visibility
+    cloudtrail_region       = local.primary_region
+    use_existing_cloudtrail = local.use_existing_cloudtrail
   }
 
   idp = {
-    enabled = var.enable_idp
+    enabled = local.enable_idp
   }
 
   sensor_management = {
-    enabled = var.enable_sensor_management
+    enabled = local.enable_sensor_management
   }
 
   dspm = {
-    enabled   = var.enable_dspm
-    role_name = var.dspm_custom_role
+    enabled = local.enable_dspm
   }
   provider = crowdstrike
 }
 
-# Make sure to replace `aws_profile` with the correct profile for your management account
-module "management_account" {
-  source = "https://cs-dev-cloudconnect-templates.s3.amazonaws.com/terraform/modules/cs-aws-integration-terraform/0.1.0/cs-aws-integration-terraform-registration-profile.tar.gz"
+module "fcs_management_account" {
+  source                      = "CrowdStrike/fcs/aws//modules/registration-profile"
+  aws_profile                 = "<aws profile for your management account>"
+  falcon_client_id            = local.falcon_client_id
+  falcon_client_secret        = local.falcon_client_secret
+  account_id                  = local.account_id
+  organization_id             = local.organization_id
+  primary_region              = local.primary_region
+  enable_sensor_management    = local.enable_sensor_management
+  enable_realtime_visibility  = local.enable_realtime_visibility
+  enable_idp                  = local.enable_idp
+  realtime_visibility_regions = ["all"]
+  use_existing_cloudtrail     = local.use_existing_cloudtrail
+  enable_dspm                 = local.enable_dspm
+  dspm_regions                = local.dspm_regions
 
-  falcon_client_id           = var.falcon_client_id
-  falcon_client_secret       = var.falcon_client_secret
-  aws_profile                = "<management-profile>"
-  account_id                 = var.account_id
-  permissions_boundary       = var.permissions_boundary
-  primary_region             = var.aws_region
-  is_gov                     = var.is_gov
-  enable_sensor_management   = var.enable_sensor_management
-  enable_realtime_visibility = var.enable_realtime_visibility
-  enable_idp                 = var.enable_idp
-  use_existing_cloudtrail    = var.use_existing_cloudtrail
-  iam_role_arn               = crowdstrike_cloud_aws_account.this.iam_role_arn
-  external_id                = crowdstrike_cloud_aws_account.this.external_id
-  intermediate_role_arn      = crowdstrike_cloud_aws_account.this.intermediate_role_arn
-  eventbus_arn               = crowdstrike_cloud_aws_account.this.eventbus_arn
-  cloudtrail_bucket_name     = crowdstrike_cloud_aws_account.this.cloudtrail_bucket_name
-  excluded_regions           = []
+  iam_role_arn           = crowdstrike_cloud_aws_account.this.iam_role_arn
+  external_id            = crowdstrike_cloud_aws_account.this.external_id
+  intermediate_role_arn  = crowdstrike_cloud_aws_account.this.intermediate_role_arn
+  eventbus_arn           = crowdstrike_cloud_aws_account.this.eventbus_arn
+  cloudtrail_bucket_name = crowdstrike_cloud_aws_account.this.cloudtrail_bucket_name
 
   providers = {
     crowdstrike = crowdstrike
   }
 }
 
-# Duplicate this module for each account in the organization that you want to register.
-# Make sure to replace `aws_profile` with the correct profile for your child account
-module "child_account" {
-  source = "https://cs-dev-cloudconnect-templates.s3.amazonaws.com/terraform/modules/cs-aws-integration-terraform/0.1.0/cs-aws-integration-terraform-registration-profile.tar.gz"
+# for each child account you want to onboard
+# - duplicate this module
+# - replace `aws_profile` with the correct profile for your child account
+module "fcs_child_account_1" {
+  source                      = "CrowdStrike/fcs/aws//modules/registration-profile"
+  aws_profile                 = "<aws profile for this child account>"
+  falcon_client_id            = local.falcon_client_id
+  falcon_client_secret        = local.falcon_client_secret
+  organization_id             = local.organization_id
+  primary_region              = local.primary_region
+  enable_sensor_management    = local.enable_sensor_management
+  enable_realtime_visibility  = local.enable_realtime_visibility
+  enable_idp                  = local.enable_idp
+  realtime_visibility_regions = ["all"]
+  use_existing_cloudtrail     = true # use the cloudtrail at the org level
+  enable_dspm                 = local.enable_dspm
+  dspm_regions                = local.dspm_regions
 
-  falcon_client_id           = var.falcon_client_id
-  falcon_client_secret       = var.falcon_client_secret
-  aws_profile                = "<child-profile>"
-  organization_id            = var.organization_id
-  permissions_boundary       = var.permissions_boundary
-  primary_region             = var.aws_region
-  is_gov                     = var.is_gov
-  enable_sensor_management   = var.enable_sensor_management
-  enable_realtime_visibility = var.enable_realtime_visibility
-  enable_idp                 = var.enable_idp
-  use_existing_cloudtrail    = true # use the cloudtrail at the org level
-  cloudtrail_bucket_name     = ""   # not needed for child accounts
-  iam_role_arn               = crowdstrike_cloud_aws_account.this.iam_role_arn
-  external_id                = crowdstrike_cloud_aws_account.this.external_id
-  intermediate_role_arn      = crowdstrike_cloud_aws_account.this.intermediate_role_arn
-  eventbus_arn               = crowdstrike_cloud_aws_account.this.eventbus_arn
-  excluded_regions           = []
+  iam_role_arn           = crowdstrike_cloud_aws_account.this.iam_role_arn
+  external_id            = crowdstrike_cloud_aws_account.this.external_id
+  intermediate_role_arn  = crowdstrike_cloud_aws_account.this.intermediate_role_arn
+  eventbus_arn           = crowdstrike_cloud_aws_account.this.eventbus_arn
+  cloudtrail_bucket_name = "" # not needed for child accounts
 
   providers = {
     crowdstrike = crowdstrike

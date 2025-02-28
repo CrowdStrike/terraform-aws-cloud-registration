@@ -1,5 +1,5 @@
 <!-- BEGIN_TF_DOCS -->
-![CrowdStrike FalconPy](https://raw.githubusercontent.com/CrowdStrike/falconpy/main/docs/asset/cs-logo.png)
+![CrowdStrike Registration terraform module](https://raw.githubusercontent.com/CrowdStrike/falconpy/main/docs/asset/cs-logo.png)
 
 [![Twitter URL](https://img.shields.io/twitter/url?label=Follow%20%40CrowdStrike&style=social&url=https%3A%2F%2Ftwitter.com%2FCrowdStrike)](https://twitter.com/CrowdStrike)<br/>
 
@@ -15,10 +15,12 @@
 
 | Name | Source | Version |
 |------|--------|---------|
-| <a name="module_asset_inventory"></a> [asset\_inventory](#module\_asset\_inventory) | https://cs-dev-cloudconnect-templates.s3.amazonaws.com/terraform/modules/cs-aws-integration-terraform/0.1.0/cs-aws-integration-terraform-asset-inventory.tar.gz | n/a |
-| <a name="module_realtime_visibility"></a> [realtime\_visibility](#module\_realtime\_visibility) | https://cs-dev-cloudconnect-templates.s3.amazonaws.com/terraform/modules/cs-aws-integration-terraform/0.1.0/cs-aws-integration-terraform-realtime-visibility.tar.gz | n/a |
-| <a name="module_realtime_visibility_rules"></a> [realtime\_visibility\_rules](#module\_realtime\_visibility\_rules) | https://cs-dev-cloudconnect-templates.s3.amazonaws.com/terraform/modules/cs-aws-integration-terraform/0.1.0/cs-aws-integration-terraform-realtime-visibility-rules.tar.gz | n/a |
-| <a name="module_sensor_management"></a> [sensor\_management](#module\_sensor\_management) | https://cs-dev-cloudconnect-templates.s3.amazonaws.com/terraform/modules/cs-aws-integration-terraform/0.1.0/cs-aws-integration-terraform-sensor-management.tar.gz | n/a |
+| <a name="module_asset_inventory"></a> [asset\_inventory](#module\_asset\_inventory) | ../asset-inventory/ | n/a |
+| <a name="module_dspm_environments"></a> [dspm\_environments](#module\_dspm\_environments) | ../dspm-environments/ | n/a |
+| <a name="module_dspm_roles"></a> [dspm\_roles](#module\_dspm\_roles) | ../dspm-roles/ | n/a |
+| <a name="module_realtime_visibility"></a> [realtime\_visibility](#module\_realtime\_visibility) | ../realtime-visibility/ | n/a |
+| <a name="module_realtime_visibility_rules"></a> [realtime\_visibility\_rules](#module\_realtime\_visibility\_rules) | ../realtime-visibility-rules/ | n/a |
+| <a name="module_sensor_management"></a> [sensor\_management](#module\_sensor\_management) | ../sensor-management/ | n/a |
 ## Resources
 
 | Name | Type |
@@ -31,8 +33,10 @@
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
 | <a name="input_account_id"></a> [account\_id](#input\_account\_id) | The AWS 12 digit account ID | `string` | `""` | no |
-| <a name="input_dspm_custom_role"></a> [dspm\_custom\_role](#input\_dspm\_custom\_role) | The role ARN used for Data Security Posture Managment integration | `string` | `""` | no |
-| <a name="input_dspm_regions"></a> [dspm\_regions](#input\_dspm\_regions) | The list of regions where DSPM should be enabled | `list(string)` | `[]` | no |
+| <a name="input_account_type"></a> [account\_type](#input\_account\_type) | Account type can be either 'commercial' or 'gov' | `string` | `"commercial"` | no |
+| <a name="input_dspm_regions"></a> [dspm\_regions](#input\_dspm\_regions) | The regions in which DSPM scanning environments will be created | `list(string)` | <pre>[<br/>  "us-east-1"<br/>]</pre> | no |
+| <a name="input_dspm_role_name"></a> [dspm\_role\_name](#input\_dspm\_role\_name) | The unique name of the IAM role that DSPM will be assuming | `string` | `"CrowdStrikeDSPMIntegrationRole"` | no |
+| <a name="input_dspm_scanner_role_name"></a> [dspm\_scanner\_role\_name](#input\_dspm\_scanner\_role\_name) | The unique name of the IAM role that CrowdStrike Scanner will be assuming | `string` | `"CrowdStrikeDSPMScannerRole"` | no |
 | <a name="input_enable_dspm"></a> [enable\_dspm](#input\_enable\_dspm) | Set to true to enable Data Security Posture Managment | `bool` | `false` | no |
 | <a name="input_enable_idp"></a> [enable\_idp](#input\_enable\_idp) | Set to true to install Identity Protection resources | `bool` | `false` | no |
 | <a name="input_enable_realtime_visibility"></a> [enable\_realtime\_visibility](#input\_enable\_realtime\_visibility) | Set to true to install realtime visibility resources | `bool` | `false` | no |
@@ -40,10 +44,10 @@
 | <a name="input_eventbridge_role_name"></a> [eventbridge\_role\_name](#input\_eventbridge\_role\_name) | The eventbridge role name | `string` | `"CrowdStrikeCSPMEventBridge"` | no |
 | <a name="input_falcon_client_id"></a> [falcon\_client\_id](#input\_falcon\_client\_id) | Falcon API Client ID | `string` | n/a | yes |
 | <a name="input_falcon_client_secret"></a> [falcon\_client\_secret](#input\_falcon\_client\_secret) | Falcon API Client Secret | `string` | n/a | yes |
+| <a name="input_is_gov"></a> [is\_gov](#input\_is\_gov) | Set to true if you are deploying in gov Falcon | `bool` | `false` | no |
 | <a name="input_is_primary_region"></a> [is\_primary\_region](#input\_is\_primary\_region) | The AWS region where resources should be deployed | `bool` | n/a | yes |
 | <a name="input_organization_id"></a> [organization\_id](#input\_organization\_id) | The AWS Organization ID. Leave blank if when onboarding single account | `string` | `""` | no |
 | <a name="input_permissions_boundary"></a> [permissions\_boundary](#input\_permissions\_boundary) | The name of the policy used to set the permissions boundary for IAM roles | `string` | `""` | no |
-| <a name="input_primary_region"></a> [primary\_region](#input\_primary\_region) | The AWS region where resources should be deployed | `string` | n/a | yes |
 | <a name="input_use_existing_cloudtrail"></a> [use\_existing\_cloudtrail](#input\_use\_existing\_cloudtrail) | Set to true if you already have a cloudtrail | `bool` | `false` | no |
 ## Outputs
 
@@ -60,83 +64,118 @@ terraform {
       version = ">= 4.45"
     }
     crowdstrike = {
-      source = "crowdstrike/crowdstrike"
-      # version = ">= 0.1.1"
+      source  = "crowdstrike/crowdstrike"
+      version = ">= 0.0.15"
     }
   }
 }
 
-provider "crowdstrike" {
-  client_id     = var.falcon_client_id
-  client_secret = var.falcon_client_secret
-}
-
-# Configure your povider the way you know
-provider "aws" {
-}
-
-data "aws_region" "current" {
-}
-
 locals {
-  is_primary_region = var.aws_region == data.aws_region.current.name
+  falcon_client_id           = "<your-falcon-client-id>"
+  falcon_client_secret       = "<your-falcon-client-secret>"
+  account_id                 = "<your aws account id>"
+  enable_realtime_visibility = true
+  primary_region             = "us-east-1"
+  enable_idp                 = true
+  enable_sensor_management   = true
+  enable_dspm                = true
+  dspm_regions               = ["us-east-1", "us-east-2"]
+  use_existing_cloudtrail    = true
 }
+
+provider "crowdstrike" {
+  client_id     = local.falcon_client_id
+  client_secret = local.falcon_client_secret
+}
+provider "aws" {
+  region = "us-east-1"
+  alias  = "us-east-1"
+}
+provider "aws" {
+  region = "us-east-2"
+  alias  = "us-east-2"
+}
+provider "aws" {
+  region = "us-west-1"
+  alias  = "us-west-1"
+}
+
 
 # Provision AWS account in Falcon.
 resource "crowdstrike_cloud_aws_account" "this" {
-  count                              = local.is_primary_region ? 1 : 0
-  account_id                         = var.account_id
-  organization_id                    = var.organization_id
-  target_ous                         = var.organizational_unit_ids
-  is_organization_management_account = var.organization_id != null && var.organization_id != "" ? true : false
+  account_id = local.account_id
 
   asset_inventory = {
-    enabled   = true
-    role_name = var.custom_role_name
+    enabled = true
   }
 
   realtime_visibility = {
-    enabled           = var.enable_realtime_visibility
-    cloudtrail_region = var.aws_region
+    enabled                 = local.enable_realtime_visibility
+    cloudtrail_region       = local.primary_region
+    use_existing_cloudtrail = local.use_existing_cloudtrail
   }
 
   idp = {
-    enabled = var.enable_idp
+    enabled = local.enable_idp
   }
 
   sensor_management = {
-    enabled = var.enable_sensor_management
+    enabled = local.enable_sensor_management
   }
 
   dspm = {
-    enabled   = var.enable_dspm
-    role_name = var.dspm_custom_role
+    enabled = local.enable_dspm
   }
   provider = crowdstrike
 }
 
-
-module "fcs_onboard" {
-  source                     = "https://cs-dev-cloudconnect-templates.s3.amazonaws.com/terraform/modules/cs-aws-integration-terraform/0.1.0/cs-aws-integration-terraform-registration-provider.tar.gz"
-  falcon_client_id           = var.falcon_client_id
-  falcon_client_secret       = var.falcon_client_secret
-  account_id                 = var.account_id
-  organization_id            = var.organization_id
-  permissions_boundary       = var.permissions_boundary
-  primary_region             = var.aws_region
-  is_primary_region          = local.is_primary_region
-  enable_sensor_management   = var.enable_sensor_management
-  enable_realtime_visibility = var.enable_realtime_visibility
+module "fcs_account_onboarding" {
+  source                     = "CrowdStrike/fcs/aws"
+  falcon_client_id           = local.falcon_client_id
+  falcon_client_secret       = local.falcon_client_secret
+  account_id                 = local.account_id
+  is_primary_region          = primary_region == "us-east-1"
+  enable_sensor_management   = local.enable_sensor_management
+  enable_realtime_visibility = local.enable_realtime_visibility
+  enable_idp                 = local.enable_idp
+  use_existing_cloudtrail    = local.use_existing_cloudtrail
+  enable_dspm                = contains(local.dspm_regions, "us-east-1")
+  dspm_regions               = local.dspm_regions
 
   depends_on = [
     crowdstrike_cloud_aws_account.this
   ]
 
   providers = {
-    aws         = aws
+    aws         = aws.us-east-1
     crowdstrike = crowdstrike
   }
 }
 
+# for each region where you want to onboard Real-time Visibility or DSPM features
+# - duplicate this module
+# - update the provider with region specific one
+module "fcs_account_us-east-2" {
+  source                     = "CrowdStrike/fcs/aws"
+  falcon_client_id           = local.falcon_client_id
+  falcon_client_secret       = local.falcon_client_secret
+  account_id                 = local.account_id
+  is_primary_region          = primary_region == "us-east-2"
+  enable_sensor_management   = local.enable_sensor_management
+  enable_realtime_visibility = local.enable_realtime_visibility
+  enable_idp                 = local.enable_idp
+  use_existing_cloudtrail    = local.use_existing_cloudtrail
+  enable_dspm                = contains(local.dspm_regions, "us-east-2")
+  dspm_regions               = local.dspm_regions
+
+  depends_on = [
+    crowdstrike_cloud_aws_account.this
+  ]
+
+  providers = {
+    aws         = aws.us-east-2
+    crowdstrike = crowdstrike
+  }
+}
 ```
 <!-- END_TF_DOCS -->

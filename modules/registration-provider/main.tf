@@ -4,15 +4,15 @@ data "aws_region" "current" {}
 data "crowdstrike_cloud_aws_account" "target" {
   account_id      = var.account_id
   organization_id = length(var.account_id) != 0 ? null : var.organization_id
-
 }
 
 locals {
-  # if we target by account_id, it will be the only account returned
-  # if we target by organization_id, we pick the first one because all accounts will have the same settings
-  account       = try(data.crowdstrike_cloud_aws_account.target.accounts[0])
   aws_partition = data.aws_partition.current.partition
   aws_region    = data.aws_region.current.name
+
+  # if we target by account_id, it will be the only account returned
+  # if we target by organization_id, we pick the first one because all accounts will have the same settings
+  account = try(data.crowdstrike_cloud_aws_account.target.accounts[0])
 
   external_id           = local.account.external_id
   intermediate_role_arn = local.account.intermediate_role_arn
@@ -109,7 +109,7 @@ module "dspm_roles" {
 }
 
 module "dspm_environments" {
-  count                  = var.enable_dspm && contains(var.dspm_regions, local.aws_region) ? 1 : 0
+  count                  = var.enable_dspm ? 1 : 0
   source                 = "../dspm-environments/"
   dspm_role_name         = var.dspm_role_name
   dspm_scanner_role_name = var.dspm_scanner_role_name
