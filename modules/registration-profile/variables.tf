@@ -16,8 +16,8 @@ variable "aws_profile" {
 }
 
 variable "primary_region" {
+  description = "Region for deploying global AWS resources (IAM roles, policies, etc.) that are account-wide and only need to be created once. Distinct from dspm_regions which controls region-specific resource deployment."
   type        = string
-  description = "The AWS region where resources should be deployed"
 }
 
 variable "is_gov" {
@@ -50,10 +50,6 @@ variable "organization_id" {
   type        = string
   default     = ""
   description = "The AWS Organization ID. Leave blank when onboarding single account"
-  validation {
-    condition     = length(var.account_id) != 0 || length(var.organization_id) != 0
-    error_message = "you must provide at least one of these variables: account_id, organization_id"
-  }
 }
 
 variable "permissions_boundary" {
@@ -82,7 +78,7 @@ variable "use_existing_cloudtrail" {
 variable "realtime_visibility_regions" {
   type        = list(string)
   default     = []
-  description = "The list of regions to onboard Realtime Visibility monitoring"
+  description = "The list of regions to onboard Realtime Visibility monitoring. Use [\"all\"] to onboard all available regions"
 }
 
 variable "enable_idp" {

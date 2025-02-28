@@ -12,13 +12,11 @@ terraform {
 }
 
 provider "aws" {
-  profile = var.aws_profile
   region  = "us-east-1"
   alias   = "us-east-1"
 }
 
 provider "aws" {
-  profile = var.aws_profile
   region  = "us-east-2"
   alias   = "us-east-2"
 }
@@ -28,27 +26,25 @@ provider "crowdstrike" {
   client_secret = var.falcon_client_secret
 }
 
-data "crowdstrike_cloud_aws_accounts" "target" {
+data "crowdstrike_cloud_aws_account" "target" {
   account_id      = var.account_id
 }
 
-module "realtime_visibility_main" {
-  source = "../realtime-visibility/main/"
+module "realtime_visibility" {
+  source = "CrowdStrike/fcs/aws//modules/realtime-visibility/"
 
-  use_existing_cloudtrail = var.use_existing_cloudtrail
-  is_organization_trail   = length(var.organization_id) > 0
-  cloudtrail_bucket_name  = data.crowdstrike_cloud_aws_accounts.accounts.0.cloudtrail_bucket_name
+  use_existing_cloudtrail = true
+  cloudtrail_bucket_name  = data.crowdstrike_cloud_aws_account.target.accounts.0.cloudtrail_bucket_name
 
   providers = {
-    aws = aws
+    aws = aws.us-east-1
   }
 }
 
 module "rules_us-east-1" {
-  source = "../realtime-visibility/rules/"
-
-  eventbus_arn         = data.crowdstrike_cloud_aws_accounts.accounts.0.eventbus_arn
-  eventbridge_role_arn = module.realtime_visibility_main.0.eventbridge_role_arn
+  source = "CrowdStrike/fcs/aws//modules/realtime-visibility-rules"
+  eventbus_arn            = data.crowdstrike_cloud_aws_account.target.accounts.0.eventbus_arn
+  eventbridge_role_arn    = module.realtime_visibility_main.0.eventbridge_role_arn
 
   providers = {
     aws = aws.us-east-1
@@ -56,9 +52,8 @@ module "rules_us-east-1" {
 }
 
 module "rules_us-east-2" {
-  source = "../realtime-visibility/rules/"
-
-  eventbus_arn         = data.crowdstrike_cloud_aws_accounts.accounts.0.eventbus_arn
+  source = "CrowdStrike/fcs/aws//modules/realtime-visibility-rules"
+  eventbus_arn         = data.crowdstrike_cloud_aws_account.target.accounts.0.eventbus_arn
   eventbridge_role_arn = module.realtime_visibility_main.0.eventbridge_role_arn
 
   providers = {

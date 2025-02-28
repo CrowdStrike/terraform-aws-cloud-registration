@@ -1,15 +1,3 @@
-locals {
-  aws_partition     = var.account_type == "gov" ? "aws-us-gov" : "aws"
-  is_gov_commercial = var.is_gov && var.account_type == "commercial"
-}
-
-provider "aws" {
-  profile = var.aws_profile
-  region  = var.primary_region
-}
-
-data "aws_partition" "current" {}
-
 data "crowdstrike_cloud_aws_account" "target" {
   account_id      = var.account_id
   organization_id = length(var.account_id) != 0 ? null : var.organization_id
@@ -35,6 +23,9 @@ locals {
   iam_role_arn           = coalesce(var.iam_role_arn, local.account.iam_role_arn)
   eventbus_arn           = coalesce(var.eventbus_arn, local.account.eventbus_arn)
   cloudtrail_bucket_name = var.use_existing_cloudtrail ? "" : coalesce(var.cloudtrail_bucket_name, local.account.cloudtrail_bucket_name)
+
+  aws_partition     = var.account_type == "gov" ? "aws-us-gov" : "aws"
+  is_gov_commercial = var.is_gov && var.account_type == "commercial"
 }
 
 module "asset_inventory" {
@@ -64,9 +55,8 @@ module "sensor_management" {
 }
 
 module "realtime_visibility_main" {
-  count  = (var.enable_realtime_visibility || var.enable_idp) ? 1 : 0
-  source = "../realtime-visibility/"
-
+  count                   = (var.enable_realtime_visibility || var.enable_idp) ? 1 : 0
+  source                  = "../realtime-visibility/"
   use_existing_cloudtrail = var.use_existing_cloudtrail
   is_organization_trail   = length(var.organization_id) > 0
   cloudtrail_bucket_name  = local.cloudtrail_bucket_name
@@ -86,9 +76,9 @@ module "dspm_roles" {
   source                 = "../dspm-roles/"
   dspm_role_name         = var.dspm_role_name
   dspm_scanner_role_name = var.dspm_scanner_role_name
-  cs_role_arn            = var.intermediate_role_arn
-  client_id              = var.falcon_client_id
-  client_secret          = var.falcon_client_secret
+  intermediate_role_arn  = var.intermediate_role_arn
+  falcon_client_id       = var.falcon_client_id
+  falcon_client_secret   = var.falcon_client_secret
   external_id            = var.external_id
   dspm_regions           = var.dspm_regions
 }

@@ -10,7 +10,7 @@ variable "dspm_scanner_role_name" {
   default     = "CrowdStrikeDSPMScannerRole"
 }
 
-variable "client_id" {
+variable "falcon_client_id" {
   description = "CrowdStrike client ID"
   type        = string
   nullable    = false
@@ -20,13 +20,13 @@ variable "client_id" {
   }
 }
 
-variable "client_secret" {
+variable "falcon_client_secret" {
   description = "CrowdStrike client secret"
   type        = string
   nullable    = false
 }
 
-variable "cs_role_arn" {
+variable "intermediate_role_arn" {
   description = "ARN of the CrowdStrike assuming role"
   type        = string
   nullable    = false

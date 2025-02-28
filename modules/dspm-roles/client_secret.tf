@@ -13,8 +13,8 @@ resource "aws_secretsmanager_secret" "client_secrets" {
 resource "aws_secretsmanager_secret_version" "client_secrets_version" {
   secret_id = aws_secretsmanager_secret.client_secrets.id
   secret_string = jsonencode({
-    ClientId     = var.client_id
-    ClientSecret = var.client_secret
+    ClientId     = var.falcon_client_id
+    ClientSecret = var.falcon_client_secret
   })
 }
 

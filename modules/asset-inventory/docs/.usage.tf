@@ -20,17 +20,17 @@ provider "crowdstrike" {
   client_secret = var.falcon_client_secret
 }
 
-data "crowdstrike_cloud_aws_accounts" "target" {
+data "crowdstrike_cloud_aws_account" "target" {
   account_id      = var.account_id
 }
 
 
 module "asset_inventory" {
-  source = "../asset-inventory/"
+  source = "CrowdStrike/fcs/aws//modules/asset-inventory"
 
-  external_id           = data.crowdstrike_cloud_aws_accounts.accounts.0.external_id
-  intermediate_role_arn = data.crowdstrike_cloud_aws_accounts.accounts.0.intermediate_role_arn
-  role_name             = split("/", data.crowdstrike_cloud_aws_accounts.accounts.0..iam_role_arn)[1]
+  external_id           = data.crowdstrike_cloud_aws_account.target.accounts.0.external_id
+  intermediate_role_arn = data.crowdstrike_cloud_aws_account.target.accounts.0.intermediate_role_arn
+  role_name             = split("/", data.crowdstrike_cloud_aws_account.target.accounts.0.iam_role_arn)[1]
   permissions_boundary  = var.permissions_boundary
 
   providers = {

@@ -16,8 +16,8 @@ variable "cross_account_role_name" {
 }
 
 variable "primary_region" {
+  description = "Region for deploying global AWS resources (IAM roles, policies, etc.) that are account-wide and only need to be created once. Distinct from dspm_regions which controls region-specific resource deployment."
   type        = string
-  description = "The AWS region where resources should be deployed"
 }
 
 variable "is_gov" {
@@ -77,7 +77,7 @@ variable "use_existing_cloudtrail" {
 variable "realtime_visibility_regions" {
   type        = list(string)
   default     = []
-  description = "The list of regions  Realtime Visibility monitoring"
+  description = "The list of regions to onboard Realtime Visibility monitoring. Use [\"all\"] to onboard all available regions"
 }
 
 variable "enable_idp" {

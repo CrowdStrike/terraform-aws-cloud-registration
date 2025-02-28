@@ -101,9 +101,9 @@ module "dspm_roles" {
   source                 = "../dspm-roles/"
   dspm_role_name         = var.dspm_role_name
   dspm_scanner_role_name = var.dspm_scanner_role_name
-  cs_role_arn            = local.intermediate_role_arn
-  client_id              = var.falcon_client_id
-  client_secret          = var.falcon_client_secret
+  intermediate_role_arn  = var.intermediate_role_arn
+  falcon_client_id       = var.falcon_client_id
+  falcon_client_secret   = var.falcon_client_secret
   external_id            = local.external_id
   dspm_regions           = var.dspm_regions
 }

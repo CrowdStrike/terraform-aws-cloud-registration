@@ -19,20 +19,29 @@ provider "crowdstrike" {
   client_secret = var.falcon_client_secret
 }
 
-data "crowdstrike_cloud_aws_accounts" "target" {
+data "crowdstrike_cloud_aws_account" "target" {
   account_id      = var.account_id
 }
 
+module "dspm_roles" {
+  count                  = (var.is_primary_region && var.enable_dspm) ? 1 : 0
+  source                 = "CrowdStrike/fcs/aws//modules/dspm-roles/"
+  dspm_role_name         = split("/", data.crowdstrike_cloud_aws_account.target.accounts.0.dspm_role_arn)[1]
+  intermediate_role_arn  = data.crowdstrike_cloud_aws_account.target.accounts.0.intermediate_role_arn
+  external_id            = data.crowdstrike_cloud_aws_account.target.accounts.0.external_id
+  falcon_client_id       = var.falcon_client_id
+  falcon_client_secret   = var.falcon_client_secret
+  dspm_regions           = ["us-east-1"]
+}
 
-module "asset_inventory" {
-  source = "../asset-inventory/"
-
-  external_id           = data.crowdstrike_cloud_aws_accounts.accounts.0.external_id
-  intermediate_role_arn = data.crowdstrike_cloud_aws_accounts.accounts.0.intermediate_role_arn
-  role_name             = split("/", data.crowdstrike_cloud_aws_accounts.accounts.0..iam_role_arn)[1]
-  permissions_boundary  = var.permissions_boundary
-
+module "dspm_environments" {
+  count                  = var.enable_dspm ? 1 : 0
+  source                 = "CrowdStrike/fcs/aws//modules/dspm-environments/"
+  dspm_role_name         = split("/", data.crowdstrike_cloud_aws_account.target.accounts.0.dspm_role_arn)[1]
+  region                 = "us-east-1"
   providers = {
     aws = aws
   }
+  depends_on = [module.dspm_roles]
 }
+

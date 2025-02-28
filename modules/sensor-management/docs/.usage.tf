@@ -19,16 +19,16 @@ provider "crowdstrike" {
   client_secret = var.falcon_client_secret
 }
 
-data "crowdstrike_cloud_aws_accounts" "target" {
+data "crowdstrike_cloud_aws_account" "target" {
   account_id      = var.account_id
 }
 
 module "sensor_management" {
-  source                = "../sensor-management/"
+  source                = "CrowdStrike/fcs/aws//modules/sensor-management/"
   falcon_client_id      = var.falcon_client_id
   falcon_client_secret  = var.falcon_client_secret
-  external_id           = data.crowdstrike_cloud_aws_accounts.accounts.0.external_id
-  intermediate_role_arn = data.crowdstrike_cloud_aws_accounts.accounts.0.intermediate_role_arn
+  external_id           = data.crowdstrike_cloud_aws_account.target.accounts.0.external_id
+  intermediate_role_arn = data.crowdstrike_cloud_aws_account.target.accounts.0.intermediate_role_arn
   permissions_boundary  = var.permissions_boundary
 
   providers = {

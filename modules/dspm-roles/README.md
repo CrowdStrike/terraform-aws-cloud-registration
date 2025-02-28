@@ -44,13 +44,13 @@ No modules.
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
-| <a name="input_client_id"></a> [client\_id](#input\_client\_id) | CrowdStrike client ID | `string` | n/a | yes |
-| <a name="input_client_secret"></a> [client\_secret](#input\_client\_secret) | CrowdStrike client secret | `string` | n/a | yes |
-| <a name="input_cs_role_arn"></a> [cs\_role\_arn](#input\_cs\_role\_arn) | ARN of the CrowdStrike assuming role | `string` | n/a | yes |
 | <a name="input_dspm_regions"></a> [dspm\_regions](#input\_dspm\_regions) | The regions in which DSPM scanning environments will be created | `list(string)` | <pre>[<br/>  "us-east-1"<br/>]</pre> | no |
 | <a name="input_dspm_role_name"></a> [dspm\_role\_name](#input\_dspm\_role\_name) | The unique name of the IAM role that CrowdStrike will be assuming | `string` | `"CrowdStrikeDSPMIntegrationRole"` | no |
 | <a name="input_dspm_scanner_role_name"></a> [dspm\_scanner\_role\_name](#input\_dspm\_scanner\_role\_name) | The unique name of the IAM role that CrowdStrike Scanner will be assuming | `string` | `"CrowdStrikeDSPMScannerRole"` | no |
 | <a name="input_external_id"></a> [external\_id](#input\_external\_id) | Unique ID for customer | `string` | n/a | yes |
+| <a name="input_falcon_client_id"></a> [falcon\_client\_id](#input\_falcon\_client\_id) | CrowdStrike client ID | `string` | n/a | yes |
+| <a name="input_falcon_client_secret"></a> [falcon\_client\_secret](#input\_falcon\_client\_secret) | CrowdStrike client secret | `string` | n/a | yes |
+| <a name="input_intermediate_role_arn"></a> [intermediate\_role\_arn](#input\_intermediate\_role\_arn) | ARN of the CrowdStrike assuming role | `string` | n/a | yes |
 | <a name="input_primary_region"></a> [primary\_region](#input\_primary\_region) | Region for deploying global AWS resources (IAM roles, policies, etc.) that are account-wide and only need to be created once. Distinct from dspm\_regions which controls region-specific resource deployment. | `string` | `"us-east-1"` | no |
 ## Outputs
 
@@ -83,22 +83,31 @@ provider "crowdstrike" {
   client_secret = var.falcon_client_secret
 }
 
-data "crowdstrike_cloud_aws_accounts" "target" {
+data "crowdstrike_cloud_aws_account" "target" {
   account_id      = var.account_id
 }
 
+module "dspm_roles" {
+  count                  = (var.is_primary_region && var.enable_dspm) ? 1 : 0
+  source                 = "CrowdStrike/fcs/aws//modules/dspm-roles/"
+  dspm_role_name         = split("/", data.crowdstrike_cloud_aws_account.target.accounts.0.dspm_role_arn)[1]
+  intermediate_role_arn  = data.crowdstrike_cloud_aws_account.target.accounts.0.intermediate_role_arn
+  external_id            = data.crowdstrike_cloud_aws_account.target.accounts.0.external_id
+  falcon_client_id       = var.falcon_client_id
+  falcon_client_secret   = var.falcon_client_secret
+  dspm_regions           = ["us-east-1"]
+}
 
-module "asset_inventory" {
-  source = "../asset-inventory/"
-
-  external_id           = data.crowdstrike_cloud_aws_accounts.accounts.0.external_id
-  intermediate_role_arn = data.crowdstrike_cloud_aws_accounts.accounts.0.intermediate_role_arn
-  role_name             = split("/", data.crowdstrike_cloud_aws_accounts.accounts.0..iam_role_arn)[1]
-  permissions_boundary  = var.permissions_boundary
-
+module "dspm_environments" {
+  count                  = var.enable_dspm ? 1 : 0
+  source                 = "CrowdStrike/fcs/aws//modules/dspm-environments/"
+  dspm_role_name         = split("/", data.crowdstrike_cloud_aws_account.target.accounts.0.dspm_role_arn)[1]
+  region                 = "us-east-1"
   providers = {
     aws = aws
   }
+  depends_on = [module.dspm_roles]
 }
+
 ```
 <!-- END_TF_DOCS -->

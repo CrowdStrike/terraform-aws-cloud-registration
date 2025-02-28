@@ -18,6 +18,7 @@ provider "aws" {
   region                      = "us-east-2"
   skip_credentials_validation = true
   skip_requesting_account_id  = true
+  sts_region                  = var.primary_region
 }
 provider "aws" {
   assume_role {

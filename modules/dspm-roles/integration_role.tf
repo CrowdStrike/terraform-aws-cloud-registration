@@ -6,7 +6,7 @@ data "aws_iam_policy_document" "assume_role" {
 
     principals {
       type        = "AWS"
-      identifiers = [var.cs_role_arn]
+      identifiers = [var.intermediate_role_arn]
     }
 
     effect = "Allow"

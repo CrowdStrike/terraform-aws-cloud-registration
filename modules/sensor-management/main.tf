@@ -136,11 +136,6 @@ resource "aws_secretsmanager_secret_version" "this" {
   })
 }
 
-# data "aws_s3_object" "lambda_package" {
-#   bucket = "cs-horizon-sensormgmt-lambda-${local.aws_region}"
-#   key    = "aws/horizon-sensor-installation-orchestrator.zip"
-# }
-
 resource "aws_lambda_function" "this" {
   function_name = "cs-horizon-sensor-installation-orchestrator"
   role          = aws_iam_role.orchestrator.arn
@@ -150,8 +145,6 @@ resource "aws_lambda_function" "this" {
   memory_size   = 128
   timeout       = 900
   package_type  = "Zip"
-  # source_code_hash = data.aws_s3_object.lambda_package.version_id
-
 
   s3_bucket = "cs-horizon-sensormgmt-lambda-${local.aws_region}"
   s3_key    = "aws/horizon-sensor-installation-orchestrator.zip"
