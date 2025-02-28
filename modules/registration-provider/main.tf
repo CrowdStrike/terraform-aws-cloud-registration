@@ -22,7 +22,7 @@ locals {
 
 module "asset_inventory" {
   count  = (var.is_primary_region) ? 1 : 0
-  source = "https://cs-dev-cloudconnect-templates.s3.amazonaws.com/terraform/modules/cs-aws-integration-terraform/0.1.0/cs-aws-integration-terraform-asset-inventory.tar.gz"
+  source = "../asset-inventory/"
 
   external_id           = local.external_id
   intermediate_role_arn = local.intermediate_role_arn
@@ -36,7 +36,7 @@ module "asset_inventory" {
 
 module "sensor_management" {
   count                 = (var.is_primary_region && var.enable_sensor_management) ? 1 : 0
-  source                = "https://cs-dev-cloudconnect-templates.s3.amazonaws.com/terraform/modules/cs-aws-integration-terraform/0.1.0/cs-aws-integration-terraform-sensor-management.tar.gz"
+  source                = "../sensor-management/"
   falcon_client_id      = var.falcon_client_id
   falcon_client_secret  = var.falcon_client_secret
   external_id           = local.external_id
@@ -50,7 +50,7 @@ module "sensor_management" {
 
 module "realtime_visibility" {
   count  = (var.is_primary_region && (var.enable_realtime_visibility || var.enable_idp)) ? 1 : 0
-  source = "https://cs-dev-cloudconnect-templates.s3.amazonaws.com/terraform/modules/cs-aws-integration-terraform/0.1.0/cs-aws-integration-terraform-realtime-visibility.tar.gz"
+  source = "../realtime-visibility/"
 
   use_existing_cloudtrail = var.use_existing_cloudtrail
   cloudtrail_bucket_name  = local.account.cloudtrail_bucket_name
@@ -63,7 +63,7 @@ module "realtime_visibility" {
 
 module "realtime_visibility_rules" {
   count  = (var.enable_realtime_visibility || var.enable_idp) ? 1 : 0
-  source = "https://cs-dev-cloudconnect-templates.s3.amazonaws.com/terraform/modules/cs-aws-integration-terraform/0.1.0/cs-aws-integration-terraform-realtime-visibility-rules.tar.gz"
+  source = "../realtime-visibility-rules/"
 
   eventbus_arn         = local.eventbus_arn
   eventbridge_role_arn = try(module.realtime_visibility.0.eventbridge_role_arn, local.eventbridge_arn)
@@ -77,24 +77,24 @@ module "realtime_visibility_rules" {
   }
 }
 
-module "dspm-roles" {
-  count  = (var.is_primary_region && var.enable_dspm) ? 1 : 0
-  source = "https://cs-dev-cloudconnect-templates.s3.amazonaws.com/terraform/modules/cs-aws-integration-terraform/0.1.0/cs-aws-integration-terraform-dspm-roles.tar.gz"
-  dspm_role_name = var.dspm_role_name
+module "dspm_roles" {
+  count                  = (var.is_primary_region && var.enable_dspm) ? 1 : 0
+  source                 = "../dspm-roles/"
+  dspm_role_name         = var.dspm_role_name
   dspm_scanner_role_name = var.dspm_scanner_role_name
-  cs_role_arn = local.intermediate_role_arn
-  client_id = var.falcon_client_id
-  client_secret = var.falcon_client_secret
-  external_id = local.external_id
-  dspm_regions = var.dspm_regions
+  cs_role_arn            = local.intermediate_role_arn
+  client_id              = var.falcon_client_id
+  client_secret          = var.falcon_client_secret
+  external_id            = local.external_id
+  dspm_regions           = var.dspm_regions
 }
 
-module "dspm-environments" {
-  count = var.enable_dspm ? 1 : 0
-  source = "https://cs-dev-cloudconnect-templates.s3.amazonaws.com/terraform/modules/cs-aws-integration-terraform/0.1.0/cs-aws-integration-terraform-dspm-environments.tar.gz"
-  dspm_role_name = var.dspm_role_name
+module "dspm_environments" {
+  count                  = var.enable_dspm ? 1 : 0
+  source                 = "../dspm-environments/"
+  dspm_role_name         = var.dspm_role_name
   dspm_scanner_role_name = var.dspm_scanner_role_name
-  region = data.aws_region.current.name
+  region                 = data.aws_region.current.name
   providers = {
     aws = aws
   }

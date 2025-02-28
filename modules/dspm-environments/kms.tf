@@ -15,20 +15,20 @@ data "aws_iam_policy_document" "policy_kms_key" {
     sid    = "Enable IAM User Permissions"
     effect = "Allow"
     principals {
-      type = "AWS"
-      identifiers = [ join("", ["arn:aws:iam::", data.aws_caller_identity.current.account_id, ":root"]) ]
+      type        = "AWS"
+      identifiers = [join("", ["arn:aws:iam::", data.aws_caller_identity.current.account_id, ":root"])]
     }
     actions = [
       "kms:*"
     ]
-    resources = [ "*" ]
+    resources = ["*"]
   }
   statement {
     sid    = "Allow administration of the key"
     effect = "Allow"
     principals {
-      type = "AWS"
-      identifiers = [ "*" ]
+      type        = "AWS"
+      identifiers = ["*"]
     }
     actions = [
       "kms:Create*",
@@ -44,11 +44,11 @@ data "aws_iam_policy_document" "policy_kms_key" {
       "kms:ScheduleKeyDeletion",
       "kms:CancelKeyDeletion"
     ]
-    resources = [ "*" ]
+    resources = ["*"]
     condition {
       test     = "StringEquals"
       variable = "aws:userId"
-      values   = [
+      values = [
         data.aws_iam_role.crowdstrike_aws_integration_role.unique_id,
         "${data.aws_iam_role.crowdstrike_aws_integration_role.unique_id}:*",
       ]
@@ -58,8 +58,8 @@ data "aws_iam_policy_document" "policy_kms_key" {
     sid    = "Allow use of the key"
     effect = "Allow"
     principals {
-      type = "AWS"
-      identifiers = [ "*" ]
+      type        = "AWS"
+      identifiers = ["*"]
     }
     actions = [
       "kms:DescribeKey",
@@ -69,11 +69,11 @@ data "aws_iam_policy_document" "policy_kms_key" {
       "kms:GenerateDataKey",
       "kms:GenerateDataKeyWithoutPlaintext"
     ]
-    resources =  [ "*" ]
+    resources = ["*"]
     condition {
       test     = "StringLike"
       variable = "aws:userId"
-      values   = [
+      values = [
         data.aws_iam_role.crowdstrike_aws_integration_role.unique_id,
         "${data.aws_iam_role.crowdstrike_aws_integration_role.unique_id}:*",
         data.aws_iam_role.crowdstrike_aws_scanner_role.unique_id,
@@ -85,15 +85,15 @@ data "aws_iam_policy_document" "policy_kms_key" {
 }
 
 resource "aws_kms_key" "crowdstrike_kms_key" {
-  description = "CrowdStrike DSPM KMS Key"
-  enable_key_rotation = true
-  deletion_window_in_days = 20
+  description              = "CrowdStrike DSPM KMS Key"
+  enable_key_rotation      = true
+  deletion_window_in_days  = 20
   customer_master_key_spec = "SYMMETRIC_DEFAULT"
-  key_usage = "ENCRYPT_DECRYPT"
-  policy = data.aws_iam_policy_document.policy_kms_key.json
+  key_usage                = "ENCRYPT_DECRYPT"
+  policy                   = data.aws_iam_policy_document.policy_kms_key.json
 
   tags = {
-    (local.logical_tag_key) = local.logical_kms_key
+    (local.logical_tag_key)     = local.logical_kms_key
     (local.crowdstrike_tag_key) = (local.crowdstrike_tag_value)
   }
 }

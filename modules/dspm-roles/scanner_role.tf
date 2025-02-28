@@ -97,9 +97,9 @@ resource "aws_iam_role_policy" "crowdstrike_bucket_reader" {
         Resource = ["*"]
       },
       {
-        Sid = "AllowS3DecryptObjects"
-        Action = "kms:Decrypt"
-        Effect = "Allow",
+        Sid      = "AllowS3DecryptObjects"
+        Action   = "kms:Decrypt"
+        Effect   = "Allow",
         Resource = ["*"]
         Condition = {
           StringLike = {
@@ -175,9 +175,9 @@ resource "aws_iam_role_policy" "crowdstrike_secret_reader" {
         Resource = ["arn:aws:secretsmanager:*:*:secret:CrowdStrikeDSPMClientSecret-*"]
       },
       {
-        Sid = "SecretsManagerListSecrets",
-        Action = "secretsmanager:ListSecrets",
-        Effect = "Allow",
+        Sid      = "SecretsManagerListSecrets",
+        Action   = "secretsmanager:ListSecrets",
+        Effect   = "Allow",
         Resource = "*"
       }
     ]

@@ -43,27 +43,27 @@ resource "aws_iam_role_policy" "crowdstrike_cloud_scan_supplemental" {
 data "aws_iam_policy_document" "crowdstrike_cloud_scan_supplemental_data" {
   #checkov:skip=CKV_AWS_356:DSPM cloud scanning requires read access to various AWS resources
   statement {
-        sid = "CloudScanSupplemental"
-        actions = [
-          "ses:DescribeActiveReceiptRuleSet",
-          "athena:GetWorkGroup",
-          "logs:DescribeLogGroups",
-          "elastictranscoder:ListPipelines",
-          "elasticfilesystem:DescribeFileSystems",
-          "redshift:List*",
-          "redshift:Describe*",
-          "redshift:View*",
-          "redshift-serverless:List*",
-          "ec2:GetConsoleOutput",
-          "sts:DecodeAuthorizationMessage",
-          "elb:DescribeLoadBalancers",
-          "cloudwatch:GetMetricData",
-          "cloudwatch:GetMetricStatistics",
-          "cloudwatch:ListMetrics"
-        ]
-        effect   = "Allow"
-        resources = ["*"]
-      }
+    sid = "CloudScanSupplemental"
+    actions = [
+      "ses:DescribeActiveReceiptRuleSet",
+      "athena:GetWorkGroup",
+      "logs:DescribeLogGroups",
+      "elastictranscoder:ListPipelines",
+      "elasticfilesystem:DescribeFileSystems",
+      "redshift:List*",
+      "redshift:Describe*",
+      "redshift:View*",
+      "redshift-serverless:List*",
+      "ec2:GetConsoleOutput",
+      "sts:DecodeAuthorizationMessage",
+      "elb:DescribeLoadBalancers",
+      "cloudwatch:GetMetricData",
+      "cloudwatch:GetMetricStatistics",
+      "cloudwatch:ListMetrics"
+    ]
+    effect    = "Allow"
+    resources = ["*"]
+  }
 }
 
 resource "aws_iam_role_policy" "crowdstrike_run_data_Scanner_restricted" {
@@ -91,12 +91,12 @@ data "aws_iam_policy_document" "crowdstrike_run_data_Scanner_restricted_data" {
     condition {
       test     = "StringEquals"
       variable = "ec2:ResourceTag/${local.crowdstrike_tag_key}"
-      values = [local.crowdstrike_tag_value]
+      values   = [local.crowdstrike_tag_value]
     }
   }
 
   // Grants permission to launch EC2 from public image
-    // Below resources are generic as they are not known during launch
+  // Below resources are generic as they are not known during launch
   statement {
     sid = "AllowRunDistrosInstances"
     actions = [
@@ -125,9 +125,9 @@ data "aws_iam_policy_document" "crowdstrike_run_data_Scanner_restricted_data" {
       "arn:aws:ec2:*:${data.aws_caller_identity.current.account_id}:volume/*"
     ]
     condition {
-      test = "StringEquals"
+      test     = "StringEquals"
       variable = "aws:RequestTag/${local.crowdstrike_tag_key}"
-      values = [local.crowdstrike_tag_value]
+      values   = [local.crowdstrike_tag_value]
     }
   }
 
@@ -144,14 +144,14 @@ data "aws_iam_policy_document" "crowdstrike_run_data_Scanner_restricted_data" {
       "arn:aws:ec2:*:${data.aws_caller_identity.current.account_id}:volume/*"
     ]
     condition {
-      test = "StringEquals"
+      test     = "StringEquals"
       variable = "aws:RequestTag/${local.crowdstrike_tag_key}"
-      values = [local.crowdstrike_tag_value]
+      values   = [local.crowdstrike_tag_value]
     }
     condition {
-      test = "StringEquals"
+      test     = "StringEquals"
       variable = "ec2:CreateAction"
-      values = ["RunInstances"]
+      values   = ["RunInstances"]
     }
   }
 
@@ -165,21 +165,21 @@ data "aws_iam_policy_document" "crowdstrike_run_data_Scanner_restricted_data" {
     resources = [
       join("/", [
         "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role",
-        var.dspm_scanner_role_name])
+      var.dspm_scanner_role_name])
     ]
     condition {
-      test = "StringEquals"
+      test     = "StringEquals"
       variable = "iam:PassedToService"
-      values = ["ec2.amazonaws.com"]
+      values   = ["ec2.amazonaws.com"]
     }
   }
 
   statement {
     sid = "ssmAmiAliasPermissions"
     actions = [
-    "ssm:GetParameters"
+      "ssm:GetParameters"
     ]
-    effect = "Allow"
+    effect    = "Allow"
     resources = ["arn:aws:ssm:*:*:parameter/aws/service/ami-amazon-linux-latest/*"]
   }
 }
@@ -223,7 +223,7 @@ data "aws_iam_policy_document" "crowdstrike_rds_clone_data" {
       "kms:ListGrants",
       "kms:DescribeKey"
     ]
-    effect = "Allow"
+    effect    = "Allow"
     resources = ["*"]
     condition {
       test     = "StringLike"
@@ -352,8 +352,8 @@ data "aws_iam_policy_document" "crowdstrike_rds_clone_data" {
   // Restricts create db instance permission to CrowdStrike VPC
   statement {
     sid = "RDSPermissionDBClusterCreateInstanceCrowdStrikeVPC"
-    actions =[
-     "rds:CreateDBInstance"
+    actions = [
+      "rds:CreateDBInstance"
     ]
     effect = "Allow"
     resources = [
@@ -406,12 +406,12 @@ resource "aws_iam_role_policy" "crowdstrike_redshift_clone" {
 data "aws_iam_policy_document" "crowdstrike_redshift_clone" {
   // Grants permission to create a cluster snapshot and restore cluster from snapshot
   statement {
-    sid     = "RedshiftPermissionsForRestoring"
+    sid = "RedshiftPermissionsForRestoring"
     actions = [
       "redshift:RestoreFromClusterSnapshot",
       "redshift:CreateClusterSnapshot"
     ]
-    effect    = "Allow"
+    effect = "Allow"
     resources = [
       "arn:aws:redshift:*:${data.aws_caller_identity.current.account_id}:cluster:*",
       "arn:aws:redshift:*:${data.aws_caller_identity.current.account_id}:snapshot:*"
@@ -420,14 +420,14 @@ data "aws_iam_policy_document" "crowdstrike_redshift_clone" {
 
   // Grants permission to create tags, modify and delete CrowdStrike's clusters and snapshots
   statement {
-    sid     = "RedshiftPermissionsForControllingClones"
+    sid = "RedshiftPermissionsForControllingClones"
     actions = [
       "redshift:CreateTags",
       "redshift:ModifyCluster*",
       "redshift:DeleteCluster",
       "redshift:DeleteClusterSnapshot"
     ]
-    effect    = "Allow"
+    effect = "Allow"
     resources = [
       "arn:aws:redshift:*:${data.aws_caller_identity.current.account_id}:cluster:crowdstrike-*",
       "arn:aws:redshift:*:${data.aws_caller_identity.current.account_id}:snapshot:*/crowdstrike-snapshot-*"

@@ -12,8 +12,8 @@ variable "dspm_scanner_role_name" {
 
 variable "client_id" {
   description = "CrowdStrike client ID"
-  type = string
-  nullable = false
+  type        = string
+  nullable    = false
   validation {
     condition     = length(var.client_id) == 32 && can(regex("^[a-fA-F0-9]+$", var.client_id))
     error_message = "The client_id must be a valid v4 uuid (without dashes), containing only hexadecimal characters and exactly 32 characters long."
@@ -22,8 +22,8 @@ variable "client_id" {
 
 variable "client_secret" {
   description = "CrowdStrike client secret"
-  type = string
-  nullable = false
+  type        = string
+  nullable    = false
 }
 
 variable "cs_role_arn" {
@@ -43,19 +43,19 @@ variable "external_id" {
   nullable    = false
 
   validation {
-    condition     = (
-    length(var.external_id) >= 1 &&
-    length(var.external_id) <= 256 &&
-    can(regex("^[\\p{L}\\p{M}\\p{S}\\p{N}\\p{P}]+$", var.external_id))
+    condition = (
+      length(var.external_id) >= 1 &&
+      length(var.external_id) <= 256 &&
+      can(regex("^[\\p{L}\\p{M}\\p{S}\\p{N}\\p{P}]+$", var.external_id))
     )
     error_message = "The provided value for the field external_id must be a valid AWS external ID."
   }
 }
 
-variable "region" {
-  description = "The region from which the DSPM terraform roles module will run"
-  type = string
-  default = "us-east-1"
+variable "primary_region" {
+  description = "Region for deploying global AWS resources (IAM roles, policies, etc.) that are account-wide and only need to be created once. Distinct from dspm_regions which controls region-specific resource deployment."
+  type        = string
+  default     = "us-east-1"
 }
 
 variable "dspm_regions" {
