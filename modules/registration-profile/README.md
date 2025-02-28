@@ -135,7 +135,7 @@ resource "crowdstrike_cloud_aws_account" "this" {
 
   dspm = {
     enabled   = var.enable_dspm
-    role_name = var.dspm_custom_role
+    role_name = var.dspm_role_name
   }
   provider = crowdstrike
 }
