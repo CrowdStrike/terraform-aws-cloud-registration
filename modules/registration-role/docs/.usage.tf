@@ -12,9 +12,19 @@ terraform {
   }
 }
 
+variable "falcon_client_id" {
+  type        = string
+  sensitive   = true
+  description = "Falcon API Client ID"
+}
+
+variable "falcon_client_secret" {
+  type        = string
+  sensitive   = true
+  description = "Falcon API Client Secret"
+}
+
 locals {
-  falcon_client_id           = "<your-falcon-client-id>"
-  falcon_client_secret       = "<your-falcon-client-secret>"
   management_account_id      = "<your aws account id>"
   organization_id            = "<your aws organization id>"
   cross_account_role_name    = "<your aws cross account role>"
@@ -28,8 +38,8 @@ locals {
 }
 
 provider "crowdstrike" {
-  client_id     = local.falcon_client_id
-  client_secret = local.falcon_client_secret
+  client_id     = var.falcon_client_id
+  client_secret = var.falcon_client_secret
 }
 
 # Provision AWS account in Falcon.
@@ -66,8 +76,8 @@ module "fcs_management_account" {
   source                      = "CrowdStrike/fcs/aws//modules/registration-role"
   cross_account_role_name     = local.cross_account_role_name
   account_id                  = local.management_account_id
-  falcon_client_id            = local.falcon_client_id
-  falcon_client_secret        = local.falcon_client_secret
+  falcon_client_id            = var.falcon_client_id
+  falcon_client_secret        = var.falcon_client_secret
   organization_id             = local.organization_id
   primary_region              = local.primary_region
   enable_sensor_management    = local.enable_sensor_management
@@ -98,8 +108,8 @@ module "fcs_child_account_1" {
   source                      = "CrowdStrike/fcs/aws//modules/registration-role"
   cross_account_role_name     = local.cross_account_role_name
   account_id                  = "<child account id>"
-  falcon_client_id            = local.falcon_client_id
-  falcon_client_secret        = local.falcon_client_secret
+  falcon_client_id            = var.falcon_client_id
+  falcon_client_secret        = var.falcon_client_secret
   organization_id             = local.organization_id
   primary_region              = local.primary_region
   enable_sensor_management    = local.enable_sensor_management

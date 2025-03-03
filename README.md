@@ -15,12 +15,12 @@
 
 | Name | Source | Version |
 |------|--------|---------|
-| <a name="module_asset_inventory"></a> [asset\_inventory](#module\_asset\_inventory) | ../asset-inventory/ | n/a |
-| <a name="module_dspm_environments"></a> [dspm\_environments](#module\_dspm\_environments) | ../dspm-environments/ | n/a |
-| <a name="module_dspm_roles"></a> [dspm\_roles](#module\_dspm\_roles) | ../dspm-roles/ | n/a |
-| <a name="module_realtime_visibility"></a> [realtime\_visibility](#module\_realtime\_visibility) | ../realtime-visibility/ | n/a |
-| <a name="module_realtime_visibility_rules"></a> [realtime\_visibility\_rules](#module\_realtime\_visibility\_rules) | ../realtime-visibility-rules/ | n/a |
-| <a name="module_sensor_management"></a> [sensor\_management](#module\_sensor\_management) | ../sensor-management/ | n/a |
+| <a name="module_asset_inventory"></a> [asset\_inventory](#module\_asset\_inventory) | ./modules/asset-inventory/ | n/a |
+| <a name="module_dspm_environments"></a> [dspm\_environments](#module\_dspm\_environments) | ./modules/dspm-environments/ | n/a |
+| <a name="module_dspm_roles"></a> [dspm\_roles](#module\_dspm\_roles) | ./modules/dspm-roles/ | n/a |
+| <a name="module_realtime_visibility"></a> [realtime\_visibility](#module\_realtime\_visibility) | ./modules/realtime-visibility/ | n/a |
+| <a name="module_realtime_visibility_rules"></a> [realtime\_visibility\_rules](#module\_realtime\_visibility\_rules) | ./modules/realtime-visibility-rules/ | n/a |
+| <a name="module_sensor_management"></a> [sensor\_management](#module\_sensor\_management) | ./modules/sensor-management/ | n/a |
 ## Resources
 
 | Name | Type |
@@ -70,9 +70,19 @@ terraform {
   }
 }
 
+variable "falcon_client_id" {
+  type        = string
+  sensitive   = true
+  description = "Falcon API Client ID"
+}
+
+variable "falcon_client_secret" {
+  type        = string
+  sensitive   = true
+  description = "Falcon API Client Secret"
+}
+
 locals {
-  falcon_client_id           = "<your-falcon-client-id>"
-  falcon_client_secret       = "<your-falcon-client-secret>"
   account_id                 = "<your aws account id>"
   enable_realtime_visibility = true
   primary_region             = "us-east-1"
@@ -84,8 +94,8 @@ locals {
 }
 
 provider "crowdstrike" {
-  client_id     = local.falcon_client_id
-  client_secret = local.falcon_client_secret
+  client_id     = var.falcon_client_id
+  client_secret = var.falcon_client_secret
 }
 provider "aws" {
   region = "us-east-1"
@@ -95,11 +105,6 @@ provider "aws" {
   region = "us-east-2"
   alias  = "us-east-2"
 }
-provider "aws" {
-  region = "us-west-1"
-  alias  = "us-west-1"
-}
-
 
 # Provision AWS account in Falcon.
 resource "crowdstrike_cloud_aws_account" "this" {
@@ -131,10 +136,10 @@ resource "crowdstrike_cloud_aws_account" "this" {
 
 module "fcs_account_onboarding" {
   source                     = "CrowdStrike/fcs/aws"
-  falcon_client_id           = local.falcon_client_id
-  falcon_client_secret       = local.falcon_client_secret
+  falcon_client_id           = var.falcon_client_id
+  falcon_client_secret       = var.falcon_client_secret
   account_id                 = local.account_id
-  is_primary_region          = primary_region == "us-east-1"
+  primary_region             = local.primary_region
   enable_sensor_management   = local.enable_sensor_management
   enable_realtime_visibility = local.enable_realtime_visibility
   enable_idp                 = local.enable_idp
@@ -157,10 +162,10 @@ module "fcs_account_onboarding" {
 # - update the provider with region specific one
 module "fcs_account_us-east-2" {
   source                     = "CrowdStrike/fcs/aws"
-  falcon_client_id           = local.falcon_client_id
-  falcon_client_secret       = local.falcon_client_secret
+  falcon_client_id           = var.falcon_client_id
+  falcon_client_secret       = var.falcon_client_secret
   account_id                 = local.account_id
-  is_primary_region          = primary_region == "us-east-2"
+  primary_region             = local.primary_region
   enable_sensor_management   = local.enable_sensor_management
   enable_realtime_visibility = local.enable_realtime_visibility
   enable_idp                 = local.enable_idp

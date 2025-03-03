@@ -15,7 +15,7 @@ variable "falcon_client_id" {
   type        = string
   nullable    = false
   validation {
-    condition     = length(var.client_id) == 32 && can(regex("^[a-fA-F0-9]+$", var.client_id))
+    condition     = length(var.falcon_client_id) == 32 && can(regex("^[a-fA-F0-9]+$", var.falcon_client_id))
     error_message = "The client_id must be a valid v4 uuid (without dashes), containing only hexadecimal characters and exactly 32 characters long."
   }
 }
@@ -32,7 +32,7 @@ variable "intermediate_role_arn" {
   nullable    = false
 
   validation {
-    condition     = can(regex("^arn:aws:iam::[0-9]{12}:role/[a-zA-Z0-9+=,.@\\-_/]+$", var.cs_role_arn))
+    condition     = can(regex("^arn:aws:iam::[0-9]{12}:role/[a-zA-Z0-9+=,.@\\-_/]+$", var.intermediate_role_arn))
     error_message = "The provided value for cs_role_arn must be a valid AWS IAM role ARN."
   }
 }

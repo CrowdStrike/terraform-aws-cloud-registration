@@ -23,9 +23,8 @@ locals {
 }
 
 module "asset_inventory" {
-  count  = (var.is_primary_region) ? 1 : 0
-  source = "../asset-inventory/"
-
+  count                 = (var.is_primary_region) ? 1 : 0
+  source                = "./modules/asset-inventory/"
   external_id           = local.external_id
   intermediate_role_arn = local.intermediate_role_arn
   role_name             = split("/", local.iam_role_arn)[1]
@@ -42,7 +41,7 @@ module "asset_inventory" {
 
 module "sensor_management" {
   count                 = (var.is_primary_region && var.enable_sensor_management) ? 1 : 0
-  source                = "../sensor-management/"
+  source                = "./modules/sensor-management/"
   falcon_client_id      = var.falcon_client_id
   falcon_client_secret  = var.falcon_client_secret
   external_id           = local.external_id
@@ -59,9 +58,8 @@ module "sensor_management" {
 }
 
 module "realtime_visibility" {
-  count  = (var.is_primary_region && (var.enable_realtime_visibility || var.enable_idp)) ? 1 : 0
-  source = "../realtime-visibility/"
-
+  count                   = (var.is_primary_region && (var.enable_realtime_visibility || var.enable_idp)) ? 1 : 0
+  source                  = "./modules/realtime-visibility/"
   use_existing_cloudtrail = var.use_existing_cloudtrail
   cloudtrail_bucket_name  = local.account.cloudtrail_bucket_name
   role_name               = var.eventbridge_role_name
@@ -81,9 +79,8 @@ module "realtime_visibility" {
 }
 
 module "realtime_visibility_rules" {
-  count  = (var.enable_realtime_visibility || var.enable_idp) ? 1 : 0
-  source = "../realtime-visibility-rules/"
-
+  count                = (var.enable_realtime_visibility || var.enable_idp) ? 1 : 0
+  source               = "./modules/realtime-visibility-rules/"
   eventbus_arn         = local.eventbus_arn
   eventbridge_role_arn = try(module.realtime_visibility.0.eventbridge_role_arn, local.eventbridge_role_arn)
 
@@ -98,24 +95,26 @@ module "realtime_visibility_rules" {
 
 module "dspm_roles" {
   count                  = (var.is_primary_region && var.enable_dspm) ? 1 : 0
-  source                 = "../dspm-roles/"
-  dspm_role_name         = var.dspm_role_name
-  dspm_scanner_role_name = var.dspm_scanner_role_name
-  intermediate_role_arn  = var.intermediate_role_arn
+  source                 = "./modules/dspm-roles/"
   falcon_client_id       = var.falcon_client_id
   falcon_client_secret   = var.falcon_client_secret
+  dspm_role_name         = var.dspm_role_name
+  dspm_scanner_role_name = var.dspm_scanner_role_name
+  intermediate_role_arn  = local.intermediate_role_arn
   external_id            = local.external_id
   dspm_regions           = var.dspm_regions
 }
 
 module "dspm_environments" {
   count                  = var.enable_dspm ? 1 : 0
-  source                 = "../dspm-environments/"
+  source                 = "./modules/dspm-environments/"
   dspm_role_name         = var.dspm_role_name
   dspm_scanner_role_name = var.dspm_scanner_role_name
   region                 = local.aws_region
+
+  depends_on = [module.dspm_roles]
+
   providers = {
     aws = aws
   }
-  depends_on = [module.dspm_roles]
 }
