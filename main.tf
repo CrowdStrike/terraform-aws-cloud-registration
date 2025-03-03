@@ -1,5 +1,4 @@
 data "aws_partition" "current" {}
-data "aws_region" "current" {}
 
 data "crowdstrike_cloud_aws_account" "target" {
   account_id      = var.account_id
@@ -8,7 +7,6 @@ data "crowdstrike_cloud_aws_account" "target" {
 
 locals {
   aws_partition = data.aws_partition.current.partition
-  aws_region    = data.aws_region.current.name
 
   # if we target by account_id, it will be the only account returned
   # if we target by organization_id, we pick the first one because all accounts will have the same settings
@@ -110,7 +108,6 @@ module "dspm_environments" {
   source                 = "./modules/dspm-environments/"
   dspm_role_name         = var.dspm_role_name
   dspm_scanner_role_name = var.dspm_scanner_role_name
-  region                 = local.aws_region
 
   depends_on = [module.dspm_roles]
 

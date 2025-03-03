@@ -1,3 +1,5 @@
+data "aws_region" "current" {}
+
 resource "aws_vpc" "VPC" {
   cidr_block           = "10.0.0.0/16"
   enable_dns_support   = true
@@ -264,7 +266,7 @@ resource "aws_security_group" "DBSecurityGroup" {
 }
 
 resource "aws_iam_role_policy" "vpc_policy" {
-  name = "RunDataScanner-${var.region}-${aws_vpc.VPC.id}"
+  name = "RunDataScanner-${local.aws_region}-${aws_vpc.VPC.id}"
   role = var.dspm_role_name
 
   policy = jsonencode({
@@ -282,7 +284,7 @@ resource "aws_iam_role_policy" "vpc_policy" {
         ]
         Condition = {
           StringEquals = {
-            "ec2:Vpc" = "arn:aws:ec2:${var.region}:${data.aws_caller_identity.current.account_id}:vpc/${aws_vpc.VPC.id}"
+            "ec2:Vpc" = "arn:aws:ec2:${local.aws_region}:${data.aws_caller_identity.current.account_id}:vpc/${aws_vpc.VPC.id}"
           }
         }
       }

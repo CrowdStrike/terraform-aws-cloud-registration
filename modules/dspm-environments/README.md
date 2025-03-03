@@ -40,6 +40,7 @@ No modules.
 | [aws_iam_policy_document.policy_kms_key](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/iam_policy_document) | data source |
 | [aws_iam_role.crowdstrike_aws_integration_role](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/iam_role) | data source |
 | [aws_iam_role.crowdstrike_aws_scanner_role](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/iam_role) | data source |
+| [aws_region.current](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/region) | data source |
 ## Inputs
 
 | Name | Description | Type | Default | Required |
@@ -47,7 +48,6 @@ No modules.
 | <a name="input_deployment_name"></a> [deployment\_name](#input\_deployment\_name) | The deployment name will be used in environment installation | `string` | `"dspm-environment"` | no |
 | <a name="input_dspm_role_name"></a> [dspm\_role\_name](#input\_dspm\_role\_name) | The unique name of the IAM role that CrowdStrike will be assuming | `string` | `"CrowdStrikeDSPMIntegrationRole"` | no |
 | <a name="input_dspm_scanner_role_name"></a> [dspm\_scanner\_role\_name](#input\_dspm\_scanner\_role\_name) | The unique name of the IAM role that CrowdStrike Scanner will be assuming | `string` | `"CrowdStrikeDSPMScannerRole"` | no |
-| <a name="input_region"></a> [region](#input\_region) | The region the terraform will run from | `string` | `"us-east-1"` | no |
 ## Outputs
 
 | Name | Description |
@@ -65,7 +65,8 @@ terraform {
       version = ">= 4.45"
     }
     crowdstrike = {
-      source = "crowdstrike/crowdstrike"
+      source  = "crowdstrike/crowdstrike"
+      version = ">= 0.0.15"
     }
   }
 }
@@ -79,25 +80,25 @@ provider "crowdstrike" {
 }
 
 data "crowdstrike_cloud_aws_account" "target" {
-  account_id      = var.account_id
+  account_id = var.account_id
 }
 
 module "dspm_roles" {
-  count                  = (var.is_primary_region && var.enable_dspm) ? 1 : 0
-  source                 = "CrowdStrike/fcs/aws//modules/dspm-roles/"
-  dspm_role_name         = split("/", data.crowdstrike_cloud_aws_account.target.accounts.0.dspm_role_arn)[1]
-  intermediate_role_arn  = data.crowdstrike_cloud_aws_account.target.accounts.0.intermediate_role_arn
-  external_id            = data.crowdstrike_cloud_aws_account.target.accounts.0.external_id
-  falcon_client_id       = var.falcon_client_id
-  falcon_client_secret   = var.falcon_client_secret
-  dspm_regions           = ["us-east-1"]
+  count                 = (var.is_primary_region && var.enable_dspm) ? 1 : 0
+  source                = "CrowdStrike/fcs/aws//modules/dspm-roles/"
+  dspm_role_name        = split("/", data.crowdstrike_cloud_aws_account.target.accounts.0.dspm_role_arn)[1]
+  intermediate_role_arn = data.crowdstrike_cloud_aws_account.target.accounts.0.intermediate_role_arn
+  external_id           = data.crowdstrike_cloud_aws_account.target.accounts.0.external_id
+  falcon_client_id      = var.falcon_client_id
+  falcon_client_secret  = var.falcon_client_secret
+  dspm_regions          = ["us-east-1"]
 }
 
 module "dspm_environments" {
-  count                  = var.enable_dspm ? 1 : 0
-  source                 = "CrowdStrike/fcs/aws//modules/dspm-environments/"
-  dspm_role_name         = split("/", data.crowdstrike_cloud_aws_account.target.accounts.0.dspm_role_arn)[1]
-  region                 = "us-east-1"
+  count          = var.enable_dspm ? 1 : 0
+  source         = "CrowdStrike/fcs/aws//modules/dspm-environments/"
+  dspm_role_name = split("/", data.crowdstrike_cloud_aws_account.target.accounts.0.dspm_role_arn)[1]
+  region         = "us-east-1"
   providers = {
     aws = aws
   }

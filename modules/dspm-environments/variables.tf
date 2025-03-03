@@ -1,9 +1,3 @@
-variable "region" {
-  description = "The region the terraform will run from"
-  type        = string
-  default     = "us-east-1"
-}
-
 variable "deployment_name" {
   description = "The deployment name will be used in environment installation"
   type        = string

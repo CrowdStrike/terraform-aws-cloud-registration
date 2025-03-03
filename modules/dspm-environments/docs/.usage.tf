@@ -6,7 +6,8 @@ terraform {
       version = ">= 4.45"
     }
     crowdstrike = {
-      source = "crowdstrike/crowdstrike"
+      source  = "crowdstrike/crowdstrike"
+      version = ">= 0.0.15"
     }
   }
 }
@@ -20,25 +21,25 @@ provider "crowdstrike" {
 }
 
 data "crowdstrike_cloud_aws_account" "target" {
-  account_id      = var.account_id
+  account_id = var.account_id
 }
 
 module "dspm_roles" {
-  count                  = (var.is_primary_region && var.enable_dspm) ? 1 : 0
-  source                 = "CrowdStrike/fcs/aws//modules/dspm-roles/"
-  dspm_role_name         = split("/", data.crowdstrike_cloud_aws_account.target.accounts.0.dspm_role_arn)[1]
-  intermediate_role_arn  = data.crowdstrike_cloud_aws_account.target.accounts.0.intermediate_role_arn
-  external_id            = data.crowdstrike_cloud_aws_account.target.accounts.0.external_id
-  falcon_client_id       = var.falcon_client_id
-  falcon_client_secret   = var.falcon_client_secret
-  dspm_regions           = ["us-east-1"]
+  count                 = (var.is_primary_region && var.enable_dspm) ? 1 : 0
+  source                = "CrowdStrike/fcs/aws//modules/dspm-roles/"
+  dspm_role_name        = split("/", data.crowdstrike_cloud_aws_account.target.accounts.0.dspm_role_arn)[1]
+  intermediate_role_arn = data.crowdstrike_cloud_aws_account.target.accounts.0.intermediate_role_arn
+  external_id           = data.crowdstrike_cloud_aws_account.target.accounts.0.external_id
+  falcon_client_id      = var.falcon_client_id
+  falcon_client_secret  = var.falcon_client_secret
+  dspm_regions          = ["us-east-1"]
 }
 
 module "dspm_environments" {
-  count                  = var.enable_dspm ? 1 : 0
-  source                 = "CrowdStrike/fcs/aws//modules/dspm-environments/"
-  dspm_role_name         = split("/", data.crowdstrike_cloud_aws_account.target.accounts.0.dspm_role_arn)[1]
-  region                 = "us-east-1"
+  count          = var.enable_dspm ? 1 : 0
+  source         = "CrowdStrike/fcs/aws//modules/dspm-environments/"
+  dspm_role_name = split("/", data.crowdstrike_cloud_aws_account.target.accounts.0.dspm_role_arn)[1]
+  region         = "us-east-1"
   providers = {
     aws = aws
   }

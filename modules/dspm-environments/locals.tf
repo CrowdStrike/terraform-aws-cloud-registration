@@ -10,9 +10,10 @@ locals {
   logical_ec2_security_group    = "EC2SecurityGroup"
   logical_db_security_group     = "DBSecurityGroup"
   logical_kms_key               = "KMSKey"
+  aws_region                    = data.aws_region.current.name
 
   availability_zones = [
-    "${var.region}a",
-    "${var.region}b"
+    "${local.aws_region}a",
+    "${local.aws_region}b"
   ]
 }
