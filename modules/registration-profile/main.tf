@@ -12,7 +12,7 @@ locals {
       account_id             = ""
       external_id            = ""
       intermediate_role_arn  = ""
-      iam_role_arn           = ""
+      iam_role_name          = ""
       eventbus_arn           = ""
       cloudtrail_bucket_name = ""
     }
@@ -20,7 +20,7 @@ locals {
 
   external_id            = coalesce(var.external_id, local.account.external_id)
   intermediate_role_arn  = coalesce(var.intermediate_role_arn, local.account.intermediate_role_arn)
-  iam_role_arn           = coalesce(var.iam_role_arn, local.account.iam_role_arn)
+  iam_role_name          = coalesce(var.iam_role_name, local.account.iam_role_name)
   eventbus_arn           = coalesce(var.eventbus_arn, local.account.eventbus_arn)
   cloudtrail_bucket_name = var.use_existing_cloudtrail ? "" : coalesce(var.cloudtrail_bucket_name, local.account.cloudtrail_bucket_name)
 
@@ -32,7 +32,7 @@ module "asset_inventory" {
   source                = "../asset-inventory/"
   external_id           = local.external_id
   intermediate_role_arn = local.intermediate_role_arn
-  role_name             = split("/", local.iam_role_arn)[1]
+  role_name             = local.iam_role_name
   permissions_boundary  = var.permissions_boundary
 
   providers = {

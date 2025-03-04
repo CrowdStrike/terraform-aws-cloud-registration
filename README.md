@@ -3,8 +3,6 @@
 
 [![Twitter URL](https://img.shields.io/twitter/url?label=Follow%20%40CrowdStrike&style=social&url=https%3A%2F%2Ftwitter.com%2FCrowdStrike)](https://twitter.com/CrowdStrike)<br/>
 
-# Terraform Modules Documentation
-
 ## Providers
 
 | Name | Version |
@@ -26,6 +24,7 @@
 | Name | Type |
 |------|------|
 | [aws_partition.current](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/partition) | data source |
+| [aws_region.current](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/region) | data source |
 | [crowdstrike_cloud_aws_account.target](https://registry.terraform.io/providers/crowdstrike/crowdstrike/latest/docs/data-sources/cloud_aws_account) | data source |
 ## Inputs
 
@@ -138,7 +137,7 @@ module "fcs_account_onboarding" {
   falcon_client_id           = var.falcon_client_id
   falcon_client_secret       = var.falcon_client_secret
   account_id                 = local.account_id
-  primary_region             = local.primary_region
+  is_primary_region          = local.primary_region == "us-east-1"
   enable_sensor_management   = local.enable_sensor_management
   enable_realtime_visibility = local.enable_realtime_visibility
   enable_idp                 = local.enable_idp
@@ -164,7 +163,7 @@ module "fcs_account_us-east-2" {
   falcon_client_id           = var.falcon_client_id
   falcon_client_secret       = var.falcon_client_secret
   account_id                 = local.account_id
-  primary_region             = local.primary_region
+  is_primary_region          = local.primary_region == "us-east-2"
   enable_sensor_management   = local.enable_sensor_management
   enable_realtime_visibility = local.enable_realtime_visibility
   enable_idp                 = local.enable_idp

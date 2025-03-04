@@ -12,8 +12,6 @@ header-from: docs/.header.md
 content: |-
   {{ .Header }}
 
-  # Terraform Modules Documentation
-
   {{ .Providers }}
   {{ .Modules }}
   {{ .Resources }}

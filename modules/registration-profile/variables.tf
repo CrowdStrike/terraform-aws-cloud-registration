@@ -99,10 +99,10 @@ variable "intermediate_role_arn" {
   description = "The intermediate role that is allowed to assume the reader role"
 }
 
-variable "iam_role_arn" {
+variable "iam_role_name" {
   type        = string
   default     = ""
-  description = "The ARN of the reader role"
+  description = "The name of the reader role"
 }
 
 variable "eventbus_arn" {

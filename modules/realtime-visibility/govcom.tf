@@ -84,9 +84,7 @@ resource "aws_lambda_function" "eventbridge" {
     variables = {
       CS_CLIENT_ID     = var.falcon_client_id
       CS_CLIENT_SECRET = var.falcon_client_secret
-      CS_GOV_CLOUD     = "false"
-      CS_DEBUG_ENABLED = "true"
-      CS_API_URL       = "https://api.crowdstrike.com"
+      CS_GOV_CLOUD     = "true"
     }
   }
 
