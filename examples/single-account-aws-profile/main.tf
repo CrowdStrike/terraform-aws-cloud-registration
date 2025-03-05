@@ -41,7 +41,7 @@ resource "crowdstrike_cloud_aws_account" "this" {
   provider = crowdstrike
 }
 
-module "fcs_management_account" {
+module "fcs_account" {
   source = "../../modules/registration-profile/"
   # source                      = "CrowdStrike/fcs/aws//modules/registration-profile"
   aws_profile                 = var.aws_profile

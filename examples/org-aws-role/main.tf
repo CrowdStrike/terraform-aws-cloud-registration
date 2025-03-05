@@ -15,7 +15,9 @@ provider "crowdstrike" {
 
 # Provision AWS account in Falcon.
 resource "crowdstrike_cloud_aws_account" "this" {
-  account_id = var.account_id
+  account_id                         = var.account_id
+  organization_id                    = var.organization_id
+  is_organization_management_account = true
 
   asset_inventory = {
     enabled = true
@@ -41,13 +43,13 @@ resource "crowdstrike_cloud_aws_account" "this" {
   provider = crowdstrike
 }
 
-module "fcs_account" {
-  # source                      = "CrowdStrike/fcs/aws//modules/registration-role"
-  source                      = "../../modules/registration-role/"
+module "fcs_management_account" {
+  source                      = "CrowdStrike/fcs/aws//modules/registration-role"
   cross_account_role_name     = var.cross_account_role_name
   falcon_client_id            = var.falcon_client_id
   falcon_client_secret        = var.falcon_client_secret
   account_id                  = var.account_id
+  organization_id             = var.organization_id
   primary_region              = local.primary_region
   enable_sensor_management    = local.enable_sensor_management
   enable_realtime_visibility  = local.enable_realtime_visibility
@@ -57,7 +59,6 @@ module "fcs_account" {
   enable_dspm                 = local.enable_dspm
   dspm_regions                = local.dspm_regions
 
-  account_type           = crowdstrike_cloud_aws_account.this.account_type
   iam_role_name          = crowdstrike_cloud_aws_account.this.iam_role_name
   external_id            = crowdstrike_cloud_aws_account.this.external_id
   intermediate_role_arn  = crowdstrike_cloud_aws_account.this.intermediate_role_arn
@@ -68,3 +69,34 @@ module "fcs_account" {
     crowdstrike = crowdstrike
   }
 }
+
+# for each child account you want to onboard
+# - duplicate this module
+# - replace `aws_profile` with the correct profile for your child account
+module "fcs_child_account_1" {
+  source                      = "CrowdStrike/fcs/aws//modules/registration-role"
+  cross_account_role_name     = var.cross_account_role_name
+  falcon_client_id            = var.falcon_client_id
+  falcon_client_secret        = var.falcon_client_secret
+  account_id                  = var.account_id
+  organization_id             = var.organization_id
+  primary_region              = local.primary_region
+  enable_sensor_management    = local.enable_sensor_management
+  enable_realtime_visibility  = local.enable_realtime_visibility
+  enable_idp                  = local.enable_idp
+  realtime_visibility_regions = ["all"]
+  use_existing_cloudtrail     = true # use the cloudtrail at the org level
+  enable_dspm                 = local.enable_dspm
+  dspm_regions                = local.dspm_regions
+
+  iam_role_name          = crowdstrike_cloud_aws_account.this.iam_role_name
+  external_id            = crowdstrike_cloud_aws_account.this.external_id
+  intermediate_role_arn  = crowdstrike_cloud_aws_account.this.intermediate_role_arn
+  eventbus_arn           = crowdstrike_cloud_aws_account.this.eventbus_arn
+  cloudtrail_bucket_name = "" # not needed for child accounts
+
+  providers = {
+    crowdstrike = crowdstrike
+  }
+}
+
