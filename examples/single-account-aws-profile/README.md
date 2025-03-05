@@ -21,6 +21,7 @@ Set the following environment variables:
 export TF_VAR_falcon_client_id=<your client id>
 export TF_VAR_falcon_client_secret=<your client secret>
 export TF_VAR_account_id=<your aws account id>
+export TF_VAR_aws_profile=<your aws profile>
 ```
 
 Run the following commands:

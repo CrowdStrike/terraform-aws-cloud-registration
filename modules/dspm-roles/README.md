@@ -8,9 +8,6 @@
 | Name | Version |
 |------|---------|
 | <a name="provider_aws"></a> [aws](#provider\_aws) | n/a |
-## Modules
-
-No modules.
 ## Resources
 
 | Name | Type |
@@ -56,6 +53,8 @@ No modules.
 |------|-------------|
 | <a name="output_dspm_role_arn"></a> [dspm\_role\_arn](#output\_dspm\_role\_arn) | The arn of the IAM role that CrowdStrike will be assuming |
 | <a name="output_dspm_scanner_role_arn"></a> [dspm\_scanner\_role\_arn](#output\_dspm\_scanner\_role\_arn) | The arn of the IAM role that CrowdStrike Scanner will be assuming |
+| <a name="output_integration_role_unique_id"></a> [integration\_role\_unique\_id](#output\_integration\_role\_unique\_id) | The unique ID of the DSPM integration role |
+| <a name="output_scanner_role_unique_id"></a> [scanner\_role\_unique\_id](#output\_scanner\_role\_unique\_id) | The unique ID of the DSPM scanner role |
 
 ## Usage
 

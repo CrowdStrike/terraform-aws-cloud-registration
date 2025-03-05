@@ -54,22 +54,6 @@ module "sensor_management" {
   }
 }
 
-module "realtime_visibility_main" {
-  count                   = (var.enable_realtime_visibility || var.enable_idp) ? 1 : 0
-  source                  = "../realtime-visibility/"
-  use_existing_cloudtrail = var.use_existing_cloudtrail
-  is_organization_trail   = length(var.organization_id) > 0
-  cloudtrail_bucket_name  = local.cloudtrail_bucket_name
-  is_gov                  = var.is_gov
-  is_gov_commercial       = local.is_gov_commercial
-  falcon_client_id        = var.falcon_client_id
-  falcon_client_secret    = var.falcon_client_secret
-
-
-  providers = {
-    aws = aws
-  }
-}
 
 module "dspm_roles" {
   count                  = (var.enable_dspm && !var.is_gov) ? 1 : 0

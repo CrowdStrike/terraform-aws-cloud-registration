@@ -16,9 +16,6 @@ There are two methods for 1-click sensor deployment: automated and manual.
 | Name | Version |
 |------|---------|
 | <a name="provider_aws"></a> [aws](#provider\_aws) | >= 4.45 |
-## Modules
-
-No modules.
 ## Resources
 
 | Name | Type |

@@ -14,9 +14,6 @@ This terraform module deploys the necessary resources in an AWS cloud environmen
 | Name | Version |
 |------|---------|
 | <a name="provider_aws"></a> [aws](#provider\_aws) | >= 4.45 |
-## Modules
-
-No modules.
 ## Resources
 
 | Name | Type |

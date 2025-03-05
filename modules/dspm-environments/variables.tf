@@ -10,8 +10,13 @@ variable "dspm_role_name" {
   default     = "CrowdStrikeDSPMIntegrationRole"
 }
 
-variable "dspm_scanner_role_name" {
-  description = "The unique name of the IAM role that CrowdStrike Scanner will be assuming"
+
+variable "integration_role_unique_id" {
+  description = "The unique ID of the DSPM integration role"
   type        = string
-  default     = "CrowdStrikeDSPMScannerRole"
+}
+
+variable "scanner_role_unique_id" {
+  description = "The unique ID of the DSPM scanner role"
+  type        = string
 }

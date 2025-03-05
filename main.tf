@@ -1,4 +1,3 @@
-data "aws_partition" "current" {}
 data "aws_region" "current" {}
 
 data "crowdstrike_cloud_aws_account" "target" {
@@ -7,22 +6,32 @@ data "crowdstrike_cloud_aws_account" "target" {
 }
 
 locals {
-  aws_partition = data.aws_partition.current.partition
-  aws_region    = data.aws_region.current.name
-  # is_primary_region = local.aws_region == var.primary_region
+  aws_region        = data.aws_region.current.name
+  is_primary_region = local.aws_region == var.primary_region
 
   # if we target by account_id, it will be the only account returned
   # if we target by organization_id, we pick the first one because all accounts will have the same settings
-  account = try(data.crowdstrike_cloud_aws_account.target.accounts[0])
+  account = try(
+    data.crowdstrike_cloud_aws_account.target.accounts[0],
+    {
+      account_id             = ""
+      external_id            = ""
+      intermediate_role_arn  = ""
+      iam_role_name          = ""
+      eventbus_arn           = ""
+      cloudtrail_bucket_name = ""
+    }
+  )
 
-  external_id           = local.account.external_id
-  intermediate_role_arn = local.account.intermediate_role_arn
-  iam_role_name         = local.account.iam_role_name
-  eventbus_arn          = local.account.eventbus_arn
+  external_id            = coalesce(var.external_id, local.account.external_id)
+  intermediate_role_arn  = coalesce(var.intermediate_role_arn, local.account.intermediate_role_arn)
+  iam_role_name          = coalesce(var.iam_role_name, local.account.iam_role_name)
+  eventbus_arn           = coalesce(var.eventbus_arn, local.account.eventbus_arn)
+  cloudtrail_bucket_name = var.use_existing_cloudtrail ? "" : coalesce(var.cloudtrail_bucket_name, local.account.cloudtrail_bucket_name)
 }
 
 module "asset_inventory" {
-  count                 = var.is_primary_region ? 1 : 0
+  count                 = local.is_primary_region ? 1 : 0
   source                = "./modules/asset-inventory/"
   external_id           = local.external_id
   intermediate_role_arn = local.intermediate_role_arn
@@ -33,13 +42,10 @@ module "asset_inventory" {
     data.crowdstrike_cloud_aws_account.target
   ]
 
-  providers = {
-    aws = aws
-  }
 }
 
 module "sensor_management" {
-  count                 = (var.is_primary_region && var.enable_sensor_management) ? 1 : 0
+  count                 = (local.is_primary_region && var.enable_sensor_management) ? 1 : 0
   source                = "./modules/sensor-management/"
   falcon_client_id      = var.falcon_client_id
   falcon_client_secret  = var.falcon_client_secret
@@ -60,12 +66,12 @@ module "realtime_visibility" {
   count                   = (var.enable_realtime_visibility || var.enable_idp) ? 1 : 0
   source                  = "./modules/realtime-visibility/"
   use_existing_cloudtrail = var.use_existing_cloudtrail
-  cloudtrail_bucket_name  = local.account.cloudtrail_bucket_name
+  cloudtrail_bucket_name  = local.cloudtrail_bucket_name
   eventbridge_role_name   = var.eventbridge_role_name
   eventbus_arn            = local.eventbus_arn
   is_organization_trail   = length(var.organization_id) > 0
   is_gov_commercial       = var.is_gov && var.account_type == "commercial"
-  is_primary_region       = var.is_primary_region
+  is_primary_region       = local.is_primary_region
   primary_region          = var.primary_region
   falcon_client_id        = var.falcon_client_id
   falcon_client_secret    = var.falcon_client_secret
@@ -80,7 +86,7 @@ module "realtime_visibility" {
 }
 
 module "dspm_roles" {
-  count                  = (var.is_primary_region && var.enable_dspm) ? 1 : 0
+  count                  = (local.is_primary_region && var.enable_dspm) ? 1 : 0
   source                 = "./modules/dspm-roles/"
   falcon_client_id       = var.falcon_client_id
   falcon_client_secret   = var.falcon_client_secret

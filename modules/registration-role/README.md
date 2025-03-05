@@ -9,70 +9,6 @@
 |------|---------|
 | <a name="provider_aws"></a> [aws](#provider\_aws) | >= 4.45 |
 | <a name="provider_crowdstrike"></a> [crowdstrike](#provider\_crowdstrike) | >= 0.0.15 |
-## Modules
-
-| Name | Source | Version |
-|------|--------|---------|
-| <a name="module_asset_inventory"></a> [asset\_inventory](#module\_asset\_inventory) | ../asset-inventory/ | n/a |
-| <a name="module_dspm_environment_af-south-1"></a> [dspm\_environment\_af-south-1](#module\_dspm\_environment\_af-south-1) | ../dspm-environments/ | n/a |
-| <a name="module_dspm_environment_ap-east-1"></a> [dspm\_environment\_ap-east-1](#module\_dspm\_environment\_ap-east-1) | ../dspm-environments/ | n/a |
-| <a name="module_dspm_environment_ap-northeast-1"></a> [dspm\_environment\_ap-northeast-1](#module\_dspm\_environment\_ap-northeast-1) | ../dspm-environments/ | n/a |
-| <a name="module_dspm_environment_ap-northeast-2"></a> [dspm\_environment\_ap-northeast-2](#module\_dspm\_environment\_ap-northeast-2) | ../dspm-environments/ | n/a |
-| <a name="module_dspm_environment_ap-northeast-3"></a> [dspm\_environment\_ap-northeast-3](#module\_dspm\_environment\_ap-northeast-3) | ../dspm-environments/ | n/a |
-| <a name="module_dspm_environment_ap-south-1"></a> [dspm\_environment\_ap-south-1](#module\_dspm\_environment\_ap-south-1) | ../dspm-environments/ | n/a |
-| <a name="module_dspm_environment_ap-south-2"></a> [dspm\_environment\_ap-south-2](#module\_dspm\_environment\_ap-south-2) | ../dspm-environments/ | n/a |
-| <a name="module_dspm_environment_ap-southeast-1"></a> [dspm\_environment\_ap-southeast-1](#module\_dspm\_environment\_ap-southeast-1) | ../dspm-environments/ | n/a |
-| <a name="module_dspm_environment_ap-southeast-2"></a> [dspm\_environment\_ap-southeast-2](#module\_dspm\_environment\_ap-southeast-2) | ../dspm-environments/ | n/a |
-| <a name="module_dspm_environment_ap-southeast-3"></a> [dspm\_environment\_ap-southeast-3](#module\_dspm\_environment\_ap-southeast-3) | ../dspm-environments/ | n/a |
-| <a name="module_dspm_environment_ap-southeast-4"></a> [dspm\_environment\_ap-southeast-4](#module\_dspm\_environment\_ap-southeast-4) | ../dspm-environments/ | n/a |
-| <a name="module_dspm_environment_ca-central-1"></a> [dspm\_environment\_ca-central-1](#module\_dspm\_environment\_ca-central-1) | ../dspm-environments/ | n/a |
-| <a name="module_dspm_environment_eu-central-1"></a> [dspm\_environment\_eu-central-1](#module\_dspm\_environment\_eu-central-1) | ../dspm-environments/ | n/a |
-| <a name="module_dspm_environment_eu-central-2"></a> [dspm\_environment\_eu-central-2](#module\_dspm\_environment\_eu-central-2) | ../dspm-environments/ | n/a |
-| <a name="module_dspm_environment_eu-north-1"></a> [dspm\_environment\_eu-north-1](#module\_dspm\_environment\_eu-north-1) | ../dspm-environments/ | n/a |
-| <a name="module_dspm_environment_eu-south-1"></a> [dspm\_environment\_eu-south-1](#module\_dspm\_environment\_eu-south-1) | ../dspm-environments/ | n/a |
-| <a name="module_dspm_environment_eu-south-2"></a> [dspm\_environment\_eu-south-2](#module\_dspm\_environment\_eu-south-2) | ../dspm-environments/ | n/a |
-| <a name="module_dspm_environment_eu-west-1"></a> [dspm\_environment\_eu-west-1](#module\_dspm\_environment\_eu-west-1) | ../dspm-environments/ | n/a |
-| <a name="module_dspm_environment_eu-west-2"></a> [dspm\_environment\_eu-west-2](#module\_dspm\_environment\_eu-west-2) | ../dspm-environments/ | n/a |
-| <a name="module_dspm_environment_eu-west-3"></a> [dspm\_environment\_eu-west-3](#module\_dspm\_environment\_eu-west-3) | ../dspm-environments/ | n/a |
-| <a name="module_dspm_environment_me-central-1"></a> [dspm\_environment\_me-central-1](#module\_dspm\_environment\_me-central-1) | ../dspm-environments/ | n/a |
-| <a name="module_dspm_environment_me-south-1"></a> [dspm\_environment\_me-south-1](#module\_dspm\_environment\_me-south-1) | ../dspm-environments/ | n/a |
-| <a name="module_dspm_environment_sa-east-1"></a> [dspm\_environment\_sa-east-1](#module\_dspm\_environment\_sa-east-1) | ../dspm-environments/ | n/a |
-| <a name="module_dspm_environment_us-east-1"></a> [dspm\_environment\_us-east-1](#module\_dspm\_environment\_us-east-1) | ../dspm-environments/ | n/a |
-| <a name="module_dspm_environment_us-east-2"></a> [dspm\_environment\_us-east-2](#module\_dspm\_environment\_us-east-2) | ../dspm-environments/ | n/a |
-| <a name="module_dspm_environment_us-west-1"></a> [dspm\_environment\_us-west-1](#module\_dspm\_environment\_us-west-1) | ../dspm-environments/ | n/a |
-| <a name="module_dspm_environment_us-west-2"></a> [dspm\_environment\_us-west-2](#module\_dspm\_environment\_us-west-2) | ../dspm-environments/ | n/a |
-| <a name="module_dspm_roles"></a> [dspm\_roles](#module\_dspm\_roles) | ../dspm-roles/ | n/a |
-| <a name="module_realtime_visibility_main"></a> [realtime\_visibility\_main](#module\_realtime\_visibility\_main) | ../realtime-visibility/ | n/a |
-| <a name="module_rules_af-south-1"></a> [rules\_af-south-1](#module\_rules\_af-south-1) | ../realtime-visibility-rules/ | n/a |
-| <a name="module_rules_ap-east-1"></a> [rules\_ap-east-1](#module\_rules\_ap-east-1) | ../realtime-visibility-rules/ | n/a |
-| <a name="module_rules_ap-northeast-1"></a> [rules\_ap-northeast-1](#module\_rules\_ap-northeast-1) | ../realtime-visibility-rules/ | n/a |
-| <a name="module_rules_ap-northeast-2"></a> [rules\_ap-northeast-2](#module\_rules\_ap-northeast-2) | ../realtime-visibility-rules/ | n/a |
-| <a name="module_rules_ap-northeast-3"></a> [rules\_ap-northeast-3](#module\_rules\_ap-northeast-3) | ../realtime-visibility-rules/ | n/a |
-| <a name="module_rules_ap-south-1"></a> [rules\_ap-south-1](#module\_rules\_ap-south-1) | ../realtime-visibility-rules/ | n/a |
-| <a name="module_rules_ap-south-2"></a> [rules\_ap-south-2](#module\_rules\_ap-south-2) | ../realtime-visibility-rules/ | n/a |
-| <a name="module_rules_ap-southeast-1"></a> [rules\_ap-southeast-1](#module\_rules\_ap-southeast-1) | ../realtime-visibility-rules/ | n/a |
-| <a name="module_rules_ap-southeast-2"></a> [rules\_ap-southeast-2](#module\_rules\_ap-southeast-2) | ../realtime-visibility-rules/ | n/a |
-| <a name="module_rules_ap-southeast-3"></a> [rules\_ap-southeast-3](#module\_rules\_ap-southeast-3) | ../realtime-visibility-rules/ | n/a |
-| <a name="module_rules_ap-southeast-4"></a> [rules\_ap-southeast-4](#module\_rules\_ap-southeast-4) | ../realtime-visibility-rules/ | n/a |
-| <a name="module_rules_ca-central-1"></a> [rules\_ca-central-1](#module\_rules\_ca-central-1) | ../realtime-visibility-rules/ | n/a |
-| <a name="module_rules_eu-central-1"></a> [rules\_eu-central-1](#module\_rules\_eu-central-1) | ../realtime-visibility-rules/ | n/a |
-| <a name="module_rules_eu-central-2"></a> [rules\_eu-central-2](#module\_rules\_eu-central-2) | ../realtime-visibility-rules/ | n/a |
-| <a name="module_rules_eu-north-1"></a> [rules\_eu-north-1](#module\_rules\_eu-north-1) | ../realtime-visibility-rules/ | n/a |
-| <a name="module_rules_eu-south-1"></a> [rules\_eu-south-1](#module\_rules\_eu-south-1) | ../realtime-visibility-rules/ | n/a |
-| <a name="module_rules_eu-south-2"></a> [rules\_eu-south-2](#module\_rules\_eu-south-2) | ../realtime-visibility-rules/ | n/a |
-| <a name="module_rules_eu-west-1"></a> [rules\_eu-west-1](#module\_rules\_eu-west-1) | ../realtime-visibility-rules/ | n/a |
-| <a name="module_rules_eu-west-2"></a> [rules\_eu-west-2](#module\_rules\_eu-west-2) | ../realtime-visibility-rules/ | n/a |
-| <a name="module_rules_eu-west-3"></a> [rules\_eu-west-3](#module\_rules\_eu-west-3) | ../realtime-visibility-rules/ | n/a |
-| <a name="module_rules_me-central-1"></a> [rules\_me-central-1](#module\_rules\_me-central-1) | ../realtime-visibility-rules/ | n/a |
-| <a name="module_rules_me-south-1"></a> [rules\_me-south-1](#module\_rules\_me-south-1) | ../realtime-visibility-rules/ | n/a |
-| <a name="module_rules_sa-east-1"></a> [rules\_sa-east-1](#module\_rules\_sa-east-1) | ../realtime-visibility-rules/ | n/a |
-| <a name="module_rules_us-east-1"></a> [rules\_us-east-1](#module\_rules\_us-east-1) | ../realtime-visibility-rules/ | n/a |
-| <a name="module_rules_us-east-2"></a> [rules\_us-east-2](#module\_rules\_us-east-2) | ../realtime-visibility-rules/ | n/a |
-| <a name="module_rules_us-gov-east-1"></a> [rules\_us-gov-east-1](#module\_rules\_us-gov-east-1) | ../realtime-visibility-rules/ | n/a |
-| <a name="module_rules_us-gov-west-1"></a> [rules\_us-gov-west-1](#module\_rules\_us-gov-west-1) | ../realtime-visibility-rules/ | n/a |
-| <a name="module_rules_us-west-1"></a> [rules\_us-west-1](#module\_rules\_us-west-1) | ../realtime-visibility-rules/ | n/a |
-| <a name="module_rules_us-west-2"></a> [rules\_us-west-2](#module\_rules\_us-west-2) | ../realtime-visibility-rules/ | n/a |
-| <a name="module_sensor_management"></a> [sensor\_management](#module\_sensor\_management) | ../sensor-management/ | n/a |
 ## Resources
 
 | Name | Type |
@@ -99,7 +35,7 @@
 | <a name="input_external_id"></a> [external\_id](#input\_external\_id) | The external ID used to assume the AWS reader role | `string` | `""` | no |
 | <a name="input_falcon_client_id"></a> [falcon\_client\_id](#input\_falcon\_client\_id) | Falcon API Client ID | `string` | n/a | yes |
 | <a name="input_falcon_client_secret"></a> [falcon\_client\_secret](#input\_falcon\_client\_secret) | Falcon API Client Secret | `string` | n/a | yes |
-| <a name="input_iam_role_arn"></a> [iam\_role\_arn](#input\_iam\_role\_arn) | The ARN of the reader role | `string` | `""` | no |
+| <a name="input_iam_role_name"></a> [iam\_role\_name](#input\_iam\_role\_name) | The name of the reader role | `string` | `""` | no |
 | <a name="input_intermediate_role_arn"></a> [intermediate\_role\_arn](#input\_intermediate\_role\_arn) | The intermediate role that is allowed to assume the reader role | `string` | `""` | no |
 | <a name="input_is_gov"></a> [is\_gov](#input\_is\_gov) | Set to true if registering in gov-cloud | `bool` | `false` | no |
 | <a name="input_organization_id"></a> [organization\_id](#input\_organization\_id) | The AWS Organization ID. Leave blank if when onboarding single account | `string` | `""` | no |

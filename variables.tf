@@ -16,11 +16,6 @@ variable "is_gov" {
   description = "Set to true if you are deploying in gov Falcon"
 }
 
-variable "is_primary_region" {
-  type        = bool
-  description = "The AWS region where resources should be deployed"
-}
-
 variable "primary_region" {
   description = "Region for deploying global AWS resources (IAM roles, policies, etc.) that are account-wide and only need to be created once. Distinct from dspm_regions which controls region-specific resource deployment."
   type        = string
@@ -86,6 +81,36 @@ variable "enable_idp" {
   type        = bool
   default     = false
   description = "Set to true to install Identity Protection resources"
+}
+
+variable "external_id" {
+  type        = string
+  default     = ""
+  description = "The external ID used to assume the AWS reader role"
+}
+
+variable "intermediate_role_arn" {
+  type        = string
+  default     = ""
+  description = "The intermediate role that is allowed to assume the reader role"
+}
+
+variable "iam_role_name" {
+  type        = string
+  default     = ""
+  description = "The name of the reader role"
+}
+
+variable "eventbus_arn" {
+  type        = string
+  default     = ""
+  description = "Eventbus ARN to send events to"
+}
+
+variable "cloudtrail_bucket_name" {
+  type        = string
+  default     = ""
+  description = ""
 }
 
 variable "enable_dspm" {

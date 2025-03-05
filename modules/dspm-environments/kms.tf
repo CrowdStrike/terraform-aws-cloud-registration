@@ -1,13 +1,5 @@
 data "aws_caller_identity" "current" {}
 
-data "aws_iam_role" "crowdstrike_aws_integration_role" {
-  name = var.dspm_role_name
-}
-data "aws_iam_role" "crowdstrike_aws_scanner_role" {
-  name = var.dspm_scanner_role_name
-}
-
-
 data "aws_iam_policy_document" "policy_kms_key" {
   #checkov:skip=CKV_AWS_356:Root user requires unrestricted KMS access according to AWS documentation https://docs.aws.amazon.com/kms/latest/developerguide/key-policy-default.html
   #checkov:skip=CKV_AWS_109,CKV_AWS_111:DSPM roles require permissions to write and modify KMS resources
@@ -16,7 +8,7 @@ data "aws_iam_policy_document" "policy_kms_key" {
     effect = "Allow"
     principals {
       type        = "AWS"
-      identifiers = [join("", ["arn:aws:iam::", data.aws_caller_identity.current.account_id, ":root"])]
+      identifiers = [join("", ["arn:aws:iam::", local.account_id, ":root"])]
     }
     actions = [
       "kms:*"
@@ -49,8 +41,8 @@ data "aws_iam_policy_document" "policy_kms_key" {
       test     = "StringEquals"
       variable = "aws:userId"
       values = [
-        data.aws_iam_role.crowdstrike_aws_integration_role.unique_id,
-        "${data.aws_iam_role.crowdstrike_aws_integration_role.unique_id}:*",
+        var.integration_role_unique_id,
+        "${var.integration_role_unique_id}:*",
       ]
     }
   }
@@ -74,10 +66,10 @@ data "aws_iam_policy_document" "policy_kms_key" {
       test     = "StringLike"
       variable = "aws:userId"
       values = [
-        data.aws_iam_role.crowdstrike_aws_integration_role.unique_id,
-        "${data.aws_iam_role.crowdstrike_aws_integration_role.unique_id}:*",
-        data.aws_iam_role.crowdstrike_aws_scanner_role.unique_id,
-        "${data.aws_iam_role.crowdstrike_aws_scanner_role.unique_id}:*"
+        var.integration_role_unique_id,
+        "${var.integration_role_unique_id}:*",
+        var.scanner_role_unique_id,
+        "${var.scanner_role_unique_id}:*"
       ]
     }
   }

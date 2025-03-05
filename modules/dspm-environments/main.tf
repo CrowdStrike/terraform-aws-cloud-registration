@@ -279,12 +279,12 @@ resource "aws_iam_role_policy" "vpc_policy" {
           "ec2:RunInstances"
         ]
         Resource = [
-          "arn:aws:ec2:*:${data.aws_caller_identity.current.account_id}:security-group/*",
-          "arn:aws:ec2:*:${data.aws_caller_identity.current.account_id}:subnet/*"
+          "arn:aws:ec2:*:${local.account_id}:security-group/*",
+          "arn:aws:ec2:*:${local.account_id}:subnet/*"
         ]
         Condition = {
           StringEquals = {
-            "ec2:Vpc" = "arn:aws:ec2:${local.aws_region}:${data.aws_caller_identity.current.account_id}:vpc/${aws_vpc.VPC.id}"
+            "ec2:Vpc" = "arn:aws:ec2:${local.aws_region}:${local.account_id}:vpc/${aws_vpc.VPC.id}"
           }
         }
       }

@@ -111,10 +111,10 @@ variable "eventbus_arn" {
   description = "Eventbus ARN to send events to"
 }
 
-variable "eventbridge_role_arn" {
+variable "eventbridge_role_name" {
   type        = string
-  default     = ""
-  description = "Eventbridge role ARN"
+  default     = "CrowdStrikeCSPMEventBridge"
+  description = "The eventbridge role name"
 }
 
 variable "cloudtrail_bucket_name" {

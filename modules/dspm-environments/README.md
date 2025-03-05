@@ -8,9 +8,6 @@
 | Name | Version |
 |------|---------|
 | <a name="provider_aws"></a> [aws](#provider\_aws) | >= 4.45 |
-## Modules
-
-No modules.
 ## Resources
 
 | Name | Type |
@@ -36,8 +33,6 @@ No modules.
 | [aws_vpc.VPC](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/vpc) | resource |
 | [aws_caller_identity.current](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/caller_identity) | data source |
 | [aws_iam_policy_document.policy_kms_key](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/iam_policy_document) | data source |
-| [aws_iam_role.crowdstrike_aws_integration_role](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/iam_role) | data source |
-| [aws_iam_role.crowdstrike_aws_scanner_role](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/iam_role) | data source |
 | [aws_region.current](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/region) | data source |
 ## Inputs
 
@@ -45,7 +40,8 @@ No modules.
 |------|-------------|------|---------|:--------:|
 | <a name="input_deployment_name"></a> [deployment\_name](#input\_deployment\_name) | The deployment name will be used in environment installation | `string` | `"dspm-environment"` | no |
 | <a name="input_dspm_role_name"></a> [dspm\_role\_name](#input\_dspm\_role\_name) | The unique name of the IAM role that CrowdStrike will be assuming | `string` | `"CrowdStrikeDSPMIntegrationRole"` | no |
-| <a name="input_dspm_scanner_role_name"></a> [dspm\_scanner\_role\_name](#input\_dspm\_scanner\_role\_name) | The unique name of the IAM role that CrowdStrike Scanner will be assuming | `string` | `"CrowdStrikeDSPMScannerRole"` | no |
+| <a name="input_integration_role_unique_id"></a> [integration\_role\_unique\_id](#input\_integration\_role\_unique\_id) | The unique ID of the DSPM integration role | `string` | n/a | yes |
+| <a name="input_scanner_role_unique_id"></a> [scanner\_role\_unique\_id](#input\_scanner\_role\_unique\_id) | The unique ID of the DSPM scanner role | `string` | n/a | yes |
 ## Outputs
 
 | Name | Description |
