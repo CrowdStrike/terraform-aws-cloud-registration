@@ -9,7 +9,8 @@ locals {
 }
 
 resource "aws_iam_role" "eventbridge" {
-  name = var.role_name
+  count = var.is_primary_region ? 1 : 0
+  name  = var.eventbridge_role_name
   assume_role_policy = jsonencode({
     "Version" : "2012-10-17",
     "Statement" : [
@@ -27,8 +28,9 @@ resource "aws_iam_role" "eventbridge" {
 }
 
 resource "aws_iam_role_policy" "inline_policy" {
-  name = "eventbridge-put-events"
-  role = aws_iam_role.eventbridge.id
+  count = var.is_primary_region ? 1 : 0
+  name  = "eventbridge-put-events"
+  role  = aws_iam_role.eventbridge[count.index].id
   policy = jsonencode({
     "Version" : "2012-10-17",
     "Statement" : [
@@ -44,7 +46,7 @@ resource "aws_iam_role_policy" "inline_policy" {
 }
 
 resource "aws_cloudtrail" "this" {
-  count                         = var.use_existing_cloudtrail ? 0 : 1
+  count                         = !var.use_existing_cloudtrail && var.is_primary_region ? 1 : 0
   name                          = "crowdstrike-cloudtrail"
   s3_bucket_name                = !var.is_gov_commercial ? var.cloudtrail_bucket_name : aws_s3_bucket.s3.0.bucket
   s3_key_prefix                 = ""
@@ -53,4 +55,3 @@ resource "aws_cloudtrail" "this" {
   enable_logging                = true
   is_organization_trail         = var.is_organization_trail
 }
-

@@ -87,6 +87,22 @@ locals {
       }
     ]
   })
+
+  default_eventbus_arn = "arn:aws:events:${var.primary_region}:${local.account_id}:event-bus/default"
+  eventbus_arn = (
+    var.is_gov_commercial ?
+    (
+      var.is_primary_region ?
+      aws_lambda_function.eventbridge.0.arn :
+      local.default_eventbus_arn
+    ) :
+    var.eventbus_arn
+  )
+  eventbridge_role_arn = (
+    var.is_gov_commercial && var.is_primary_region ?
+    null :
+    "arn:${local.aws_partition}:iam::${local.account_id}:role/${var.eventbridge_role_name}"
+  )
 }
 
 resource "aws_cloudwatch_event_rule" "rw" {
@@ -96,9 +112,13 @@ resource "aws_cloudwatch_event_rule" "rw" {
 
 resource "aws_cloudwatch_event_target" "rw" {
   target_id = local.target_id
-  arn       = var.eventbus_arn
+  arn       = local.eventbus_arn
   rule      = aws_cloudwatch_event_rule.rw.name
-  role_arn  = var.eventbridge_role_arn
+  role_arn  = local.eventbridge_role_arn
+
+  depends_on = [
+    aws_lambda_alias.eventbridge
+  ]
 }
 
 
@@ -109,7 +129,11 @@ resource "aws_cloudwatch_event_rule" "ro" {
 
 resource "aws_cloudwatch_event_target" "ro" {
   target_id = local.target_id
-  arn       = var.eventbus_arn
+  arn       = local.eventbus_arn
   rule      = aws_cloudwatch_event_rule.ro.name
-  role_arn  = var.eventbridge_role_arn
+  role_arn  = local.eventbridge_role_arn
+
+  depends_on = [
+    aws_lambda_alias.eventbridge
+  ]
 }

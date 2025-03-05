@@ -63,11 +63,13 @@ module "fcs_account_onboarding" {
   falcon_client_secret       = var.falcon_client_secret
   account_id                 = var.account_id
   is_primary_region          = local.primary_region == "us-east-1"
+  primary_region             = local.primary_region
+  is_gov                     = local.is_gov
   enable_sensor_management   = local.enable_sensor_management
   enable_realtime_visibility = local.enable_realtime_visibility
   enable_idp                 = local.enable_idp
   use_existing_cloudtrail    = local.use_existing_cloudtrail
-  enable_dspm                = contains(local.dspm_regions, "us-east-1")
+  enable_dspm                = local.enable_dspm && contains(local.dspm_regions, "us-east-1")
   dspm_regions               = local.dspm_regions
 
   depends_on = [
@@ -86,11 +88,13 @@ module "fcs_account_us-east-2" {
   falcon_client_secret       = var.falcon_client_secret
   account_id                 = var.account_id
   is_primary_region          = local.primary_region == "us-east-2"
+  primary_region             = local.primary_region
+  is_gov                     = local.is_gov
   enable_sensor_management   = local.enable_sensor_management
   enable_realtime_visibility = local.enable_realtime_visibility
   enable_idp                 = local.enable_idp
   use_existing_cloudtrail    = local.use_existing_cloudtrail
-  enable_dspm                = contains(local.dspm_regions, "us-east-2")
+  enable_dspm                = local.enable_dspm && contains(local.dspm_regions, "us-east-2")
   dspm_regions               = local.dspm_regions
 
   depends_on = [
@@ -109,11 +113,13 @@ module "fcs_account_us-west-1" {
   falcon_client_secret       = var.falcon_client_secret
   account_id                 = var.account_id
   is_primary_region          = local.primary_region == "us-west-1"
+  primary_region             = local.primary_region
+  is_gov                     = local.is_gov
   enable_sensor_management   = local.enable_sensor_management
   enable_realtime_visibility = local.enable_realtime_visibility
   enable_idp                 = local.enable_idp
   use_existing_cloudtrail    = local.use_existing_cloudtrail
-  enable_dspm                = contains(local.dspm_regions, "us-west-1")
+  enable_dspm                = local.enable_dspm && contains(local.dspm_regions, "us-west-1")
   dspm_regions               = local.dspm_regions
 
   depends_on = [
@@ -132,11 +138,13 @@ module "fcs_account_us-west-2" {
   falcon_client_secret       = var.falcon_client_secret
   account_id                 = var.account_id
   is_primary_region          = local.primary_region == "us-west-2"
+  primary_region             = local.primary_region
+  is_gov                     = local.is_gov
   enable_sensor_management   = local.enable_sensor_management
   enable_realtime_visibility = local.enable_realtime_visibility
   enable_idp                 = local.enable_idp
   use_existing_cloudtrail    = local.use_existing_cloudtrail
-  enable_dspm                = contains(local.dspm_regions, "us-west-2")
+  enable_dspm                = local.enable_dspm && contains(local.dspm_regions, "us-west-2")
   dspm_regions               = local.dspm_regions
 
   depends_on = [

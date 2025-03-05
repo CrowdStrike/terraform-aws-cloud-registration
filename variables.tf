@@ -21,6 +21,11 @@ variable "is_primary_region" {
   description = "The AWS region where resources should be deployed"
 }
 
+variable "primary_region" {
+  description = "Region for deploying global AWS resources (IAM roles, policies, etc.) that are account-wide and only need to be created once. Distinct from dspm_regions which controls region-specific resource deployment."
+  type        = string
+}
+
 variable "account_id" {
   type        = string
   default     = ""
