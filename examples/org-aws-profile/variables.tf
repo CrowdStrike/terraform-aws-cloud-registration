@@ -25,7 +25,3 @@ variable "organization_id" {
   description = "The AWS Organization ID. Leave blank when onboarding single account"
 }
 
-variable "aws_profile" {
-  type        = string
-  description = "The AWS profile to be used for this registration"
-}

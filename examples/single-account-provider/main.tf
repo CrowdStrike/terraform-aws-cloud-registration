@@ -58,8 +58,7 @@ resource "crowdstrike_cloud_aws_account" "this" {
 }
 
 module "fcs_account_onboarding" {
-  # source                     = "CrowdStrike/fcs/aws"
-  source                     = "../../"
+  source                     = "CrowdStrike/fcs/aws"
   falcon_client_id           = var.falcon_client_id
   falcon_client_secret       = var.falcon_client_secret
   account_id                 = var.account_id
@@ -84,8 +83,7 @@ module "fcs_account_onboarding" {
 }
 
 module "fcs_account_us-east-2" {
-  # source                     = "CrowdStrike/fcs/aws"
-  source                     = "../../"
+  source                     = "CrowdStrike/fcs/aws"
   falcon_client_id           = var.falcon_client_id
   falcon_client_secret       = var.falcon_client_secret
   account_id                 = var.account_id
@@ -110,8 +108,7 @@ module "fcs_account_us-east-2" {
 }
 
 module "fcs_account_us-west-1" {
-  # source                     = "CrowdStrike/fcs/aws"
-  source                     = "../../"
+  source                     = "CrowdStrike/fcs/aws"
   falcon_client_id           = var.falcon_client_id
   falcon_client_secret       = var.falcon_client_secret
   account_id                 = var.account_id
@@ -136,8 +133,7 @@ module "fcs_account_us-west-1" {
 }
 
 module "fcs_account_us-west-2" {
-  # source                     = "CrowdStrike/fcs/aws"
-  source                     = "../../"
+  source                     = "CrowdStrike/fcs/aws"
   falcon_client_id           = var.falcon_client_id
   falcon_client_secret       = var.falcon_client_secret
   account_id                 = var.account_id

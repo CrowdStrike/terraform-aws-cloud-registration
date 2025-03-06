@@ -1,22 +1,25 @@
-# FCS single account registration
+# FCS Single Account Registration Example (Cross-Account Role)
 
-This example shows how to provision a single AWS account into Falcon Cloud Security using an AWS role for cross account access.
+This example demonstrates how to register a single AWS account with CrowdStrike Falcon Cloud Security (FCS) using an AWS IAM role for cross-account access. This method is particularly useful for organizations that prefer role-based access over AWS profiles.
 
-## Pre-requisites:
+## Features Enabled
 
-Ensure that you have the following tools installed locally:
+- Asset Inventory
+- Real-time Visibility (using existing CloudTrail)
+- Identity Protection (IDP)
+- Sensor Management
+- Data Security and Posture Management (DSPM)
 
-1. [aws cli](https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html)
-2. [terraform](https://learn.hashicorp.com/tutorials/terraform/install-cli)
+## Prerequisites
 
-See [Pre-requisites](../../README.md#pre-requisites) for instructions on how to generate your falcon_client_id and falcon_client_secret.
+1. [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html) installed and configured
+2. [Terraform](https://learn.hashicorp.com/tutorials/terraform/install-cli) installed
+3. CrowdStrike API credentials (see [Pre-requisites](../../README.md#pre-requisites) for details)
+4. Existing IAM role with appropriate permissions for cross-account access
 
 ## Deploy
 
-To provision this example:
-
-Set the following environment variables:
-
+1. Set required environment variables:
 ```sh
 export TF_VAR_falcon_client_id=<your client id>
 export TF_VAR_falcon_client_secret=<your client secret>
@@ -24,8 +27,7 @@ export TF_VAR_account_id=<your aws account id>
 export TF_VAR_cross_account_role_name=<your aws cross account role name>
 ```
 
-Run the following commands:
-
+2. Initialize and apply Terraform:
 ```sh
 terraform init
 terraform apply
@@ -36,9 +38,8 @@ Enter `yes` at command prompt to apply
 
 ## Destroy
 
-To teardown and remove the resources created in this example:
+To teardown and remove all resources created by this example:
 
 ```sh
 terraform destroy -auto-approve
 ```
-

@@ -5,9 +5,7 @@
 
 ## Introduction
 
-Falcon Cloud Security performs behavior assessments to identify indicators of attack (IOA) and cloud assets in real time. IOAs are patterns of suspicious behavior that suggest an attack might be underway.
-
-This terraform module deploys the global resources in an AWS cloud environment. To enable Real-time visibility and detection feature you need to also deploy [realtime-visibility-rules](../realtime-visibility-rules/README.md) module in each region you want to monitor.
+This Terraform module deploys AWS resources required for CrowdStrike's Real-time Visibility and Detection feature, which identifies indicators of attack (IOAs) and monitors cloud asset behavior in real-time. Note: This module must be deployed separately in each AWS region you wish to monitor, as it manages region-specific resources.
 
 ## Providers
 

@@ -8,7 +8,7 @@
 | Name | Version |
 |------|---------|
 | <a name="provider_aws"></a> [aws](#provider\_aws) | >= 4.45 |
-| <a name="provider_crowdstrike"></a> [crowdstrike](#provider\_crowdstrike) | >= 0.0.15 |
+| <a name="provider_crowdstrike"></a> [crowdstrike](#provider\_crowdstrike) | >= 0.0.16 |
 ## Resources
 
 | Name | Type |
@@ -59,7 +59,7 @@ terraform {
     }
     crowdstrike = {
       source  = "crowdstrike/crowdstrike"
-      version = ">= 0.0.15"
+      version = ">= 0.0.16"
     }
   }
 }
@@ -76,8 +76,17 @@ variable "falcon_client_secret" {
   description = "Falcon API Client Secret"
 }
 
+variable "account_id" {
+  type        = string
+  default     = ""
+  description = "The AWS 12 digit account ID"
+  validation {
+    condition     = length(var.account_id) == 0 || can(regex("^[0-9]{12}$", var.account_id))
+    error_message = "account_id must be either empty or the 12-digit AWS account ID"
+  }
+}
+
 locals {
-  account_id                 = "<your aws account id>"
   organization_id            = "<your aws organization id>"
   enable_realtime_visibility = true
   primary_region             = "us-east-1"
@@ -95,7 +104,7 @@ provider "crowdstrike" {
 
 # Provision AWS account in Falcon.
 resource "crowdstrike_cloud_aws_account" "this" {
-  account_id                         = local.account_id
+  account_id                         = var.account_id
   organization_id                    = local.organization_id
   is_organization_management_account = true
 
@@ -128,7 +137,7 @@ module "fcs_management_account" {
   aws_profile                 = "<aws profile for your management account>"
   falcon_client_id            = var.falcon_client_id
   falcon_client_secret        = var.falcon_client_secret
-  account_id                  = local.account_id
+  account_id                  = var.account_id
   organization_id             = local.organization_id
   primary_region              = local.primary_region
   enable_sensor_management    = local.enable_sensor_management
@@ -139,7 +148,7 @@ module "fcs_management_account" {
   enable_dspm                 = local.enable_dspm
   dspm_regions                = local.dspm_regions
 
-  iam_role_arn           = crowdstrike_cloud_aws_account.this.iam_role_arn
+  iam_role_name          = crowdstrike_cloud_aws_account.this.iam_role_name
   external_id            = crowdstrike_cloud_aws_account.this.external_id
   intermediate_role_arn  = crowdstrike_cloud_aws_account.this.intermediate_role_arn
   eventbus_arn           = crowdstrike_cloud_aws_account.this.eventbus_arn
@@ -158,7 +167,7 @@ module "fcs_child_account_1" {
   aws_profile                 = "<aws profile for this child account>"
   falcon_client_id            = var.falcon_client_id
   falcon_client_secret        = var.falcon_client_secret
-  organization_id             = local.organization_id
+  organization_id             = var.organization_id
   primary_region              = local.primary_region
   enable_sensor_management    = local.enable_sensor_management
   enable_realtime_visibility  = local.enable_realtime_visibility
@@ -168,7 +177,7 @@ module "fcs_child_account_1" {
   enable_dspm                 = local.enable_dspm
   dspm_regions                = local.dspm_regions
 
-  iam_role_arn           = crowdstrike_cloud_aws_account.this.iam_role_arn
+  iam_role_name          = crowdstrike_cloud_aws_account.this.iam_role_name
   external_id            = crowdstrike_cloud_aws_account.this.external_id
   intermediate_role_arn  = crowdstrike_cloud_aws_account.this.intermediate_role_arn
   eventbus_arn           = crowdstrike_cloud_aws_account.this.eventbus_arn

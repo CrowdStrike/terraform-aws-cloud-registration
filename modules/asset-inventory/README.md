@@ -5,9 +5,7 @@
 
 ## Introduction
 
-The FCS Asset Inventory dashboard provides a comprehensive view of the customer's cloud asset inventory across AWS, Azure, and GCP. It offers visibility into managed and unmanaged assets, as well as supported and unsupported assets, allowing users to quickly understand the state of their cloud environment.
-
-This terraform module deploys the necessary resources in an AWS cloud environment to enable asset inventory feature.
+This Terraform module deploys the required AWS resources to enable CrowdStrike's Asset Inventory feature in AWS environments. The solution helps organizations track both managed and unmanaged AWS assets, enabling better cloud security posture management.
 
 ## Providers
 
@@ -50,7 +48,7 @@ terraform {
     }
     crowdstrike = {
       source = "crowdstrike/crowdstrike"
-      version = ">= 0.0.15"
+      version = ">= 0.0.16"
     }
   }
 }

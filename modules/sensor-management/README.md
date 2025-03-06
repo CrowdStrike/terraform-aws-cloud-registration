@@ -3,13 +3,9 @@
 
 [![Twitter URL](https://img.shields.io/twitter/url?label=Follow%20%40CrowdStrike&style=social&url=https%3A%2F%2Ftwitter.com%2FCrowdStrike)](https://twitter.com/CrowdStrike)<br/>
 
-1-click sensor deployment provides a way to quickly and easily deploy the Falcon sensor to your cloud workloads. Use the Deployment dashboard to discover unmanaged AWS hosts and unregistered AWS accounts and to kick start workflows to register your cloud accounts and automate sensor deployments.
+## Introduction
 
-There are two methods for 1-click sensor deployment: automated and manual.
-
- * Automated: We recommend this method for deploying the Falcon sensor in AWS environments where AWS Systems Manager (SSM) is in use. After enabling and adding EC2 hosts to the SSM inventory on your registered AWS accounts, you can deploy the Falcon sensor into your EC2 instances from the Falcon console with just one click. For info about SSM, see the AWS documentation.
-
-* Manual: We recommend this method for AWS environments without SSM. This method generates an Ansible inventory for easier deployment of the Falcon sensor.
+This Terraform module deploys the AWS resources required for CrowdStrike's 1-Click Sensor Management feature. It supports both automated deployment via AWS Systems Manager (SSM) and manual deployment using Ansible inventory generation. The module enables automated discovery of unmanaged hosts and streamlines the Falcon sensor deployment process across your AWS environment.
 
 ## Providers
 

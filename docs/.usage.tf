@@ -7,7 +7,7 @@ terraform {
     }
     crowdstrike = {
       source  = "crowdstrike/crowdstrike"
-      version = ">= 0.0.15"
+      version = ">= 0.0.16"
     }
   }
 }
@@ -24,8 +24,17 @@ variable "falcon_client_secret" {
   description = "Falcon API Client Secret"
 }
 
+variable "account_id" {
+  type        = string
+  default     = ""
+  description = "The AWS 12 digit account ID"
+  validation {
+    condition     = length(var.account_id) == 0 || can(regex("^[0-9]{12}$", var.account_id))
+    error_message = "account_id must be either empty or the 12-digit AWS account ID"
+  }
+}
+
 locals {
-  account_id                 = "<your aws account id>"
   enable_realtime_visibility = true
   primary_region             = "us-east-1"
   enable_idp                 = true

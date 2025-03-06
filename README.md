@@ -3,12 +3,68 @@
 
 [![Twitter URL](https://img.shields.io/twitter/url?label=Follow%20%40CrowdStrike&style=social&url=https%3A%2F%2Ftwitter.com%2FCrowdStrike)](https://twitter.com/CrowdStrike)<br/>
 
+# AWS Falcon Cloud Security Terraform Module
+
+This Terraform module enables registration and configuration of AWS accounts with CrowdStrike's Falcon Cloud Security. It supports multi-region deployments and provides flexibility in AWS provider configuration.
+
+For simplified deployment, two specialized sub-modules are available:
+- [modules/registration-profile](./modules/registration-profile/README.md) - Streamlined deployment using AWS CLI profiles
+- [modules/registration-role](./modules/registration-role/README.md) - Streamlined deployment using cross-account IAM roles
+
+Key features:
+- Asset Inventory
+- Real-time Visibility and Detection
+- Identity Protection (IDP)
+- Sensor Management
+- Data Security Posture Management (DSPM)
+
+> **Note:** For multi-region deployments, this module needs to be instantiated separately for each region where FCS components are required. The sub-modules handle this automatically. See the examples directory for different deployment patterns.
+
+## Pre-requisites
+
+* You will need to provide CrowdStrike API Keys and CrowdStrike cloud region for the installation. It is recommended to establish new API credentials for the installation at https://falcon.crowdstrike.com/support/api-clients-and-keys, minimal required permissions are:
+
+<table>
+    <tr>
+        <th>Option</th>
+        <th>Scope Name</th>
+        <th>Permission</th>
+    </tr>
+    <tr>
+        <td rowspan="2">Automated account registration</td>
+        <td>CSPM registration</td>
+        <td><strong>Read</strong> and <strong>Write</strong></td>
+    </tr>
+    <tr>
+        <td>Cloud security AWS registration</td>
+        <td><strong>Read</strong> and <strong>Write</strong></td>
+    </tr>
+    <tr>
+        <td rowspan="3">1-click sensor management</td>
+        <td>CSPM sensor management</td>
+        <td><strong>Read</strong> and <strong>Write</strong></td>
+    </tr>
+    <tr>
+        <td>Installation tokens</td>
+        <td><strong>Read</strong></td>
+    </tr>
+    <tr>
+        <td>Sensor download</td>
+        <td><strong>Read</strong></td>
+    </tr>
+    <tr>
+        <td>DSPM</td>
+        <td>DSPM Data scanner</td>
+        <td><strong>Read</strong> and <strong>Write</strong></td>
+    </tr>
+</table>
+
 ## Providers
 
 | Name | Version |
 |------|---------|
 | <a name="provider_aws"></a> [aws](#provider\_aws) | >= 4.45 |
-| <a name="provider_crowdstrike"></a> [crowdstrike](#provider\_crowdstrike) | >= 0.0.15 |
+| <a name="provider_crowdstrike"></a> [crowdstrike](#provider\_crowdstrike) | >= 0.0.16 |
 ## Resources
 
 | Name | Type |
@@ -57,7 +113,7 @@ terraform {
     }
     crowdstrike = {
       source  = "crowdstrike/crowdstrike"
-      version = ">= 0.0.15"
+      version = ">= 0.0.16"
     }
   }
 }
@@ -74,8 +130,17 @@ variable "falcon_client_secret" {
   description = "Falcon API Client Secret"
 }
 
+variable "account_id" {
+  type        = string
+  default     = ""
+  description = "The AWS 12 digit account ID"
+  validation {
+    condition     = length(var.account_id) == 0 || can(regex("^[0-9]{12}$", var.account_id))
+    error_message = "account_id must be either empty or the 12-digit AWS account ID"
+  }
+}
+
 locals {
-  account_id                 = "<your aws account id>"
   enable_realtime_visibility = true
   primary_region             = "us-east-1"
   enable_idp                 = true
