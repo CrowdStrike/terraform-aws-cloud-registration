@@ -1,0 +1,7 @@
+branch: master
+directory:
+  - .
+download-external-modules: true
+evaluate-variables: true
+framework:
+  - terraform
