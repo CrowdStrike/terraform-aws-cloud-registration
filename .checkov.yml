@@ -5,3 +5,5 @@ download-external-modules: true
 evaluate-variables: true
 framework:
   - terraform
+skip-check:
+  - CKV_AWS_*

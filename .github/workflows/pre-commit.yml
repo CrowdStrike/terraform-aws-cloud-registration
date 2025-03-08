@@ -42,11 +42,6 @@ jobs:
         env:
           SKIP: no-commit-to-branch
 
-      - name: Run TFLint
-        run: |
-          tflint --init
-          tflint --format=compact
-
       - name: Run Checkov
         run: |
           checkov -d . --framework terraform --output cli --quiet

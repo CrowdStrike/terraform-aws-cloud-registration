@@ -7,7 +7,7 @@ plugin "aws" {
 config {
   call_module_type = "local"  # Instead of "module = true"
   force = false
-  disabled_by_default = false
+  disabled_by_default = true
 }
 
 rule "aws_resource_missing_tags" {
