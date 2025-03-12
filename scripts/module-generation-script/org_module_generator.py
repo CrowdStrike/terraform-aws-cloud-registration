@@ -65,8 +65,14 @@ class FileConfiguration:  # pylint: disable=R0902
         self.dspm = self.file['falcon.features']['DSPM']
         self.iam_role_name = self.file['asset.inventory']['IAMRoleName']
         self.existing_cloudtrail = self.file['realtime.visibility']['ExistingCloudTrail']
-        self.realtime_visibility_regions = self.file['realtime.visibility']['Regions']
-        self.dspm_regions = self.file['dspm']['DSPMRegions']
+        if not self.file['realtime.visibility']['Regions']:
+            self.realtime_visibility_regions = "all"
+        else:
+            self.realtime_visibility_regions = self.file['realtime.visibility']['Regions']
+        if not self.file['dspm']['DSPMRegions']:
+            self.dspm_regions = ""
+        else:
+            self.dspm_regions = self.file['dspm']['DSPMRegions']
 
 class ArgConfiguration:  # pylint: disable=R0902
     """Class to hold running configuration."""
@@ -78,15 +84,27 @@ class ArgConfiguration:  # pylint: disable=R0902
         self.aws_auth_method = args.aws_auth_method
         self.cross_account_role = args.cross_account_role
         self.primary_region = args.primary_region
-        self.permissions_boundary = args.permissions_boundary
+        if not args.permissions_boundary:
+            self.permissions_boundary = ""
+        else:
+            self.permissions_boundary = args.permissions_boundary
         self.realtime_visibility = args.realtime_visibility
         self.idp = args.idp
         self.sensor_management = args.sensor_management
         self.dspm = args.dspm
-        self.iam_role_name = args.iam_role_name
+        if not args.iam_role_name:
+            self.iam_role_name = ""
+        else:
+          self.iam_role_name = args.iam_role_name
         self.existing_cloudtrail = args.existing_cloudtrail
-        self.realtime_visibility_regions = args.realtime_visibility_regions
-        self.dspm_regions = args.dspm_regions
+        if not args.realtime_visibility_regions:
+          self.realtime_visibility_regions = "all"
+        else:
+            self.realtime_visibility_regions = args.realtime_visibility_regions
+        if not args.dspm_regions:
+            self.dspm_regions = ""
+        else:
+            self.dspm_regions = args.dspm_regions
         self.ous = args.ous.split(",")
 
 def parse_command_line():
@@ -105,7 +123,7 @@ def parse_command_line():
         "--target-directory",
         dest="target",
         help="Path to directory to save modules",
-        default = "cs-modules",
+        default = "fcs-tf-modules",
         required=False,
     )
     parser.add_argument(
@@ -134,6 +152,7 @@ def parse_command_line():
         "--aws-auth-method",
         dest="aws_auth_method",
         help="Auth method for AWS Providers (role, profile)",
+        default="role",
         required=False,
     )
     parser.add_argument(
@@ -148,6 +167,7 @@ def parse_command_line():
         "--primary-region",
         dest="primary_region",
         help="Your AWS Region",
+        default="us-east-1",
         required=False,
     )
     parser.add_argument(
@@ -162,7 +182,7 @@ def parse_command_line():
         "--realtime-visibility",
         dest="realtime_visibility",
         help="Whether to enable Realtime Visibility (IOA)",
-        default = "True",
+        default = "true",
         required=False,
     )
     parser.add_argument(
@@ -170,7 +190,7 @@ def parse_command_line():
         "--idp",
         dest="idp",
         help="Whether to enable Identity Protection",
-        default = "True",
+        default = "true",
         required=False,
     )
     parser.add_argument(
@@ -178,7 +198,7 @@ def parse_command_line():
         "--sensor-management",
         dest="sensor_management",
         help="Whether to enable Sensor Management (OneClick)",
-        default = "True",
+        default = "true",
         required=False,
     )
     parser.add_argument(
@@ -186,7 +206,7 @@ def parse_command_line():
         "--dspm",
         dest="dspm",
         help="Whether to enable DSPM",
-        default = "False",
+        default = "false",
         required=False,
     )
     parser.add_argument(
@@ -201,7 +221,7 @@ def parse_command_line():
         "--existing-cloudtrail",
         dest="existing_cloudtrail",
         help="Whether to use existing CloudTrail. Choose false to create a new Organization CloudTrail and enable ReadOnly IOAs",
-        default = "True",
+        default = "true",
         required=False,
     )
     parser.add_argument(
@@ -209,6 +229,7 @@ def parse_command_line():
         "--realtime-visibility-regions",
         dest="realtime_visibility_regions",
         help="If realtime_visibility = True, List of Regions to enable for Realtime Visibility",
+        default="",
         required=False,
     )
     parser.add_argument(
@@ -362,8 +383,11 @@ variable "dspm_regions" {
     return
 
 def generate_config_file(config, org_id, management_id):
-    content="""target                      = "{target}"
-falcon_client_id            = "{falcon_client_id}"
+    rtv_regions = config.realtime_visibility_regions
+    rtv_regions_list = '['+','.join(['"'+x+'"' for x in rtv_regions.split(',')])+']'
+    dspm_regions = config.dspm_regions
+    dspm_regions_list = '['+','.join(['"'+x+'"' for x in dspm_regions.split(',')])+']'
+    content="""falcon_client_id            = "{falcon_client_id}"
 falcon_client_secret        = "{falcon_client_secret}"
 aws_auth_method             = "{aws_auth_method}"
 cross_account_role          = "{cross_account_role}"
@@ -377,10 +401,9 @@ sensor_management           = {sensor_management}
 dspm                        = {dspm}
 iam_role_name               = "{iam_role_name}"
 existing_cloudtrail         = {existing_cloudtrail}
-realtime_visibility_regions = "{realtime_visibility_regions}"
-dspm_regions                = "{dspm_regions}"\
-""".format(target=config.target,
-          falcon_client_id=config.falcon_client_id,
+realtime_visibility_regions = {realtime_visibility_regions}
+dspm_regions                = {dspm_regions}\
+""".format(falcon_client_id=config.falcon_client_id,
           falcon_client_secret=config.falcon_client_secret,
           aws_auth_method=config.aws_auth_method,
           cross_account_role=config.cross_account_role,
@@ -394,8 +417,8 @@ dspm_regions                = "{dspm_regions}"\
           dspm=config.dspm,
           iam_role_name=config.iam_role_name,
           existing_cloudtrail=config.existing_cloudtrail,
-          realtime_visibility_regions=config.realtime_visibility_regions,
-          dspm_regions=config.dspm_regions
+          realtime_visibility_regions=rtv_regions_list,
+          dspm_regions=dspm_regions_list
            )
     f = open(f"{config.target}/config.tfvars", "w")
     f.write(content)

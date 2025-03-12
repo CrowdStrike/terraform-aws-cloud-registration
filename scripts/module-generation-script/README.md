@@ -79,7 +79,7 @@ Available Arguments
 |-t --target-directory | Location of generated TF files | No, will default to fcs-tf-modules is no argument given |
 |-k --falcon-client-id | Your Falcon API Client ID | Yes, if there is no --config-file |
 |-s --falcon-client-secret | Your Falcon API Client Secret | Yes, if there is no --config-file |
-|-a --aws-auth-method | Configure the AWS Terraform provider for `role` or `profile` | No, will default to `role` is no argument given |
+|-a --aws-auth-method | Configure the AWS Terraform provider for `role` or `profile` | No, will default to `role` if no argument given |
 |-A --cross-account-role | Name of your AWS Cross Account Role, this role should have access across the Organization | Yes, if --aws-auth-method = role |
 |-p --primary-region | Primary AWS Region to deploy Resources | No, will default to `us-east-1` if no argument given |
 |-o --target-ous | List of OUs to target for onboarding | No, will target entire AWS Organization if no argument given |
