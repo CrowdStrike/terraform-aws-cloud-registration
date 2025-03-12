@@ -22,7 +22,7 @@ This soution accepts either a config file or command line arguments.  See exampl
 ### Config file
 
 ```
-python3 generate_org_modules.py -c config.ini
+python3 org_module_generator.py -c config.ini
 ```
 
 Config file example
@@ -43,6 +43,7 @@ CrossAccountRole = myCrossAccountRole
 
 [aws.config]
 PrimaryRegion       = us-east-1
+TargetOUs           = 
 PermissionsBoundary = 
 
 [falcon.credentials]
@@ -72,29 +73,31 @@ DSPMRegions = []
 ### Command Line Arguments
 Available Arguments
 
-```
--c --config-file 
--t --target-directory
--k --falcon-client-id
--s --falcon-client-secret
--a --aws-auth-method
--A --cross-account-role
--p --primary-region
--b --permissions-boundary
--r --realtime-visibility
--i --idp
--S --sensor-management
--d --dspm
--C --custom-role-name
--E --existing-cloudtrail
--R --realtime-visibility-regions
--D --dspm-regions
-```
+| Argument | Description | Required |
+| -------- | ----------- | -------- |
+|-c --config-file | Location of config.ini file | Yes, if no other arguments are present |
+|-t --target-directory | Location of generated TF files | No, will default to fcs-tf-modules is no argument given |
+|-k --falcon-client-id | Your Falcon API Client ID | Yes, if there is no --config-file |
+|-s --falcon-client-secret | Your Falcon API Client Secret | Yes, if there is no --config-file |
+|-a --aws-auth-method | Configure the AWS Terraform provider for `role` or `profile` | No, will default to `role` is no argument given |
+|-A --cross-account-role | Name of your AWS Cross Account Role, this role should have access across the Organization | Yes, if --aws-auth-method = role |
+|-p --primary-region | Primary AWS Region to deploy Resources | No, will default to `us-east-1` if no argument given |
+|-o --target-ous | List of OUs to target for onboarding | No, will target entire AWS Organization if no argument given |
+|-b --permissions-boundary | AWS IAM Permissions Boundary Policy Name| No |
+|-r --realtime-visibility | Whether to enable Realtime Visbility | No, will default to true is no argument given |
+|-i --idp | Whether to enable Identity Protection | No, will default to true is no argument given |
+|-S --sensor-management | Whether to enable Sensor Management | No, will default to true is no argument given |
+|-d --dspm | Whether to enable DSPM | No, will default to false is no argument given |
+|-C --custom-role-name | Specify custom name for CSPM ReadOnly IAM Role | No, will use default CrowdStrike CSPM ReadOnly IAM Role name if no argument given |
+|-E --existing-cloudtrail | Whether to use existing CloudTrail for IOAs.  Change this to `false` to create a new Org CloudTrail and enable ReadOnly IOAS | No, will default to true is no argument given |
+|-R --realtime-visibility-regions | Which AWS Regions to enable for Realtime Visibility | No, will default to [all] is no argument given |
+|-D --dspm-regions | Which AWS Regions to enable for DSPM | Yes, if --dspm = true |
+
 
 Command Line Arguments Example
 
 ```
-python3 generate_org_modules.py \
+python3 org_module_generator.py \
 --target-directory ./fcs-tf-modules \
 --falcon-client-id myFalconAPIClientId \
 --falcon-client-secret myFalconAPIClientSecret \
