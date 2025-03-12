@@ -48,7 +48,7 @@ import boto3
 class FileConfiguration:  # pylint: disable=R0902
     """Class to hold running configuration."""
     def __init__(self, file_name):
-        self.file = configparser.ConfigParser()
+        self.file = configparser.ConfigParser(converters={'list': lambda x: [i.strip() for i in x.split(',')]})
         self.file.read(file_name)
         self.target = self.file['target']['TargetDirectory']
         self.falcon_client_id = self.file['falcon.credentials']['ClientId']
@@ -57,6 +57,7 @@ class FileConfiguration:  # pylint: disable=R0902
         if 'role' in self.aws_auth_method:
             self.cross_account_role = self.file['aws.auth']['CrossAccountRole']
         self.primary_region = self.file['aws.config']['PrimaryRegion']
+        self.ous = self.file.getlist('aws.config', 'TargetOUs')
         self.permissions_boundary = self.file['aws.config']['PermissionsBoundary']
         self.realtime_visibility = self.file['falcon.features']['RealtimeVisibility']
         self.idp = self.file['falcon.features']['IDP']
@@ -86,6 +87,7 @@ class ArgConfiguration:  # pylint: disable=R0902
         self.existing_cloudtrail = args.existing_cloudtrail
         self.realtime_visibility_regions = args.realtime_visibility_regions
         self.dspm_regions = args.dspm_regions
+        self.ous = args.ous.split(",")
 
 def parse_command_line():
     """Parse command line arguments."""
@@ -216,6 +218,14 @@ def parse_command_line():
         help="If dspm = True, List of Regions to enable for DSPM",
         required=False,
     )
+    parser.add_argument(
+        "-o",
+        "--target-ous",
+        dest="ous",
+        help="List of AWS OUs to target.  If blank, modules will be generated for all accounts in the AWS Organization",
+        default="",
+        required=False,
+    )
     return parser.parse_args()
 
 def create_directory(config):
@@ -231,22 +241,37 @@ def create_directory(config):
     except Exception as e:
         print(f"An error occurred: {e}")
 
-def get_accounts():
+def get_accounts(config):
     """Get AWS accounts."""
     client = boto3.client('organizations')
     organization = client.describe_organization()
     management_id = organization['Organization']['MasterAccountId']
     org_id = organization['Organization']['Id']
-    response = client.list_accounts()
-    response_accounts = response['Accounts']
-    next_token = response.get('NextToken', None)
+    response_accounts = []
+    ou_list = config.ous
+    if ou_list != ['']:
+        for ou in ou_list:
+            response = client.list_accounts_for_parent(ParentId=ou)
+            response_accounts += response['Accounts']
+            next_token = response.get('NextToken', None)
 
-    while next_token:
-        response = client.list_accounts(NextToken=next_token)
-        response_accounts += response['Accounts']
+            while next_token:
+                response = client.list_accounts_for_parent(ParentId=ou,NextToken=next_token)
+                response_accounts += response['Accounts']
+                next_token = response.get('NextToken', None)
+
+        active_accounts = [a for a in response_accounts if a['Status'] == 'ACTIVE']
+    else:
+        response = client.list_accounts()
+        response_accounts = response['Accounts']
         next_token = response.get('NextToken', None)
 
-    active_accounts = [a for a in response_accounts if a['Status'] == 'ACTIVE']
+        while next_token:
+            response = client.list_accounts(NextToken=next_token)
+            response_accounts += response['Accounts']
+            next_token = response.get('NextToken', None)
+
+        active_accounts = [a for a in response_accounts if a['Status'] == 'ACTIVE']
     return org_id, management_id, active_accounts
 
 def generate_var_file(config):
@@ -574,7 +599,7 @@ if __name__ == "__main__":
     else:
         config = ArgConfiguration(args)
     create_directory(config)
-    org_id, management_id, accounts = get_accounts()
+    org_id, management_id, accounts = get_accounts(config)
     generate_var_file(config)
     generate_config_file(config, org_id, management_id)
     generate_crowdstrike_module(config)
