@@ -15,6 +15,16 @@ Generate the Terraform files and modules necessary to register and onboard an AW
 
 Terraform modules are designed to be called per provider configuration.  This can make running a module, such as the CrowdStrike Registration terraform module, against many AWS accounts tedious and difficult.  This solution uses Python to generate the modules and other files necessary to use the CrowdStrike Registration terraform module against many or all accounts in your AWS Organization.
 
+## Requirements
+
+This solution utilizes Boto3 to analyze your AWS organization and generate the account list.  You must run this in an environment with the AWS CLI set to an identity with access to your AWS Organization Management Account.  For more details see [AWS Documentation](https://docs.aws.amazon.com/cli/v1/userguide/cli-configure-files.html#cli-configure-files-methods)
+
+To install the necessary requirements in your environment, use the following command:
+
+```
+pip install -r requirements.txt
+```
+
 ## Usage
 
 This soution accepts either a config file or command line arguments.  See examples below:
