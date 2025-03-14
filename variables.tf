@@ -149,3 +149,15 @@ variable "dspm_regions" {
     error_message = "Each element in the dspm_regions list must be a valid AWS region (e.g., 'us-east-1', 'eu-west-2') that is supported by DSPM."
   }
 }
+
+variable "dspm_integration_role_unique_id" {
+  description = "The unique ID of the DSPM integration role"
+  default     = ""
+  type        = string
+}
+
+variable "dspm_scanner_role_unique_id" {
+  description = "The unique ID of the DSPM scanner role"
+  default     = ""
+  type        = string
+}

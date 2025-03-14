@@ -170,6 +170,9 @@ resource "aws_s3_bucket_lifecycle_configuration" "s3" {
   rule {
     id     = "rule-1"
     status = "Enabled"
+    filter {
+      prefix = ""
+    }
     expiration {
       days = 1
     }

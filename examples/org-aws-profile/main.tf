@@ -15,9 +15,8 @@ provider "crowdstrike" {
 
 # Provision AWS account in Falcon.
 resource "crowdstrike_cloud_aws_account" "this" {
-  account_id                         = var.account_id
-  organization_id                    = var.organization_id
-  is_organization_management_account = true
+  account_id      = var.account_id
+  organization_id = var.organization_id
 
   asset_inventory = {
     enabled = true
@@ -88,7 +87,7 @@ module "fcs_child_account_1" {
   enable_dspm                 = local.enable_dspm
   dspm_regions                = local.dspm_regions
 
-  iam_role_name           = crowdstrike_cloud_aws_account.this.iam_role_name
+  iam_role_name          = crowdstrike_cloud_aws_account.this.iam_role_name
   external_id            = crowdstrike_cloud_aws_account.this.external_id
   intermediate_role_arn  = crowdstrike_cloud_aws_account.this.intermediate_role_arn
   eventbus_arn           = crowdstrike_cloud_aws_account.this.eventbus_arn

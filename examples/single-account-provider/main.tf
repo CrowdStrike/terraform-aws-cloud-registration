@@ -58,7 +58,7 @@ resource "crowdstrike_cloud_aws_account" "this" {
 }
 
 module "fcs_account_onboarding" {
-  source                     = "CrowdStrike/fcs/aws"
+  source                     = "../../"
   falcon_client_id           = var.falcon_client_id
   falcon_client_secret       = var.falcon_client_secret
   account_id                 = var.account_id
@@ -74,6 +74,7 @@ module "fcs_account_onboarding" {
   external_id            = crowdstrike_cloud_aws_account.this.external_id
   intermediate_role_arn  = crowdstrike_cloud_aws_account.this.intermediate_role_arn
   eventbus_arn           = crowdstrike_cloud_aws_account.this.eventbus_arn
+  dspm_role_name         = crowdstrike_cloud_aws_account.this.dspm_role_name
   cloudtrail_bucket_name = crowdstrike_cloud_aws_account.this.cloudtrail_bucket_name
 
   providers = {
@@ -83,7 +84,7 @@ module "fcs_account_onboarding" {
 }
 
 module "fcs_account_us-east-2" {
-  source                     = "CrowdStrike/fcs/aws"
+  source                     = "../.."
   falcon_client_id           = var.falcon_client_id
   falcon_client_secret       = var.falcon_client_secret
   account_id                 = var.account_id
@@ -95,11 +96,14 @@ module "fcs_account_us-east-2" {
   enable_dspm                = local.enable_dspm && contains(local.dspm_regions, "us-east-2")
   dspm_regions               = local.dspm_regions
 
-  iam_role_name          = crowdstrike_cloud_aws_account.this.iam_role_name
-  external_id            = crowdstrike_cloud_aws_account.this.external_id
-  intermediate_role_arn  = crowdstrike_cloud_aws_account.this.intermediate_role_arn
-  eventbus_arn           = crowdstrike_cloud_aws_account.this.eventbus_arn
-  cloudtrail_bucket_name = crowdstrike_cloud_aws_account.this.cloudtrail_bucket_name
+  iam_role_name                   = crowdstrike_cloud_aws_account.this.iam_role_name
+  external_id                     = crowdstrike_cloud_aws_account.this.external_id
+  intermediate_role_arn           = crowdstrike_cloud_aws_account.this.intermediate_role_arn
+  eventbus_arn                    = crowdstrike_cloud_aws_account.this.eventbus_arn
+  dspm_role_name                  = crowdstrike_cloud_aws_account.this.dspm_role_name
+  cloudtrail_bucket_name          = crowdstrike_cloud_aws_account.this.cloudtrail_bucket_name
+  dspm_integration_role_unique_id = module.fcs_account_onboarding.integration_role_unique_id
+  dspm_scanner_role_unique_id     = module.fcs_account_onboarding.scanner_role_unique_id
 
   providers = {
     aws         = aws.us-east-2
@@ -108,7 +112,7 @@ module "fcs_account_us-east-2" {
 }
 
 module "fcs_account_us-west-1" {
-  source                     = "CrowdStrike/fcs/aws"
+  source                     = "../.."
   falcon_client_id           = var.falcon_client_id
   falcon_client_secret       = var.falcon_client_secret
   account_id                 = var.account_id
@@ -120,11 +124,14 @@ module "fcs_account_us-west-1" {
   enable_dspm                = local.enable_dspm && contains(local.dspm_regions, "us-west-1")
   dspm_regions               = local.dspm_regions
 
-  iam_role_name          = crowdstrike_cloud_aws_account.this.iam_role_name
-  external_id            = crowdstrike_cloud_aws_account.this.external_id
-  intermediate_role_arn  = crowdstrike_cloud_aws_account.this.intermediate_role_arn
-  eventbus_arn           = crowdstrike_cloud_aws_account.this.eventbus_arn
-  cloudtrail_bucket_name = crowdstrike_cloud_aws_account.this.cloudtrail_bucket_name
+  iam_role_name                   = crowdstrike_cloud_aws_account.this.iam_role_name
+  external_id                     = crowdstrike_cloud_aws_account.this.external_id
+  intermediate_role_arn           = crowdstrike_cloud_aws_account.this.intermediate_role_arn
+  eventbus_arn                    = crowdstrike_cloud_aws_account.this.eventbus_arn
+  dspm_role_name                  = crowdstrike_cloud_aws_account.this.dspm_role_name
+  cloudtrail_bucket_name          = crowdstrike_cloud_aws_account.this.cloudtrail_bucket_name
+  dspm_integration_role_unique_id = module.fcs_account_onboarding.integration_role_unique_id
+  dspm_scanner_role_unique_id     = module.fcs_account_onboarding.scanner_role_unique_id
 
   providers = {
     aws         = aws.us-west-1
@@ -133,7 +140,7 @@ module "fcs_account_us-west-1" {
 }
 
 module "fcs_account_us-west-2" {
-  source                     = "CrowdStrike/fcs/aws"
+  source                     = "../.."
   falcon_client_id           = var.falcon_client_id
   falcon_client_secret       = var.falcon_client_secret
   account_id                 = var.account_id
@@ -145,11 +152,14 @@ module "fcs_account_us-west-2" {
   enable_dspm                = local.enable_dspm && contains(local.dspm_regions, "us-west-2")
   dspm_regions               = local.dspm_regions
 
-  iam_role_name          = crowdstrike_cloud_aws_account.this.iam_role_name
-  external_id            = crowdstrike_cloud_aws_account.this.external_id
-  intermediate_role_arn  = crowdstrike_cloud_aws_account.this.intermediate_role_arn
-  eventbus_arn           = crowdstrike_cloud_aws_account.this.eventbus_arn
-  cloudtrail_bucket_name = crowdstrike_cloud_aws_account.this.cloudtrail_bucket_name
+  iam_role_name                   = crowdstrike_cloud_aws_account.this.iam_role_name
+  external_id                     = crowdstrike_cloud_aws_account.this.external_id
+  intermediate_role_arn           = crowdstrike_cloud_aws_account.this.intermediate_role_arn
+  eventbus_arn                    = crowdstrike_cloud_aws_account.this.eventbus_arn
+  dspm_role_name                  = crowdstrike_cloud_aws_account.this.dspm_role_name
+  cloudtrail_bucket_name          = crowdstrike_cloud_aws_account.this.cloudtrail_bucket_name
+  dspm_integration_role_unique_id = module.fcs_account_onboarding.integration_role_unique_id
+  dspm_scanner_role_unique_id     = module.fcs_account_onboarding.scanner_role_unique_id
 
   providers = {
     aws         = aws.us-west-2
