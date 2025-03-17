@@ -8,8 +8,8 @@
 This Terraform module enables registration and configuration of AWS accounts with CrowdStrike's Falcon Cloud Security. It supports multi-region deployments and provides flexibility in AWS provider configuration.
 
 For simplified deployment, two specialized sub-modules are available:
-- [modules/registration-profile](./modules/registration-profile/README.md) - Streamlined deployment using AWS CLI profiles
-- [modules/registration-role](./modules/registration-role/README.md) - Streamlined deployment using cross-account IAM roles
+- [modules/aws-profile](./modules/aws-profile/README.md) - Streamlined deployment using AWS CLI profiles
+- [modules/aws-role](./modules/aws-role/README.md) - Streamlined deployment using cross-account IAM roles
 
 Key features:
 - Asset Inventory

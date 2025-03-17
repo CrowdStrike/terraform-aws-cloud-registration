@@ -42,7 +42,7 @@ resource "crowdstrike_cloud_aws_account" "this" {
 }
 
 module "fcs_account" {
-  source                      = "CrowdStrike/fcs/aws//modules/registration-profile"
+  source                      = "../../modules/aws-profile"
   aws_profile                 = var.aws_profile
   falcon_client_id            = var.falcon_client_id
   falcon_client_secret        = var.falcon_client_secret
