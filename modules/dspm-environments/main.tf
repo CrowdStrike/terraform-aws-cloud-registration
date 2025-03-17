@@ -1,5 +1,9 @@
 data "aws_region" "current" {}
 
+data "aws_availability_zones" "available" {
+  state = "available"
+}
+
 resource "aws_vpc" "VPC" {
   cidr_block           = "10.0.0.0/16"
   enable_dns_support   = true
@@ -26,7 +30,7 @@ resource "aws_internet_gateway" "InternetGateway" {
 resource "aws_subnet" "DBSubnetA" {
   vpc_id            = aws_vpc.VPC.id
   cidr_block        = "10.0.0.0/24"
-  availability_zone = local.availability_zones[0]
+  availability_zone = data.aws_availability_zones.available.names[0]
   tags = {
     Name                        = "${var.deployment_name}-DB-A"
     (local.crowdstrike_tag_key) = local.crowdstrike_tag_value
@@ -36,7 +40,7 @@ resource "aws_subnet" "DBSubnetA" {
 resource "aws_subnet" "DBSubnetB" {
   vpc_id            = aws_vpc.VPC.id
   cidr_block        = "10.0.1.0/24"
-  availability_zone = local.availability_zones[1]
+  availability_zone = data.aws_availability_zones.available.names[1]
   tags = {
     Name                        = "${var.deployment_name}-DB-B"
     (local.crowdstrike_tag_key) = local.crowdstrike_tag_value
@@ -70,7 +74,7 @@ resource "aws_redshift_subnet_group" "RedshiftSubnetGroup" {
 resource "aws_subnet" "PublicSubnet" {
   vpc_id            = aws_vpc.VPC.id
   cidr_block        = "10.0.2.0/24"
-  availability_zone = local.availability_zones[0]
+  availability_zone = data.aws_availability_zones.available.names[0]
   tags = {
     Name                        = "${var.deployment_name}-Public"
     (local.crowdstrike_tag_key) = local.crowdstrike_tag_value
@@ -80,7 +84,7 @@ resource "aws_subnet" "PublicSubnet" {
 resource "aws_subnet" "PrivateSubnet" {
   vpc_id            = aws_vpc.VPC.id
   cidr_block        = "10.0.3.0/24"
-  availability_zone = local.availability_zones[0]
+  availability_zone = data.aws_availability_zones.available.names[0]
   tags = {
     Name                        = "${var.deployment_name}-Private"
     (local.crowdstrike_tag_key) = local.crowdstrike_tag_value
