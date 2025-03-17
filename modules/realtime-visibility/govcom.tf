@@ -30,7 +30,7 @@ resource "aws_iam_role" "lambda" {
 resource "aws_iam_role_policy" "lambda_logging" {
   count = var.is_gov_commercial && var.is_primary_region ? 1 : 0
   name  = "logging"
-  role  = aws_iam_role.lambda.0.id
+  role  = aws_iam_role.lambda[0].id
   policy = jsonencode({
     Version = "2012-10-17"
     Statement = [
@@ -69,7 +69,7 @@ resource "aws_cloudwatch_log_group" "eventbridge_logs" {
 resource "aws_lambda_function" "eventbridge" {
   count         = var.is_gov_commercial && var.is_primary_region ? 1 : 0
   function_name = "cs-lambda-eventbridge"
-  role          = aws_iam_role.lambda.0.arn
+  role          = aws_iam_role.lambda[0].arn
   handler       = "bootstrap"
   runtime       = "provided.al2"
   architectures = ["x86_64"]
@@ -95,13 +95,13 @@ resource "aws_lambda_alias" "eventbridge" {
   count            = var.is_gov_commercial && var.is_primary_region ? 1 : 0
   name             = "cs-lambda-eventbridge"
   function_version = "$LATEST"
-  function_name    = aws_lambda_function.eventbridge.0.arn
+  function_name    = aws_lambda_function.eventbridge[0].arn
 }
 
 resource "aws_lambda_permission" "eventbridge" {
   count         = var.is_gov_commercial && var.is_primary_region ? 1 : 0
-  function_name = aws_lambda_alias.eventbridge.0.function_name
-  qualifier     = aws_lambda_alias.eventbridge.0.name
+  function_name = aws_lambda_alias.eventbridge[0].function_name
+  qualifier     = aws_lambda_alias.eventbridge[0].name
   action        = "lambda:InvokeFunction"
   principal     = "events.amazonaws.com"
   source_arn    = "arn:aws:events:${local.aws_region}:${local.account_id}:rule/cs-*"
@@ -116,7 +116,7 @@ resource "aws_cloudwatch_log_group" "s3_logs" {
 resource "aws_lambda_function" "s3" {
   count         = var.is_gov_commercial && !var.use_existing_cloudtrail && var.is_primary_region ? 1 : 0
   function_name = "cs-lambda-s3"
-  role          = aws_iam_role.lambda.0.arn
+  role          = aws_iam_role.lambda[0].arn
   handler       = "bootstrap"
   runtime       = "provided.al2"
   architectures = ["x86_64"]
@@ -142,13 +142,13 @@ resource "aws_lambda_alias" "s3" {
   count            = var.is_gov_commercial && !var.use_existing_cloudtrail && var.is_primary_region ? 1 : 0
   name             = "cs-lambda-s3"
   function_version = "$LATEST"
-  function_name    = aws_lambda_function.s3.0.arn
+  function_name    = aws_lambda_function.s3[0].arn
 }
 
 resource "aws_lambda_permission" "s3" {
   count         = var.is_gov_commercial && !var.use_existing_cloudtrail && var.is_primary_region ? 1 : 0
-  function_name = aws_lambda_alias.s3.0.function_name
-  qualifier     = aws_lambda_alias.s3.0.name
+  function_name = aws_lambda_alias.s3[0].function_name
+  qualifier     = aws_lambda_alias.s3[0].name
   action        = "lambda:InvokeFunction"
   principal     = "s3.amazonaws.com"
   source_arn    = "arn:aws:s3:::${local.bucket_name}"
@@ -166,7 +166,7 @@ resource "aws_s3_bucket" "s3" {
 
 resource "aws_s3_bucket_lifecycle_configuration" "s3" {
   count  = var.is_gov_commercial && !var.use_existing_cloudtrail && var.is_primary_region ? 1 : 0
-  bucket = aws_s3_bucket.s3.0.id
+  bucket = aws_s3_bucket.s3[0].id
   rule {
     id     = "rule-1"
     status = "Enabled"
@@ -181,10 +181,10 @@ resource "aws_s3_bucket_lifecycle_configuration" "s3" {
 
 resource "aws_s3_bucket_notification" "s3" {
   count  = var.is_gov_commercial && !var.use_existing_cloudtrail && var.is_primary_region ? 1 : 0
-  bucket = aws_s3_bucket.s3.0.id
+  bucket = aws_s3_bucket.s3[0].id
 
   lambda_function {
-    lambda_function_arn = aws_lambda_alias.s3.0.arn
+    lambda_function_arn = aws_lambda_alias.s3[0].arn
     events              = ["s3:ObjectCreated:*"]
   }
 
@@ -195,7 +195,7 @@ resource "aws_s3_bucket_notification" "s3" {
 
 resource "aws_s3_bucket_ownership_controls" "s3" {
   count  = var.is_gov_commercial && !var.use_existing_cloudtrail && var.is_primary_region ? 1 : 0
-  bucket = aws_s3_bucket.s3.0.id
+  bucket = aws_s3_bucket.s3[0].id
 
   rule {
     object_ownership = "BucketOwnerPreferred"
@@ -204,7 +204,7 @@ resource "aws_s3_bucket_ownership_controls" "s3" {
 
 resource "aws_s3_bucket_acl" "s3" {
   count  = var.is_gov_commercial && !var.use_existing_cloudtrail && var.is_primary_region ? 1 : 0
-  bucket = aws_s3_bucket.s3.0.id
+  bucket = aws_s3_bucket.s3[0].id
   acl    = "private"
 
   depends_on = [aws_s3_bucket_ownership_controls.s3]
@@ -212,7 +212,7 @@ resource "aws_s3_bucket_acl" "s3" {
 
 resource "aws_s3_bucket_policy" "s3" {
   count  = var.is_gov_commercial && !var.use_existing_cloudtrail && var.is_primary_region ? 1 : 0
-  bucket = aws_s3_bucket.s3.0.id
+  bucket = aws_s3_bucket.s3[0].id
 
   policy = jsonencode({
     Version = "2012-10-17"
@@ -224,7 +224,7 @@ resource "aws_s3_bucket_policy" "s3" {
           Service = "cloudtrail.amazonaws.com"
         }
         Action   = "s3:GetBucketAcl"
-        Resource = "arn:aws:s3:::${aws_s3_bucket.s3.0.id}"
+        Resource = "arn:aws:s3:::${aws_s3_bucket.s3[0].id}"
       },
       {
         Sid    = "AWSCloudTrailWrite"
@@ -233,7 +233,7 @@ resource "aws_s3_bucket_policy" "s3" {
           Service = "cloudtrail.amazonaws.com"
         }
         Action   = "s3:PutObject"
-        Resource = "arn:aws:s3:::${aws_s3_bucket.s3.0.id}/*"
+        Resource = "arn:aws:s3:::${aws_s3_bucket.s3[0].id}/*"
         Condition = {
           StringEquals = {
             "s3:x-amz-acl" = "bucket-owner-full-control"

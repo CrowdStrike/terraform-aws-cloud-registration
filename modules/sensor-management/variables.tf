@@ -25,4 +25,3 @@ variable "permissions_boundary" {
   default     = ""
   description = "The name of the policy used to set the permissions boundary for IAM roles"
 }
-

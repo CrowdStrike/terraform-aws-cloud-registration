@@ -1,12 +1,12 @@
 locals {
-  aws_partition          = var.account_type == "gov" ? "aws-us-gov" : "aws"
-  is_gov_commercial      = var.is_gov && var.account_type == "commercial"
-  cross_account_role_arn = "arn:${local.aws_partition}:iam::${var.account_id}:role/${var.cross_account_role_name}"
+  aws_partition     = var.account_type == "gov" ? "aws-us-gov" : "aws"
+  is_gov_commercial = var.is_gov && var.account_type == "commercial"
+  account_role_arn  = "arn:${local.aws_partition}:iam::${var.account_id}:role/${var.aws_role_name}"
 }
 
 provider "aws" {
   assume_role {
-    role_arn     = local.cross_account_role_arn
+    role_arn     = local.account_role_arn
     session_name = "TerraformSession"
   }
   region                      = var.primary_region
@@ -79,4 +79,3 @@ module "dspm_roles" {
   external_id            = local.external_id
   dspm_regions           = var.dspm_regions
 }
-

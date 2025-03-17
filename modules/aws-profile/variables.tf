@@ -120,7 +120,7 @@ variable "eventbridge_role_name" {
 variable "cloudtrail_bucket_name" {
   type        = string
   default     = ""
-  description = ""
+  description = "Name of the S3 bucket for CloudTrail logs"
 }
 
 variable "enable_dspm" {

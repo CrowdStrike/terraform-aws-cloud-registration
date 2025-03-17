@@ -83,7 +83,7 @@ module "fcs_account_onboarding" {
   }
 }
 
-module "fcs_account_us-east-2" {
+module "fcs_account_us_east_2" {
   source                     = "../.."
   falcon_client_id           = var.falcon_client_id
   falcon_client_secret       = var.falcon_client_secret
@@ -111,7 +111,7 @@ module "fcs_account_us-east-2" {
   }
 }
 
-module "fcs_account_us-west-1" {
+module "fcs_account_us_west_1" {
   source                     = "../.."
   falcon_client_id           = var.falcon_client_id
   falcon_client_secret       = var.falcon_client_secret
@@ -139,7 +139,7 @@ module "fcs_account_us-west-1" {
   }
 }
 
-module "fcs_account_us-west-2" {
+module "fcs_account_us_west_2" {
   source                     = "../.."
   falcon_client_id           = var.falcon_client_id
   falcon_client_secret       = var.falcon_client_secret
@@ -166,4 +166,3 @@ module "fcs_account_us-west-2" {
     crowdstrike = crowdstrike
   }
 }
-

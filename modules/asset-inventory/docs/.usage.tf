@@ -6,14 +6,13 @@ terraform {
       version = ">= 4.45"
     }
     crowdstrike = {
-      source = "crowdstrike/crowdstrike"
+      source  = "CrowdStrike/crowdstrike"
       version = ">= 0.0.16"
     }
   }
 }
 
-provider "aws" {
-}
+provider "aws" {}
 
 provider "crowdstrike" {
   client_id     = var.falcon_client_id
@@ -21,19 +20,15 @@ provider "crowdstrike" {
 }
 
 data "crowdstrike_cloud_aws_account" "target" {
-  account_id      = var.account_id
+  account_id = var.account_id
 }
 
 
 module "asset_inventory" {
-  source = "CrowdStrike/fcs/aws//modules/asset-inventory"
+  source = "CrowdStrike/cloud-registration/aws//modules/asset-inventory"
 
-  external_id           = data.crowdstrike_cloud_aws_account.target.accounts.0.external_id
-  intermediate_role_arn = data.crowdstrike_cloud_aws_account.target.accounts.0.intermediate_role_arn
-  role_name             = split("/", data.crowdstrike_cloud_aws_account.target.accounts.0.iam_role_arn)[1]
+  external_id           = data.crowdstrike_cloud_aws_account.target.accounts[0].external_id
+  intermediate_role_arn = data.crowdstrike_cloud_aws_account.target.accounts[0].intermediate_role_arn
+  role_name             = data.crowdstrike_cloud_aws_account.target.accounts[0].iam_role_name
   permissions_boundary  = var.permissions_boundary
-
-  providers = {
-    aws = aws
-  }
 }

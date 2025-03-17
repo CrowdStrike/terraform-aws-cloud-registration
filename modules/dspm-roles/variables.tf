@@ -52,12 +52,6 @@ variable "external_id" {
   }
 }
 
-variable "primary_region" {
-  description = "Region for deploying global AWS resources (IAM roles, policies, etc.) that are account-wide and only need to be created once. Distinct from dspm_regions which controls region-specific resource deployment."
-  type        = string
-  default     = "us-east-1"
-}
-
 variable "dspm_regions" {
   description = "The regions in which DSPM scanning environments will be created"
   type        = list(string)

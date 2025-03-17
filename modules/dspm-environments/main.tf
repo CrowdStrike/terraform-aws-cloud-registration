@@ -1,6 +1,6 @@
 data "aws_region" "current" {}
 
-resource "aws_vpc" "VPC" {
+resource "aws_vpc" "vpc" {
   cidr_block           = "10.0.0.0/16"
   enable_dns_support   = true
   enable_dns_hostnames = true
@@ -12,19 +12,19 @@ resource "aws_vpc" "VPC" {
   }
 }
 
-resource "aws_internet_gateway" "InternetGateway" {
-  vpc_id = aws_vpc.VPC.id
+resource "aws_internet_gateway" "internet_gateway" {
+  vpc_id = aws_vpc.vpc.id
 
   tags = {
     Name                        = "${var.deployment_name}-Gateway"
     (local.crowdstrike_tag_key) = local.crowdstrike_tag_value
   }
 
-  depends_on = [aws_vpc.VPC]
+  depends_on = [aws_vpc.vpc]
 }
 
-resource "aws_subnet" "DBSubnetA" {
-  vpc_id            = aws_vpc.VPC.id
+resource "aws_subnet" "db_subnet_a" {
+  vpc_id            = aws_vpc.vpc.id
   cidr_block        = "10.0.0.0/24"
   availability_zone = local.availability_zones[0]
   tags = {
@@ -33,8 +33,8 @@ resource "aws_subnet" "DBSubnetA" {
   }
 }
 
-resource "aws_subnet" "DBSubnetB" {
-  vpc_id            = aws_vpc.VPC.id
+resource "aws_subnet" "db_subnet_b" {
+  vpc_id            = aws_vpc.vpc.id
   cidr_block        = "10.0.1.0/24"
   availability_zone = local.availability_zones[1]
   tags = {
@@ -43,10 +43,10 @@ resource "aws_subnet" "DBSubnetB" {
   }
 }
 
-resource "aws_db_subnet_group" "DBSubnetGroup" {
+resource "aws_db_subnet_group" "db_subnet_group" {
   name        = "${var.deployment_name}-db-subnet-group"
   description = "CrowdStrike Security DB subnet group"
-  subnet_ids  = [aws_subnet.DBSubnetA.id, aws_subnet.DBSubnetB.id]
+  subnet_ids  = [aws_subnet.db_subnet_a.id, aws_subnet.db_subnet_b.id]
 
   tags = {
     Name                        = "${var.deployment_name}-DBSubnetGroup"
@@ -55,10 +55,10 @@ resource "aws_db_subnet_group" "DBSubnetGroup" {
   }
 }
 
-resource "aws_redshift_subnet_group" "RedshiftSubnetGroup" {
+resource "aws_redshift_subnet_group" "redshift_subnet_group" {
   name        = "${var.deployment_name}-redshift-subnet-group"
   description = "CrowdStrike Security Redshift subnet group"
-  subnet_ids  = [aws_subnet.DBSubnetA.id, aws_subnet.DBSubnetB.id]
+  subnet_ids  = [aws_subnet.db_subnet_a.id, aws_subnet.db_subnet_b.id]
 
   tags = {
     Name                        = "${var.deployment_name}-RedshiftSubnetGroup"
@@ -67,8 +67,8 @@ resource "aws_redshift_subnet_group" "RedshiftSubnetGroup" {
   }
 }
 
-resource "aws_subnet" "PublicSubnet" {
-  vpc_id            = aws_vpc.VPC.id
+resource "aws_subnet" "public_subnet" {
+  vpc_id            = aws_vpc.vpc.id
   cidr_block        = "10.0.2.0/24"
   availability_zone = local.availability_zones[0]
   tags = {
@@ -77,8 +77,8 @@ resource "aws_subnet" "PublicSubnet" {
   }
 }
 
-resource "aws_subnet" "PrivateSubnet" {
-  vpc_id            = aws_vpc.VPC.id
+resource "aws_subnet" "private_subnet" {
+  vpc_id            = aws_vpc.vpc.id
   cidr_block        = "10.0.3.0/24"
   availability_zone = local.availability_zones[0]
   tags = {
@@ -88,13 +88,13 @@ resource "aws_subnet" "PrivateSubnet" {
   }
 }
 
-resource "aws_route_table" "PublicRouteTable" {
-  vpc_id = aws_vpc.VPC.id
+resource "aws_route_table" "public_route_table" {
+  vpc_id = aws_vpc.vpc.id
 
-  // PublicRoute1
+  # PublicRoute1
   route {
     cidr_block = "0.0.0.0/0"
-    gateway_id = aws_internet_gateway.InternetGateway.id
+    gateway_id = aws_internet_gateway.internet_gateway.id
   }
 
   tags = {
@@ -102,10 +102,10 @@ resource "aws_route_table" "PublicRouteTable" {
     (local.crowdstrike_tag_key) = local.crowdstrike_tag_value
   }
 
-  depends_on = [aws_internet_gateway.InternetGateway]
+  depends_on = [aws_internet_gateway.internet_gateway]
 }
 
-resource "aws_eip" "ElasticIPAddress" {
+resource "aws_eip" "elastic_ip_address" {
   domain = "vpc"
   tags = {
     Name                        = "EIP-${var.deployment_name}"
@@ -114,9 +114,9 @@ resource "aws_eip" "ElasticIPAddress" {
   }
 }
 
-resource "aws_nat_gateway" "NATGateway" {
-  allocation_id = aws_eip.ElasticIPAddress.id
-  subnet_id     = aws_subnet.PublicSubnet.id
+resource "aws_nat_gateway" "nat_gateway" {
+  allocation_id = aws_eip.elastic_ip_address.id
+  subnet_id     = aws_subnet.public_subnet.id
 
   tags = {
     Name                        = "NAT-${var.deployment_name}"
@@ -125,13 +125,13 @@ resource "aws_nat_gateway" "NATGateway" {
 }
 
 
-resource "aws_route_table" "PrivateRouteTable" {
-  vpc_id = aws_vpc.VPC.id
+resource "aws_route_table" "private_route_table" {
+  vpc_id = aws_vpc.vpc.id
 
-  // PrivateRoute1
+  # PrivateRoute1
   route {
     cidr_block     = "0.0.0.0/0"
-    nat_gateway_id = aws_nat_gateway.NATGateway.id
+    nat_gateway_id = aws_nat_gateway.nat_gateway.id
   }
 
   tags = {
@@ -140,23 +140,23 @@ resource "aws_route_table" "PrivateRouteTable" {
   }
 }
 
-resource "aws_route_table_association" "PublicSubnetRouteTableAssociation" {
-  subnet_id      = aws_subnet.PublicSubnet.id
-  route_table_id = aws_route_table.PublicRouteTable.id
+resource "aws_route_table_association" "public_subnet_route_table_association" {
+  subnet_id      = aws_subnet.public_subnet.id
+  route_table_id = aws_route_table.public_route_table.id
 }
 
-resource "aws_route_table_association" "PrivateSubnetRouteTableAssociation" {
-  subnet_id      = aws_subnet.PrivateSubnet.id
-  route_table_id = aws_route_table.PrivateRouteTable.id
+resource "aws_route_table_association" "private_subnet_route_table_association" {
+  subnet_id      = aws_subnet.private_subnet.id
+  route_table_id = aws_route_table.private_route_table.id
 }
 
-resource "aws_security_group" "EC2SecurityGroup" {
+resource "aws_security_group" "ec2_security_group" {
   #checkov:skip=CKV_AWS_382:Data scanner must be allowed to access undetermined ports to support scanning new services
   name        = "EC2SecurityGroup"
   description = "Security group attached to CrowdStrike provisioned EC2 instances for running data scanners"
-  vpc_id      = aws_vpc.VPC.id
+  vpc_id      = aws_vpc.vpc.id
 
-  // General outbound traffic
+  # General outbound traffic
   egress {
     description = "Security group attached to EC2"
     from_port   = 0
@@ -172,90 +172,90 @@ resource "aws_security_group" "EC2SecurityGroup" {
   }
 }
 
-resource "aws_security_group" "DBSecurityGroup" {
+resource "aws_security_group" "db_security_group" {
   name        = "DBSecurityGroup"
   description = "Security group attached to RDS instance to allow EC2 instances with specific security groups attached to connect to the database"
-  vpc_id      = aws_vpc.VPC.id
+  vpc_id      = aws_vpc.vpc.id
 
-  // postgres
+  # postgres
   ingress {
     description     = "access for postgres port"
     from_port       = 5432
     to_port         = 5432
     protocol        = "tcp"
-    security_groups = [aws_security_group.EC2SecurityGroup.id]
+    security_groups = [aws_security_group.ec2_security_group.id]
   }
 
-  // mysql
+  # mysql
   ingress {
     description     = "access for mysql port"
     from_port       = 3306
     to_port         = 3306
     protocol        = "tcp"
-    security_groups = [aws_security_group.EC2SecurityGroup.id]
+    security_groups = [aws_security_group.ec2_security_group.id]
   }
 
-  // oracle
+  # oracle
   ingress {
     description     = "access for oracle db port"
     from_port       = 1521
     to_port         = 1523
     protocol        = "tcp"
-    security_groups = [aws_security_group.EC2SecurityGroup.id]
+    security_groups = [aws_security_group.ec2_security_group.id]
   }
 
-  // sql server
+  # sql server
   ingress {
     description     = "access for sql server port"
     from_port       = 1433
     to_port         = 1433
     protocol        = "tcp"
-    security_groups = [aws_security_group.EC2SecurityGroup.id]
+    security_groups = [aws_security_group.ec2_security_group.id]
   }
 
-  // mongo
+  # mongo
   ingress {
     description     = "access for mongodb port"
     from_port       = 27017
     to_port         = 27017
     protocol        = "tcp"
-    security_groups = [aws_security_group.EC2SecurityGroup.id]
+    security_groups = [aws_security_group.ec2_security_group.id]
   }
 
-  // redis
+  # redis
   ingress {
     description     = "access for redis port"
     from_port       = 6379
     to_port         = 6379
     protocol        = "tcp"
-    security_groups = [aws_security_group.EC2SecurityGroup.id]
+    security_groups = [aws_security_group.ec2_security_group.id]
   }
 
-  // cassandra
+  # cassandra
   ingress {
     description     = "access for cassandra port"
     from_port       = 9042
     to_port         = 9042
     protocol        = "tcp"
-    security_groups = [aws_security_group.EC2SecurityGroup.id]
+    security_groups = [aws_security_group.ec2_security_group.id]
   }
 
-  // open search
+  # open search
   ingress {
     description     = "access for open search port"
     from_port       = 9200
     to_port         = 9200
     protocol        = "tcp"
-    security_groups = [aws_security_group.EC2SecurityGroup.id]
+    security_groups = [aws_security_group.ec2_security_group.id]
   }
 
-  // redshift
+  # redshift
   ingress {
     description     = "access for redshift port"
     from_port       = 5439
     to_port         = 5439
     protocol        = "tcp"
-    security_groups = [aws_security_group.EC2SecurityGroup.id]
+    security_groups = [aws_security_group.ec2_security_group.id]
   }
 
   tags = {
@@ -266,7 +266,7 @@ resource "aws_security_group" "DBSecurityGroup" {
 }
 
 resource "aws_iam_role_policy" "vpc_policy" {
-  name = "RunDataScanner-${local.aws_region}-${aws_vpc.VPC.id}"
+  name = "RunDataScanner-${local.aws_region}-${aws_vpc.vpc.id}"
   role = var.dspm_role_name
 
   policy = jsonencode({
@@ -284,7 +284,7 @@ resource "aws_iam_role_policy" "vpc_policy" {
         ]
         Condition = {
           StringEquals = {
-            "ec2:Vpc" = "arn:aws:ec2:${local.aws_region}:${local.account_id}:vpc/${aws_vpc.VPC.id}"
+            "ec2:Vpc" = "arn:aws:ec2:${local.aws_region}:${local.account_id}:vpc/${aws_vpc.vpc.id}"
           }
         }
       }

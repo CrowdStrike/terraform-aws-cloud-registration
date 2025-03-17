@@ -9,6 +9,52 @@ This Terraform module deploys the regional AWS resources required for CrowdStrik
 
 >**Note**: The [dspm-roles](../dspm-roles/) module must be deployed first to establish the necessary global IAM roles and permissions before deploying this module.
 
+## Usage
+
+```hcl
+terraform {
+  required_version = ">= 0.15"
+  required_providers {
+    aws = {
+      source  = "hashicorp/aws"
+      version = ">= 4.45"
+    }
+    crowdstrike = {
+      source  = "CrowdStrike/crowdstrike"
+      version = ">= 0.0.16"
+    }
+  }
+}
+
+provider "aws" {}
+
+provider "crowdstrike" {
+  client_id     = var.falcon_client_id
+  client_secret = var.falcon_client_secret
+}
+
+data "crowdstrike_cloud_aws_account" "target" {
+  account_id = var.account_id
+}
+
+module "dspm_roles" {
+  source                = "CrowdStrike/cloud-registration/aws//modules/dspm-roles/"
+  dspm_role_name        = data.crowdstrike_cloud_aws_account.target.accounts[0].dspm_role_arn
+  intermediate_role_arn = data.crowdstrike_cloud_aws_account.target.accounts[0].intermediate_role_arn
+  external_id           = data.crowdstrike_cloud_aws_account.target.accounts[0].external_id
+  falcon_client_id      = var.falcon_client_id
+  falcon_client_secret  = var.falcon_client_secret
+  dspm_regions          = ["us-east-1"]
+}
+
+module "dspm_environments" {
+  source         = "CrowdStrike/cloud-registration/aws//modules/dspm-environments/"
+  dspm_role_name = data.crowdstrike_cloud_aws_account.target.accounts[0].dspm_role_arn
+  region         = "us-east-1"
+  depends_on     = [module.dspm_roles]
+}
+```
+
 ## Providers
 
 | Name | Version |
@@ -18,25 +64,25 @@ This Terraform module deploys the regional AWS resources required for CrowdStrik
 
 | Name | Type |
 |------|------|
-| [aws_db_subnet_group.DBSubnetGroup](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/db_subnet_group) | resource |
-| [aws_eip.ElasticIPAddress](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/eip) | resource |
+| [aws_db_subnet_group.db_subnet_group](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/db_subnet_group) | resource |
+| [aws_eip.elastic_ip_address](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/eip) | resource |
 | [aws_iam_role_policy.vpc_policy](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role_policy) | resource |
-| [aws_internet_gateway.InternetGateway](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/internet_gateway) | resource |
+| [aws_internet_gateway.internet_gateway](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/internet_gateway) | resource |
 | [aws_kms_alias.crowdstrike_key_alias](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/kms_alias) | resource |
 | [aws_kms_key.crowdstrike_kms_key](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/kms_key) | resource |
-| [aws_nat_gateway.NATGateway](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/nat_gateway) | resource |
-| [aws_redshift_subnet_group.RedshiftSubnetGroup](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/redshift_subnet_group) | resource |
-| [aws_route_table.PrivateRouteTable](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/route_table) | resource |
-| [aws_route_table.PublicRouteTable](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/route_table) | resource |
-| [aws_route_table_association.PrivateSubnetRouteTableAssociation](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/route_table_association) | resource |
-| [aws_route_table_association.PublicSubnetRouteTableAssociation](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/route_table_association) | resource |
-| [aws_security_group.DBSecurityGroup](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/security_group) | resource |
-| [aws_security_group.EC2SecurityGroup](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/security_group) | resource |
-| [aws_subnet.DBSubnetA](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/subnet) | resource |
-| [aws_subnet.DBSubnetB](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/subnet) | resource |
-| [aws_subnet.PrivateSubnet](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/subnet) | resource |
-| [aws_subnet.PublicSubnet](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/subnet) | resource |
-| [aws_vpc.VPC](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/vpc) | resource |
+| [aws_nat_gateway.nat_gateway](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/nat_gateway) | resource |
+| [aws_redshift_subnet_group.redshift_subnet_group](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/redshift_subnet_group) | resource |
+| [aws_route_table.private_route_table](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/route_table) | resource |
+| [aws_route_table.public_route_table](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/route_table) | resource |
+| [aws_route_table_association.private_subnet_route_table_association](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/route_table_association) | resource |
+| [aws_route_table_association.public_subnet_route_table_association](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/route_table_association) | resource |
+| [aws_security_group.db_security_group](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/security_group) | resource |
+| [aws_security_group.ec2_security_group](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/security_group) | resource |
+| [aws_subnet.db_subnet_a](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/subnet) | resource |
+| [aws_subnet.db_subnet_b](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/subnet) | resource |
+| [aws_subnet.private_subnet](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/subnet) | resource |
+| [aws_subnet.public_subnet](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/subnet) | resource |
+| [aws_vpc.vpc](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/vpc) | resource |
 | [aws_caller_identity.current](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/caller_identity) | data source |
 | [aws_iam_policy_document.policy_kms_key](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/iam_policy_document) | data source |
 | [aws_region.current](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/region) | data source |
@@ -53,57 +99,4 @@ This Terraform module deploys the regional AWS resources required for CrowdStrik
 | Name | Description |
 |------|-------------|
 | <a name="output_crowdstrike_kms_key"></a> [crowdstrike\_kms\_key](#output\_crowdstrike\_kms\_key) | The arn of the KMS key that DSPM will use |
-
-## Usage
-
-```hcl
-terraform {
-  required_version = ">= 0.15"
-  required_providers {
-    aws = {
-      source  = "hashicorp/aws"
-      version = ">= 4.45"
-    }
-    crowdstrike = {
-      source  = "crowdstrike/crowdstrike"
-      version = ">= 0.0.16"
-    }
-  }
-}
-
-provider "aws" {
-}
-
-provider "crowdstrike" {
-  client_id     = var.falcon_client_id
-  client_secret = var.falcon_client_secret
-}
-
-data "crowdstrike_cloud_aws_account" "target" {
-  account_id = var.account_id
-}
-
-module "dspm_roles" {
-  count                 = (var.is_primary_region && var.enable_dspm) ? 1 : 0
-  source                = "CrowdStrike/fcs/aws//modules/dspm-roles/"
-  dspm_role_name        = split("/", data.crowdstrike_cloud_aws_account.target.accounts.0.dspm_role_arn)[1]
-  intermediate_role_arn = data.crowdstrike_cloud_aws_account.target.accounts.0.intermediate_role_arn
-  external_id           = data.crowdstrike_cloud_aws_account.target.accounts.0.external_id
-  falcon_client_id      = var.falcon_client_id
-  falcon_client_secret  = var.falcon_client_secret
-  dspm_regions          = ["us-east-1"]
-}
-
-module "dspm_environments" {
-  count          = var.enable_dspm ? 1 : 0
-  source         = "CrowdStrike/fcs/aws//modules/dspm-environments/"
-  dspm_role_name = split("/", data.crowdstrike_cloud_aws_account.target.accounts.0.dspm_role_arn)[1]
-  region         = "us-east-1"
-  providers = {
-    aws = aws
-  }
-  depends_on = [module.dspm_roles]
-}
-
-```
 <!-- END_TF_DOCS -->

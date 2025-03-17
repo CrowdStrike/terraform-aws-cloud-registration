@@ -12,14 +12,13 @@ header-from: docs/.header.md
 content: |-
   {{ .Header }}
 
-  {{ .Providers }}
-  {{ .Resources }}
-  {{ .Inputs }}
-  {{ .Outputs }}
-
   ## Usage
-  
+
   ```hcl
   {{ include "docs/.usage.tf" }}
   ```
 
+  {{ .Providers }}
+  {{ .Resources }}
+  {{ .Inputs }}
+  {{ .Outputs }}
