@@ -23,7 +23,7 @@ variable "primary_region" {
 variable "is_gov" {
   type        = bool
   default     = false
-  description = "Set to true if this is a gov account"
+  description = "Set to true if your falcon cloud is gov"
 }
 
 variable "account_id" {
