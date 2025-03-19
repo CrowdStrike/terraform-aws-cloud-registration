@@ -6,7 +6,7 @@ terraform {
       version = ">= 4.45"
     }
     crowdstrike = {
-      source  = "crowdstrike/crowdstrike"
+      source  = "CrowdStrike/crowdstrike"
       version = ">= 0.0.16"
     }
   }
@@ -82,11 +82,10 @@ resource "crowdstrike_cloud_aws_account" "this" {
   dspm = {
     enabled = local.enable_dspm
   }
-  provider = crowdstrike
 }
 
 module "fcs_account_onboarding" {
-  source                     = "CrowdStrike/fcs/aws"
+  source                     = "CrowdStrike/cloud-registration/aws"
   falcon_client_id           = var.falcon_client_id
   falcon_client_secret       = var.falcon_client_secret
   account_id                 = var.account_id
@@ -113,8 +112,8 @@ module "fcs_account_onboarding" {
 # for each region where you want to onboard Real-time Visibility or DSPM features
 # - duplicate this module
 # - update the provider with region specific one
-module "fcs_account_us-east-2" {
-  source                     = "CrowdStrike/fcs/aws"
+module "fcs_account_us_east_2" {
+  source                     = "CrowdStrike/cloud-registration/aws"
   falcon_client_id           = var.falcon_client_id
   falcon_client_secret       = var.falcon_client_secret
   account_id                 = var.account_id
@@ -137,5 +136,3 @@ module "fcs_account_us-east-2" {
     crowdstrike = crowdstrike
   }
 }
-
-

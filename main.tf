@@ -101,8 +101,8 @@ module "dspm_environments" {
   count                      = var.enable_dspm && contains(var.dspm_regions, local.aws_region) ? 1 : 0
   source                     = "./modules/dspm-environments/"
   dspm_role_name             = var.dspm_role_name
-  integration_role_unique_id = local.is_primary_region ? module.dspm_roles.0.integration_role_unique_id : var.dspm_integration_role_unique_id
-  scanner_role_unique_id     = local.is_primary_region ? module.dspm_roles.0.scanner_role_unique_id : var.dspm_scanner_role_unique_id
+  integration_role_unique_id = local.is_primary_region ? module.dspm_roles[0].integration_role_unique_id : var.dspm_integration_role_unique_id
+  scanner_role_unique_id     = local.is_primary_region ? module.dspm_roles[0].scanner_role_unique_id : var.dspm_scanner_role_unique_id
 
   depends_on = [module.dspm_roles]
 

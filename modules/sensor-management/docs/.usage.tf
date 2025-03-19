@@ -6,13 +6,13 @@ terraform {
       version = ">= 4.45"
     }
     crowdstrike = {
-      source = "crowdstrike/crowdstrike"
+      source  = "CrowdStrike/crowdstrike"
+      version = ">= 0.0.16"
     }
   }
 }
 
-provider "aws" {
-}
+provider "aws" {}
 
 provider "crowdstrike" {
   client_id     = var.falcon_client_id
@@ -20,18 +20,14 @@ provider "crowdstrike" {
 }
 
 data "crowdstrike_cloud_aws_account" "target" {
-  account_id      = var.account_id
+  account_id = var.account_id
 }
 
 module "sensor_management" {
-  source                = "CrowdStrike/fcs/aws//modules/sensor-management/"
+  source                = "CrowdStrike/cloud-registration/aws//modules/sensor-management/"
   falcon_client_id      = var.falcon_client_id
   falcon_client_secret  = var.falcon_client_secret
-  external_id           = data.crowdstrike_cloud_aws_account.target.accounts.0.external_id
-  intermediate_role_arn = data.crowdstrike_cloud_aws_account.target.accounts.0.intermediate_role_arn
+  external_id           = data.crowdstrike_cloud_aws_account.target.accounts[0].external_id
+  intermediate_role_arn = data.crowdstrike_cloud_aws_account.target.accounts[0].intermediate_role_arn
   permissions_boundary  = var.permissions_boundary
-
-  providers = {
-    aws = aws
-  }
 }

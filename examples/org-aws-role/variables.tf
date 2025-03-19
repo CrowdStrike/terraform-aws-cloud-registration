@@ -25,8 +25,7 @@ variable "organization_id" {
   description = "The AWS Organization ID. Leave blank when onboarding single account"
 }
 
-variable "cross_account_role_name" {
+variable "aws_role_name" {
   type        = string
   description = "The AWS role name used for assuming into this account"
 }
-

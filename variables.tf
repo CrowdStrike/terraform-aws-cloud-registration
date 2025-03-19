@@ -47,7 +47,6 @@ variable "account_type" {
   }
 }
 
-
 variable "permissions_boundary" {
   type        = string
   default     = ""
@@ -110,7 +109,7 @@ variable "eventbus_arn" {
 variable "cloudtrail_bucket_name" {
   type        = string
   default     = ""
-  description = ""
+  description = "Name of the S3 bucket for CloudTrail logs"
 }
 
 variable "enable_dspm" {

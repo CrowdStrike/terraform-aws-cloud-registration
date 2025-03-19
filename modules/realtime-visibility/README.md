@@ -7,12 +7,80 @@
 
 This Terraform module deploys AWS resources required for CrowdStrike's Real-time Visibility and Detection feature, which identifies indicators of attack (IOAs) and monitors cloud asset behavior in real-time. Note: This module must be deployed separately in each AWS region you wish to monitor, as it manages region-specific resources.
 
+## Usage
+
+```hcl
+terraform {
+  required_version = ">= 0.15"
+  required_providers {
+    aws = {
+      source  = "hashicorp/aws"
+      version = ">= 4.45"
+    }
+    crowdstrike = {
+      source  = "CrowdStrike/crowdstrike"
+      version = ">= 0.0.16"
+    }
+  }
+}
+
+provider "aws" {
+  region = "us-east-1"
+  alias  = "us-east-1"
+}
+
+provider "aws" {
+  region = "us-east-2"
+  alias  = "us-east-2"
+}
+
+provider "crowdstrike" {
+  client_id     = var.falcon_client_id
+  client_secret = var.falcon_client_secret
+}
+
+data "crowdstrike_cloud_aws_account" "target" {
+  account_id = var.account_id
+}
+
+module "realtime_visibility" {
+  source = "CrowdStrike/cloud-registration/aws//modules/realtime-visibility/"
+
+  use_existing_cloudtrail = true
+  cloudtrail_bucket_name  = data.crowdstrike_cloud_aws_account.target.accounts[0].cloudtrail_bucket_name
+
+  providers = {
+    aws = aws.us-east-1
+  }
+}
+
+module "rules_us_east_1" {
+  source               = "CrowdStrike/cloud-registration/aws//modules/realtime-visibility-rules"
+  eventbus_arn         = data.crowdstrike_cloud_aws_account.target.accounts[0].eventbus_arn
+  eventbridge_role_arn = module.realtime_visibility_main[0].eventbridge_role_arn
+
+  providers = {
+    aws = aws.us-east-1
+  }
+}
+
+module "rules_us_east_2" {
+  source               = "CrowdStrike/cloud-registration/aws//modules/realtime-visibility-rules"
+  eventbus_arn         = data.crowdstrike_cloud_aws_account.target.accounts[0].eventbus_arn
+  eventbridge_role_arn = module.realtime_visibility_main[0].eventbridge_role_arn
+
+  providers = {
+    aws = aws.us-east-2
+  }
+}
+```
+
 ## Providers
 
 | Name | Version |
 |------|---------|
 | <a name="provider_aws"></a> [aws](#provider\_aws) | >= 4.45 |
-| <a name="provider_random"></a> [random](#provider\_random) | n/a |
+| <a name="provider_random"></a> [random](#provider\_random) | >= 3.7.1 |
 ## Resources
 
 | Name | Type |
@@ -64,72 +132,4 @@ This Terraform module deploys AWS resources required for CrowdStrike's Real-time
 | Name | Description |
 |------|-------------|
 | <a name="output_eventbridge_lambda_alias"></a> [eventbridge\_lambda\_alias](#output\_eventbridge\_lambda\_alias) | The AWS lambda alias to forward events to |
-
-## Usage
-
-```hcl
-terraform {
-  required_version = ">= 0.15"
-  required_providers {
-    aws = {
-      source  = "hashicorp/aws"
-      version = ">= 4.45"
-    }
-    crowdstrike = {
-      source = "crowdstrike/crowdstrike"
-    }
-  }
-}
-
-provider "aws" {
-  region  = "us-east-1"
-  alias   = "us-east-1"
-}
-
-provider "aws" {
-  region  = "us-east-2"
-  alias   = "us-east-2"
-}
-
-provider "crowdstrike" {
-  client_id     = var.falcon_client_id
-  client_secret = var.falcon_client_secret
-}
-
-data "crowdstrike_cloud_aws_account" "target" {
-  account_id      = var.account_id
-}
-
-module "realtime_visibility" {
-  source = "CrowdStrike/fcs/aws//modules/realtime-visibility/"
-
-  use_existing_cloudtrail = true
-  cloudtrail_bucket_name  = data.crowdstrike_cloud_aws_account.target.accounts.0.cloudtrail_bucket_name
-
-  providers = {
-    aws = aws.us-east-1
-  }
-}
-
-module "rules_us-east-1" {
-  source = "CrowdStrike/fcs/aws//modules/realtime-visibility-rules"
-  eventbus_arn            = data.crowdstrike_cloud_aws_account.target.accounts.0.eventbus_arn
-  eventbridge_role_arn    = module.realtime_visibility_main.0.eventbridge_role_arn
-
-  providers = {
-    aws = aws.us-east-1
-  }
-}
-
-module "rules_us-east-2" {
-  source = "CrowdStrike/fcs/aws//modules/realtime-visibility-rules"
-  eventbus_arn         = data.crowdstrike_cloud_aws_account.target.accounts.0.eventbus_arn
-  eventbridge_role_arn = module.realtime_visibility_main.0.eventbridge_role_arn
-
-  providers = {
-    aws = aws.us-east-2
-  }
-}
-
-```
 <!-- END_TF_DOCS -->

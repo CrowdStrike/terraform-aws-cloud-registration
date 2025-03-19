@@ -24,7 +24,6 @@ locals {
   eventbus_arn           = coalesce(var.eventbus_arn, local.account.eventbus_arn)
   cloudtrail_bucket_name = var.use_existing_cloudtrail ? "" : coalesce(var.cloudtrail_bucket_name, local.account.cloudtrail_bucket_name)
 
-  aws_partition     = var.account_type == "gov" ? "aws-us-gov" : "aws"
   is_gov_commercial = var.is_gov && var.account_type == "commercial"
 }
 

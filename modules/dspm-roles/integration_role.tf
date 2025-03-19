@@ -66,15 +66,15 @@ data "aws_iam_policy_document" "crowdstrike_cloud_scan_supplemental_data" {
   }
 }
 
-resource "aws_iam_role_policy" "crowdstrike_run_data_Scanner_restricted" {
+resource "aws_iam_role_policy" "crowdstrike_run_data_scanner_restricted" {
   name   = "CrowdStrikeRunDataScannerRestricted"
   role   = aws_iam_role.crowdstrike_aws_dspm_integration_role.id
-  policy = data.aws_iam_policy_document.crowdstrike_run_data_Scanner_restricted_data.json
+  policy = data.aws_iam_policy_document.crowdstrike_run_data_scanner_restricted_data.json
 }
 
-data "aws_iam_policy_document" "crowdstrike_run_data_Scanner_restricted_data" {
-  // Grants permission to start, terminate EC2 and attach, detach, delete volume
-  // on CrowdStrike EC2 instance
+data "aws_iam_policy_document" "crowdstrike_run_data_scanner_restricted_data" {
+  # Grants permission to start, terminate EC2 and attach, detach, delete volume
+  # on CrowdStrike EC2 instance
   #checkov:skip=CKV_AWS_108:Running a DSPM data scanner requires ssm:GetParameters permissions
   statement {
     sid = "AllowInstanceOperationsWithRestrictions"
@@ -95,8 +95,8 @@ data "aws_iam_policy_document" "crowdstrike_run_data_Scanner_restricted_data" {
     }
   }
 
-  // Grants permission to launch EC2 from public image
-  // Below resources are generic as they are not known during launch
+  # Grants permission to launch EC2 from public image
+  # Below resources are generic as they are not known during launch
   statement {
     sid = "AllowRunDistrosInstances"
     actions = [
@@ -112,8 +112,8 @@ data "aws_iam_policy_document" "crowdstrike_run_data_Scanner_restricted_data" {
     ]
   }
 
-  // Grants permission to Launch EC2 and create volume for CrowdStrike EC2 instance
-  // The condition key aws:RequestTag is applicable to below resources
+  # Grants permission to Launch EC2 and create volume for CrowdStrike EC2 instance
+  # The condition key aws:RequestTag is applicable to below resources
   statement {
     sid = "AllowRunInstancesWithRestrictions"
     actions = [
@@ -131,8 +131,8 @@ data "aws_iam_policy_document" "crowdstrike_run_data_Scanner_restricted_data" {
     }
   }
 
-  // Grants permission to create below resources with only Crowdstrike tag
-  // On CrowdStrike EC2 instance
+  # Grants permission to create below resources with only Crowdstrike tag
+  # On CrowdStrike EC2 instance
   statement {
     sid = "AllowCreateTagsOnlyLaunching"
     actions = [
@@ -155,7 +155,7 @@ data "aws_iam_policy_document" "crowdstrike_run_data_Scanner_restricted_data" {
     }
   }
 
-  // Grant permissions to attach instance profile for EC2 service created by CrowdStrike.
+  # Grant permissions to attach instance profile for EC2 service created by CrowdStrike.
   statement {
     sid = "passRoleToEc2Service"
     actions = [
@@ -191,7 +191,7 @@ resource "aws_iam_role_policy" "crowdstrike_rds_clone" {
 }
 
 data "aws_iam_policy_document" "crowdstrike_rds_clone_data" {
-  // Grants permission to add only requested tag mentioned in condition to RDS instance and snapshot.
+  # Grants permission to add only requested tag mentioned in condition to RDS instance and snapshot.
   statement {
     sid = "RDSPermissionForTagging"
     actions = [
@@ -211,7 +211,7 @@ data "aws_iam_policy_document" "crowdstrike_rds_clone_data" {
     }
   }
 
-  // Grants permission to restore CMK encrypted instances
+  # Grants permission to restore CMK encrypted instances
   statement {
     sid = "KMSPermissionsForRDSRestore"
     actions = [
@@ -232,13 +232,13 @@ data "aws_iam_policy_document" "crowdstrike_rds_clone_data" {
     }
   }
 
-  // Grants permission to restore an instance/cluster from any snapshot
+  # Grants permission to restore an instance/cluster from any snapshot
   statement {
     sid = "RDSPermissionForInstanceRestore"
     actions = [
       "rds:RestoreDBInstanceFromDBSnapshot",
       "rds:RestoreDBClusterFromSnapshot",
-      "kms:Decrypt" //  Require to restore encrypted db snapshot using KMS keys
+      "kms:Decrypt" #  Require to restore encrypted db snapshot using KMS keys
     ]
     effect = "Allow"
     resources = [
@@ -248,7 +248,7 @@ data "aws_iam_policy_document" "crowdstrike_rds_clone_data" {
     ]
   }
 
-  // Restricts permission to restore an instance/cluster to CrowdStrike VPC
+  # Restricts permission to restore an instance/cluster to CrowdStrike VPC
   statement {
     sid = "RDSPermissionForInstanceRestoreCrowdStrikeVPC"
     actions = [
@@ -266,7 +266,7 @@ data "aws_iam_policy_document" "crowdstrike_rds_clone_data" {
     }
   }
 
-  // Grants permission to restore instance/cluster with a tag mentioned in the condition
+  # Grants permission to restore instance/cluster with a tag mentioned in the condition
   statement {
     sid = "RDSLimitedPermissionForInstanceRestore"
     actions = [
@@ -290,7 +290,7 @@ data "aws_iam_policy_document" "crowdstrike_rds_clone_data" {
     }
   }
 
-  // Grants permission to create snapshot with a tag mentioned in the condition.
+  # Grants permission to create snapshot with a tag mentioned in the condition.
   statement {
     sid = "RDSLimitedPermissionForSnapshotCreate"
     actions = [
@@ -311,7 +311,7 @@ data "aws_iam_policy_document" "crowdstrike_rds_clone_data" {
     }
   }
 
-  // Grants permission to copy snapshot with a tag mentioned in the condition.
+  # Grants permission to copy snapshot with a tag mentioned in the condition.
   statement {
     sid = "RDSLimitedPermissionForCopySnapshot"
     actions = [
@@ -330,7 +330,7 @@ data "aws_iam_policy_document" "crowdstrike_rds_clone_data" {
     }
   }
 
-  // Grants permission to create db instance with a tag mentioned in the condition inside db cluster
+  # Grants permission to create db instance with a tag mentioned in the condition inside db cluster
   statement {
     sid = "RDSPermissionDBClusterCreateInstance"
     actions = [
@@ -349,7 +349,7 @@ data "aws_iam_policy_document" "crowdstrike_rds_clone_data" {
     }
   }
 
-  // Restricts create db instance permission to CrowdStrike VPC
+  # Restricts create db instance permission to CrowdStrike VPC
   statement {
     sid = "RDSPermissionDBClusterCreateInstanceCrowdStrikeVPC"
     actions = [
@@ -366,7 +366,7 @@ data "aws_iam_policy_document" "crowdstrike_rds_clone_data" {
     }
   }
 
-  // Grants permission to delete or modify RDS DB/cluster, which are tagged as mentioned in the condition
+  # Grants permission to delete or modify RDS DB/cluster, which are tagged as mentioned in the condition
   statement {
     sid = "RDSPermissionDeleteRestorePermissions"
     actions = [
@@ -404,7 +404,7 @@ resource "aws_iam_role_policy" "crowdstrike_redshift_clone" {
 }
 
 data "aws_iam_policy_document" "crowdstrike_redshift_clone" {
-  // Grants permission to create a cluster snapshot and restore cluster from snapshot
+  # Grants permission to create a cluster snapshot and restore cluster from snapshot
   statement {
     sid = "RedshiftPermissionsForRestoring"
     actions = [
@@ -418,7 +418,7 @@ data "aws_iam_policy_document" "crowdstrike_redshift_clone" {
     ]
   }
 
-  // Grants permission to create tags, modify and delete CrowdStrike's clusters and snapshots
+  # Grants permission to create tags, modify and delete CrowdStrike's clusters and snapshots
   statement {
     sid = "RedshiftPermissionsForControllingClones"
     actions = [
@@ -434,7 +434,7 @@ data "aws_iam_policy_document" "crowdstrike_redshift_clone" {
     ]
   }
 
-  // Grants permission to secret manager to restore redshfit's password managed by secret manager
+  # Grants permission to secret manager to restore redshfit's password managed by secret manager
   statement {
     sid = "RedshiftPermissionsForSecretsManager"
     actions = [

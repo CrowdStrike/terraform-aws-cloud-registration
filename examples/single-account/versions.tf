@@ -5,6 +5,9 @@ terraform {
       source  = "hashicorp/aws"
       version = ">= 4.45"
     }
+    crowdstrike = {
+      source  = "CrowdStrike/crowdstrike"
+      version = ">= 0.0.16"
+    }
   }
 }
-

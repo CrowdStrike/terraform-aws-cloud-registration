@@ -6,19 +6,20 @@ terraform {
       version = ">= 4.45"
     }
     crowdstrike = {
-      source = "crowdstrike/crowdstrike"
+      source  = "CrowdStrike/crowdstrike"
+      version = ">= 0.0.16"
     }
   }
 }
 
 provider "aws" {
-  region  = "us-east-1"
-  alias   = "us-east-1"
+  region = "us-east-1"
+  alias  = "us-east-1"
 }
 
 provider "aws" {
-  region  = "us-east-2"
-  alias   = "us-east-2"
+  region = "us-east-2"
+  alias  = "us-east-2"
 }
 
 provider "crowdstrike" {
@@ -27,37 +28,36 @@ provider "crowdstrike" {
 }
 
 data "crowdstrike_cloud_aws_account" "target" {
-  account_id      = var.account_id
+  account_id = var.account_id
 }
 
 module "realtime_visibility" {
-  source = "CrowdStrike/fcs/aws//modules/realtime-visibility/"
+  source = "CrowdStrike/cloud-registration/aws//modules/realtime-visibility/"
 
   use_existing_cloudtrail = true
-  cloudtrail_bucket_name  = data.crowdstrike_cloud_aws_account.target.accounts.0.cloudtrail_bucket_name
+  cloudtrail_bucket_name  = data.crowdstrike_cloud_aws_account.target.accounts[0].cloudtrail_bucket_name
 
   providers = {
     aws = aws.us-east-1
   }
 }
 
-module "rules_us-east-1" {
-  source = "CrowdStrike/fcs/aws//modules/realtime-visibility-rules"
-  eventbus_arn            = data.crowdstrike_cloud_aws_account.target.accounts.0.eventbus_arn
-  eventbridge_role_arn    = module.realtime_visibility_main.0.eventbridge_role_arn
+module "rules_us_east_1" {
+  source               = "CrowdStrike/cloud-registration/aws//modules/realtime-visibility-rules"
+  eventbus_arn         = data.crowdstrike_cloud_aws_account.target.accounts[0].eventbus_arn
+  eventbridge_role_arn = module.realtime_visibility_main[0].eventbridge_role_arn
 
   providers = {
     aws = aws.us-east-1
   }
 }
 
-module "rules_us-east-2" {
-  source = "CrowdStrike/fcs/aws//modules/realtime-visibility-rules"
-  eventbus_arn         = data.crowdstrike_cloud_aws_account.target.accounts.0.eventbus_arn
-  eventbridge_role_arn = module.realtime_visibility_main.0.eventbridge_role_arn
+module "rules_us_east_2" {
+  source               = "CrowdStrike/cloud-registration/aws//modules/realtime-visibility-rules"
+  eventbus_arn         = data.crowdstrike_cloud_aws_account.target.accounts[0].eventbus_arn
+  eventbridge_role_arn = module.realtime_visibility_main[0].eventbridge_role_arn
 
   providers = {
     aws = aws.us-east-2
   }
 }
-

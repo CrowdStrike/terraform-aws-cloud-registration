@@ -39,12 +39,11 @@ resource "crowdstrike_cloud_aws_account" "this" {
   dspm = {
     enabled = local.enable_dspm
   }
-  provider = crowdstrike
 }
 
 module "fcs_management_account" {
-  source                      = "CrowdStrike/fcs/aws//modules/registration-role"
-  cross_account_role_name     = var.cross_account_role_name
+  source                      = "../../modules/aws-role/"
+  aws_role_name               = var.aws_role_name
   falcon_client_id            = var.falcon_client_id
   falcon_client_secret        = var.falcon_client_secret
   account_id                  = var.account_id
@@ -63,18 +62,14 @@ module "fcs_management_account" {
   intermediate_role_arn  = crowdstrike_cloud_aws_account.this.intermediate_role_arn
   eventbus_arn           = crowdstrike_cloud_aws_account.this.eventbus_arn
   cloudtrail_bucket_name = crowdstrike_cloud_aws_account.this.cloudtrail_bucket_name
-
-  providers = {
-    crowdstrike = crowdstrike
-  }
 }
 
 # for each child account you want to onboard
 # - duplicate this module
 # - replace `aws_profile` with the correct profile for your child account
 module "fcs_child_account_1" {
-  source                      = "CrowdStrike/fcs/aws//modules/registration-role"
-  cross_account_role_name     = var.cross_account_role_name
+  source                      = "../../modules/aws-role/"
+  aws_role_name               = var.aws_role_name
   falcon_client_id            = var.falcon_client_id
   falcon_client_secret        = var.falcon_client_secret
   account_id                  = var.account_id
@@ -93,9 +88,4 @@ module "fcs_child_account_1" {
   intermediate_role_arn  = crowdstrike_cloud_aws_account.this.intermediate_role_arn
   eventbus_arn           = crowdstrike_cloud_aws_account.this.eventbus_arn
   cloudtrail_bucket_name = "" # not needed for child accounts
-
-  providers = {
-    crowdstrike = crowdstrike
-  }
 }
-

@@ -10,9 +10,9 @@ variable "falcon_client_secret" {
   description = "Falcon API Client Secret"
 }
 
-variable "cross_account_role_name" {
+variable "aws_role_name" {
   type        = string
-  description = "The name of the IAM role used for cross account role switching"
+  description = "The AWS profile to be used for this registration"
 }
 
 variable "primary_region" {
@@ -23,7 +23,17 @@ variable "primary_region" {
 variable "is_gov" {
   type        = bool
   default     = false
-  description = "Set to true if registering in gov-cloud"
+  description = "Set to true if your falcon cloud is gov"
+}
+
+variable "account_id" {
+  type        = string
+  default     = ""
+  description = "The AWS 12 digit account ID"
+  validation {
+    condition     = length(var.account_id) == 0 || can(regex("^[0-9]{12}$", var.account_id))
+    error_message = "account_id must be either empty or the 12-digit AWS account ID"
+  }
 }
 
 variable "account_type" {
@@ -36,19 +46,10 @@ variable "account_type" {
   }
 }
 
-variable "account_id" {
-  type        = string
-  description = "The AWS 12 digit account ID"
-  validation {
-    condition     = length(var.account_id) == 0 || can(regex("^[0-9]{12}$", var.account_id))
-    error_message = "account_id must be either empty or the 12-digit AWS account ID"
-  }
-}
-
 variable "organization_id" {
   type        = string
   default     = ""
-  description = "The AWS Organization ID. Leave blank if when onboarding single account"
+  description = "The AWS Organization ID. Leave blank when onboarding single account"
 }
 
 variable "permissions_boundary" {
@@ -110,16 +111,16 @@ variable "eventbus_arn" {
   description = "Eventbus ARN to send events to"
 }
 
-variable "eventbridge_role_arn" {
+variable "eventbridge_role_name" {
   type        = string
-  default     = ""
-  description = "Eventbridge role ARN"
+  default     = "CrowdStrikeCSPMEventBridge"
+  description = "The eventbridge role name"
 }
 
 variable "cloudtrail_bucket_name" {
   type        = string
   default     = ""
-  description = ""
+  description = "Name of the S3 bucket for CloudTrail logs"
 }
 
 variable "enable_dspm" {

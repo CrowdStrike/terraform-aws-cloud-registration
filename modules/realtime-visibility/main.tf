@@ -48,7 +48,7 @@ resource "aws_iam_role_policy" "inline_policy" {
 resource "aws_cloudtrail" "this" {
   count                         = !var.use_existing_cloudtrail && var.is_primary_region ? 1 : 0
   name                          = "crowdstrike-cloudtrail"
-  s3_bucket_name                = !var.is_gov_commercial ? var.cloudtrail_bucket_name : aws_s3_bucket.s3.0.bucket
+  s3_bucket_name                = !var.is_gov_commercial ? var.cloudtrail_bucket_name : aws_s3_bucket.s3[0].bucket
   s3_key_prefix                 = ""
   include_global_service_events = true
   is_multi_region_trail         = true

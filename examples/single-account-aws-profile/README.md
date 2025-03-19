@@ -43,4 +43,3 @@ To teardown and remove all resources created by this example:
 ```sh
 terraform destroy -auto-approve
 ```
-

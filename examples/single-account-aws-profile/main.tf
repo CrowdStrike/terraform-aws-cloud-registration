@@ -1,10 +1,10 @@
 locals {
   enable_realtime_visibility = true
-  primary_region             = "us-east-1"
+  primary_region             = "us-west-1"
   enable_idp                 = true
-  enable_sensor_management   = true
-  enable_dspm                = true
-  dspm_regions               = ["us-east-1", "us-east-2"]
+  enable_sensor_management   = false
+  enable_dspm                = false
+  dspm_regions               = ["us-west-1"]
   use_existing_cloudtrail    = true
 }
 
@@ -51,7 +51,7 @@ module "fcs_account" {
   enable_sensor_management    = local.enable_sensor_management
   enable_realtime_visibility  = local.enable_realtime_visibility
   enable_idp                  = local.enable_idp
-  realtime_visibility_regions = ["all"]
+  realtime_visibility_regions = ["us-west-1"]
   use_existing_cloudtrail     = local.use_existing_cloudtrail
   enable_dspm                 = local.enable_dspm
   dspm_regions                = local.dspm_regions

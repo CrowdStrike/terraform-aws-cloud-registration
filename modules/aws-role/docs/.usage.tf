@@ -6,7 +6,7 @@ terraform {
       version = ">= 4.45"
     }
     crowdstrike = {
-      source  = "crowdstrike/crowdstrike"
+      source  = "CrowdStrike/crowdstrike"
       version = ">= 0.0.16"
     }
   }
@@ -27,7 +27,7 @@ variable "falcon_client_secret" {
 locals {
   management_account_id      = "<your aws account id>"
   organization_id            = "<your aws organization id>"
-  cross_account_role_name    = "<your aws cross account role>"
+  aws_role_name              = "<your aws account role>"
   enable_realtime_visibility = true
   primary_region             = "us-east-1"
   enable_idp                 = true
@@ -68,12 +68,11 @@ resource "crowdstrike_cloud_aws_account" "this" {
   dspm = {
     enabled = local.enable_dspm
   }
-  provider = crowdstrike
 }
 
 module "fcs_management_account" {
-  source                      = "CrowdStrike/fcs/aws//modules/registration-role"
-  cross_account_role_name     = local.cross_account_role_name
+  source                      = "CrowdStrike/cloud-registration/aws//modules/aws-role"
+  aws_role_name               = local.aws_role_name
   account_id                  = local.management_account_id
   falcon_client_id            = var.falcon_client_id
   falcon_client_secret        = var.falcon_client_secret
@@ -92,19 +91,15 @@ module "fcs_management_account" {
   intermediate_role_arn  = crowdstrike_cloud_aws_account.this.intermediate_role_arn
   eventbus_arn           = crowdstrike_cloud_aws_account.this.eventbus_arn
   cloudtrail_bucket_name = crowdstrike_cloud_aws_account.this.cloudtrail_bucket_name
-
-  providers = {
-    crowdstrike = crowdstrike
-  }
 }
 
 # for each child account you want to onboard
 # - duplicate this module
 # - replace `account_id` with the correct AWS account id
-# - replace `cross_account_role_name` if needed
+# - replace `aws_role_name` if needed
 module "fcs_child_account_1" {
-  source                      = "CrowdStrike/fcs/aws//modules/registration-role"
-  cross_account_role_name     = local.cross_account_role_name
+  source                      = "CrowdStrike/cloud-registration/aws//modules/aws-role"
+  aws_role_name               = local.aws_role_name
   account_id                  = "<child account id>"
   falcon_client_id            = var.falcon_client_id
   falcon_client_secret        = var.falcon_client_secret
@@ -123,8 +118,4 @@ module "fcs_child_account_1" {
   intermediate_role_arn  = crowdstrike_cloud_aws_account.this.intermediate_role_arn
   eventbus_arn           = crowdstrike_cloud_aws_account.this.eventbus_arn
   cloudtrail_bucket_name = "" # not needed for child accounts
-
-  providers = {
-    crowdstrike = crowdstrike
-  }
 }

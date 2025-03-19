@@ -6,7 +6,7 @@ terraform {
       version = ">= 4.45"
     }
     crowdstrike = {
-      source  = "crowdstrike/crowdstrike"
+      source  = "CrowdStrike/crowdstrike"
       version = ">= 0.0.16"
     }
   }
@@ -76,11 +76,10 @@ resource "crowdstrike_cloud_aws_account" "this" {
   dspm = {
     enabled = local.enable_dspm
   }
-  provider = crowdstrike
 }
 
 module "fcs_management_account" {
-  source                      = "CrowdStrike/fcs/aws//modules/registration-profile"
+  source                      = "CrowdStrike/cloud-registration/aws//modules/aws-profile"
   aws_profile                 = "<aws profile for your management account>"
   falcon_client_id            = var.falcon_client_id
   falcon_client_secret        = var.falcon_client_secret
@@ -100,17 +99,13 @@ module "fcs_management_account" {
   intermediate_role_arn  = crowdstrike_cloud_aws_account.this.intermediate_role_arn
   eventbus_arn           = crowdstrike_cloud_aws_account.this.eventbus_arn
   cloudtrail_bucket_name = crowdstrike_cloud_aws_account.this.cloudtrail_bucket_name
-
-  providers = {
-    crowdstrike = crowdstrike
-  }
 }
 
 # for each child account you want to onboard
 # - duplicate this module
 # - replace `aws_profile` with the correct profile for your child account
 module "fcs_child_account_1" {
-  source                      = "CrowdStrike/fcs/aws//modules/registration-profile"
+  source                      = "CrowdStrike/cloud-registration/aws//modules/aws-profile"
   aws_profile                 = "<aws profile for this child account>"
   falcon_client_id            = var.falcon_client_id
   falcon_client_secret        = var.falcon_client_secret
@@ -129,8 +124,4 @@ module "fcs_child_account_1" {
   intermediate_role_arn  = crowdstrike_cloud_aws_account.this.intermediate_role_arn
   eventbus_arn           = crowdstrike_cloud_aws_account.this.eventbus_arn
   cloudtrail_bucket_name = "" # not needed for child accounts
-
-  providers = {
-    crowdstrike = crowdstrike
-  }
 }

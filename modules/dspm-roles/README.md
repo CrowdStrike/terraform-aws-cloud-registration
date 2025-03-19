@@ -7,11 +7,57 @@
 
 This Terraform module deploys the global AWS IAM roles and permissions required for CrowdStrike's Data Security and Posture Management (DSPM) feature. This module handles the account-wide authentication components, while region-specific resources should be deployed using the companion [dspm-environments](../dspm-environments/) module in each region where DSPM monitoring is desired.
 
+## Usage
+
+```hcl
+terraform {
+  required_version = ">= 0.15"
+  required_providers {
+    aws = {
+      source  = "hashicorp/aws"
+      version = ">= 4.45"
+    }
+    crowdstrike = {
+      source  = "CrowdStrike/crowdstrike"
+      version = ">= 0.0.16"
+    }
+  }
+}
+
+provider "aws" {}
+
+provider "crowdstrike" {
+  client_id     = var.falcon_client_id
+  client_secret = var.falcon_client_secret
+}
+
+data "crowdstrike_cloud_aws_account" "target" {
+  account_id = var.account_id
+}
+
+module "dspm_roles" {
+  source                = "CrowdStrike/cloud-registration/aws//modules/dspm-roles/"
+  dspm_role_name        = data.crowdstrike_cloud_aws_account.target.accounts[0].dspm_role_name
+  intermediate_role_arn = data.crowdstrike_cloud_aws_account.target.accounts[0].intermediate_role_arn
+  external_id           = data.crowdstrike_cloud_aws_account.target.accounts[0].external_id
+  falcon_client_id      = var.falcon_client_id
+  falcon_client_secret  = var.falcon_client_secret
+  dspm_regions          = ["us-east-1"]
+}
+
+module "dspm_environments" {
+  source         = "CrowdStrike/cloud-registration/aws//modules/dspm-environments/"
+  dspm_role_name = data.crowdstrike_cloud_aws_account.target.accounts[0].dspm_role_name
+  region         = "us-east-1"
+  depends_on     = [module.dspm_roles]
+}
+```
+
 ## Providers
 
 | Name | Version |
 |------|---------|
-| <a name="provider_aws"></a> [aws](#provider\_aws) | n/a |
+| <a name="provider_aws"></a> [aws](#provider\_aws) | >= 4.45 |
 ## Resources
 
 | Name | Type |
@@ -26,7 +72,7 @@ This Terraform module deploys the global AWS IAM roles and permissions required 
 | [aws_iam_role_policy.crowdstrike_rds_clone](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role_policy) | resource |
 | [aws_iam_role_policy.crowdstrike_redshift_clone](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role_policy) | resource |
 | [aws_iam_role_policy.crowdstrike_redshift_reader](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role_policy) | resource |
-| [aws_iam_role_policy.crowdstrike_run_data_Scanner_restricted](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role_policy) | resource |
+| [aws_iam_role_policy.crowdstrike_run_data_scanner_restricted](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role_policy) | resource |
 | [aws_iam_role_policy.crowdstrike_secret_reader](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role_policy) | resource |
 | [aws_iam_role_policy_attachment.amazon_ssm_managed_instance_core](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role_policy_attachment) | resource |
 | [aws_iam_role_policy_attachment.cloud_watch_logs_read_only_access](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role_policy_attachment) | resource |
@@ -38,7 +84,7 @@ This Terraform module deploys the global AWS IAM roles and permissions required 
 | [aws_iam_policy_document.crowdstrike_cloud_scan_supplemental_data](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/iam_policy_document) | data source |
 | [aws_iam_policy_document.crowdstrike_rds_clone_data](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/iam_policy_document) | data source |
 | [aws_iam_policy_document.crowdstrike_redshift_clone](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/iam_policy_document) | data source |
-| [aws_iam_policy_document.crowdstrike_run_data_Scanner_restricted_data](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/iam_policy_document) | data source |
+| [aws_iam_policy_document.crowdstrike_run_data_scanner_restricted_data](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/iam_policy_document) | data source |
 ## Inputs
 
 | Name | Description | Type | Default | Required |
@@ -50,7 +96,6 @@ This Terraform module deploys the global AWS IAM roles and permissions required 
 | <a name="input_falcon_client_id"></a> [falcon\_client\_id](#input\_falcon\_client\_id) | CrowdStrike client ID | `string` | n/a | yes |
 | <a name="input_falcon_client_secret"></a> [falcon\_client\_secret](#input\_falcon\_client\_secret) | CrowdStrike client secret | `string` | n/a | yes |
 | <a name="input_intermediate_role_arn"></a> [intermediate\_role\_arn](#input\_intermediate\_role\_arn) | ARN of the CrowdStrike assuming role | `string` | n/a | yes |
-| <a name="input_primary_region"></a> [primary\_region](#input\_primary\_region) | Region for deploying global AWS resources (IAM roles, policies, etc.) that are account-wide and only need to be created once. Distinct from dspm\_regions which controls region-specific resource deployment. | `string` | `"us-east-1"` | no |
 ## Outputs
 
 | Name | Description |
@@ -59,56 +104,4 @@ This Terraform module deploys the global AWS IAM roles and permissions required 
 | <a name="output_dspm_scanner_role_arn"></a> [dspm\_scanner\_role\_arn](#output\_dspm\_scanner\_role\_arn) | The arn of the IAM role that CrowdStrike Scanner will be assuming |
 | <a name="output_integration_role_unique_id"></a> [integration\_role\_unique\_id](#output\_integration\_role\_unique\_id) | The unique ID of the DSPM integration role |
 | <a name="output_scanner_role_unique_id"></a> [scanner\_role\_unique\_id](#output\_scanner\_role\_unique\_id) | The unique ID of the DSPM scanner role |
-
-## Usage
-
-```hcl
-terraform {
-  required_version = ">= 0.15"
-  required_providers {
-    aws = {
-      source  = "hashicorp/aws"
-      version = ">= 4.45"
-    }
-    crowdstrike = {
-      source = "crowdstrike/crowdstrike"
-    }
-  }
-}
-
-provider "aws" {
-}
-
-provider "crowdstrike" {
-  client_id     = var.falcon_client_id
-  client_secret = var.falcon_client_secret
-}
-
-data "crowdstrike_cloud_aws_account" "target" {
-  account_id      = var.account_id
-}
-
-module "dspm_roles" {
-  count                  = (var.is_primary_region && var.enable_dspm) ? 1 : 0
-  source                 = "CrowdStrike/fcs/aws//modules/dspm-roles/"
-  dspm_role_name         = split("/", data.crowdstrike_cloud_aws_account.target.accounts.0.dspm_role_arn)[1]
-  intermediate_role_arn  = data.crowdstrike_cloud_aws_account.target.accounts.0.intermediate_role_arn
-  external_id            = data.crowdstrike_cloud_aws_account.target.accounts.0.external_id
-  falcon_client_id       = var.falcon_client_id
-  falcon_client_secret   = var.falcon_client_secret
-  dspm_regions           = ["us-east-1"]
-}
-
-module "dspm_environments" {
-  count                  = var.enable_dspm ? 1 : 0
-  source                 = "CrowdStrike/fcs/aws//modules/dspm-environments/"
-  dspm_role_name         = split("/", data.crowdstrike_cloud_aws_account.target.accounts.0.dspm_role_arn)[1]
-  region                 = "us-east-1"
-  providers = {
-    aws = aws
-  }
-  depends_on = [module.dspm_roles]
-}
-
-```
 <!-- END_TF_DOCS -->

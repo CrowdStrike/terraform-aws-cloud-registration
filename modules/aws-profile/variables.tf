@@ -23,7 +23,7 @@ variable "primary_region" {
 variable "is_gov" {
   type        = bool
   default     = false
-  description = "Set to true if this is a gov account"
+  description = "Set to true if your falcon cloud is gov"
 }
 
 variable "account_id" {
@@ -120,7 +120,7 @@ variable "eventbridge_role_name" {
 variable "cloudtrail_bucket_name" {
   type        = string
   default     = ""
-  description = ""
+  description = "Name of the S3 bucket for CloudTrail logs"
 }
 
 variable "enable_dspm" {

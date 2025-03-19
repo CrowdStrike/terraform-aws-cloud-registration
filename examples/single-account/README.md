@@ -53,4 +53,3 @@ terraform destroy -auto-approve
 ```
 
 >**Note**: This example requires you to explicitly define AWS providers for each region where you want to deploy FCS components. See the main.tf file for the provider configuration pattern that needs to be replicated for each desired region.
-

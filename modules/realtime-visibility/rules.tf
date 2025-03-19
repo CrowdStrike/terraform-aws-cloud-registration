@@ -93,7 +93,7 @@ locals {
     var.is_gov_commercial ?
     (
       var.is_primary_region ?
-      aws_lambda_function.eventbridge.0.arn :
+      aws_lambda_function.eventbridge[0].arn :
       local.default_eventbus_arn
     ) :
     var.eventbus_arn

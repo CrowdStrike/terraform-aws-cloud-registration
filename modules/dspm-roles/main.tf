@@ -1,4 +1,4 @@
-// Creates instance profile. Attached as IAM role to EC2 instance, used for data scan
+# Creates instance profile. Attached as IAM role to EC2 instance, used for data scan
 resource "aws_iam_instance_profile" "instance_profile" {
   name = "CrowdStrikeScannerRoleProfile"
   path = "/"
