@@ -1,4 +1,4 @@
-# pylint: disable=W1401
+# pylint: disable=W0621,C0301
 
 """CrowdStrike FCS Terraform Generator
  _______                        __ _______ __        __ __
@@ -95,10 +95,10 @@ class ArgConfiguration:  # pylint: disable=R0902
         if not args.iam_role_name:
             self.iam_role_name = ""
         else:
-          self.iam_role_name = args.iam_role_name
+            self.iam_role_name = args.iam_role_name
         self.existing_cloudtrail = args.existing_cloudtrail
         if not args.realtime_visibility_regions:
-          self.realtime_visibility_regions = "all"
+            self.realtime_visibility_regions = "all"
         else:
             self.realtime_visibility_regions = args.realtime_visibility_regions
         if not args.dspm_regions:
@@ -250,6 +250,7 @@ def parse_command_line():
     return parser.parse_args()
 
 def create_directory(config):
+    """Create directory to store .tf files"""
     try:
         os.mkdir(config.target)
         print(f"Directory '{config.target}' created successfully.")
@@ -298,6 +299,7 @@ def get_accounts(config):
     return org_id, management_id, active_accounts
 
 def generate_var_file(config):
+    """Generate variables.tf"""
     content="""variable "falcon_client_id" {
   type        = string
   sensitive   = true
@@ -382,9 +384,8 @@ variable "dspm_regions" {
     f = open(f"{config.target}/variables.tf", "w")
     f.write(content)
 
-    return
-
 def generate_config_file(config, org_id, management_id):
+    """Generate config.tfvars"""
     rtv_regions = config.realtime_visibility_regions
     rtv_regions_list = '['+','.join(['"'+x+'"' for x in rtv_regions.split(',')])+']'
     dspm_regions = config.dspm_regions
@@ -425,9 +426,8 @@ dspm_regions                = {dspm_regions}\
     f = open(f"{config.target}/config.tfvars", "w")
     f.write(content)
 
-    return
-
 def generate_crowdstrike_module(config):
+    """Generate CrowdStrike registration module"""
     content="""terraform {
   required_version = ">= 0.15"
   required_providers {
@@ -476,9 +476,8 @@ resource "crowdstrike_cloud_aws_account" "this" {
     f = open(f"{config.target}/register-organization.tf", "w")
     f.write(content)
 
-    return
-
 def generate_account_modules_role(config, account_id, management_id):
+    """Generate modules for each account using aws-role"""
     mgmt_content="""module "management_account_{account_id}" {{
   source                      = "CrowdStrike/fcs/aws//modules/aws-role"
   account_id                  = "{account_id}"
@@ -543,10 +542,9 @@ def generate_account_modules_role(config, account_id, management_id):
     else:
         f = open(f"{config.target}/{account_id}.tf", "w")
         f.write(member_content)
-    
-    return
 
 def generate_account_modules_profile(config, account_id, management_id):
+    """Generate modules for each account using aws-profile"""
     mgmt_content="""module "management_account_{account_id}" {{
   source                      = "CrowdStrike/fcs/aws//modules/aws-profile"
   aws_profile                 = "AWS_PROFILE"
@@ -613,11 +611,8 @@ def generate_account_modules_profile(config, account_id, management_id):
     else:
         f = open(f"{config.target}/{account_id}.tf", "w")
         f.write(member_content)
-    
-    return
 
 if __name__ == "__main__":
-    """Main Function"""
     args = parse_command_line()
     if args.config_file:
         config = FileConfiguration(args.config_file)
@@ -635,5 +630,5 @@ if __name__ == "__main__":
         else:
             generate_account_modules_profile(config, account_id, management_id)
     if 'profile' in config.aws_auth_method:
-      print('IMPORTANT')
-      print('Please update the AWS_PROFILE in each terraform file for each respective account.')
+        print('IMPORTANT')
+        print('Please update the AWS_PROFILE in each terraform file for each respective account.')
