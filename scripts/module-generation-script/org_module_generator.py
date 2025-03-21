@@ -271,6 +271,7 @@ def get_accounts(config):
     response_accounts = []
     ou_list = config.ous
     if ou_list != ['']:
+        active_accounts = []
         for ou in ou_list:
             response = client.list_accounts_for_parent(ParentId=ou)
             response_accounts += response['Accounts']
@@ -280,8 +281,9 @@ def get_accounts(config):
                 response = client.list_accounts_for_parent(ParentId=ou,NextToken=next_token)
                 response_accounts += response['Accounts']
                 next_token = response.get('NextToken', None)
-
-        active_accounts = [a for a in response_accounts if a['Status'] == 'ACTIVE']
+        active_accounts += [a for a in response_accounts if a['Status'] == 'ACTIVE']
+        mgmt_response = client.describe_account(AccountId=management_id)
+        active_accounts.append(mgmt_response['Account'])
     else:
         response = client.list_accounts()
         response_accounts = response['Accounts']
