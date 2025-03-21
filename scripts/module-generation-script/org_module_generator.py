@@ -480,7 +480,7 @@ resource "crowdstrike_cloud_aws_account" "this" {
 
 def generate_account_modules_role(config, account_id, management_id):
     mgmt_content="""module "management_account_{account_id}" {{
-  source                      = "CrowdStrike/fcs/aws//modules/registration-role"
+  source                      = "CrowdStrike/fcs/aws//modules/aws-role"
   account_id                  = "{account_id}"
   cross_account_role_name     = var.cross_account_role
   falcon_client_id            = var.falcon_client_id
@@ -509,7 +509,7 @@ def generate_account_modules_role(config, account_id, management_id):
 """.format(account_id=management_id)
 
     member_content="""module "member_account_{account_id}" {{
-  source                      = "CrowdStrike/fcs/aws//modules/registration-role"
+  source                      = "CrowdStrike/fcs/aws//modules/aws-role"
   account_id                  = "{account_id}"
   cross_account_role_name     = var.cross_account_role
   falcon_client_id            = var.falcon_client_id
@@ -548,7 +548,7 @@ def generate_account_modules_role(config, account_id, management_id):
 
 def generate_account_modules_profile(config, account_id, management_id):
     mgmt_content="""module "management_account_{account_id}" {{
-  source                      = "CrowdStrike/fcs/aws//modules/registration-profile"
+  source                      = "CrowdStrike/fcs/aws//modules/aws-profile"
   aws_profile                 = "AWS_PROFILE"
   account_id                  = "{account_id}"
   cross_account_role_name     = var.cross_account_role
@@ -578,7 +578,7 @@ def generate_account_modules_profile(config, account_id, management_id):
 """.format(account_id=management_id)
 
     member_content="""module "member_account_{account_id}" {{
-  source                      = "CrowdStrike/fcs/aws//modules/registration-profile"
+  source                      = "CrowdStrike/fcs/aws//modules/aws-profile"
   aws_profile                 = "AWS_PROFILE"
   account_id                  = "{account_id}"
   cross_account_role_name     = var.cross_account_role
