@@ -20,3 +20,15 @@ variable "scanner_role_unique_id" {
   description = "The unique ID of the DSPM scanner role"
   type        = string
 }
+
+variable "resource_prefix" {
+  description = "The prefix to be added to all resource names"
+  default     = ""
+  type        = string
+}
+
+variable "resource_suffix" {
+  description = "The suffix to be added to all resource names"
+  default     = ""
+  type        = string
+}

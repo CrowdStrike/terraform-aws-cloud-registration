@@ -35,7 +35,7 @@ resource "aws_iam_role_policy_attachment" "security_audit" {
 }
 
 resource "aws_iam_role_policy" "crowdstrike_cloud_scan_supplemental" {
-  name   = "CrowdStrikeCloudScanSupplemental"
+  name   = "${var.resource_prefix}CloudScanSupplemental"
   role   = aws_iam_role.crowdstrike_aws_dspm_integration_role.id
   policy = data.aws_iam_policy_document.crowdstrike_cloud_scan_supplemental_data.json
 }
@@ -67,7 +67,7 @@ data "aws_iam_policy_document" "crowdstrike_cloud_scan_supplemental_data" {
 }
 
 resource "aws_iam_role_policy" "crowdstrike_run_data_scanner_restricted" {
-  name   = "CrowdStrikeRunDataScannerRestricted"
+  name   = "${var.resource_prefix}RunDataScannerRestricted${var.resource_suffix}"
   role   = aws_iam_role.crowdstrike_aws_dspm_integration_role.id
   policy = data.aws_iam_policy_document.crowdstrike_run_data_scanner_restricted_data.json
 }
@@ -185,7 +185,7 @@ data "aws_iam_policy_document" "crowdstrike_run_data_scanner_restricted_data" {
 }
 
 resource "aws_iam_role_policy" "crowdstrike_rds_clone" {
-  name   = "CrowdStrikeRDSClone"
+  name   = "${var.resource_prefix}CrowdStrikeRDSClone${var.resource_suffix}"
   role   = aws_iam_role.crowdstrike_aws_dspm_integration_role.id
   policy = data.aws_iam_policy_document.crowdstrike_rds_clone_data.json
 }
@@ -398,7 +398,7 @@ data "aws_iam_policy_document" "crowdstrike_rds_clone_data" {
 }
 
 resource "aws_iam_role_policy" "crowdstrike_redshift_clone" {
-  name   = "CrowdStrikeRedshiftClone"
+  name   = "${var.resource_prefix}CrowdStrikeRedshiftClone${var.resource_suffix}"
   role   = aws_iam_role.crowdstrike_aws_dspm_integration_role.id
   policy = data.aws_iam_policy_document.crowdstrike_redshift_clone.json
 }

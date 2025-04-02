@@ -1,6 +1,6 @@
 resource "aws_secretsmanager_secret" "client_secrets" {
   #checkov:skip=CKV_AWS_149:The secret is encrypted using an AWS managed key
-  name = "CrowdStrikeDSPMClientSecret"
+  name = "${var.resource_prefix}DSPMClientSecret${var.resource_suffix}"
 
   tags = {
     (local.crowdstrike_tag_key)        = local.crowdstrike_tag_value
