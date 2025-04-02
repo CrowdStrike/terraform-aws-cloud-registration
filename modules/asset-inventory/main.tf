@@ -31,7 +31,7 @@ resource "aws_iam_role" "this" {
 }
 
 resource "aws_iam_role_policy" "this" {
-  name = "cspm_config"
+  name = "${var.resource_prefix}cspm-config${var.resource_suffix}"
   role = aws_iam_role.this.id
   policy = jsonencode({
     Version = "2012-10-17"

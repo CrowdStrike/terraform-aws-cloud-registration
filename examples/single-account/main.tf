@@ -27,6 +27,11 @@ locals {
   enable_dspm                = true
   dspm_regions               = ["us-east-1", "us-east-2"]
   use_existing_cloudtrail    = true
+
+  // customizations
+  resource_prefix  = "cs-"
+  resource_suffix  = "-cspm"
+  custom_role_name = "${local.resource_prefix}reader-role${local.resource_suffix}"
 }
 
 # Provision AWS account in Falcon.
@@ -34,7 +39,8 @@ resource "crowdstrike_cloud_aws_account" "this" {
   account_id = var.account_id
 
   asset_inventory = {
-    enabled = true
+    enabled   = true
+    role_name = local.custom_role_name
   }
 
   realtime_visibility = {
@@ -77,6 +83,9 @@ module "fcs_account_onboarding" {
   dspm_role_name         = crowdstrike_cloud_aws_account.this.dspm_role_name
   cloudtrail_bucket_name = crowdstrike_cloud_aws_account.this.cloudtrail_bucket_name
 
+  resource_prefix = local.resource_prefix
+  resource_suffix = local.resource_suffix
+
   providers = {
     aws         = aws.us-east-1
     crowdstrike = crowdstrike
@@ -104,6 +113,9 @@ module "fcs_account_us_east_2" {
   cloudtrail_bucket_name          = crowdstrike_cloud_aws_account.this.cloudtrail_bucket_name
   dspm_integration_role_unique_id = module.fcs_account_onboarding.integration_role_unique_id
   dspm_scanner_role_unique_id     = module.fcs_account_onboarding.scanner_role_unique_id
+
+  resource_prefix = local.resource_prefix
+  resource_suffix = local.resource_suffix
 
   providers = {
     aws         = aws.us-east-2
@@ -133,6 +145,10 @@ module "fcs_account_us_west_1" {
   dspm_integration_role_unique_id = module.fcs_account_onboarding.integration_role_unique_id
   dspm_scanner_role_unique_id     = module.fcs_account_onboarding.scanner_role_unique_id
 
+  resource_prefix = local.resource_prefix
+  resource_suffix = local.resource_suffix
+
+
   providers = {
     aws         = aws.us-west-1
     crowdstrike = crowdstrike
@@ -160,6 +176,9 @@ module "fcs_account_us_west_2" {
   cloudtrail_bucket_name          = crowdstrike_cloud_aws_account.this.cloudtrail_bucket_name
   dspm_integration_role_unique_id = module.fcs_account_onboarding.integration_role_unique_id
   dspm_scanner_role_unique_id     = module.fcs_account_onboarding.scanner_role_unique_id
+
+  resource_prefix = local.resource_prefix
+  resource_suffix = local.resource_suffix
 
   providers = {
     aws         = aws.us-west-2
