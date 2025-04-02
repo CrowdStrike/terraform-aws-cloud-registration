@@ -27,13 +27,13 @@ data "aws_iam_policy_document" "management" {
 }
 
 resource "aws_iam_role" "management" {
-  name                 = "CrowdStrikeSensorManagement"
+  name                 = "${var.resource_prefix}sensor-management${var.resource_suffix}"
   assume_role_policy   = data.aws_iam_policy_document.management.json
   permissions_boundary = var.permissions_boundary != "" ? "arn:${local.aws_partition}:iam::${local.account_id}:policy/${var.permissions_boundary}" : null
 }
 
 resource "aws_iam_role_policy" "invoke_lambda" {
-  name = "sensor-management-invoke-orchestrator-lambda"
+  name = "${var.resource_prefix}invoke-orchestrator-lambda${var.resource_suffix}"
   role = aws_iam_role.management.id
   policy = jsonencode({
     Version = "2012-10-17"
@@ -73,13 +73,13 @@ data "aws_iam_policy_document" "orchestrator" {
 }
 
 resource "aws_iam_role" "orchestrator" {
-  name                 = "CrowdStrikeSensorManagementOrchestrator"
+  name                 = "${var.resource_prefix}sensor-management-orchestrator${var.resource_suffix}"
   assume_role_policy   = data.aws_iam_policy_document.orchestrator.json
   permissions_boundary = var.permissions_boundary != "" ? "arn:${local.aws_partition}:iam::${local.account_id}:policy/${var.permissions_boundary}" : null
 }
 
 resource "aws_iam_role_policy" "orchestrator" {
-  name = "sensor-management-orchestrator-lambda-ssm-send-command"
+  name = "${var.resource_prefix}sensor-management-ssm-send-command${var.resource_suffix}"
   role = aws_iam_role.orchestrator.id
   policy = jsonencode({
     Version = "2012-10-17"
@@ -137,6 +137,7 @@ resource "aws_secretsmanager_secret_version" "this" {
 }
 
 resource "aws_lambda_function" "this" {
+  # todo: name is hardcoded in the backend
   function_name = "cs-horizon-sensor-installation-orchestrator"
   role          = aws_iam_role.orchestrator.arn
   handler       = "bootstrap"
@@ -152,7 +153,7 @@ resource "aws_lambda_function" "this" {
   environment {
     variables = {
       CS_CLIENT_ID                  = var.falcon_client_id
-      CS_API_CREDENTIALS_AWS_SECRET = "/CrowdStrike/CSPM/SensorManagement/FalconAPICredentials"
+      CS_API_CREDENTIALS_AWS_SECRET = aws_secretsmanager_secret.this.name
       CS_MODE                       = "force_auth"
     }
   }
