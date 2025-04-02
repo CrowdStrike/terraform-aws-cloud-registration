@@ -5,12 +5,12 @@ resource "random_string" "suffix" {
 }
 
 locals {
-  bucket_name = "crowdstrike-s3-${random_string.suffix.result}"
+  bucket_name = "${var.resource_prefix}s3-${random_string.suffix.result}${var.resource_suffix}"
 }
 
 resource "aws_iam_role" "lambda" {
   count = var.is_gov_commercial && var.is_primary_region ? 1 : 0
-  name  = "CrowdStrikeCSPMLambda"
+  name  = "${var.resource_prefix}cspm-lambda${var.resource_suffix}"
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
     Statement = [
@@ -29,7 +29,7 @@ resource "aws_iam_role" "lambda" {
 
 resource "aws_iam_role_policy" "lambda_logging" {
   count = var.is_gov_commercial && var.is_primary_region ? 1 : 0
-  name  = "logging"
+  name  = "${var.resource_prefix}logging${var.resource_suffix}"
   role  = aws_iam_role.lambda[0].id
   policy = jsonencode({
     Version = "2012-10-17"
@@ -48,8 +48,8 @@ resource "aws_iam_role_policy" "lambda_logging" {
       {
         Effect = "Allow"
         Resource = [
-          "arn:aws:logs:*:*:log-group:/aws/lambda/cs-lambda-*",
-          "arn:aws:logs:*:*:log-group:/aws/lambda/cs-lambda-*:log-stream:*"
+          "arn:aws:logs:*:*:log-group:/aws/lambda/${var.resource_prefix}lambda-*",
+          "arn:aws:logs:*:*:log-group:/aws/lambda/${var.resource_prefix}lambda-*:log-stream:*"
         ]
         Action = [
           "logs:PutLogEvents",
@@ -62,13 +62,13 @@ resource "aws_iam_role_policy" "lambda_logging" {
 
 resource "aws_cloudwatch_log_group" "eventbridge_logs" {
   count             = var.is_gov_commercial && var.is_primary_region ? 1 : 0
-  name              = "/aws/lambda/cs-lambda-eventbridge"
+  name              = "/aws/lambda/${var.resource_prefix}lambda-eventbridge${var.resource_suffix}"
   retention_in_days = 1
 }
 
 resource "aws_lambda_function" "eventbridge" {
   count         = var.is_gov_commercial && var.is_primary_region ? 1 : 0
-  function_name = "cs-lambda-eventbridge"
+  function_name = "${var.resource_prefix}lambda-eventbridge${var.resource_suffix}"
   role          = aws_iam_role.lambda[0].arn
   handler       = "bootstrap"
   runtime       = "provided.al2"
@@ -93,7 +93,7 @@ resource "aws_lambda_function" "eventbridge" {
 
 resource "aws_lambda_alias" "eventbridge" {
   count            = var.is_gov_commercial && var.is_primary_region ? 1 : 0
-  name             = "cs-lambda-eventbridge"
+  name             = "${var.resource_prefix}lambda-eventbridge${var.resource_suffix}"
   function_version = "$LATEST"
   function_name    = aws_lambda_function.eventbridge[0].arn
 }
@@ -104,18 +104,18 @@ resource "aws_lambda_permission" "eventbridge" {
   qualifier     = aws_lambda_alias.eventbridge[0].name
   action        = "lambda:InvokeFunction"
   principal     = "events.amazonaws.com"
-  source_arn    = "arn:aws:events:${local.aws_region}:${local.account_id}:rule/cs-*"
+  source_arn    = "arn:aws:events:${local.aws_region}:${local.account_id}:rule/cs-*" #todo: rule names are hardcoded in the backend
 }
 
 resource "aws_cloudwatch_log_group" "s3_logs" {
   count             = var.is_gov_commercial && !var.use_existing_cloudtrail && var.is_primary_region ? 1 : 0
-  name              = "/aws/lambda/cs-lambda-s3"
+  name              = "/aws/lambda/${var.resource_prefix}lambda-s3${var.resource_suffix}"
   retention_in_days = 1
 }
 
 resource "aws_lambda_function" "s3" {
   count         = var.is_gov_commercial && !var.use_existing_cloudtrail && var.is_primary_region ? 1 : 0
-  function_name = "cs-lambda-s3"
+  function_name = "${var.resource_prefix}lambda-s3${var.resource_suffix}"
   role          = aws_iam_role.lambda[0].arn
   handler       = "bootstrap"
   runtime       = "provided.al2"
@@ -140,7 +140,7 @@ resource "aws_lambda_function" "s3" {
 
 resource "aws_lambda_alias" "s3" {
   count            = var.is_gov_commercial && !var.use_existing_cloudtrail && var.is_primary_region ? 1 : 0
-  name             = "cs-lambda-s3"
+  name             = "${var.resource_prefix}lambda-s3${var.resource_suffix}"
   function_version = "$LATEST"
   function_name    = aws_lambda_function.s3[0].arn
 }

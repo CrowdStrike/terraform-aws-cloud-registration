@@ -9,7 +9,6 @@ variable "primary_region" {
   type        = string
 }
 
-
 variable "cloudtrail_bucket_name" {
   type        = string
   description = "Name of the S3 bucket for CloudTrail logs"
@@ -61,3 +60,16 @@ variable "eventbus_arn" {
   type        = string
   description = "Eventbus ARN to send events to"
 }
+
+variable "resource_prefix" {
+  description = "The prefix to be added to all resource names"
+  default     = ""
+  type        = string
+}
+
+variable "resource_suffix" {
+  description = "The suffix to be added to all resource names"
+  default     = ""
+  type        = string
+}
+

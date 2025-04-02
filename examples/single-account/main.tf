@@ -83,8 +83,9 @@ module "fcs_account_onboarding" {
   dspm_role_name         = crowdstrike_cloud_aws_account.this.dspm_role_name
   cloudtrail_bucket_name = crowdstrike_cloud_aws_account.this.cloudtrail_bucket_name
 
-  resource_prefix = local.resource_prefix
-  resource_suffix = local.resource_suffix
+  resource_prefix       = local.resource_prefix
+  resource_suffix       = local.resource_suffix
+  eventbridge_role_name = "${local.resource_prefix}cspm-eventbridge${local.resource_suffix}"
 
   providers = {
     aws         = aws.us-east-1

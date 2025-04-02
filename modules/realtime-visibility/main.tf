@@ -29,7 +29,7 @@ resource "aws_iam_role" "eventbridge" {
 
 resource "aws_iam_role_policy" "inline_policy" {
   count = var.is_primary_region ? 1 : 0
-  name  = "eventbridge-put-events"
+  name  = "${var.resource_prefix}eventbridge-put-events${var.resource_suffix}"
   role  = aws_iam_role.eventbridge[count.index].id
   policy = jsonencode({
     "Version" : "2012-10-17",
@@ -38,6 +38,7 @@ resource "aws_iam_role_policy" "inline_policy" {
         "Action" : [
           "events:PutEvents"
         ],
+        # todo update hardcoded rule name
         "Resource" : !var.is_gov_commercial ? "arn:${local.aws_partition}:events:*:*:event-bus/cs-*" : "arn:aws:events:*:*:event-bus/default"
         "Effect" : "Allow"
       }
@@ -47,7 +48,7 @@ resource "aws_iam_role_policy" "inline_policy" {
 
 resource "aws_cloudtrail" "this" {
   count                         = !var.use_existing_cloudtrail && var.is_primary_region ? 1 : 0
-  name                          = "crowdstrike-cloudtrail"
+  name                          = "${var.resource_prefix}cspm-cloudtrail${var.resource_suffix}"
   s3_bucket_name                = !var.is_gov_commercial ? var.cloudtrail_bucket_name : aws_s3_bucket.s3[0].bucket
   s3_key_prefix                 = ""
   include_global_service_events = true
