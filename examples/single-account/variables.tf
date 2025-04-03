@@ -19,3 +19,9 @@ variable "account_id" {
     error_message = "account_id must be either empty or the 12-digit AWS account ID"
   }
 }
+
+variable "me" {
+  type        = string
+  default     = "unspecified"
+  description = "The user running terraform"
+}

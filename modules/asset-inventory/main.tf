@@ -28,6 +28,7 @@ resource "aws_iam_role" "this" {
   name                 = var.role_name
   assume_role_policy   = data.aws_iam_policy_document.this.json
   permissions_boundary = var.permissions_boundary != "" ? "arn:${local.aws_partition}:iam::${local.account_id}:policy/${var.permissions_boundary}" : null
+  tags                 = var.tags
 }
 
 resource "aws_iam_role_policy" "this" {
