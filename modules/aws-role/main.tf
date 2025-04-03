@@ -48,6 +48,9 @@ module "asset_inventory" {
   intermediate_role_arn = local.intermediate_role_arn
   role_name             = local.iam_role_name
   permissions_boundary  = var.permissions_boundary
+  resource_prefix       = var.resource_prefix
+  resource_suffix       = var.resource_suffix
+  tags                  = var.tags
 
   providers = {
     aws = aws
@@ -62,6 +65,9 @@ module "sensor_management" {
   external_id           = local.external_id
   intermediate_role_arn = local.intermediate_role_arn
   permissions_boundary  = var.permissions_boundary
+  resource_prefix       = var.resource_prefix
+  resource_suffix       = var.resource_suffix
+  tags                  = var.tags
 
   providers = {
     aws = aws
@@ -78,4 +84,7 @@ module "dspm_roles" {
   intermediate_role_arn  = local.intermediate_role_arn
   external_id            = local.external_id
   dspm_regions           = var.dspm_regions
+  resource_prefix        = var.resource_prefix
+  resource_suffix        = var.resource_suffix
+  tags                   = var.tags
 }
