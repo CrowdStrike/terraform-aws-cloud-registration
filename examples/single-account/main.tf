@@ -28,7 +28,7 @@ locals {
   dspm_regions               = ["us-east-1", "us-east-2"]
   use_existing_cloudtrail    = true
 
-  // customizations
+  # customizations
   resource_prefix        = "cs-"
   resource_suffix        = "-cspm"
   custom_role_name       = "${local.resource_prefix}reader-role${local.resource_suffix}"
@@ -36,7 +36,7 @@ locals {
   dspm_scanner_role_name = "${local.resource_prefix}dspm-scanner${local.resource_suffix}"
 
   tags = {
-    DeployedBy = "${var.me}"
+    DeployedBy = var.me
     Product    = "FalconCloudSecurity"
   }
 }

@@ -163,7 +163,7 @@ variable "dspm_scanner_role_unique_id" {
 
 variable "resource_prefix" {
   description = "The prefix to be added to all resource names"
-  default     = "CrowdStrike-"
+  default     = "CrowdStrike"
   type        = string
 }
 
