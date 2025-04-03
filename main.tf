@@ -37,8 +37,6 @@ module "asset_inventory" {
   intermediate_role_arn = local.intermediate_role_arn
   role_name             = local.iam_role_name
   permissions_boundary  = var.permissions_boundary
-  resource_prefix       = var.resource_prefix
-  resource_suffix       = var.resource_suffix
   tags                  = var.tags
 
   depends_on = [
@@ -115,8 +113,6 @@ module "dspm_environments" {
   dspm_role_name             = var.dspm_role_name
   integration_role_unique_id = local.is_primary_region ? module.dspm_roles[0].integration_role_unique_id : var.dspm_integration_role_unique_id
   scanner_role_unique_id     = local.is_primary_region ? module.dspm_roles[0].scanner_role_unique_id : var.dspm_scanner_role_unique_id
-  resource_prefix            = var.resource_prefix
-  resource_suffix            = var.resource_suffix
   tags                       = var.tags
 
   depends_on = [module.dspm_roles]
