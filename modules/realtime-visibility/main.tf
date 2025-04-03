@@ -25,11 +25,12 @@ resource "aws_iam_role" "eventbridge" {
     ]
   })
   permissions_boundary = var.permissions_boundary != "" ? "arn:${local.aws_partition}:iam::${local.account_id}:policy/${var.permissions_boundary}" : null
+  tags                 = var.tags
 }
 
 resource "aws_iam_role_policy" "inline_policy" {
   count = var.is_primary_region ? 1 : 0
-  name  = "${var.resource_prefix}eventbridge-put-events${var.resource_suffix}"
+  name  = "eventbridge-put-events"
   role  = aws_iam_role.eventbridge[count.index].id
   policy = jsonencode({
     "Version" : "2012-10-17",
@@ -48,11 +49,12 @@ resource "aws_iam_role_policy" "inline_policy" {
 
 resource "aws_cloudtrail" "this" {
   count                         = !var.use_existing_cloudtrail && var.is_primary_region ? 1 : 0
-  name                          = "${var.resource_prefix}cspm-cloudtrail${var.resource_suffix}"
+  name                          = "${var.resource_prefix}CSPMCloudtrail${var.resource_suffix}"
   s3_bucket_name                = !var.is_gov_commercial ? var.cloudtrail_bucket_name : aws_s3_bucket.s3[0].bucket
   s3_key_prefix                 = ""
   include_global_service_events = true
   is_multi_region_trail         = true
   enable_logging                = true
   is_organization_trail         = var.is_organization_trail
+  tags                          = var.tags
 }

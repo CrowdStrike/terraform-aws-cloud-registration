@@ -10,19 +10,25 @@ resource "aws_vpc" "vpc" {
   enable_dns_hostnames = true
 
 
-  tags = {
-    Name                        = "${var.deployment_name}-VPC"
-    (local.crowdstrike_tag_key) = local.crowdstrike_tag_value
-  }
+  tags = merge(
+    var.tags,
+    {
+      Name                        = "${var.deployment_name}-VPC"
+      (local.crowdstrike_tag_key) = local.crowdstrike_tag_value
+    }
+  )
 }
 
 resource "aws_internet_gateway" "internet_gateway" {
   vpc_id = aws_vpc.vpc.id
 
-  tags = {
-    Name                        = "${var.deployment_name}-Gateway"
-    (local.crowdstrike_tag_key) = local.crowdstrike_tag_value
-  }
+  tags = merge(
+    var.tags,
+    {
+      Name                        = "${var.deployment_name}-Gateway"
+      (local.crowdstrike_tag_key) = local.crowdstrike_tag_value
+    }
+  )
 
   depends_on = [aws_vpc.vpc]
 }
@@ -36,10 +42,13 @@ resource "aws_subnet" "db_subnet_a" {
     ignore_changes = [availability_zone]
   }
 
-  tags = {
-    Name                        = "${var.deployment_name}-DB-A"
-    (local.crowdstrike_tag_key) = local.crowdstrike_tag_value
-  }
+  tags = merge(
+    var.tags,
+    {
+      Name                        = "${var.deployment_name}-DB-A"
+      (local.crowdstrike_tag_key) = local.crowdstrike_tag_value
+    }
+  )
 }
 
 resource "aws_subnet" "db_subnet_b" {
@@ -51,10 +60,13 @@ resource "aws_subnet" "db_subnet_b" {
     ignore_changes = [availability_zone]
   }
 
-  tags = {
-    Name                        = "${var.deployment_name}-DB-B"
-    (local.crowdstrike_tag_key) = local.crowdstrike_tag_value
-  }
+  tags = merge(
+    var.tags,
+    {
+      Name                        = "${var.deployment_name}-DB-B"
+      (local.crowdstrike_tag_key) = local.crowdstrike_tag_value
+    }
+  )
 }
 
 resource "aws_db_subnet_group" "db_subnet_group" {
@@ -62,11 +74,14 @@ resource "aws_db_subnet_group" "db_subnet_group" {
   description = "CrowdStrike Security DB subnet group"
   subnet_ids  = [aws_subnet.db_subnet_a.id, aws_subnet.db_subnet_b.id]
 
-  tags = {
-    Name                        = "${var.deployment_name}-DBSubnetGroup"
-    (local.crowdstrike_tag_key) = local.crowdstrike_tag_value
-    (local.logical_tag_key)     = local.logical_subnet_group
-  }
+  tags = merge(
+    var.tags,
+    {
+      Name                        = "${var.deployment_name}-DBSubnetGroup"
+      (local.crowdstrike_tag_key) = local.crowdstrike_tag_value
+      (local.logical_tag_key)     = local.logical_subnet_group
+    }
+  )
 }
 
 resource "aws_redshift_subnet_group" "redshift_subnet_group" {
@@ -74,11 +89,14 @@ resource "aws_redshift_subnet_group" "redshift_subnet_group" {
   description = "CrowdStrike Security Redshift subnet group"
   subnet_ids  = [aws_subnet.db_subnet_a.id, aws_subnet.db_subnet_b.id]
 
-  tags = {
-    Name                        = "${var.deployment_name}-RedshiftSubnetGroup"
-    (local.crowdstrike_tag_key) = local.crowdstrike_tag_value
-    (local.logical_tag_key)     = local.logical_redshift_subnet_group
-  }
+  tags = merge(
+    var.tags,
+    {
+      Name                        = "${var.deployment_name}-RedshiftSubnetGroup"
+      (local.crowdstrike_tag_key) = local.crowdstrike_tag_value
+      (local.logical_tag_key)     = local.logical_redshift_subnet_group
+    }
+  )
 }
 
 resource "aws_subnet" "public_subnet" {
@@ -90,10 +108,13 @@ resource "aws_subnet" "public_subnet" {
     ignore_changes = [availability_zone]
   }
 
-  tags = {
-    Name                        = "${var.deployment_name}-Public"
-    (local.crowdstrike_tag_key) = local.crowdstrike_tag_value
-  }
+  tags = merge(
+    var.tags,
+    {
+      Name                        = "${var.deployment_name}-Public"
+      (local.crowdstrike_tag_key) = local.crowdstrike_tag_value
+    }
+  )
 }
 
 resource "aws_subnet" "private_subnet" {
@@ -105,11 +126,14 @@ resource "aws_subnet" "private_subnet" {
     ignore_changes = [availability_zone]
   }
 
-  tags = {
-    Name                        = "${var.deployment_name}-Private"
-    (local.crowdstrike_tag_key) = local.crowdstrike_tag_value
-    (local.logical_tag_key)     = local.logical_private_subnet
-  }
+  tags = merge(
+    var.tags,
+    {
+      Name                        = "${var.deployment_name}-Private"
+      (local.crowdstrike_tag_key) = local.crowdstrike_tag_value
+      (local.logical_tag_key)     = local.logical_private_subnet
+    }
+  )
 }
 
 resource "aws_route_table" "public_route_table" {
@@ -121,31 +145,40 @@ resource "aws_route_table" "public_route_table" {
     gateway_id = aws_internet_gateway.internet_gateway.id
   }
 
-  tags = {
-    Name                        = "${var.deployment_name}-Public"
-    (local.crowdstrike_tag_key) = local.crowdstrike_tag_value
-  }
+  tags = merge(
+    var.tags,
+    {
+      Name                        = "${var.deployment_name}-Public"
+      (local.crowdstrike_tag_key) = local.crowdstrike_tag_value
+    }
+  )
 
   depends_on = [aws_internet_gateway.internet_gateway]
 }
 
 resource "aws_eip" "elastic_ip_address" {
   domain = "vpc"
-  tags = {
-    Name                        = "EIP-${var.deployment_name}"
-    (local.crowdstrike_tag_key) = local.crowdstrike_tag_value
-    (local.logical_tag_key)     = local.logical_elastic_ip
-  }
+  tags = merge(
+    var.tags,
+    {
+      Name                        = "EIP-${var.deployment_name}"
+      (local.crowdstrike_tag_key) = local.crowdstrike_tag_value
+      (local.logical_tag_key)     = local.logical_elastic_ip
+    }
+  )
 }
 
 resource "aws_nat_gateway" "nat_gateway" {
   allocation_id = aws_eip.elastic_ip_address.id
   subnet_id     = aws_subnet.public_subnet.id
 
-  tags = {
-    Name                        = "NAT-${var.deployment_name}"
-    (local.crowdstrike_tag_key) = local.crowdstrike_tag_value
-  }
+  tags = merge(
+    var.tags,
+    {
+      Name                        = "NAT-${var.deployment_name}"
+      (local.crowdstrike_tag_key) = local.crowdstrike_tag_value
+    }
+  )
 }
 
 
@@ -158,10 +191,13 @@ resource "aws_route_table" "private_route_table" {
     nat_gateway_id = aws_nat_gateway.nat_gateway.id
   }
 
-  tags = {
-    Name                        = "${var.deployment_name}-Private"
-    (local.crowdstrike_tag_key) = local.crowdstrike_tag_value
-  }
+  tags = merge(
+    var.tags,
+    {
+      Name                        = "${var.deployment_name}-Private"
+      (local.crowdstrike_tag_key) = local.crowdstrike_tag_value
+    }
+  )
 }
 
 resource "aws_route_table_association" "public_subnet_route_table_association" {
@@ -176,7 +212,7 @@ resource "aws_route_table_association" "private_subnet_route_table_association" 
 
 resource "aws_security_group" "ec2_security_group" {
   #checkov:skip=CKV_AWS_382:Data scanner must be allowed to access undetermined ports to support scanning new services
-  name        = "${var.resource_prefix}EC2SecurityGroup${var.resource_suffix}"
+  name        = "${var.deployment_name}-EC2SecurityGroup"
   description = "Security group attached to CrowdStrike provisioned EC2 instances for running data scanners"
   vpc_id      = aws_vpc.vpc.id
 
@@ -189,15 +225,18 @@ resource "aws_security_group" "ec2_security_group" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
-  tags = {
-    Name                        = "${var.deployment_name}-EC2"
-    (local.crowdstrike_tag_key) = local.crowdstrike_tag_value
-    (local.logical_tag_key)     = local.logical_ec2_security_group
-  }
+  tags = merge(
+    var.tags,
+    {
+      Name                        = "${var.deployment_name}-EC2"
+      (local.crowdstrike_tag_key) = local.crowdstrike_tag_value
+      (local.logical_tag_key)     = local.logical_ec2_security_group
+    }
+  )
 }
 
 resource "aws_security_group" "db_security_group" {
-  name        = "${var.resource_prefix}DBSecurityGroup${var.resource_suffix}"
+  name        = "${var.deployment_name}-DBSecurityGroup"
   description = "Security group attached to RDS instance to allow EC2 instances with specific security groups attached to connect to the database"
   vpc_id      = aws_vpc.vpc.id
 
@@ -282,15 +321,18 @@ resource "aws_security_group" "db_security_group" {
     security_groups = [aws_security_group.ec2_security_group.id]
   }
 
-  tags = {
-    Name                        = "${var.deployment_name}-DB"
-    (local.crowdstrike_tag_key) = local.crowdstrike_tag_value
-    (local.logical_tag_key)     = local.logical_db_security_group
-  }
+  tags = merge(
+    var.tags,
+    {
+      Name                        = "${var.deployment_name}-DB"
+      (local.crowdstrike_tag_key) = local.crowdstrike_tag_value
+      (local.logical_tag_key)     = local.logical_db_security_group
+    }
+  )
 }
 
 resource "aws_iam_role_policy" "vpc_policy" {
-  name = "${var.resource_prefix}RunDataScanner-${local.aws_region}-${aws_vpc.vpc.id}-${var.resource_suffix}"
+  name = "${var.deployment_name}-RunDataScanner-${local.aws_region}-${aws_vpc.vpc.id}"
   role = var.dspm_role_name
 
   policy = jsonencode({

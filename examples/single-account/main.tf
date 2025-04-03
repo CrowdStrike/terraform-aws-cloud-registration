@@ -29,9 +29,16 @@ locals {
   use_existing_cloudtrail    = true
 
   // customizations
-  resource_prefix  = "cs-"
-  resource_suffix  = "-cspm"
-  custom_role_name = "${local.resource_prefix}reader-role${local.resource_suffix}"
+  resource_prefix        = "cs-"
+  resource_suffix        = "-cspm"
+  custom_role_name       = "${local.resource_prefix}reader-role${local.resource_suffix}"
+  dspm_role_name         = "${local.resource_prefix}dspm-integration${local.resource_suffix}"
+  dspm_scanner_role_name = "${local.resource_prefix}dspm-scanner${local.resource_suffix}"
+
+  tags = {
+    DeployedBy = "${var.me}"
+    Product    = "FalconCloudSecurity"
+  }
 }
 
 # Provision AWS account in Falcon.
@@ -58,7 +65,8 @@ resource "crowdstrike_cloud_aws_account" "this" {
   }
 
   dspm = {
-    enabled = local.enable_dspm
+    enabled   = local.enable_dspm
+    role_name = local.dspm_role_name
   }
   provider = crowdstrike
 }
@@ -75,6 +83,7 @@ module "fcs_account_onboarding" {
   use_existing_cloudtrail    = local.use_existing_cloudtrail
   enable_dspm                = local.enable_dspm && contains(local.dspm_regions, "us-east-1")
   dspm_regions               = local.dspm_regions
+  dspm_scanner_role_name     = local.dspm_scanner_role_name
 
   iam_role_name          = crowdstrike_cloud_aws_account.this.iam_role_name
   external_id            = crowdstrike_cloud_aws_account.this.external_id
@@ -86,6 +95,7 @@ module "fcs_account_onboarding" {
   resource_prefix       = local.resource_prefix
   resource_suffix       = local.resource_suffix
   eventbridge_role_name = "${local.resource_prefix}cspm-eventbridge${local.resource_suffix}"
+  tags                  = local.tags
 
   providers = {
     aws         = aws.us-east-1
@@ -105,6 +115,7 @@ module "fcs_account_us_east_2" {
   use_existing_cloudtrail    = local.use_existing_cloudtrail
   enable_dspm                = local.enable_dspm && contains(local.dspm_regions, "us-east-2")
   dspm_regions               = local.dspm_regions
+  dspm_scanner_role_name     = local.dspm_scanner_role_name
 
   iam_role_name                   = crowdstrike_cloud_aws_account.this.iam_role_name
   external_id                     = crowdstrike_cloud_aws_account.this.external_id
@@ -115,8 +126,10 @@ module "fcs_account_us_east_2" {
   dspm_integration_role_unique_id = module.fcs_account_onboarding.integration_role_unique_id
   dspm_scanner_role_unique_id     = module.fcs_account_onboarding.scanner_role_unique_id
 
-  resource_prefix = local.resource_prefix
-  resource_suffix = local.resource_suffix
+  resource_prefix       = local.resource_prefix
+  resource_suffix       = local.resource_suffix
+  eventbridge_role_name = "${local.resource_prefix}cspm-eventbridge${local.resource_suffix}"
+  tags                  = local.tags
 
   providers = {
     aws         = aws.us-east-2
@@ -136,6 +149,7 @@ module "fcs_account_us_west_1" {
   use_existing_cloudtrail    = local.use_existing_cloudtrail
   enable_dspm                = local.enable_dspm && contains(local.dspm_regions, "us-west-1")
   dspm_regions               = local.dspm_regions
+  dspm_scanner_role_name     = local.dspm_scanner_role_name
 
   iam_role_name                   = crowdstrike_cloud_aws_account.this.iam_role_name
   external_id                     = crowdstrike_cloud_aws_account.this.external_id
@@ -146,9 +160,10 @@ module "fcs_account_us_west_1" {
   dspm_integration_role_unique_id = module.fcs_account_onboarding.integration_role_unique_id
   dspm_scanner_role_unique_id     = module.fcs_account_onboarding.scanner_role_unique_id
 
-  resource_prefix = local.resource_prefix
-  resource_suffix = local.resource_suffix
-
+  resource_prefix       = local.resource_prefix
+  resource_suffix       = local.resource_suffix
+  eventbridge_role_name = "${local.resource_prefix}cspm-eventbridge${local.resource_suffix}"
+  tags                  = local.tags
 
   providers = {
     aws         = aws.us-west-1
@@ -168,6 +183,7 @@ module "fcs_account_us_west_2" {
   use_existing_cloudtrail    = local.use_existing_cloudtrail
   enable_dspm                = local.enable_dspm && contains(local.dspm_regions, "us-west-2")
   dspm_regions               = local.dspm_regions
+  dspm_scanner_role_name     = local.dspm_scanner_role_name
 
   iam_role_name                   = crowdstrike_cloud_aws_account.this.iam_role_name
   external_id                     = crowdstrike_cloud_aws_account.this.external_id
@@ -178,8 +194,10 @@ module "fcs_account_us_west_2" {
   dspm_integration_role_unique_id = module.fcs_account_onboarding.integration_role_unique_id
   dspm_scanner_role_unique_id     = module.fcs_account_onboarding.scanner_role_unique_id
 
-  resource_prefix = local.resource_prefix
-  resource_suffix = local.resource_suffix
+  resource_prefix       = local.resource_prefix
+  resource_suffix       = local.resource_suffix
+  eventbridge_role_name = "${local.resource_prefix}cspm-eventbridge${local.resource_suffix}"
+  tags                  = local.tags
 
   providers = {
     aws         = aws.us-west-2

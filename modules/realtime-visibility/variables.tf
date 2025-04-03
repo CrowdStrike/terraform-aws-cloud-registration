@@ -73,3 +73,8 @@ variable "resource_suffix" {
   type        = string
 }
 
+variable "tags" {
+  description = "A map of tags to add to all resources that support tagging"
+  type        = map(string)
+  default     = {}
+}

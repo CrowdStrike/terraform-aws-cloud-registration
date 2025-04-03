@@ -27,13 +27,14 @@ data "aws_iam_policy_document" "management" {
 }
 
 resource "aws_iam_role" "management" {
-  name                 = "${var.resource_prefix}sensor-management${var.resource_suffix}"
+  name                 = "${var.resource_prefix}SensorManagement${var.resource_suffix}"
   assume_role_policy   = data.aws_iam_policy_document.management.json
   permissions_boundary = var.permissions_boundary != "" ? "arn:${local.aws_partition}:iam::${local.account_id}:policy/${var.permissions_boundary}" : null
+  tags                 = var.tags
 }
 
 resource "aws_iam_role_policy" "invoke_lambda" {
-  name = "${var.resource_prefix}invoke-orchestrator-lambda${var.resource_suffix}"
+  name = "sensor-management-invoke-orchestrator-lambda"
   role = aws_iam_role.management.id
   policy = jsonencode({
     Version = "2012-10-17"
@@ -73,13 +74,14 @@ data "aws_iam_policy_document" "orchestrator" {
 }
 
 resource "aws_iam_role" "orchestrator" {
-  name                 = "${var.resource_prefix}sensor-management-orchestrator${var.resource_suffix}"
+  name                 = "${var.resource_prefix}SensorManagementOrchestrator${var.resource_suffix}"
   assume_role_policy   = data.aws_iam_policy_document.orchestrator.json
   permissions_boundary = var.permissions_boundary != "" ? "arn:${local.aws_partition}:iam::${local.account_id}:policy/${var.permissions_boundary}" : null
+  tags                 = var.tags
 }
 
 resource "aws_iam_role_policy" "orchestrator" {
-  name = "${var.resource_prefix}sensor-management-ssm-send-command${var.resource_suffix}"
+  name = "sensor-management-orchestrator-lambda-ssm-send-command"
   role = aws_iam_role.orchestrator.id
   policy = jsonencode({
     Version = "2012-10-17"

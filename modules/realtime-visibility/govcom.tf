@@ -10,7 +10,7 @@ locals {
 
 resource "aws_iam_role" "lambda" {
   count = var.is_gov_commercial && var.is_primary_region ? 1 : 0
-  name  = "${var.resource_prefix}cspm-lambda${var.resource_suffix}"
+  name  = "${var.resource_prefix}CSPMLambda${var.resource_suffix}"
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
     Statement = [
@@ -25,11 +25,12 @@ resource "aws_iam_role" "lambda" {
     ]
   })
   permissions_boundary = var.permissions_boundary != "" ? "arn:${local.aws_partition}:iam::${local.account_id}:policy/${var.permissions_boundary}" : null
+  tags                 = var.tags
 }
 
 resource "aws_iam_role_policy" "lambda_logging" {
   count = var.is_gov_commercial && var.is_primary_region ? 1 : 0
-  name  = "${var.resource_prefix}logging${var.resource_suffix}"
+  name  = "logging"
   role  = aws_iam_role.lambda[0].id
   policy = jsonencode({
     Version = "2012-10-17"
@@ -64,6 +65,7 @@ resource "aws_cloudwatch_log_group" "eventbridge_logs" {
   count             = var.is_gov_commercial && var.is_primary_region ? 1 : 0
   name              = "/aws/lambda/${var.resource_prefix}lambda-eventbridge${var.resource_suffix}"
   retention_in_days = 1
+  tags              = var.tags
 }
 
 resource "aws_lambda_function" "eventbridge" {
@@ -79,6 +81,7 @@ resource "aws_lambda_function" "eventbridge" {
 
   s3_bucket = "cs-horizon-ioa-lambda-${local.aws_region}"
   s3_key    = "aws/aws-lambda-eventbridge.zip"
+  tags      = var.tags
 
   environment {
     variables = {
@@ -111,6 +114,7 @@ resource "aws_cloudwatch_log_group" "s3_logs" {
   count             = var.is_gov_commercial && !var.use_existing_cloudtrail && var.is_primary_region ? 1 : 0
   name              = "/aws/lambda/${var.resource_prefix}lambda-s3${var.resource_suffix}"
   retention_in_days = 1
+  tags              = var.tags
 }
 
 resource "aws_lambda_function" "s3" {
@@ -126,6 +130,7 @@ resource "aws_lambda_function" "s3" {
 
   s3_bucket = "cs-horizon-ioa-lambda-${local.aws_region}"
   s3_key    = "aws/aws-lambda-s3.zip"
+  tags      = var.tags
 
   environment {
     variables = {
@@ -158,6 +163,7 @@ resource "aws_s3_bucket" "s3" {
   count         = var.is_gov_commercial && !var.use_existing_cloudtrail && var.is_primary_region ? 1 : 0
   bucket        = local.bucket_name
   force_destroy = true
+  tags          = var.tags
 
   depends_on = [
     aws_lambda_permission.s3
@@ -196,7 +202,6 @@ resource "aws_s3_bucket_notification" "s3" {
 resource "aws_s3_bucket_ownership_controls" "s3" {
   count  = var.is_gov_commercial && !var.use_existing_cloudtrail && var.is_primary_region ? 1 : 0
   bucket = aws_s3_bucket.s3[0].id
-
   rule {
     object_ownership = "BucketOwnerPreferred"
   }

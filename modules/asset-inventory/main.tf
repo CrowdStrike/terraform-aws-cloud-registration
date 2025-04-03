@@ -28,10 +28,11 @@ resource "aws_iam_role" "this" {
   name                 = var.role_name
   assume_role_policy   = data.aws_iam_policy_document.this.json
   permissions_boundary = var.permissions_boundary != "" ? "arn:${local.aws_partition}:iam::${local.account_id}:policy/${var.permissions_boundary}" : null
+  tags                 = var.tags
 }
 
 resource "aws_iam_role_policy" "this" {
-  name = "${var.resource_prefix}cspm-config${var.resource_suffix}"
+  name = "cspm_config"
   role = aws_iam_role.this.id
   policy = jsonencode({
     Version = "2012-10-17"

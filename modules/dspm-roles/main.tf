@@ -3,9 +3,12 @@ resource "aws_iam_instance_profile" "instance_profile" {
   name = "CrowdStrikeScannerRoleProfile" #todo: this is hardcoded in the backend
   path = "/"
   role = var.dspm_scanner_role_name
-  tags = {
-    (local.crowdstrike_tag_key) = local.crowdstrike_tag_value
-  }
+  tags = merge(
+    var.tags,
+    {
+      (local.crowdstrike_tag_key) = local.crowdstrike_tag_value
+    }
+  )
 }
 
 resource "aws_iam_role" "crowdstrike_aws_dspm_scanner_role" {
@@ -23,9 +26,12 @@ resource "aws_iam_role" "crowdstrike_aws_dspm_scanner_role" {
       }
     ]
   })
-  tags = {
-    (local.crowdstrike_tag_key) = local.crowdstrike_tag_value
-  }
+  tags = merge(
+    var.tags,
+    {
+      (local.crowdstrike_tag_key) = local.crowdstrike_tag_value
+    }
+  )
 }
 
 resource "aws_iam_role_policy_attachment" "cloud_watch_logs_read_only_access" {
@@ -42,7 +48,7 @@ resource "aws_iam_role_policy_attachment" "amazon_ssm_managed_instance_core" {
 
 resource "aws_iam_role_policy" "crowdstrike_logs_reader" {
   #checkov:skip=CKV_AWS_355:DSPM data scanner requires read access to logs for all scannable assets
-  name = "${var.resource_prefix}CrowdStrikeLogsReader${var.resource_suffix}"
+  name = "CrowdStrikeLogsReader"
   role = aws_iam_role.crowdstrike_aws_dspm_scanner_role.id
   policy = jsonencode({
     Version = "2012-10-17"
@@ -82,7 +88,7 @@ resource "aws_iam_role_policy" "crowdstrike_logs_reader" {
 
 resource "aws_iam_role_policy" "crowdstrike_bucket_reader" {
   #checkov:skip=CKV_AWS_288,CKV_AWS_355:DSPM data scanner requires read access to all scannable s3 assets
-  name = "${var.resource_prefix}CrowdStrikeBucketReader${var.resource_suffix}"
+  name = "CrowdStrikeBucketReader"
   role = aws_iam_role.crowdstrike_aws_dspm_scanner_role.id
   policy = jsonencode({
     Version = "2012-10-17"
@@ -113,7 +119,7 @@ resource "aws_iam_role_policy" "crowdstrike_bucket_reader" {
 
 resource "aws_iam_role_policy" "crowdstrike_dynamodb_reader" {
   #checkov:skip=CKV_AWS_355:DSPM data scanner requires read access to all scannable dynamodb assets
-  name = "${var.resource_prefix}CrowdStrikeDynamoDBReader${var.resource_suffix}"
+  name = "CrowdStrikeDynamoDBReader"
   role = aws_iam_role.crowdstrike_aws_dspm_scanner_role.id
   policy = jsonencode({
     Version = "2012-10-17"
@@ -138,7 +144,7 @@ resource "aws_iam_role_policy" "crowdstrike_dynamodb_reader" {
 resource "aws_iam_role_policy" "crowdstrike_redshift_reader" {
   #checkov:skip=CKV_AWS_355:DSPM data scanner requires read access to all scannable redshift assets
   #checkov:skip=CKV_AWS_290,CKV_AWS_287:DSPM data scanner requires redshift:Get* permissions
-  name = "${var.resource_prefix}CrowdStrikeRedshiftReader${var.resource_suffix}"
+  name = "CrowdStrikeRedshiftReader"
   role = aws_iam_role.crowdstrike_aws_dspm_scanner_role.id
   policy = jsonencode({
     Version = "2012-10-17"
@@ -160,7 +166,7 @@ resource "aws_iam_role_policy" "crowdstrike_redshift_reader" {
 }
 
 resource "aws_iam_role_policy" "crowdstrike_secret_reader" {
-  name = "${var.resource_prefix}CrowdStrikeSecretReader${var.resource_suffix}"
+  name = "CrowdStrikeSecretReader"
   role = aws_iam_role.crowdstrike_aws_dspm_scanner_role.id
   policy = jsonencode({
     Version = "2012-10-17"

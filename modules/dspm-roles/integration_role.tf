@@ -24,9 +24,12 @@ resource "aws_iam_role" "crowdstrike_aws_dspm_integration_role" {
   path                 = "/"
   max_session_duration = 43200
   assume_role_policy   = data.aws_iam_policy_document.assume_role.json
-  tags = {
-    (local.crowdstrike_tag_key) = local.crowdstrike_tag_value
-  }
+  tags = merge(
+    var.tags,
+    {
+      (local.crowdstrike_tag_key) = local.crowdstrike_tag_value
+    }
+  )
 }
 
 resource "aws_iam_role_policy_attachment" "security_audit" {
@@ -35,7 +38,7 @@ resource "aws_iam_role_policy_attachment" "security_audit" {
 }
 
 resource "aws_iam_role_policy" "crowdstrike_cloud_scan_supplemental" {
-  name   = "${var.resource_prefix}CloudScanSupplemental"
+  name   = "CloudScanSupplemental"
   role   = aws_iam_role.crowdstrike_aws_dspm_integration_role.id
   policy = data.aws_iam_policy_document.crowdstrike_cloud_scan_supplemental_data.json
 }
@@ -67,7 +70,7 @@ data "aws_iam_policy_document" "crowdstrike_cloud_scan_supplemental_data" {
 }
 
 resource "aws_iam_role_policy" "crowdstrike_run_data_scanner_restricted" {
-  name   = "${var.resource_prefix}RunDataScannerRestricted${var.resource_suffix}"
+  name   = "CrowdStrikeRunDataScannerRestricted"
   role   = aws_iam_role.crowdstrike_aws_dspm_integration_role.id
   policy = data.aws_iam_policy_document.crowdstrike_run_data_scanner_restricted_data.json
 }
@@ -185,7 +188,7 @@ data "aws_iam_policy_document" "crowdstrike_run_data_scanner_restricted_data" {
 }
 
 resource "aws_iam_role_policy" "crowdstrike_rds_clone" {
-  name   = "${var.resource_prefix}CrowdStrikeRDSClone${var.resource_suffix}"
+  name   = "CrowdStrikeRDSClone"
   role   = aws_iam_role.crowdstrike_aws_dspm_integration_role.id
   policy = data.aws_iam_policy_document.crowdstrike_rds_clone_data.json
 }
@@ -398,7 +401,7 @@ data "aws_iam_policy_document" "crowdstrike_rds_clone_data" {
 }
 
 resource "aws_iam_role_policy" "crowdstrike_redshift_clone" {
-  name   = "${var.resource_prefix}CrowdStrikeRedshiftClone${var.resource_suffix}"
+  name   = "CrowdStrikeRedshiftClone"
   role   = aws_iam_role.crowdstrike_aws_dspm_integration_role.id
   policy = data.aws_iam_policy_document.crowdstrike_redshift_clone.json
 }
