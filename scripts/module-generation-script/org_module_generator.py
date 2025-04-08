@@ -51,11 +51,13 @@ class FileConfiguration:  # pylint: disable=R0902
         self.file = configparser.ConfigParser(converters={'list': lambda x: [i.strip() for i in x.split(',')]})
         self.file.read(file_name)
         self.target = self.file['target']['TargetDirectory']
-        self.falcon_client_id = self.file['falcon.credentials']['ClientId']
-        self.falcon_client_secret = self.file['falcon.credentials']['ClientSecret']
+        self.is_gov = self.file['falcon.config']['IsGov']
+        self.falcon_client_id = self.file['falcon.config']['ClientId']
+        self.falcon_client_secret = self.file['falcon.config']['ClientSecret']
         self.aws_auth_method = self.file['aws.auth']['AuthMethod']
         if 'role' in self.aws_auth_method:
             self.cross_account_role = self.file['aws.auth']['CrossAccountRole']
+        self.account_type = self.file['aws.config']['AccountType']
         self.primary_region = self.file['aws.config']['PrimaryRegion']
         self.ous = self.file.getlist('aws.config', 'TargetOUs')
         self.permissions_boundary = self.file['aws.config']['PermissionsBoundary']
@@ -81,8 +83,10 @@ class ArgConfiguration:  # pylint: disable=R0902
         self.target = args.target
         self.falcon_client_id = args.falcon_client_id
         self.falcon_client_secret = args.falcon_client_secret
+        self.is_gov = args.is_gov
         self.aws_auth_method = args.aws_auth_method
         self.cross_account_role = args.cross_account_role
+        self.account_type = args.account_type
         self.primary_region = args.primary_region
         if not args.permissions_boundary:
             self.permissions_boundary = ""
@@ -127,7 +131,7 @@ def parse_command_line():
         required=False,
     )
     parser.add_argument(
-        "-c",
+        "-f",
         "--config-file",
         dest="config_file",
         help="Path to config.ini file",
@@ -210,7 +214,7 @@ def parse_command_line():
         required=False,
     )
     parser.add_argument(
-        "-C",
+        "-c",
         "--custom-role-name",
         dest="iam_role_name",
         help="Set the name of the IAM Role for CSPM, if you require a custom name",
@@ -245,6 +249,22 @@ def parse_command_line():
         dest="ous",
         help="List of AWS OUs to target.  If blank, modules will be generated for all accounts in the AWS Organization",
         default="",
+        required=False,
+    )
+    parser.add_argument(
+        "-T",
+        "--account-type",
+        dest="account_type",
+        help="AWS account type.  Can be either commercial or gov",
+        default="commercial",
+        required=False,
+    )
+    parser.add_argument(
+        "-g",
+        "--is-gov",
+        dest="is_gov",
+        help="Set to true if you are deploying in gov Falcon",
+        default="true",
         required=False,
     )
     return parser.parse_args()
@@ -310,6 +330,11 @@ variable "falcon_client_secret" {
   sensitive   = true
   description = "Falcon API Client Secret"
 }
+variable "is_gov" {
+  type        = bool
+  default     = false
+  description = "Set to true if you are deploying in gov Falcon"
+}
 variable "aws_auth_method" {
   type        = string
   description = "AWS Provider Authentication Method"
@@ -324,6 +349,15 @@ variable "management_account_id" {
   type        = string
   description = "AWS Organization Management Account Id"
   default     = ""
+}
+variable "account_type" {
+  type        = string
+  default     = "commercial"
+  description = "Account type can be either 'commercial' or 'gov'"
+  validation {
+    condition     = var.account_type == "commercial" || var.account_type == "gov"
+    error_message = "must be either 'commercial' or 'gov'"
+  }
 }
 variable "organization_id" {
   type        = string
@@ -390,12 +424,15 @@ def generate_config_file(config, org_id, management_id):
     rtv_regions_list = '['+','.join(['"'+x+'"' for x in rtv_regions.split(',')])+']'
     dspm_regions = config.dspm_regions
     dspm_regions_list = '['+','.join(['"'+x+'"' for x in dspm_regions.split(',')])+']'
-    content="""falcon_client_id            = "{falcon_client_id}"
+    if 'role' in config.aws_auth_method:
+        content="""falcon_client_id            = "{falcon_client_id}"
 falcon_client_secret        = "{falcon_client_secret}"
+is_gov                      = {is_gov}
 aws_auth_method             = "{aws_auth_method}"
 cross_account_role          = "{cross_account_role}"
 management_account_id       = "{management_account_id}"
 organization_id             = "{organization_id}"
+account_type                = "{account_type}"
 primary_region              = "{primary_region}"
 permissions_boundary        = "{permissions_boundary}"
 realtime_visibility         = {realtime_visibility}
@@ -408,10 +445,12 @@ realtime_visibility_regions = {realtime_visibility_regions}
 dspm_regions                = {dspm_regions}\
 """.format(falcon_client_id=config.falcon_client_id,
           falcon_client_secret=config.falcon_client_secret,
+          is_gov=config.is_gov,
           aws_auth_method=config.aws_auth_method,
           cross_account_role=config.cross_account_role,
           management_account_id=management_id,
           organization_id=org_id,
+          account_type=config.account_type,
           primary_region=config.primary_region,
           permissions_boundary=config.permissions_boundary,
           realtime_visibility=config.realtime_visibility,
@@ -422,7 +461,43 @@ dspm_regions                = {dspm_regions}\
           existing_cloudtrail=config.existing_cloudtrail,
           realtime_visibility_regions=rtv_regions_list,
           dspm_regions=dspm_regions_list
-           )
+          )
+    else:
+        content="""falcon_client_id            = "{falcon_client_id}"
+falcon_client_secret        = "{falcon_client_secret}"
+is_gov                      = {is_gov}
+aws_auth_method             = "{aws_auth_method}"
+management_account_id       = "{management_account_id}"
+organization_id             = "{organization_id}"
+account_type                = "{account_type}"
+primary_region              = "{primary_region}"
+permissions_boundary        = "{permissions_boundary}"
+realtime_visibility         = {realtime_visibility}
+idp                         = {idp}
+sensor_management           = {sensor_management}
+dspm                        = {dspm}
+iam_role_name               = "{iam_role_name}"
+existing_cloudtrail         = {existing_cloudtrail}
+realtime_visibility_regions = {realtime_visibility_regions}
+dspm_regions                = {dspm_regions}\
+""".format(falcon_client_id=config.falcon_client_id,
+          falcon_client_secret=config.falcon_client_secret,
+          is_gov=config.is_gov,
+          aws_auth_method=config.aws_auth_method,
+          management_account_id=management_id,
+          organization_id=org_id,
+          account_type=config.account_type,
+          primary_region=config.primary_region,
+          permissions_boundary=config.permissions_boundary,
+          realtime_visibility=config.realtime_visibility,
+          idp=config.idp,
+          sensor_management=config.sensor_management,
+          dspm=config.dspm,
+          iam_role_name=config.iam_role_name,
+          existing_cloudtrail=config.existing_cloudtrail,
+          realtime_visibility_regions=rtv_regions_list,
+          dspm_regions=dspm_regions_list
+          )
     f = open(f"{config.target}/config.tfvars", "w")
     f.write(content)
 
@@ -447,6 +522,7 @@ provider "crowdstrike" {
 resource "crowdstrike_cloud_aws_account" "this" {
   account_id                         = var.management_account_id
   organization_id                    = var.organization_id
+  account_type                       = var.account_type
   is_organization_management_account = true
 
   asset_inventory = {
@@ -484,6 +560,8 @@ def generate_account_modules_role(config, account_id, management_id):
   cross_account_role_name     = var.cross_account_role
   falcon_client_id            = var.falcon_client_id
   falcon_client_secret        = var.falcon_client_secret
+  is_gov                      = var.is_gov
+  account_type                = var.account_type
   organization_id             = var.organization_id
   primary_region              = var.primary_region
   enable_sensor_management    = var.sensor_management
@@ -513,6 +591,8 @@ def generate_account_modules_role(config, account_id, management_id):
   cross_account_role_name     = var.cross_account_role
   falcon_client_id            = var.falcon_client_id
   falcon_client_secret        = var.falcon_client_secret
+  is_gov                      = var.is_gov
+  account_type                = var.account_type
   organization_id             = var.organization_id
   primary_region              = var.primary_region
   enable_sensor_management    = var.sensor_management
@@ -552,6 +632,8 @@ def generate_account_modules_profile(config, account_id, management_id):
   cross_account_role_name     = var.cross_account_role
   falcon_client_id            = var.falcon_client_id
   falcon_client_secret        = var.falcon_client_secret
+  is_gov                      = var.is_gov
+  account_type                = var.account_type
   organization_id             = var.organization_id
   primary_region              = var.primary_region
   enable_sensor_management    = var.sensor_management
@@ -582,6 +664,8 @@ def generate_account_modules_profile(config, account_id, management_id):
   cross_account_role_name     = var.cross_account_role
   falcon_client_id            = var.falcon_client_id
   falcon_client_secret        = var.falcon_client_secret
+  is_gov                      = var.is_gov
+  account_type                = var.account_type
   organization_id             = var.organization_id
   primary_region              = var.primary_region
   enable_sensor_management    = var.sensor_management
@@ -631,4 +715,4 @@ if __name__ == "__main__":
             generate_account_modules_profile(config, account_id, management_id)
     if 'profile' in config.aws_auth_method:
         print('IMPORTANT')
-        print('Please update the AWS_PROFILE in each terraform file for each respective account.')
+        print('Please update the AWS_PROFILE in the terraform file for each respective account.')
