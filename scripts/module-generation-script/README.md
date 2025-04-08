@@ -52,13 +52,15 @@ CrossAccountRole = myCrossAccountRole
 # Note: if you choose profile, you must update the Profile for each account module after running this generation script.
 
 [aws.config]
+AccountType         = commercial
 PrimaryRegion       = us-east-1
 TargetOUs           = 
 PermissionsBoundary = 
 
-[falcon.credentials]
-ClientId     = myFalconAPIClientId
-ClientSecret = myFalconAPIClientSecret
+[falcon.config]
+ClientId     = 
+ClientSecret = 
+IsGov        = false
 
 [falcon.features]
 RealtimeVisibility = true
@@ -85,7 +87,7 @@ Available Arguments
 
 | Argument | Description | Required |
 | -------- | ----------- | -------- |
-|-c --config-file | Location of config.ini file | Yes, if no other arguments are present |
+|-f --config-file | Location of config.ini file | Yes, if no other arguments are present |
 |-t --target-directory | Location of generated TF files | No, will default to fcs-tf-modules is no argument given |
 |-k --falcon-client-id | Your Falcon API Client ID | No, you may enter these in config.tfvars after running the script |
 |-s --falcon-client-secret | Your Falcon API Client Secret | No, you may enter these in config.tfvars after running the script |
@@ -98,10 +100,12 @@ Available Arguments
 |-i --idp | Whether to enable Identity Protection | No, will default to true is no argument given |
 |-S --sensor-management | Whether to enable Sensor Management | No, will default to true is no argument given |
 |-d --dspm | Whether to enable DSPM | No, will default to false is no argument given |
-|-C --custom-role-name | Specify custom name for CSPM ReadOnly IAM Role | No, will use default CrowdStrike CSPM ReadOnly IAM Role name if no argument given |
+|-c --custom-role-name | Specify custom name for CSPM ReadOnly IAM Role | No, will use default CrowdStrike CSPM ReadOnly IAM Role name if no argument given |
 |-E --existing-cloudtrail | Whether to use existing CloudTrail for IOAs.  Change this to `false` to create a new Org CloudTrail and enable ReadOnly IOAS | No, will default to true is no argument given |
 |-R --realtime-visibility-regions | Which AWS Regions to enable for Realtime Visibility | No, will default to [all] is no argument given |
 |-D --dspm-regions | Which AWS Regions to enable for DSPM | Yes, if --dspm = true |
+|-T --account-type | AWS account type. Can be either commercial or gov | No |
+|-g --is-gov | Set to true if you are deploying in gov Falcon | No |
 
 
 Command Line Arguments Example
