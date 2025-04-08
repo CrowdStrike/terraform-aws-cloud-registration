@@ -24,7 +24,7 @@ This example demonstrates how to register a single AWS account with CrowdStrike 
 export TF_VAR_falcon_client_id=<your client id>
 export TF_VAR_falcon_client_secret=<your client secret>
 export TF_VAR_account_id=<your aws account id>
-export TF_VAR_cross_account_role_name=<your aws cross account role name>
+export TF_VAR_aws_role_name=<your aws cross account role name>
 ```
 
 2. Initialize and apply Terraform:

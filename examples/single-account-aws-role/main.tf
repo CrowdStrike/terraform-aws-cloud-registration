@@ -42,9 +42,8 @@ resource "crowdstrike_cloud_aws_account" "this" {
 }
 
 module "fcs_account" {
-  # source                      = "CrowdStrike/fcs/aws//modules/registration-role"
-  source                      = "../../modules/registration-role/"
-  cross_account_role_name     = var.cross_account_role_name
+  source                      = "../../modules/aws-role/"
+  aws_role_name               = var.aws_role_name
   falcon_client_id            = var.falcon_client_id
   falcon_client_secret        = var.falcon_client_secret
   account_id                  = var.account_id

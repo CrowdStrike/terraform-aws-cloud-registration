@@ -17,4 +17,3 @@ resource "aws_secretsmanager_secret_version" "client_secrets_version" {
     ClientSecret = var.falcon_client_secret
   })
 }
-

@@ -47,7 +47,6 @@ variable "account_type" {
   }
 }
 
-
 variable "permissions_boundary" {
   type        = string
   default     = ""
@@ -110,7 +109,7 @@ variable "eventbus_arn" {
 variable "cloudtrail_bucket_name" {
   type        = string
   default     = ""
-  description = ""
+  description = "Name of the S3 bucket for CloudTrail logs"
 }
 
 variable "enable_dspm" {
@@ -148,4 +147,16 @@ variable "dspm_regions" {
     ])
     error_message = "Each element in the dspm_regions list must be a valid AWS region (e.g., 'us-east-1', 'eu-west-2') that is supported by DSPM."
   }
+}
+
+variable "dspm_integration_role_unique_id" {
+  description = "The unique ID of the DSPM integration role"
+  default     = ""
+  type        = string
+}
+
+variable "dspm_scanner_role_unique_id" {
+  description = "The unique ID of the DSPM scanner role"
+  default     = ""
+  type        = string
 }

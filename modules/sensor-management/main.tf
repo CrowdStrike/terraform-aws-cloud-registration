@@ -132,7 +132,7 @@ resource "aws_secretsmanager_secret" "this" {
 resource "aws_secretsmanager_secret_version" "this" {
   secret_id = aws_secretsmanager_secret.this.id
   secret_string = jsonencode({
-    ClientSecret = var.falcon_client_id
+    ClientSecret = var.falcon_client_secret
   })
 }
 
@@ -159,4 +159,3 @@ resource "aws_lambda_function" "this" {
 
   depends_on = [aws_cloudwatch_log_group.crowdstrike_sensor_management]
 }
-
