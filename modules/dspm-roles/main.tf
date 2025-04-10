@@ -1,6 +1,6 @@
 # Creates instance profile. Attached as IAM role to EC2 instance, used for data scan
 resource "aws_iam_instance_profile" "instance_profile" {
-  name = "CrowdStrikeScannerRoleProfile" #todo: this is hardcoded in the backend
+  name = "CrowdStrikeScannerRoleProfile"
   path = "/"
   role = var.dspm_scanner_role_name
   tags = merge(
@@ -178,7 +178,7 @@ resource "aws_iam_role_policy" "crowdstrike_secret_reader" {
           "secretsmanager:DescribeSecret",
         ]
         Effect   = "Allow"
-        Resource = ["arn:aws:secretsmanager:*:*:secret:${var.resource_prefix}DSPMClientSecret${var.resource_suffix}-*"]
+        Resource = ["arn:aws:secretsmanager:*:*:secret:CrowdStrikeDSPMClientSecret-*"]
       },
       {
         Sid      = "SecretsManagerListSecrets",

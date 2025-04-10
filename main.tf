@@ -102,8 +102,6 @@ module "dspm_roles" {
   intermediate_role_arn  = local.intermediate_role_arn
   external_id            = local.external_id
   dspm_regions           = var.dspm_regions
-  resource_prefix        = var.resource_prefix
-  resource_suffix        = var.resource_suffix
   tags                   = var.tags
 }
 

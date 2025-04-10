@@ -38,7 +38,7 @@ resource "aws_iam_role_policy_attachment" "security_audit" {
 }
 
 resource "aws_iam_role_policy" "crowdstrike_cloud_scan_supplemental" {
-  name   = "CloudScanSupplemental"
+  name   = "CrowdStrikeCloudScanSupplemental"
   role   = aws_iam_role.crowdstrike_aws_dspm_integration_role.id
   policy = data.aws_iam_policy_document.crowdstrike_cloud_scan_supplemental_data.json
 }
