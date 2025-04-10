@@ -84,10 +84,13 @@ resource "aws_kms_key" "crowdstrike_kms_key" {
   key_usage                = "ENCRYPT_DECRYPT"
   policy                   = data.aws_iam_policy_document.policy_kms_key.json
 
-  tags = {
-    (local.logical_tag_key)     = local.logical_kms_key
-    (local.crowdstrike_tag_key) = (local.crowdstrike_tag_value)
-  }
+  tags = merge(
+    var.tags,
+    {
+      (local.logical_tag_key)     = local.logical_kms_key
+      (local.crowdstrike_tag_key) = (local.crowdstrike_tag_value)
+    }
+  )
 }
 
 resource "aws_kms_alias" "crowdstrike_key_alias" {

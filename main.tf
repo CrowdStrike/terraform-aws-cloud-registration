@@ -37,6 +37,7 @@ module "asset_inventory" {
   intermediate_role_arn = local.intermediate_role_arn
   role_name             = local.iam_role_name
   permissions_boundary  = var.permissions_boundary
+  tags                  = var.tags
 
   depends_on = [
     data.crowdstrike_cloud_aws_account.target
@@ -52,6 +53,9 @@ module "sensor_management" {
   external_id           = local.external_id
   intermediate_role_arn = local.intermediate_role_arn
   permissions_boundary  = var.permissions_boundary
+  resource_prefix       = var.resource_prefix
+  resource_suffix       = var.resource_suffix
+  tags                  = var.tags
 
   depends_on = [
     data.crowdstrike_cloud_aws_account.target
@@ -75,6 +79,9 @@ module "realtime_visibility" {
   primary_region          = var.primary_region
   falcon_client_id        = var.falcon_client_id
   falcon_client_secret    = var.falcon_client_secret
+  resource_prefix         = var.resource_prefix
+  resource_suffix         = var.resource_suffix
+  tags                    = var.tags
 
   depends_on = [
     data.crowdstrike_cloud_aws_account.target,
@@ -95,6 +102,7 @@ module "dspm_roles" {
   intermediate_role_arn  = local.intermediate_role_arn
   external_id            = local.external_id
   dspm_regions           = var.dspm_regions
+  tags                   = var.tags
 }
 
 module "dspm_environments" {
@@ -103,6 +111,7 @@ module "dspm_environments" {
   dspm_role_name             = var.dspm_role_name
   integration_role_unique_id = local.is_primary_region ? module.dspm_roles[0].integration_role_unique_id : var.dspm_integration_role_unique_id
   scanner_role_unique_id     = local.is_primary_region ? module.dspm_roles[0].scanner_role_unique_id : var.dspm_scanner_role_unique_id
+  tags                       = var.tags
 
   depends_on = [module.dspm_roles]
 

@@ -20,3 +20,9 @@ variable "scanner_role_unique_id" {
   description = "The unique ID of the DSPM scanner role"
   type        = string
 }
+
+variable "tags" {
+  description = "A map of tags to add to all resources that support tagging"
+  type        = map(string)
+  default     = {}
+}
