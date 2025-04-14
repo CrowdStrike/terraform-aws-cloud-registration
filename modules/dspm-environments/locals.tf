@@ -10,6 +10,9 @@ locals {
   logical_ec2_security_group    = "EC2SecurityGroup"
   logical_db_security_group     = "DBSecurityGroup"
   logical_kms_key               = "KMSKey"
-  aws_region                    = data.aws_region.current.name
-  account_id                    = data.aws_caller_identity.current.account_id
+
+  account_id    = data.aws_caller_identity.current.account_id
+  aws_region    = data.aws_region.current.name
+  aws_partition = data.aws_partition.current.partition
 }
+

@@ -160,3 +160,9 @@ variable "dspm_scanner_role_unique_id" {
   default     = ""
   type        = string
 }
+
+variable "vpc_cidr_block" {
+  description = "VPC CIDR block"
+  type = string
+}
+

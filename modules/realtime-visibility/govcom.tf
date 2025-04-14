@@ -37,8 +37,8 @@ resource "aws_iam_role_policy" "lambda_logging" {
       {
         Effect = "Allow"
         Resource = [
-          "arn:aws:s3:::${local.bucket_name}",
-          "arn:aws:s3:::${local.bucket_name}/*"
+          "arn:${local.aws_partition}:s3:::${local.bucket_name}",
+          "arn:${local.aws_partition}:s3:::${local.bucket_name}/*"
         ]
         Action = [
           "s3:ListBucket",
@@ -48,8 +48,8 @@ resource "aws_iam_role_policy" "lambda_logging" {
       {
         Effect = "Allow"
         Resource = [
-          "arn:aws:logs:*:*:log-group:/aws/lambda/cs-lambda-*",
-          "arn:aws:logs:*:*:log-group:/aws/lambda/cs-lambda-*:log-stream:*"
+          "arn:${local.aws_partition}:logs:*:*:log-group:/aws/lambda/cs-lambda-*",
+          "arn:${local.aws_partition}:logs:*:*:log-group:/aws/lambda/cs-lambda-*:log-stream:*"
         ]
         Action = [
           "logs:PutLogEvents",
@@ -104,7 +104,7 @@ resource "aws_lambda_permission" "eventbridge" {
   qualifier     = aws_lambda_alias.eventbridge[0].name
   action        = "lambda:InvokeFunction"
   principal     = "events.amazonaws.com"
-  source_arn    = "arn:aws:events:${local.aws_region}:${local.account_id}:rule/cs-*"
+  source_arn    = "arn:${local.aws_partition}:events:${local.aws_region}:${local.account_id}:rule/cs-*"
 }
 
 resource "aws_cloudwatch_log_group" "s3_logs" {
@@ -151,7 +151,7 @@ resource "aws_lambda_permission" "s3" {
   qualifier     = aws_lambda_alias.s3[0].name
   action        = "lambda:InvokeFunction"
   principal     = "s3.amazonaws.com"
-  source_arn    = "arn:aws:s3:::${local.bucket_name}"
+  source_arn    = "arn:${local.aws_partition}:s3:::${local.bucket_name}"
 }
 
 resource "aws_s3_bucket" "s3" {
@@ -224,7 +224,7 @@ resource "aws_s3_bucket_policy" "s3" {
           Service = "cloudtrail.amazonaws.com"
         }
         Action   = "s3:GetBucketAcl"
-        Resource = "arn:aws:s3:::${aws_s3_bucket.s3[0].id}"
+        Resource = "arn:${local.aws_partition}:s3:::${aws_s3_bucket.s3[0].id}"
       },
       {
         Sid    = "AWSCloudTrailWrite"
@@ -233,7 +233,7 @@ resource "aws_s3_bucket_policy" "s3" {
           Service = "cloudtrail.amazonaws.com"
         }
         Action   = "s3:PutObject"
-        Resource = "arn:aws:s3:::${aws_s3_bucket.s3[0].id}/*"
+        Resource = "arn:${local.aws_partition}:s3:::${aws_s3_bucket.s3[0].id}/*"
         Condition = {
           StringEquals = {
             "s3:x-amz-acl" = "bucket-owner-full-control"
