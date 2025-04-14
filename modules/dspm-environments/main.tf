@@ -1,4 +1,5 @@
 data "aws_region" "current" {}
+data "aws_partition" "current" {}
 
 data "aws_availability_zones" "available" {
   state = "available"
@@ -303,12 +304,12 @@ resource "aws_iam_role_policy" "vpc_policy" {
           "ec2:RunInstances"
         ]
         Resource = [
-          "arn:aws:ec2:*:${local.account_id}:security-group/*",
-          "arn:aws:ec2:*:${local.account_id}:subnet/*"
+          "arn:${local.aws_partition}:ec2:*:${local.account_id}:security-group/*",
+          "arn:${local.aws_partition}:ec2:*:${local.account_id}:subnet/*"
         ]
         Condition = {
           StringEquals = {
-            "ec2:Vpc" = "arn:aws:ec2:${local.aws_region}:${local.account_id}:vpc/${aws_vpc.vpc.id}"
+            "ec2:Vpc" = "arn:${local.aws_partition}:ec2:${local.aws_region}:${local.account_id}:vpc/${aws_vpc.vpc.id}"
           }
         }
       }

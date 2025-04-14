@@ -1,3 +1,27 @@
+module "dspm_environment_us_gov_east_1" {
+  count                      = (contains(var.dspm_regions, "us-gov-east-1") && var.enable_dspm && var.is_gov) ? 1 : 0
+  source                     = "../dspm-environments/"
+  dspm_role_name             = var.dspm_role_name
+  integration_role_unique_id = module.dspm_roles[0].integration_role_unique_id
+  scanner_role_unique_id     = module.dspm_roles[0].scanner_role_unique_id
+  providers = {
+    aws = aws.us-gov-east-1
+  }
+  depends_on = [module.dspm_roles]
+}
+
+module "dspm_environment_us_gov_west_1" {
+  count                      = (contains(var.dspm_regions, "us-gov-west-1") && var.enable_dspm && var.is_gov) ? 1 : 0
+  source                     = "../dspm-environments/"
+  dspm_role_name             = var.dspm_role_name
+  integration_role_unique_id = module.dspm_roles[0].integration_role_unique_id
+  scanner_role_unique_id     = module.dspm_roles[0].scanner_role_unique_id
+  providers = {
+    aws = aws.us-gov-west-1
+  }
+  depends_on = [module.dspm_roles]
+}
+
 module "dspm_environment_us_east_1" {
   count                      = (contains(var.dspm_regions, "us-east-1") && var.enable_dspm && !var.is_gov) ? 1 : 0
   source                     = "../dspm-environments/"
