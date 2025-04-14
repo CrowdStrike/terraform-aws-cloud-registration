@@ -159,3 +159,8 @@ variable "dspm_regions" {
     error_message = "Each element in the dspm_regions list must be a valid AWS region (e.g., 'us-east-1', 'eu-west-2') that is supported by DSPM."
   }
 }
+
+variable "vpc_cidr_block" {
+  description = "VPC CIDR block"
+  type = string
+}

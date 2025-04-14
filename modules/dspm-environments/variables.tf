@@ -20,3 +20,8 @@ variable "scanner_role_unique_id" {
   description = "The unique ID of the DSPM scanner role"
   type        = string
 }
+
+variable "vpc_cidr_block" {
+  description = "VPC CIDR block"
+  type = string
+}
