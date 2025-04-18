@@ -3,9 +3,12 @@ resource "aws_iam_instance_profile" "instance_profile" {
   name = "CrowdStrikeScannerRoleProfile"
   path = "/"
   role = var.dspm_scanner_role_name
-  tags = {
-    (local.crowdstrike_tag_key) = local.crowdstrike_tag_value
-  }
+  tags = merge(
+    var.tags,
+    {
+      (local.crowdstrike_tag_key) = local.crowdstrike_tag_value
+    }
+  )
 }
 
 resource "aws_iam_role" "crowdstrike_aws_dspm_scanner_role" {
@@ -23,9 +26,12 @@ resource "aws_iam_role" "crowdstrike_aws_dspm_scanner_role" {
       }
     ]
   })
-  tags = {
-    (local.crowdstrike_tag_key) = local.crowdstrike_tag_value
-  }
+  tags = merge(
+    var.tags,
+    {
+      (local.crowdstrike_tag_key) = local.crowdstrike_tag_value
+    }
+  )
 }
 
 resource "aws_iam_role_policy_attachment" "cloud_watch_logs_read_only_access" {

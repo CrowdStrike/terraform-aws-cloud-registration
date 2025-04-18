@@ -28,6 +28,7 @@ resource "aws_iam_role" "this" {
   name                 = var.role_name
   assume_role_policy   = data.aws_iam_policy_document.this.json
   permissions_boundary = var.permissions_boundary != "" ? "arn:${local.aws_partition}:iam::${local.account_id}:policy/${var.permissions_boundary}" : null
+  tags                 = var.tags
 }
 
 resource "aws_iam_role_policy" "this" {
@@ -40,6 +41,10 @@ resource "aws_iam_role_policy" "this" {
         Effect   = "Allow"
         Resource = "*"
         Action = [
+          "appsync:GetApiCache",
+          "appsync:GetGraphqlApi",
+          "appsync:GetGraphqlApiEnvironmentVariables",
+          "appsync:GetIntrospectionSchema",
           "athena:GetDataCatalog",
           "auditmanager:GetAssessment",
           "auditmanager:GetControl",
@@ -75,6 +80,14 @@ resource "aws_iam_role_policy" "this" {
           "bedrock:ListKnowledgeBases",
           "bedrock:ListModelCustomizationJobs",
           "bedrock:ListProvisionedModelThroughputs",
+          "cassandra:Select",
+          "codeartifact:DescribeDomain",
+          "codeartifact:DescribeRepository",
+          "codeartifact:ListDomains",
+          "codeartifact:ListRepositoriesInDomain",
+          "codeartifact:ListTagsForResource",
+          "codeguru-profiler:DescribeProfilingGroup",
+          "codeguru-profiler:ListProfilingGroups",
           "cognito-idp:GetGroup",
           "cognito-idp:GetLogDeliveryConfiguration",
           "detective:ListDatasourcePackages",
@@ -82,8 +95,6 @@ resource "aws_iam_role_policy" "this" {
           "ecr:BatchGetImage",
           "ecr:GetDownloadUrlForLayer",
           "ecr:GetRegistryScanningConfiguration",
-          "eks:Describe*",
-          "eks:ListFargateProfiles",
           "elasticfilesystem:DescribeAccessPoints",
           "fms:GetAdminAccount",
           "fms:GetPolicy",
@@ -91,6 +102,15 @@ resource "aws_iam_role_policy" "this" {
           "grafana:DescribeWorkspace",
           "grafana:DescribeWorkspaceAuthentication",
           "grafana:DescribeWorkspaceConfiguration",
+          "imagebuilder:GetComponent",
+          "imagebuilder:GetImagePipeline",
+          "imagebuilder:GetImageRecipe",
+          "imagebuilder:GetInfrastructureConfiguration",
+          "imagebuilder:ListComponents",
+          "imagebuilder:ListImagePipelines",
+          "imagebuilder:ListImageRecipes",
+          "imagebuilder:ListInfrastructureConfigurations",
+          "imagebuilder:ListTagsForResource",
           "lambda:GetEventSourceMapping",
           "lambda:GetFunction",
           "lambda:GetLayerVersion",
@@ -105,8 +125,8 @@ resource "aws_iam_role_policy" "this" {
           "lightsail:GetKeyPair",
           "lightsail:GetKeyPairs",
           "memorydb:DescribeACLs",
-          "memorydb:DescribeParameters",
           "memorydb:DescribeParameterGroups",
+          "memorydb:DescribeParameters",
           "memorydb:DescribeSnapshots",
           "memorydb:DescribeSubnetGroups",
           "memorydb:DescribeUsers",
@@ -119,7 +139,6 @@ resource "aws_iam_role_policy" "this" {
           "waf-regional:ListIPSets",
           "waf-regional:ListRuleGroups",
           "waf-regional:ListRules",
-          "wafv2:GetIPSet",
           "wafv2:GetRuleGroup"
         ]
       },

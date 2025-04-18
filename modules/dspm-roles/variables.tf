@@ -70,3 +70,9 @@ variable "dspm_regions" {
     error_message = "Each element in the dspm_regions list must be a valid AWS region (e.g., 'us-east-1', 'eu-west-2') that is supported by DSPM."
   }
 }
+
+variable "tags" {
+  description = "A map of tags to add to all resources that support tagging"
+  type        = map(string)
+  default     = {}
+}

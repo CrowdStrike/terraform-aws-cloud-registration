@@ -24,9 +24,12 @@ resource "aws_iam_role" "crowdstrike_aws_dspm_integration_role" {
   path                 = "/"
   max_session_duration = 43200
   assume_role_policy   = data.aws_iam_policy_document.assume_role.json
-  tags = {
-    (local.crowdstrike_tag_key) = local.crowdstrike_tag_value
-  }
+  tags = merge(
+    var.tags,
+    {
+      (local.crowdstrike_tag_key) = local.crowdstrike_tag_value
+    }
+  )
 }
 
 resource "aws_iam_role_policy_attachment" "security_audit" {
