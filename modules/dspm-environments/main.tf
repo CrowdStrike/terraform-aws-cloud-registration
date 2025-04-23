@@ -212,7 +212,7 @@ resource "aws_route_table_association" "private_subnet_route_table_association" 
 
 resource "aws_security_group" "ec2_security_group" {
   #checkov:skip=CKV_AWS_382:Data scanner must be allowed to access undetermined ports to support scanning new services
-  name        = "${var.deployment_name}-EC2SecurityGroup"
+  name        = "EC2SecurityGroup"
   description = "Security group attached to CrowdStrike provisioned EC2 instances for running data scanners"
   vpc_id      = aws_vpc.vpc.id
 
@@ -236,7 +236,7 @@ resource "aws_security_group" "ec2_security_group" {
 }
 
 resource "aws_security_group" "db_security_group" {
-  name        = "${var.deployment_name}-DBSecurityGroup"
+  name        = "DBSecurityGroup"
   description = "Security group attached to RDS instance to allow EC2 instances with specific security groups attached to connect to the database"
   vpc_id      = aws_vpc.vpc.id
 
@@ -332,7 +332,7 @@ resource "aws_security_group" "db_security_group" {
 }
 
 resource "aws_iam_role_policy" "vpc_policy" {
-  name = "${var.deployment_name}-RunDataScanner-${local.aws_region}-${aws_vpc.vpc.id}"
+  name = "RunDataScanner-${local.aws_region}-${aws_vpc.vpc.id}"
   role = var.dspm_role_name
 
   policy = jsonencode({
