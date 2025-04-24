@@ -166,3 +166,20 @@ variable "vpc_cidr_block" {
   type = string
 }
 
+variable "resource_prefix" {
+  description = "The prefix to be added to all resource names"
+  default     = "CrowdStrike"
+  type        = string
+}
+
+variable "resource_suffix" {
+  description = "The suffix to be added to all resource names"
+  default     = ""
+  type        = string
+}
+
+variable "tags" {
+  description = "A map of tags to add to all resources that support tagging"
+  type        = map(string)
+  default     = {}
+}

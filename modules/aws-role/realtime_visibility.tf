@@ -24,6 +24,9 @@ module "rtvd_us_east_1" {
   falcon_client_id        = var.falcon_client_id
   falcon_client_secret    = var.falcon_client_secret
   permissions_boundary    = var.permissions_boundary
+  resource_prefix         = var.resource_prefix
+  resource_suffix         = var.resource_suffix
+  tags                    = var.tags
 
   depends_on = [
     data.crowdstrike_cloud_aws_account.target,
@@ -48,6 +51,9 @@ module "rtvd_us_east_2" {
   falcon_client_id        = var.falcon_client_id
   falcon_client_secret    = var.falcon_client_secret
   permissions_boundary    = var.permissions_boundary
+  resource_prefix         = var.resource_prefix
+  resource_suffix         = var.resource_suffix
+  tags                    = var.tags
 
   depends_on = [
     data.crowdstrike_cloud_aws_account.target,
@@ -72,6 +78,9 @@ module "rtvd_us_west_1" {
   falcon_client_id        = var.falcon_client_id
   falcon_client_secret    = var.falcon_client_secret
   permissions_boundary    = var.permissions_boundary
+  resource_prefix         = var.resource_prefix
+  resource_suffix         = var.resource_suffix
+  tags                    = var.tags
 
   depends_on = [
     data.crowdstrike_cloud_aws_account.target,
@@ -96,6 +105,9 @@ module "rtvd_us_west_2" {
   falcon_client_id        = var.falcon_client_id
   falcon_client_secret    = var.falcon_client_secret
   permissions_boundary    = var.permissions_boundary
+  resource_prefix         = var.resource_prefix
+  resource_suffix         = var.resource_suffix
+  tags                    = var.tags
 
   depends_on = [
     data.crowdstrike_cloud_aws_account.target,
@@ -120,6 +132,9 @@ module "rtvd_af_south_1" {
   falcon_client_id        = var.falcon_client_id
   falcon_client_secret    = var.falcon_client_secret
   permissions_boundary    = var.permissions_boundary
+  resource_prefix         = var.resource_prefix
+  resource_suffix         = var.resource_suffix
+  tags                    = var.tags
 
   depends_on = [
     data.crowdstrike_cloud_aws_account.target,
@@ -144,6 +159,9 @@ module "rtvd_ap_east_1" {
   falcon_client_id        = var.falcon_client_id
   falcon_client_secret    = var.falcon_client_secret
   permissions_boundary    = var.permissions_boundary
+  resource_prefix         = var.resource_prefix
+  resource_suffix         = var.resource_suffix
+  tags                    = var.tags
 
   depends_on = [
     data.crowdstrike_cloud_aws_account.target,
@@ -168,6 +186,9 @@ module "rtvd_ap_south_1" {
   falcon_client_id        = var.falcon_client_id
   falcon_client_secret    = var.falcon_client_secret
   permissions_boundary    = var.permissions_boundary
+  resource_prefix         = var.resource_prefix
+  resource_suffix         = var.resource_suffix
+  tags                    = var.tags
 
   depends_on = [
     data.crowdstrike_cloud_aws_account.target,
@@ -192,6 +213,9 @@ module "rtvd_ap_south_2" {
   falcon_client_id        = var.falcon_client_id
   falcon_client_secret    = var.falcon_client_secret
   permissions_boundary    = var.permissions_boundary
+  resource_prefix         = var.resource_prefix
+  resource_suffix         = var.resource_suffix
+  tags                    = var.tags
 
   depends_on = [
     data.crowdstrike_cloud_aws_account.target,
@@ -216,6 +240,9 @@ module "rtvd_ap_southeast_1" {
   falcon_client_id        = var.falcon_client_id
   falcon_client_secret    = var.falcon_client_secret
   permissions_boundary    = var.permissions_boundary
+  resource_prefix         = var.resource_prefix
+  resource_suffix         = var.resource_suffix
+  tags                    = var.tags
 
   depends_on = [
     data.crowdstrike_cloud_aws_account.target,
@@ -240,6 +267,9 @@ module "rtvd_ap_southeast_2" {
   falcon_client_id        = var.falcon_client_id
   falcon_client_secret    = var.falcon_client_secret
   permissions_boundary    = var.permissions_boundary
+  resource_prefix         = var.resource_prefix
+  resource_suffix         = var.resource_suffix
+  tags                    = var.tags
 
   depends_on = [
     data.crowdstrike_cloud_aws_account.target,
@@ -264,6 +294,9 @@ module "rtvd_ap_southeast_3" {
   falcon_client_id        = var.falcon_client_id
   falcon_client_secret    = var.falcon_client_secret
   permissions_boundary    = var.permissions_boundary
+  resource_prefix         = var.resource_prefix
+  resource_suffix         = var.resource_suffix
+  tags                    = var.tags
 
   depends_on = [
     data.crowdstrike_cloud_aws_account.target,
@@ -288,6 +321,9 @@ module "rtvd_ap_southeast_4" {
   falcon_client_id        = var.falcon_client_id
   falcon_client_secret    = var.falcon_client_secret
   permissions_boundary    = var.permissions_boundary
+  resource_prefix         = var.resource_prefix
+  resource_suffix         = var.resource_suffix
+  tags                    = var.tags
 
   depends_on = [
     data.crowdstrike_cloud_aws_account.target,
@@ -312,6 +348,9 @@ module "rtvd_ap_northeast_1" {
   falcon_client_id        = var.falcon_client_id
   falcon_client_secret    = var.falcon_client_secret
   permissions_boundary    = var.permissions_boundary
+  resource_prefix         = var.resource_prefix
+  resource_suffix         = var.resource_suffix
+  tags                    = var.tags
 
   depends_on = [
     data.crowdstrike_cloud_aws_account.target,
@@ -336,6 +375,9 @@ module "rtvd_ap_northeast_2" {
   falcon_client_id        = var.falcon_client_id
   falcon_client_secret    = var.falcon_client_secret
   permissions_boundary    = var.permissions_boundary
+  resource_prefix         = var.resource_prefix
+  resource_suffix         = var.resource_suffix
+  tags                    = var.tags
 
   depends_on = [
     data.crowdstrike_cloud_aws_account.target,
@@ -360,6 +402,9 @@ module "rtvd_ap_northeast_3" {
   falcon_client_id        = var.falcon_client_id
   falcon_client_secret    = var.falcon_client_secret
   permissions_boundary    = var.permissions_boundary
+  resource_prefix         = var.resource_prefix
+  resource_suffix         = var.resource_suffix
+  tags                    = var.tags
 
   depends_on = [
     data.crowdstrike_cloud_aws_account.target,
@@ -384,6 +429,9 @@ module "rtvd_ca_central_1" {
   falcon_client_id        = var.falcon_client_id
   falcon_client_secret    = var.falcon_client_secret
   permissions_boundary    = var.permissions_boundary
+  resource_prefix         = var.resource_prefix
+  resource_suffix         = var.resource_suffix
+  tags                    = var.tags
 
   depends_on = [
     data.crowdstrike_cloud_aws_account.target,
@@ -408,6 +456,9 @@ module "rtvd_eu_central_1" {
   falcon_client_id        = var.falcon_client_id
   falcon_client_secret    = var.falcon_client_secret
   permissions_boundary    = var.permissions_boundary
+  resource_prefix         = var.resource_prefix
+  resource_suffix         = var.resource_suffix
+  tags                    = var.tags
 
   depends_on = [
     data.crowdstrike_cloud_aws_account.target,
@@ -432,6 +483,9 @@ module "rtvd_eu_west_1" {
   falcon_client_id        = var.falcon_client_id
   falcon_client_secret    = var.falcon_client_secret
   permissions_boundary    = var.permissions_boundary
+  resource_prefix         = var.resource_prefix
+  resource_suffix         = var.resource_suffix
+  tags                    = var.tags
 
   depends_on = [
     data.crowdstrike_cloud_aws_account.target,
@@ -456,6 +510,9 @@ module "rtvd_eu_west_2" {
   falcon_client_id        = var.falcon_client_id
   falcon_client_secret    = var.falcon_client_secret
   permissions_boundary    = var.permissions_boundary
+  resource_prefix         = var.resource_prefix
+  resource_suffix         = var.resource_suffix
+  tags                    = var.tags
 
   depends_on = [
     data.crowdstrike_cloud_aws_account.target,
@@ -480,6 +537,9 @@ module "rtvd_eu_west_3" {
   falcon_client_id        = var.falcon_client_id
   falcon_client_secret    = var.falcon_client_secret
   permissions_boundary    = var.permissions_boundary
+  resource_prefix         = var.resource_prefix
+  resource_suffix         = var.resource_suffix
+  tags                    = var.tags
 
   depends_on = [
     data.crowdstrike_cloud_aws_account.target,
@@ -504,6 +564,9 @@ module "rtvd_eu_south_1" {
   falcon_client_id        = var.falcon_client_id
   falcon_client_secret    = var.falcon_client_secret
   permissions_boundary    = var.permissions_boundary
+  resource_prefix         = var.resource_prefix
+  resource_suffix         = var.resource_suffix
+  tags                    = var.tags
 
   depends_on = [
     data.crowdstrike_cloud_aws_account.target,
@@ -528,6 +591,9 @@ module "rtvd_eu_south_2" {
   falcon_client_id        = var.falcon_client_id
   falcon_client_secret    = var.falcon_client_secret
   permissions_boundary    = var.permissions_boundary
+  resource_prefix         = var.resource_prefix
+  resource_suffix         = var.resource_suffix
+  tags                    = var.tags
 
   depends_on = [
     data.crowdstrike_cloud_aws_account.target,
@@ -552,6 +618,9 @@ module "rtvd_eu_north_1" {
   falcon_client_id        = var.falcon_client_id
   falcon_client_secret    = var.falcon_client_secret
   permissions_boundary    = var.permissions_boundary
+  resource_prefix         = var.resource_prefix
+  resource_suffix         = var.resource_suffix
+  tags                    = var.tags
 
   depends_on = [
     data.crowdstrike_cloud_aws_account.target,
@@ -576,6 +645,9 @@ module "rtvd_eu_central_2" {
   falcon_client_id        = var.falcon_client_id
   falcon_client_secret    = var.falcon_client_secret
   permissions_boundary    = var.permissions_boundary
+  resource_prefix         = var.resource_prefix
+  resource_suffix         = var.resource_suffix
+  tags                    = var.tags
 
   depends_on = [
     data.crowdstrike_cloud_aws_account.target,
@@ -600,6 +672,9 @@ module "rtvd_me_south_1" {
   falcon_client_id        = var.falcon_client_id
   falcon_client_secret    = var.falcon_client_secret
   permissions_boundary    = var.permissions_boundary
+  resource_prefix         = var.resource_prefix
+  resource_suffix         = var.resource_suffix
+  tags                    = var.tags
 
   depends_on = [
     data.crowdstrike_cloud_aws_account.target,
@@ -624,6 +699,9 @@ module "rtvd_me_central_1" {
   falcon_client_id        = var.falcon_client_id
   falcon_client_secret    = var.falcon_client_secret
   permissions_boundary    = var.permissions_boundary
+  resource_prefix         = var.resource_prefix
+  resource_suffix         = var.resource_suffix
+  tags                    = var.tags
 
   depends_on = [
     data.crowdstrike_cloud_aws_account.target,
@@ -648,6 +726,9 @@ module "rtvd_sa_east_1" {
   falcon_client_id        = var.falcon_client_id
   falcon_client_secret    = var.falcon_client_secret
   permissions_boundary    = var.permissions_boundary
+  resource_prefix         = var.resource_prefix
+  resource_suffix         = var.resource_suffix
+  tags                    = var.tags
 
   depends_on = [
     data.crowdstrike_cloud_aws_account.target,
@@ -672,6 +753,9 @@ module "rtvd_us_gov_east_1" {
   falcon_client_id        = var.falcon_client_id
   falcon_client_secret    = var.falcon_client_secret
   permissions_boundary    = var.permissions_boundary
+  resource_prefix         = var.resource_prefix
+  resource_suffix         = var.resource_suffix
+  tags                    = var.tags
 
   depends_on = [
     data.crowdstrike_cloud_aws_account.target,
@@ -696,6 +780,9 @@ module "rtvd_us_gov_west_1" {
   falcon_client_id        = var.falcon_client_id
   falcon_client_secret    = var.falcon_client_secret
   permissions_boundary    = var.permissions_boundary
+  resource_prefix         = var.resource_prefix
+  resource_suffix         = var.resource_suffix
+  tags                    = var.tags
 
   depends_on = [
     data.crowdstrike_cloud_aws_account.target,

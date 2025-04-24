@@ -27,9 +27,10 @@ data "aws_iam_policy_document" "management" {
 }
 
 resource "aws_iam_role" "management" {
-  name                 = "CrowdStrikeSensorManagement"
+  name                 = "${var.resource_prefix}SensorManagement${var.resource_suffix}"
   assume_role_policy   = data.aws_iam_policy_document.management.json
   permissions_boundary = var.permissions_boundary != "" ? "arn:${local.aws_partition}:iam::${local.account_id}:policy/${var.permissions_boundary}" : null
+  tags                 = var.tags
 }
 
 resource "aws_iam_role_policy" "invoke_lambda" {
@@ -73,9 +74,10 @@ data "aws_iam_policy_document" "orchestrator" {
 }
 
 resource "aws_iam_role" "orchestrator" {
-  name                 = "CrowdStrikeSensorManagementOrchestrator"
+  name                 = "${var.resource_prefix}SensorManagementOrchestrator${var.resource_suffix}"
   assume_role_policy   = data.aws_iam_policy_document.orchestrator.json
   permissions_boundary = var.permissions_boundary != "" ? "arn:${local.aws_partition}:iam::${local.account_id}:policy/${var.permissions_boundary}" : null
+  tags                 = var.tags
 }
 
 resource "aws_iam_role_policy" "orchestrator" {
@@ -137,6 +139,7 @@ resource "aws_secretsmanager_secret_version" "this" {
 }
 
 resource "aws_lambda_function" "this" {
+  # todo: name is hardcoded in the backend
   function_name = "cs-horizon-sensor-installation-orchestrator"
   role          = aws_iam_role.orchestrator.arn
   handler       = "bootstrap"
@@ -152,7 +155,7 @@ resource "aws_lambda_function" "this" {
   environment {
     variables = {
       CS_CLIENT_ID                  = var.falcon_client_id
-      CS_API_CREDENTIALS_AWS_SECRET = "/CrowdStrike/CSPM/SensorManagement/FalconAPICredentials"
+      CS_API_CREDENTIALS_AWS_SECRET = aws_secretsmanager_secret.this.name
       CS_MODE                       = "force_auth"
     }
   }
