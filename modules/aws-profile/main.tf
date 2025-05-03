@@ -59,7 +59,7 @@ module "sensor_management" {
 
 
 module "dspm_roles" {
-  count                  = (var.enable_dspm && !var.is_gov) ? 1 : 0
+  count                  = var.enable_dspm ? 1 : 0
   source                 = "../dspm-roles/"
   falcon_client_id       = var.falcon_client_id
   falcon_client_secret   = var.falcon_client_secret

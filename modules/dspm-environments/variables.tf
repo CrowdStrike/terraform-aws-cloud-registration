@@ -21,6 +21,12 @@ variable "scanner_role_unique_id" {
   type        = string
 }
 
+variable "vpc_cidr_block" {
+  description = "VPC CIDR block"
+  type        = string
+  default     = "172.16.0.0/20"
+}
+
 variable "tags" {
   description = "A map of tags to add to all resources that support tagging"
   type        = map(string)

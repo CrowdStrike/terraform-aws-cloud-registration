@@ -111,7 +111,10 @@ module "dspm_environments" {
   dspm_role_name             = var.dspm_role_name
   integration_role_unique_id = local.is_primary_region ? module.dspm_roles[0].integration_role_unique_id : var.dspm_integration_role_unique_id
   scanner_role_unique_id     = local.is_primary_region ? module.dspm_roles[0].scanner_role_unique_id : var.dspm_scanner_role_unique_id
+  vpc_cidr_block             = var.vpc_cidr_block
+
   tags                       = var.tags
+
 
   depends_on = [module.dspm_roles]
 

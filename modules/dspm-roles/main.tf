@@ -1,3 +1,7 @@
+data "aws_region" "current" {}
+data "aws_partition" "current" {}
+
+
 # Creates instance profile. Attached as IAM role to EC2 instance, used for data scan
 resource "aws_iam_instance_profile" "instance_profile" {
   name = "CrowdStrikeScannerRoleProfile"
@@ -36,12 +40,12 @@ resource "aws_iam_role" "crowdstrike_aws_dspm_scanner_role" {
 
 resource "aws_iam_role_policy_attachment" "cloud_watch_logs_read_only_access" {
   role       = aws_iam_role.crowdstrike_aws_dspm_scanner_role.name
-  policy_arn = "arn:aws:iam::aws:policy/CloudWatchLogsReadOnlyAccess"
+  policy_arn = "arn:${local.aws_partition}:iam::aws:policy/CloudWatchLogsReadOnlyAccess"
 }
 
 resource "aws_iam_role_policy_attachment" "amazon_ssm_managed_instance_core" {
   role       = aws_iam_role.crowdstrike_aws_dspm_scanner_role.name
-  policy_arn = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
+  policy_arn = "arn:${local.aws_partition}:iam::aws:policy/AmazonSSMManagedInstanceCore"
 }
 
 
@@ -178,7 +182,7 @@ resource "aws_iam_role_policy" "crowdstrike_secret_reader" {
           "secretsmanager:DescribeSecret",
         ]
         Effect   = "Allow"
-        Resource = ["arn:aws:secretsmanager:*:*:secret:CrowdStrikeDSPMClientSecret-*"]
+        Resource = ["arn:${local.aws_partition}:secretsmanager:*:*:secret:CrowdStrikeDSPMClientSecret-*"]
       },
       {
         Sid      = "SecretsManagerListSecrets",

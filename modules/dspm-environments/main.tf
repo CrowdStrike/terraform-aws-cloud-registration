@@ -1,11 +1,12 @@
 data "aws_region" "current" {}
+data "aws_partition" "current" {}
 
 data "aws_availability_zones" "available" {
   state = "available"
 }
 
 resource "aws_vpc" "vpc" {
-  cidr_block           = "10.0.0.0/16"
+  cidr_block           = var.vpc_cidr_block
   enable_dns_support   = true
   enable_dns_hostnames = true
 
@@ -35,7 +36,7 @@ resource "aws_internet_gateway" "internet_gateway" {
 
 resource "aws_subnet" "db_subnet_a" {
   vpc_id            = aws_vpc.vpc.id
-  cidr_block        = "10.0.0.0/24"
+  cidr_block        = cidrsubnet("${var.vpc_cidr_block}", 8, 0)
   availability_zone = data.aws_availability_zones.available.names[0]
 
   lifecycle {
@@ -53,7 +54,7 @@ resource "aws_subnet" "db_subnet_a" {
 
 resource "aws_subnet" "db_subnet_b" {
   vpc_id            = aws_vpc.vpc.id
-  cidr_block        = "10.0.1.0/24"
+  cidr_block        = cidrsubnet("${var.vpc_cidr_block}", 8, 1)
   availability_zone = data.aws_availability_zones.available.names[1]
 
   lifecycle {
@@ -101,7 +102,7 @@ resource "aws_redshift_subnet_group" "redshift_subnet_group" {
 
 resource "aws_subnet" "public_subnet" {
   vpc_id            = aws_vpc.vpc.id
-  cidr_block        = "10.0.2.0/24"
+  cidr_block        = cidrsubnet("${var.vpc_cidr_block}", 8, 3)
   availability_zone = data.aws_availability_zones.available.names[0]
 
   lifecycle {
@@ -119,7 +120,7 @@ resource "aws_subnet" "public_subnet" {
 
 resource "aws_subnet" "private_subnet" {
   vpc_id            = aws_vpc.vpc.id
-  cidr_block        = "10.0.3.0/24"
+  cidr_block        = cidrsubnet("${var.vpc_cidr_block}", 8, 4)
   availability_zone = data.aws_availability_zones.available.names[0]
 
   lifecycle {
@@ -345,12 +346,12 @@ resource "aws_iam_role_policy" "vpc_policy" {
           "ec2:RunInstances"
         ]
         Resource = [
-          "arn:aws:ec2:*:${local.account_id}:security-group/*",
-          "arn:aws:ec2:*:${local.account_id}:subnet/*"
+          "arn:${local.aws_partition}:ec2:*:${local.account_id}:security-group/*",
+          "arn:${local.aws_partition}:ec2:*:${local.account_id}:subnet/*"
         ]
         Condition = {
           StringEquals = {
-            "ec2:Vpc" = "arn:aws:ec2:${local.aws_region}:${local.account_id}:vpc/${aws_vpc.vpc.id}"
+            "ec2:Vpc" = "arn:${local.aws_partition}:ec2:${local.aws_region}:${local.account_id}:vpc/${aws_vpc.vpc.id}"
           }
         }
       }

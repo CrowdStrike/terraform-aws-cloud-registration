@@ -161,6 +161,12 @@ variable "dspm_scanner_role_unique_id" {
   type        = string
 }
 
+variable "vpc_cidr_block" {
+  description = "VPC CIDR block"
+  type = string
+  default = "172.16.0.0/20"
+}
+
 variable "resource_prefix" {
   description = "The prefix to be added to all resource names"
   default     = "CrowdStrike"
