@@ -164,6 +164,7 @@ variable "dspm_scanner_role_unique_id" {
 variable "vpc_cidr_block" {
   description = "VPC CIDR block"
   type = string
+  default = "172.16.0.0/20"
 }
 
 variable "resource_prefix" {
