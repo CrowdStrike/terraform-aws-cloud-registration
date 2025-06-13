@@ -105,6 +105,12 @@ variable "iam_role_name" {
   description = "The name of the reader role"
 }
 
+variable "use_existing_iam_reader_role" {
+  type        = bool
+  default     = false
+  description = "Set to true if you want to use an existing IAM role for asset inventory"
+}
+
 variable "eventbus_arn" {
   type        = string
   default     = ""

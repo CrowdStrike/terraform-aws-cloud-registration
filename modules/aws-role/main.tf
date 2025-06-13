@@ -43,12 +43,13 @@ locals {
 }
 
 module "asset_inventory" {
-  source                = "../asset-inventory/"
-  external_id           = local.external_id
-  intermediate_role_arn = local.intermediate_role_arn
-  role_name             = local.iam_role_name
-  permissions_boundary  = var.permissions_boundary
-  tags                  = var.tags
+  source                       = "../asset-inventory/"
+  external_id                  = local.external_id
+  intermediate_role_arn        = local.intermediate_role_arn
+  role_name                    = local.iam_role_name
+  use_existing_iam_reader_role = var.use_existing_iam_reader_role
+  permissions_boundary         = var.permissions_boundary
+  tags                         = var.tags
 
   providers = {
     aws = aws

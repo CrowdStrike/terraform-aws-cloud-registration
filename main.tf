@@ -31,13 +31,14 @@ locals {
 }
 
 module "asset_inventory" {
-  count                 = local.is_primary_region ? 1 : 0
-  source                = "./modules/asset-inventory/"
-  external_id           = local.external_id
-  intermediate_role_arn = local.intermediate_role_arn
-  role_name             = local.iam_role_name
-  permissions_boundary  = var.permissions_boundary
-  tags                  = var.tags
+  count                        = local.is_primary_region ? 1 : 0
+  source                       = "./modules/asset-inventory/"
+  external_id                  = local.external_id
+  intermediate_role_arn        = local.intermediate_role_arn
+  role_name                    = local.iam_role_name
+  permissions_boundary         = var.permissions_boundary
+  use_existing_iam_reader_role = var.use_existing_iam_reader_role
+  tags                         = var.tags
 
   depends_on = [
     data.crowdstrike_cloud_aws_account.target

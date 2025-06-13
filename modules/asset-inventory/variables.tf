@@ -3,6 +3,12 @@ variable "external_id" {
   description = "Unique identifier provided by CrowdStrike for secure cross-account access"
 }
 
+variable "use_existing_iam_reader_role" {
+  type = bool
+  default = false
+  description = "Set to true if you intend to use an existing IAM role for asset inventory"
+}
+
 variable "role_name" {
   type        = string
   description = "Name of the asset inventory reader IAM role"
