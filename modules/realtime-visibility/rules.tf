@@ -62,7 +62,7 @@ locals {
                 "HeadObject",
                 "ListObjects",
                 "GetObjectTagging",
-                "GetOjectAcl",
+                "GetObjectAcl",
                 "AssumeRole"
               ]
             }
