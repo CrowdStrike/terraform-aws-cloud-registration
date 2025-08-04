@@ -29,3 +29,9 @@ variable "aws_role_name" {
   type        = string
   description = "The AWS role name used for assuming into this account"
 }
+
+variable "dspm_create_nat_gateway" {
+  description = "Set to true to create a NAT Gateway for DSPM scanning environments"
+  type        = bool
+  default     = true
+}

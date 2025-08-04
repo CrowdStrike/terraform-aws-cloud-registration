@@ -6,6 +6,7 @@ locals {
   enable_dspm                = false
   dspm_regions               = ["us-west-1"]
   use_existing_cloudtrail    = true
+  dspm_create_nat_gateway    = var.dspm_create_nat_gateway
 
   # customizations
   resource_prefix        = "cs-"
@@ -70,14 +71,15 @@ module "fcs_account" {
   enable_dspm                 = local.enable_dspm
   dspm_regions                = local.dspm_regions
 
-  iam_role_name          = crowdstrike_cloud_aws_account.this.iam_role_name
-  external_id            = crowdstrike_cloud_aws_account.this.external_id
-  intermediate_role_arn  = crowdstrike_cloud_aws_account.this.intermediate_role_arn
-  eventbus_arn           = crowdstrike_cloud_aws_account.this.eventbus_arn
-  eventbridge_role_name  = local.eventbridge_role_name
-  dspm_role_name         = crowdstrike_cloud_aws_account.this.dspm_role_name
-  cloudtrail_bucket_name = crowdstrike_cloud_aws_account.this.cloudtrail_bucket_name
-  dspm_scanner_role_name = local.dspm_scanner_role_name
+  iam_role_name           = crowdstrike_cloud_aws_account.this.iam_role_name
+  external_id             = crowdstrike_cloud_aws_account.this.external_id
+  intermediate_role_arn   = crowdstrike_cloud_aws_account.this.intermediate_role_arn
+  eventbus_arn            = crowdstrike_cloud_aws_account.this.eventbus_arn
+  eventbridge_role_name   = local.eventbridge_role_name
+  dspm_role_name          = crowdstrike_cloud_aws_account.this.dspm_role_name
+  cloudtrail_bucket_name  = crowdstrike_cloud_aws_account.this.cloudtrail_bucket_name
+  dspm_scanner_role_name  = local.dspm_scanner_role_name
+  dspm_create_nat_gateway = local.dspm_create_nat_gateway
 
   resource_prefix = local.resource_prefix
   resource_suffix = local.resource_suffix

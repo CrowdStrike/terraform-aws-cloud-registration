@@ -76,3 +76,9 @@ variable "tags" {
   type        = map(string)
   default     = {}
 }
+
+variable "dspm_create_nat_gateway" {
+  description = "Set to true to create a NAT Gateway for DSPM scanning environments"
+  type        = bool
+  default     = true
+}
