@@ -29,3 +29,9 @@ variable "aws_role_name" {
   type        = string
   description = "The AWS role name used for assuming into this account"
 }
+
+variable "vpc_cidr_block" {
+  description = "VPC CIDR block"
+  type        = string
+  default     = "10.0.0.0/16"
+}

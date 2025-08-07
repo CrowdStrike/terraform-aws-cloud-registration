@@ -56,6 +56,7 @@ module "fcs_management_account" {
   use_existing_cloudtrail     = local.use_existing_cloudtrail
   enable_dspm                 = local.enable_dspm
   dspm_regions                = local.dspm_regions
+  vpc_cidr_block              = var.vpc_cidr_block
 
   iam_role_name          = crowdstrike_cloud_aws_account.this.iam_role_name
   external_id            = crowdstrike_cloud_aws_account.this.external_id
@@ -81,6 +82,7 @@ module "fcs_child_account_1" {
   use_existing_cloudtrail     = true # use the cloudtrail at the org level
   enable_dspm                 = local.enable_dspm
   dspm_regions                = local.dspm_regions
+  vpc_cidr_block              = var.vpc_cidr_block
 
   iam_role_name          = crowdstrike_cloud_aws_account.this.iam_role_name
   external_id            = crowdstrike_cloud_aws_account.this.external_id

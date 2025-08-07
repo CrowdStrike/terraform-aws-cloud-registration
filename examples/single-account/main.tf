@@ -87,6 +87,7 @@ module "fcs_account_onboarding" {
   enable_dspm                = local.enable_dspm && contains(local.dspm_regions, "us-east-1")
   dspm_regions               = local.dspm_regions
   dspm_scanner_role_name     = local.dspm_scanner_role_name
+  vpc_cidr_block              = var.vpc_cidr_block
 
   iam_role_name          = crowdstrike_cloud_aws_account.this.iam_role_name
   external_id            = crowdstrike_cloud_aws_account.this.external_id
@@ -120,6 +121,7 @@ module "fcs_account_us_east_2" {
   enable_dspm                = local.enable_dspm && contains(local.dspm_regions, "us-east-2")
   dspm_regions               = local.dspm_regions
   dspm_scanner_role_name     = local.dspm_scanner_role_name
+  vpc_cidr_block              = var.vpc_cidr_block
 
   iam_role_name                   = crowdstrike_cloud_aws_account.this.iam_role_name
   external_id                     = crowdstrike_cloud_aws_account.this.external_id
@@ -155,6 +157,7 @@ module "fcs_account_us_west_1" {
   enable_dspm                = local.enable_dspm && contains(local.dspm_regions, "us-west-1")
   dspm_regions               = local.dspm_regions
   dspm_scanner_role_name     = local.dspm_scanner_role_name
+  vpc_cidr_block              = var.vpc_cidr_block
 
   iam_role_name                   = crowdstrike_cloud_aws_account.this.iam_role_name
   external_id                     = crowdstrike_cloud_aws_account.this.external_id
@@ -190,6 +193,7 @@ module "fcs_account_us_west_2" {
   enable_dspm                = local.enable_dspm && contains(local.dspm_regions, "us-west-2")
   dspm_regions               = local.dspm_regions
   dspm_scanner_role_name     = local.dspm_scanner_role_name
+  vpc_cidr_block              = var.vpc_cidr_block
 
   iam_role_name                   = crowdstrike_cloud_aws_account.this.iam_role_name
   external_id                     = crowdstrike_cloud_aws_account.this.external_id

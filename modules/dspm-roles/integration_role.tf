@@ -58,6 +58,7 @@ data "aws_iam_policy_document" "crowdstrike_cloud_scan_supplemental_data" {
       "redshift:View*",
       "redshift-serverless:List*",
       "ec2:GetConsoleOutput",
+      "ec2:Describe*",
       "sts:DecodeAuthorizationMessage",
       "elb:DescribeLoadBalancers",
       "cloudwatch:GetMetricData",
@@ -130,6 +131,26 @@ data "aws_iam_policy_document" "crowdstrike_run_data_scanner_restricted_data" {
     condition {
       test     = "StringEquals"
       variable = "aws:RequestTag/${local.crowdstrike_tag_key}"
+      values   = [local.crowdstrike_tag_value]
+    }
+  }
+
+  statement {
+    sid    = "AllowRunInstances"
+    effect = "Allow"
+
+    actions = [
+      "ec2:RunInstances"
+    ]
+
+    resources = [
+      "arn:aws:ec2:*:${data.aws_caller_identity.current.account_id}:security-group/*",
+      "arn:aws:ec2:*:${data.aws_caller_identity.current.account_id}:subnet/*"
+    ]
+
+    condition {
+      test     = "StringEquals"
+      variable = "ec2:ResourceTag/${local.crowdstrike_tag_key}"
       values   = [local.crowdstrike_tag_value]
     }
   }
