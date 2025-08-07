@@ -357,3 +357,80 @@ resource "aws_iam_role_policy" "vpc_policy" {
     ]
   })
 }
+
+resource "aws_vpc_endpoint" "s3_endpoint" {
+  vpc_id            = aws_vpc.vpc.id
+  service_name      = "com.amazonaws.${local.aws_region}.s3"
+  vpc_endpoint_type = "Gateway"
+  route_table_ids   = [aws_route_table.private_route_table.id]
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect    = "Allow"
+        Principal = "*"
+        Action    = [
+          "s3:Get*",
+          "s3:List*"
+        ]
+        Resource  = "*"
+        Condition = {
+          StringEquals = {
+            "aws:SourceVpc" = aws_vpc.vpc.id
+          }
+        }
+      }
+    ]
+  })
+
+  tags = merge(
+    var.tags,
+    {
+      Name                        = "${var.deployment_name}-S3-Endpoint"
+      (local.crowdstrike_tag_key) = local.crowdstrike_tag_value
+      (local.logical_tag_key)     = "S3Endpoint"
+    }
+  )
+}
+
+resource "aws_vpc_endpoint" "dynamodb_endpoint" {
+  vpc_id            = aws_vpc.vpc.id
+  service_name      = "com.amazonaws.${local.aws_region}.dynamodb"
+  vpc_endpoint_type = "Gateway"
+  route_table_ids   = [aws_route_table.private_route_table.id]
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect    = "Allow"
+        Principal = "*"
+        Action    = [
+          "dynamodb:BatchGet*",
+          "dynamodb:Describe*",
+          "dynamodb:List*",
+          "dynamodb:Get*",
+          "dynamodb:Query",
+          "dynamodb:Scan",
+          "dynamodb:PartiQLSelect"
+        ]
+        Resource  = "*"
+        Condition = {
+          StringEquals = {
+            "aws:SourceVpc" = aws_vpc.vpc.id
+          }
+        }
+      }
+    ]
+  })
+
+  tags = merge(
+    var.tags,
+    {
+      Name                        = "${var.deployment_name}-DynamoDB-Endpoint"
+      (local.crowdstrike_tag_key) = local.crowdstrike_tag_value
+      (local.logical_tag_key)     = "DynamoDBEndpoint"
+    }
+  )
+}
