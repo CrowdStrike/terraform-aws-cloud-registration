@@ -161,6 +161,12 @@ variable "dspm_regions" {
   }
 }
 
+variable "dspm_create_nat_gateway" {
+  description = "Set to true to create a NAT Gateway for DSPM scanning environments"
+  type        = bool
+  default     = true
+}
+
 variable "dspm_integration_role_unique_id" {
   description = "The unique ID of the DSPM integration role"
   default     = ""

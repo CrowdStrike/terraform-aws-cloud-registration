@@ -21,6 +21,12 @@ variable "scanner_role_unique_id" {
   type        = string
 }
 
+variable "dspm_create_nat_gateway" {
+  description = "Set to true to create a NAT Gateway for DSPM scanning environments"
+  type        = bool
+  default     = true
+}
+
 variable "tags" {
   description = "A map of tags to add to all resources that support tagging"
   type        = map(string)
