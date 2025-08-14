@@ -1,6 +1,6 @@
 locals {
   target_id = "CrowdStrikeCentralizeEvents"
-  rule_name = "cs-cloudtrail-events-ioa-rule"
+  rule_name = "${var.resource_prefix}cs-cloudtrail-events-ioa-rule${var.resource_suffix}"
   event_pattern = jsonencode({
     source = [
       {
@@ -31,7 +31,7 @@ locals {
     }
   })
 
-  ro_rule_name = "cs-cloudtrail-events-readonly-rule"
+  ro_rule_name = "${var.resource_prefix}cs-cloudtrail-events-readonly-rule${var.resource_suffix}"
   ro_event_pattern = jsonencode({
     source = [
       {

@@ -121,7 +121,7 @@ resource "aws_iam_role_policy" "orchestrator" {
 }
 
 resource "aws_cloudwatch_log_group" "crowdstrike_sensor_management" {
-  name              = "/aws/lambda/cs-horizon-sensor-installation-orchestrator"
+  name              = "/aws/lambda/${var.resource_prefix}cs-horizon-sensor-installation-orchestrator${var.resource_suffix}"
   retention_in_days = 1
 }
 
@@ -139,8 +139,7 @@ resource "aws_secretsmanager_secret_version" "this" {
 }
 
 resource "aws_lambda_function" "this" {
-  # todo: name is hardcoded in the backend
-  function_name = "cs-horizon-sensor-installation-orchestrator"
+  function_name = "${var.resource_prefix}cs-horizon-sensor-installation-orchestrator${var.resource_suffix}"
   role          = aws_iam_role.orchestrator.arn
   handler       = "bootstrap"
   runtime       = "provided.al2"
