@@ -255,7 +255,8 @@ resource "aws_network_acl_rule" "outbound" {
 }
 
 resource "aws_network_acl_association" "public_subnet_nacl_association" {
-  subnet_id      = aws_subnet.public_subnet.id
+  count          = var.dspm_create_nat_gateway ? 1 : 0
+  subnet_id      = aws_subnet.public_subnet[0].id
   network_acl_id = aws_network_acl.network_acl.id
 }
 
