@@ -167,6 +167,30 @@ variable "dspm_create_nat_gateway" {
   default     = true
 }
 
+variable "dspm_s3_access" {
+  description = "Apply permissions for S3 bucket scanning"
+  type        = bool
+  default     = true
+}
+
+variable "dspm_dynamodb_access" {
+  description = "Apply permissions for DynamoDB scanning"
+  type        = bool
+  default     = true
+}
+
+variable "dspm_rds_access" {
+  description = "Apply permissions for RDS scanning"
+  type        = bool
+  default     = true
+}
+
+variable "dspm_redshift_access" {
+  description = "Apply permissions for Redshift scanning"
+  type        = bool
+  default     = true
+}
+
 variable "dspm_integration_role_unique_id" {
   description = "The unique ID of the DSPM integration role"
   default     = ""

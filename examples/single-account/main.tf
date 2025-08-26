@@ -88,7 +88,7 @@ module "fcs_account_onboarding" {
   enable_dspm                = local.enable_dspm && contains(local.dspm_regions, "us-east-1")
   dspm_regions               = local.dspm_regions
   dspm_scanner_role_name     = local.dspm_scanner_role_name
-  vpc_cidr_block              = var.vpc_cidr_block
+  vpc_cidr_block             = var.vpc_cidr_block
 
   iam_role_name          = crowdstrike_cloud_aws_account.this.iam_role_name
   external_id            = crowdstrike_cloud_aws_account.this.external_id
@@ -102,6 +102,10 @@ module "fcs_account_onboarding" {
   resource_suffix         = local.resource_suffix
   tags                    = local.tags
   dspm_create_nat_gateway = local.dspm_create_nat_gateway
+  dspm_s3_access          = var.dspm_s3_access
+  dspm_dynamodb_access    = var.dspm_dynamodb_access
+  dspm_rds_access         = var.dspm_rds_access
+  dspm_redshift_access    = var.dspm_redshift_access
 
   providers = {
     aws         = aws.us-east-1
@@ -123,7 +127,7 @@ module "fcs_account_us_east_2" {
   enable_dspm                = local.enable_dspm && contains(local.dspm_regions, "us-east-2")
   dspm_regions               = local.dspm_regions
   dspm_scanner_role_name     = local.dspm_scanner_role_name
-  vpc_cidr_block              = var.vpc_cidr_block
+  vpc_cidr_block             = var.vpc_cidr_block
 
   iam_role_name                   = crowdstrike_cloud_aws_account.this.iam_role_name
   external_id                     = crowdstrike_cloud_aws_account.this.external_id
@@ -139,6 +143,10 @@ module "fcs_account_us_east_2" {
   resource_suffix         = local.resource_suffix
   tags                    = local.tags
   dspm_create_nat_gateway = local.dspm_create_nat_gateway
+  dspm_s3_access          = var.dspm_s3_access
+  dspm_dynamodb_access    = var.dspm_dynamodb_access
+  dspm_rds_access         = var.dspm_rds_access
+  dspm_redshift_access    = var.dspm_redshift_access
 
   providers = {
     aws         = aws.us-east-2
@@ -160,7 +168,7 @@ module "fcs_account_us_west_1" {
   enable_dspm                = local.enable_dspm && contains(local.dspm_regions, "us-west-1")
   dspm_regions               = local.dspm_regions
   dspm_scanner_role_name     = local.dspm_scanner_role_name
-  vpc_cidr_block              = var.vpc_cidr_block
+  vpc_cidr_block             = var.vpc_cidr_block
 
   iam_role_name                   = crowdstrike_cloud_aws_account.this.iam_role_name
   external_id                     = crowdstrike_cloud_aws_account.this.external_id
@@ -176,6 +184,10 @@ module "fcs_account_us_west_1" {
   resource_suffix         = local.resource_suffix
   tags                    = local.tags
   dspm_create_nat_gateway = local.dspm_create_nat_gateway
+  dspm_s3_access          = var.dspm_s3_access
+  dspm_dynamodb_access    = var.dspm_dynamodb_access
+  dspm_rds_access         = var.dspm_rds_access
+  dspm_redshift_access    = var.dspm_redshift_access
 
   providers = {
     aws         = aws.us-west-1
@@ -197,7 +209,7 @@ module "fcs_account_us_west_2" {
   enable_dspm                = local.enable_dspm && contains(local.dspm_regions, "us-west-2")
   dspm_regions               = local.dspm_regions
   dspm_scanner_role_name     = local.dspm_scanner_role_name
-  vpc_cidr_block              = var.vpc_cidr_block
+  vpc_cidr_block             = var.vpc_cidr_block
 
   iam_role_name                   = crowdstrike_cloud_aws_account.this.iam_role_name
   external_id                     = crowdstrike_cloud_aws_account.this.external_id
@@ -213,6 +225,10 @@ module "fcs_account_us_west_2" {
   resource_suffix         = local.resource_suffix
   tags                    = local.tags
   dspm_create_nat_gateway = local.dspm_create_nat_gateway
+  dspm_s3_access          = var.dspm_s3_access
+  dspm_dynamodb_access    = var.dspm_dynamodb_access
+  dspm_rds_access         = var.dspm_rds_access
+  dspm_redshift_access    = var.dspm_redshift_access
 
   providers = {
     aws         = aws.us-west-2

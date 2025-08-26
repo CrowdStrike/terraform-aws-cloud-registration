@@ -239,6 +239,10 @@ module "fcs_account_us_east_2" {
 | <a name="input_dspm_integration_role_unique_id"></a> [dspm\_integration\_role\_unique\_id](#input\_dspm\_integration\_role\_unique\_id) | The unique ID of the DSPM integration role | `string` | `""` | no |
 | <a name="input_dspm_regions"></a> [dspm\_regions](#input\_dspm\_regions) | The regions in which DSPM scanning environments will be created | `list(string)` | <pre>[<br/>  "us-east-1"<br/>]</pre> | no |
 | <a name="input_dspm_create_nat_gateway"></a> [dspm\_create\_nat\_gateway](#input\_dspm\_create\_nat\_gateway) | Set to true to create a NAT Gateway for DSPM scanning environments | `bool` | `true` | no |
+| <a name="input_dspm_s3_access"></a> [dspm\_s3\_access](#input\_dspm\_s3\_access) | Apply permissions for S3 bucket scanning | `bool` | `true` | no |
+| <a name="input_dspm_dynamodb_access"></a> [dspm\_dynamodb\_access](#input\_dspm\_dynamodb\_access) | Apply permissions for DynamoDB scanning | `bool` | `true` | no |
+| <a name="input_dspm_rds_access"></a> [dspm\_rds\_access](#input\_dspm\_rds\_access) | Apply permissions for RDS scanning | `bool` | `true` | no |
+| <a name="input_dspm_redshift_access"></a> [dspm\_redshift\_access](#input\_dspm\_redshift\_access) | Apply permissions for Redshift scanning | `bool` | `true` | no |
 | <a name="input_dspm_role_name"></a> [dspm\_role\_name](#input\_dspm\_role\_name) | The unique name of the IAM role that DSPM will be assuming | `string` | `"CrowdStrikeDSPMIntegrationRole"` | no |
 | <a name="input_dspm_scanner_role_name"></a> [dspm\_scanner\_role\_name](#input\_dspm\_scanner\_role\_name) | The unique name of the IAM role that CrowdStrike Scanner will be assuming | `string` | `"CrowdStrikeDSPMScannerRole"` | no |
 | <a name="input_dspm_scanner_role_unique_id"></a> [dspm\_scanner\_role\_unique\_id](#input\_dspm\_scanner\_role\_unique\_id) | The unique ID of the DSPM scanner role | `string` | `""` | no |

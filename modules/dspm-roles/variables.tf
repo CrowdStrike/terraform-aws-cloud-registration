@@ -71,6 +71,30 @@ variable "dspm_regions" {
   }
 }
 
+variable "dspm_s3_access" {
+  description = "Apply permissions for S3 bucket scanning"
+  type        = bool
+  default     = true
+}
+
+variable "dspm_dynamodb_access" {
+  description = "Apply permissions for DynamoDB scanning"
+  type        = bool
+  default     = true
+}
+
+variable "dspm_rds_access" {
+  description = "Apply permissions for RDS scanning"
+  type        = bool
+  default     = true
+}
+
+variable "dspm_redshift_access" {
+  description = "Apply permissions for Redshift scanning"
+  type        = bool
+  default     = true
+}
+
 variable "tags" {
   description = "A map of tags to add to all resources that support tagging"
   type        = map(string)

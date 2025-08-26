@@ -206,15 +206,28 @@ data "aws_iam_policy_document" "crowdstrike_run_data_scanner_restricted_data" {
     effect    = "Allow"
     resources = ["arn:aws:ssm:*:*:parameter/aws/service/ami-amazon-linux-latest/*"]
   }
+
+  statement {
+    sid = "ssmDSPMPermissionsReader"
+    actions = [
+      "ssm:GetParameter"
+    ]
+    effect = "Allow"
+    resources = [
+      "arn:aws:ssm:*:${data.aws_caller_identity.current.account_id}:parameter/CrowdStrike/*"
+    ]
+  }
 }
 
 resource "aws_iam_role_policy" "crowdstrike_rds_clone" {
+  count  = var.dspm_rds_access ? 1 : 0
   name   = "CrowdStrikeRDSClone"
   role   = aws_iam_role.crowdstrike_aws_dspm_integration_role.id
-  policy = data.aws_iam_policy_document.crowdstrike_rds_clone_data.json
+  policy = data.aws_iam_policy_document.crowdstrike_rds_clone_data[0].json
 }
 
 data "aws_iam_policy_document" "crowdstrike_rds_clone_data" {
+  count = var.dspm_rds_access ? 1 : 0
   # Grants permission to add only requested tag mentioned in condition to RDS instance and snapshot.
   statement {
     sid = "RDSPermissionForTagging"
@@ -422,12 +435,14 @@ data "aws_iam_policy_document" "crowdstrike_rds_clone_data" {
 }
 
 resource "aws_iam_role_policy" "crowdstrike_redshift_clone" {
+  count  = var.dspm_redshift_access ? 1 : 0
   name   = "CrowdStrikeRedshiftClone"
   role   = aws_iam_role.crowdstrike_aws_dspm_integration_role.id
-  policy = data.aws_iam_policy_document.crowdstrike_redshift_clone.json
+  policy = data.aws_iam_policy_document.crowdstrike_redshift_clone[0].json
 }
 
 data "aws_iam_policy_document" "crowdstrike_redshift_clone" {
+  count = var.dspm_redshift_access ? 1 : 0
   # Grants permission to create a cluster snapshot and restore cluster from snapshot
   statement {
     sid = "RedshiftPermissionsForRestoring"
