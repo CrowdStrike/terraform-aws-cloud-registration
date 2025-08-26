@@ -7,6 +7,10 @@ locals {
   dspm_regions               = ["us-east-1", "us-east-2"]
   use_existing_cloudtrail    = true
   dspm_create_nat_gateway    = var.dspm_create_nat_gateway
+  dspm_s3_access             = var.dspm_s3_access
+  dspm_dynamodb_access       = var.dspm_dynamodb_access
+  dspm_rds_access            = var.dspm_rds_access
+  dspm_redshift_access       = var.dspm_redshift_access
 
   # customizations
   resource_prefix        = "cs-"
@@ -85,6 +89,10 @@ module "fcs_account" {
   resource_suffix         = local.resource_suffix
   tags                    = local.tags
   dspm_create_nat_gateway = local.dspm_create_nat_gateway
+  dspm_s3_access          = local.dspm_s3_access
+  dspm_dynamodb_access    = local.dspm_dynamodb_access
+  dspm_rds_access         = local.dspm_rds_access
+  dspm_redshift_access    = local.dspm_redshift_access
 
   providers = {
     crowdstrike = crowdstrike

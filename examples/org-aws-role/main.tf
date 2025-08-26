@@ -7,6 +7,10 @@ locals {
   dspm_regions               = ["us-east-1", "us-east-2"]
   use_existing_cloudtrail    = true
   dspm_create_nat_gateway    = var.dspm_create_nat_gateway
+  dspm_s3_access             = var.dspm_s3_access
+  dspm_dynamodb_access       = var.dspm_dynamodb_access
+  dspm_rds_access            = var.dspm_rds_access
+  dspm_redshift_access       = var.dspm_redshift_access
 }
 
 provider "crowdstrike" {
@@ -65,6 +69,10 @@ module "fcs_management_account" {
   eventbus_arn            = crowdstrike_cloud_aws_account.this.eventbus_arn
   cloudtrail_bucket_name  = crowdstrike_cloud_aws_account.this.cloudtrail_bucket_name
   dspm_create_nat_gateway = local.dspm_create_nat_gateway
+  dspm_s3_access          = local.dspm_s3_access
+  dspm_dynamodb_access    = local.dspm_dynamodb_access
+  dspm_rds_access         = local.dspm_rds_access
+  dspm_redshift_access    = local.dspm_redshift_access
 }
 
 # for each child account you want to onboard
@@ -93,4 +101,8 @@ module "fcs_child_account_1" {
   eventbus_arn            = crowdstrike_cloud_aws_account.this.eventbus_arn
   cloudtrail_bucket_name  = "" # not needed for child accounts
   dspm_create_nat_gateway = local.dspm_create_nat_gateway
+  dspm_s3_access          = local.dspm_s3_access
+  dspm_dynamodb_access    = local.dspm_dynamodb_access
+  dspm_rds_access         = local.dspm_rds_access
+  dspm_redshift_access    = local.dspm_redshift_access
 }
