@@ -78,19 +78,19 @@ variable "dspm_s3_access" {
 }
 
 variable "dspm_dynamodb_access" {
-  description = "Apply permissions for DynamoDB scanning"
+  description = "Apply permissions for DynamoDB table scanning"
   type        = bool
   default     = true
 }
 
 variable "dspm_rds_access" {
-  description = "Apply permissions for RDS scanning"
+  description = "Apply permissions for RDS instance scanning"
   type        = bool
   default     = true
 }
 
 variable "dspm_redshift_access" {
-  description = "Apply permissions for Redshift scanning"
+  description = "Apply permissions for Redshift cluster scanning"
   type        = bool
   default     = true
 }
