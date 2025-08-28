@@ -3,8 +3,8 @@ locals {
   primary_region             = "us-west-1"
   enable_idp                 = true
   enable_sensor_management   = false
-  enable_dspm                = true
-  dspm_regions               = ["us-west-1", "us-east-1", "us-west-2","us-east-2"]
+  enable_dspm                = false
+  dspm_regions               = ["us-west-1"]
   use_existing_cloudtrail    = true
   dspm_create_nat_gateway    = var.dspm_create_nat_gateway
   dspm_s3_access             = var.dspm_s3_access
