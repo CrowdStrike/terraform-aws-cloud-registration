@@ -63,7 +63,7 @@ data "aws_iam_policy_document" "crowdstrike_cloud_scan_supplemental_data" {
       "elb:DescribeLoadBalancers",
       "cloudwatch:GetMetricData",
       "cloudwatch:GetMetricStatistics",
-      "cloudwatch:ListMetrics"
+      "cloudwatch:ListMetrics",
       "pricing:GetProducts"
     ]
     effect    = "Allow"
