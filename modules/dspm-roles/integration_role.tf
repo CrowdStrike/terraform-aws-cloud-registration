@@ -64,6 +64,7 @@ data "aws_iam_policy_document" "crowdstrike_cloud_scan_supplemental_data" {
       "cloudwatch:GetMetricData",
       "cloudwatch:GetMetricStatistics",
       "cloudwatch:ListMetrics"
+      "pricing:GetProducts"
     ]
     effect    = "Allow"
     resources = ["*"]
