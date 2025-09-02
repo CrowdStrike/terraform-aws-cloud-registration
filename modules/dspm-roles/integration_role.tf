@@ -208,7 +208,7 @@ data "aws_iam_policy_document" "crowdstrike_run_data_scanner_restricted_data" {
   }
 
   statement {
-    sid = "ssmDSPMPermissionsReader"
+    sid = "ssmParameterReader"
     actions = [
       "ssm:GetParameter"
     ]
