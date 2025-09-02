@@ -11,7 +11,7 @@ resource "aws_iam_instance_profile" "instance_profile" {
   )
 }
 
-resource "aws_ssm_parameter" "dspm_permissions" {
+resource "aws_ssm_parameter" "agentless_scanning_root_parameter" {
   name = "/CrowdStrike/AgentlessScanning/Root"
   type = "String"
   tier = "Intelligent-Tiering"
