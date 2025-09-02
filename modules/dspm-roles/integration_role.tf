@@ -206,17 +206,6 @@ data "aws_iam_policy_document" "crowdstrike_run_data_scanner_restricted_data" {
     effect    = "Allow"
     resources = ["arn:aws:ssm:*:*:parameter/aws/service/ami-amazon-linux-latest/*"]
   }
-
-  statement {
-    sid = "ssmParameterReader"
-    actions = [
-      "ssm:GetParameter"
-    ]
-    effect = "Allow"
-    resources = [
-      "arn:aws:ssm:*:${data.aws_caller_identity.current.account_id}:parameter/CrowdStrike/*"
-    ]
-  }
 }
 
 resource "aws_iam_role_policy" "crowdstrike_rds_clone" {
@@ -484,6 +473,24 @@ data "aws_iam_policy_document" "crowdstrike_redshift_clone" {
     effect = "Allow"
     resources = [
       "arn:aws:secretsmanager:*:${data.aws_caller_identity.current.account_id}:secret:*"
+    ]
+  }
+}
+
+resource "aws_iam_role_policy" "crowdstrike_ssm_reader" {
+  name   = "CrowdStrikeSSMReader"
+  role   = aws_iam_role.crowdstrike_aws_dspm_integration_role.id
+  policy = data.aws_iam_policy_document.crowdstrike_ssm_reader_data.json
+}
+
+data "aws_iam_policy_document" "crowdstrike_ssm_reader_data" {
+  statement {
+    actions = [
+      "ssm:GetParameter"
+    ]
+    effect = "Allow"
+    resources = [
+      "arn:aws:ssm:*:${data.aws_caller_identity.current.account_id}:parameter/CrowdStrike/*"
     ]
   }
 }
