@@ -6,7 +6,7 @@ data "crowdstrike_cloud_aws_account" "target" {
 }
 
 locals {
-  aws_region        = data.aws_region.current.region
+  aws_region        = data.aws_region.current.name
   is_primary_region = local.aws_region == var.primary_region
 
   # if we target by account_id, it will be the only account returned
