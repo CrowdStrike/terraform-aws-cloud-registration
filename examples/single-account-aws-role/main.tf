@@ -11,6 +11,7 @@ locals {
   dspm_dynamodb_access       = var.dspm_dynamodb_access
   dspm_rds_access            = var.dspm_rds_access
   dspm_redshift_access       = var.dspm_redshift_access
+  agentless_scanning_custom_vpc_resources_map = var.agentless_scanning_custom_vpc_resources_map
 
   # customizations
   resource_prefix        = "cs-"
@@ -93,6 +94,7 @@ module "fcs_account" {
   dspm_dynamodb_access    = local.dspm_dynamodb_access
   dspm_rds_access         = local.dspm_rds_access
   dspm_redshift_access    = local.dspm_redshift_access
+  agentless_scanning_custom_vpc_resources_map = local.agentless_scanning_custom_vpc_resources_map
 
   providers = {
     crowdstrike = crowdstrike

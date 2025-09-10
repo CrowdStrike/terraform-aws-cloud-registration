@@ -71,6 +71,19 @@ variable "dspm_regions" {
   }
 }
 
+variable "agentless_scanning_custom_vpc_resources_map" {
+  description = "Map of region-specific VPC resources for existing VPC deployment. Keys are region names, values are objects containing VPC resource IDs."
+  type = map(object({
+    vpc            = string
+    scanner_subnet = string
+    scanner_sg     = string
+    db_subnet_a    = string
+    db_subnet_b    = string
+    db_sg          = string
+  }))
+  default = {}
+}
+
 variable "dspm_s3_access" {
   description = "Apply permissions for S3 bucket scanning"
   type        = bool

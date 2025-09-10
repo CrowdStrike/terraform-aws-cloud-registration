@@ -21,6 +21,19 @@ variable "scanner_role_unique_id" {
   type        = string
 }
 
+variable "region_vpc_config" {
+  description = "VPC configuration for the current region"
+  type = object({
+    vpc            = string
+    scanner_subnet = string
+    scanner_sg     = string
+    db_subnet_a    = string
+    db_subnet_b    = string
+    db_sg          = string
+  })
+  default = null
+}
+
 variable "dspm_create_nat_gateway" {
   description = "Set to true to create a NAT Gateway for DSPM scanning environments"
   type        = bool

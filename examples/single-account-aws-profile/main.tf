@@ -11,6 +11,7 @@ locals {
   dspm_dynamodb_access       = var.dspm_dynamodb_access
   dspm_rds_access            = var.dspm_rds_access
   dspm_redshift_access       = var.dspm_redshift_access
+  agentless_scanning_custom_vpc_resources_map = var.agentless_scanning_custom_vpc_resources_map
 
   # customizations
   resource_prefix        = "cs-"
@@ -74,6 +75,7 @@ module "fcs_account" {
   use_existing_cloudtrail    = local.use_existing_cloudtrail
   enable_dspm                = local.enable_dspm
   dspm_regions               = local.dspm_regions
+  agentless_scanning_custom_vpc_resources_map   = local.agentless_scanning_custom_vpc_resources_map
   vpc_cidr_block             = var.vpc_cidr_block
 
   iam_role_name           = crowdstrike_cloud_aws_account.this.iam_role_name

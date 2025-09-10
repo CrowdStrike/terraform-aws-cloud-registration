@@ -69,6 +69,7 @@ module "dspm_roles" {
   intermediate_role_arn  = local.intermediate_role_arn
   external_id            = local.external_id
   dspm_regions           = var.dspm_regions
+  agentless_scanning_custom_vpc_resources_map = var.agentless_scanning_custom_vpc_resources_map
   dspm_s3_access         = var.dspm_s3_access
   dspm_dynamodb_access   = var.dspm_dynamodb_access
   dspm_rds_access        = var.dspm_rds_access

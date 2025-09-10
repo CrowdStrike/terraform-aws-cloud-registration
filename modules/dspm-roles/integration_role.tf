@@ -1,4 +1,5 @@
 data "aws_caller_identity" "current" {}
+data "aws_region" "current" {}
 
 data "aws_iam_policy_document" "assume_role" {
   statement {
@@ -28,6 +29,7 @@ resource "aws_iam_role" "crowdstrike_aws_dspm_integration_role" {
     var.tags,
     {
       (local.crowdstrike_tag_key) = local.crowdstrike_tag_value
+      RootRegion                  = data.aws_region.current.name
     }
   )
 }
@@ -493,5 +495,36 @@ data "aws_iam_policy_document" "crowdstrike_ssm_reader_data" {
     resources = [
       "arn:aws:ssm:*:${data.aws_caller_identity.current.account_id}:parameter/CrowdStrike/*"
     ]
+  }
+}
+
+# Custom VPC IAM policy
+resource "aws_iam_role_policy" "run_data_scanner_custom_vpcs" {
+  count  = length(var.agentless_scanning_custom_vpc_resources_map) > 0 ? 1 : 0
+  name   = "RunDataScannerCustomVPCs"
+  role   = aws_iam_role.crowdstrike_aws_dspm_integration_role.id
+  policy = data.aws_iam_policy_document.run_data_scanner_custom_vpcs_data[0].json
+}
+
+data "aws_iam_policy_document" "run_data_scanner_custom_vpcs_data" {
+  count = length(var.agentless_scanning_custom_vpc_resources_map) > 0 ? 1 : 0
+
+  # Grants permission to Launch EC2 for CrowdStrike EC2 instance in custom VPCs
+  # The condition key ec2:Vpc is applicable to custom VPC resources
+  statement {
+    sid = "AllowRunInstancesCustomVpc"
+    actions = [
+      "ec2:RunInstances"
+    ]
+    effect = "Allow"
+    resources = [
+      "arn:aws:ec2:*:${data.aws_caller_identity.current.account_id}:security-group/*",
+      "arn:aws:ec2:*:${data.aws_caller_identity.current.account_id}:subnet/*"
+    ]
+    condition {
+      test     = "ForAnyValue:StringEquals"
+      variable = "ec2:Vpc"
+      values   = local.custom_vpc_arns
+    }
   }
 }
