@@ -22,6 +22,22 @@ jobs:
   validate:
     runs-on: ubuntu-latest
     name: Validate Terraform configuration
+    strategy:
+      matrix:
+        path:
+          - "."
+          - "examples/org-aws-profile"
+          - "examples/org-aws-role"
+          - "examples/single-account"
+          - "examples/single-account-aws-profile"
+          - "examples/single-account-aws-role"
+          - "modules/asset-inventory"
+          - "modules/aws-profile"
+          - "modules/aws-role"
+          - "modules/dspm-environments"
+          - "modules/dspm-roles"
+          - "modules/realtime-visibility"
+          - "modules/sensor-management"
 
     steps:
       - name: Checkout source code
@@ -30,7 +46,7 @@ jobs:
       - name: Terraform validate
         uses: dflook/terraform-validate@v2
         with:
-          path: .
+          path: ${{ matrix.path }}
 
   docs:
     runs-on: ubuntu-latest
