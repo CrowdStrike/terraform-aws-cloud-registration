@@ -408,11 +408,11 @@ resource "aws_vpc_endpoint" "s3_endpoint" {
       {
         Effect    = "Allow"
         Principal = "*"
-        Action    = [
+        Action = [
           "s3:Get*",
           "s3:List*"
         ]
-        Resource  = "*"
+        Resource = "*"
         Condition = {
           StringEquals = {
             "aws:SourceVpc" = aws_vpc.vpc.id
@@ -444,7 +444,7 @@ resource "aws_vpc_endpoint" "dynamodb_endpoint" {
       {
         Effect    = "Allow"
         Principal = "*"
-        Action    = [
+        Action = [
           "dynamodb:BatchGet*",
           "dynamodb:Describe*",
           "dynamodb:List*",
@@ -453,7 +453,7 @@ resource "aws_vpc_endpoint" "dynamodb_endpoint" {
           "dynamodb:Scan",
           "dynamodb:PartiQLSelect"
         ]
-        Resource  = "*"
+        Resource = "*"
         Condition = {
           StringEquals = {
             "aws:SourceVpc" = aws_vpc.vpc.id
