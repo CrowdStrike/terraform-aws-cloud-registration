@@ -88,14 +88,18 @@ locals {
     ]
   })
 
-  default_eventbus_arn = "arn:aws:events:${var.primary_region}:${local.account_id}:event-bus/default"
+  default_eventbus_arn = "arn:${local.aws_partition}:events:${var.primary_region}:${local.account_id}:event-bus/default"
   eventbus_arn = (
     var.is_gov_commercial ?
     (
       var.is_primary_region ?
-      aws_lambda_function.eventbridge[0].arn :
+      aws_lambda_alias.eventbridge[0].arn :
       local.default_eventbus_arn
-    ) :
+    ) : var.is_gov ?
+    one([
+      for value in split(",", var.eventbus_arn) : value
+      if contains(value, local.aws_region)
+    ]) :
     var.eventbus_arn
   )
   eventbridge_role_arn = (

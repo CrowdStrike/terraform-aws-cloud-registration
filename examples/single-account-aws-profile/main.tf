@@ -61,20 +61,20 @@ resource "crowdstrike_cloud_aws_account" "this" {
 }
 
 module "fcs_account" {
-  source                     = "../../modules/aws-profile"
-  aws_profile                = var.aws_profile
-  falcon_client_id           = var.falcon_client_id
-  falcon_client_secret       = var.falcon_client_secret
-  account_id                 = var.account_id
-  primary_region             = local.primary_region
-  enable_sensor_management   = local.enable_sensor_management
-  enable_realtime_visibility = local.enable_realtime_visibility
-  enable_idp                 = local.enable_idp
+  source                      = "../../modules/aws-profile"
+  aws_profile                 = var.aws_profile
+  falcon_client_id            = var.falcon_client_id
+  falcon_client_secret        = var.falcon_client_secret
+  account_id                  = var.account_id
+  primary_region              = local.primary_region
+  enable_sensor_management    = local.enable_sensor_management
+  enable_realtime_visibility  = local.enable_realtime_visibility
+  enable_idp                  = local.enable_idp
   realtime_visibility_regions = ["all"]
-  use_existing_cloudtrail    = local.use_existing_cloudtrail
-  enable_dspm                = local.enable_dspm
-  dspm_regions               = local.dspm_regions
-  vpc_cidr_block             = var.vpc_cidr_block
+  use_existing_cloudtrail     = local.use_existing_cloudtrail
+  enable_dspm                 = local.enable_dspm
+  dspm_regions                = local.dspm_regions
+  vpc_cidr_block              = var.vpc_cidr_block
 
   iam_role_name           = crowdstrike_cloud_aws_account.this.iam_role_name
   external_id             = crowdstrike_cloud_aws_account.this.external_id

@@ -14,6 +14,7 @@ module "rtvd_us_east_1" {
   eventbus_arn            = local.eventbus_arn
   eventbridge_role_name   = var.eventbridge_role_name
   is_organization_trail   = length(var.organization_id) > 0
+  is_gov                  = var.is_gov
   is_gov_commercial       = local.is_gov_commercial
   is_primary_region       = var.primary_region == "us-east-1"
   primary_region          = var.primary_region
@@ -42,6 +43,7 @@ module "rtvd_us_east_2" {
   eventbus_arn            = local.eventbus_arn
   eventbridge_role_name   = var.eventbridge_role_name
   is_organization_trail   = length(var.organization_id) > 0
+  is_gov                  = var.is_gov
   is_gov_commercial       = local.is_gov_commercial
   is_primary_region       = var.primary_region == "us-east-2"
   primary_region          = var.primary_region
@@ -70,6 +72,7 @@ module "rtvd_us_west_1" {
   eventbus_arn            = local.eventbus_arn
   eventbridge_role_name   = var.eventbridge_role_name
   is_organization_trail   = length(var.organization_id) > 0
+  is_gov                  = var.is_gov
   is_gov_commercial       = local.is_gov_commercial
   is_primary_region       = var.primary_region == "us-west-1"
   primary_region          = var.primary_region
@@ -98,6 +101,7 @@ module "rtvd_us_west_2" {
   eventbus_arn            = local.eventbus_arn
   eventbridge_role_name   = var.eventbridge_role_name
   is_organization_trail   = length(var.organization_id) > 0
+  is_gov                  = var.is_gov
   is_gov_commercial       = local.is_gov_commercial
   is_primary_region       = var.primary_region == "us-west-2"
   primary_region          = var.primary_region
@@ -126,6 +130,7 @@ module "rtvd_af_south_1" {
   eventbus_arn            = local.eventbus_arn
   eventbridge_role_name   = var.eventbridge_role_name
   is_organization_trail   = length(var.organization_id) > 0
+  is_gov                  = var.is_gov
   is_gov_commercial       = local.is_gov_commercial
   is_primary_region       = var.primary_region == "af-south-1"
   primary_region          = var.primary_region
@@ -154,6 +159,7 @@ module "rtvd_ap_east_1" {
   eventbus_arn            = local.eventbus_arn
   eventbridge_role_name   = var.eventbridge_role_name
   is_organization_trail   = length(var.organization_id) > 0
+  is_gov                  = var.is_gov
   is_gov_commercial       = local.is_gov_commercial
   is_primary_region       = var.primary_region == "ap-east-1"
   primary_region          = var.primary_region
@@ -182,6 +188,7 @@ module "rtvd_ap_south_1" {
   eventbus_arn            = local.eventbus_arn
   eventbridge_role_name   = var.eventbridge_role_name
   is_organization_trail   = length(var.organization_id) > 0
+  is_gov                  = var.is_gov
   is_gov_commercial       = local.is_gov_commercial
   is_primary_region       = var.primary_region == "ap-south-1"
   primary_region          = var.primary_region
@@ -210,6 +217,7 @@ module "rtvd_ap_south_2" {
   eventbus_arn            = local.eventbus_arn
   eventbridge_role_name   = var.eventbridge_role_name
   is_organization_trail   = length(var.organization_id) > 0
+  is_gov                  = var.is_gov
   is_gov_commercial       = local.is_gov_commercial
   is_primary_region       = var.primary_region == "ap-south-2"
   primary_region          = var.primary_region
@@ -238,6 +246,7 @@ module "rtvd_ap_southeast_1" {
   eventbus_arn            = local.eventbus_arn
   eventbridge_role_name   = var.eventbridge_role_name
   is_organization_trail   = length(var.organization_id) > 0
+  is_gov                  = var.is_gov
   is_gov_commercial       = local.is_gov_commercial
   is_primary_region       = var.primary_region == "ap-southeast-1"
   primary_region          = var.primary_region
@@ -266,6 +275,7 @@ module "rtvd_ap_southeast_2" {
   eventbus_arn            = local.eventbus_arn
   eventbridge_role_name   = var.eventbridge_role_name
   is_organization_trail   = length(var.organization_id) > 0
+  is_gov                  = var.is_gov
   is_gov_commercial       = local.is_gov_commercial
   is_primary_region       = var.primary_region == "ap-southeast-2"
   primary_region          = var.primary_region
@@ -294,6 +304,7 @@ module "rtvd_ap_southeast_3" {
   eventbus_arn            = local.eventbus_arn
   eventbridge_role_name   = var.eventbridge_role_name
   is_organization_trail   = length(var.organization_id) > 0
+  is_gov                  = var.is_gov
   is_gov_commercial       = local.is_gov_commercial
   is_primary_region       = var.primary_region == "ap-southeast-3"
   primary_region          = var.primary_region
@@ -322,6 +333,7 @@ module "rtvd_ap_southeast_4" {
   eventbus_arn            = local.eventbus_arn
   eventbridge_role_name   = var.eventbridge_role_name
   is_organization_trail   = length(var.organization_id) > 0
+  is_gov                  = var.is_gov
   is_gov_commercial       = local.is_gov_commercial
   is_primary_region       = var.primary_region == "ap-southeast-4"
   primary_region          = var.primary_region
@@ -350,6 +362,7 @@ module "rtvd_ap_northeast_1" {
   eventbus_arn            = local.eventbus_arn
   eventbridge_role_name   = var.eventbridge_role_name
   is_organization_trail   = length(var.organization_id) > 0
+  is_gov                  = var.is_gov
   is_gov_commercial       = local.is_gov_commercial
   is_primary_region       = var.primary_region == "ap-northeast-1"
   primary_region          = var.primary_region
@@ -378,6 +391,7 @@ module "rtvd_ap_northeast_2" {
   eventbus_arn            = local.eventbus_arn
   eventbridge_role_name   = var.eventbridge_role_name
   is_organization_trail   = length(var.organization_id) > 0
+  is_gov                  = var.is_gov
   is_gov_commercial       = local.is_gov_commercial
   is_primary_region       = var.primary_region == "ap-northeast-2"
   primary_region          = var.primary_region
@@ -406,6 +420,7 @@ module "rtvd_ap_northeast_3" {
   eventbus_arn            = local.eventbus_arn
   eventbridge_role_name   = var.eventbridge_role_name
   is_organization_trail   = length(var.organization_id) > 0
+  is_gov                  = var.is_gov
   is_gov_commercial       = local.is_gov_commercial
   is_primary_region       = var.primary_region == "ap-northeast-3"
   primary_region          = var.primary_region
@@ -434,6 +449,7 @@ module "rtvd_ca_central_1" {
   eventbus_arn            = local.eventbus_arn
   eventbridge_role_name   = var.eventbridge_role_name
   is_organization_trail   = length(var.organization_id) > 0
+  is_gov                  = var.is_gov
   is_gov_commercial       = local.is_gov_commercial
   is_primary_region       = var.primary_region == "ca-central-1"
   primary_region          = var.primary_region
@@ -462,6 +478,7 @@ module "rtvd_eu_central_1" {
   eventbus_arn            = local.eventbus_arn
   eventbridge_role_name   = var.eventbridge_role_name
   is_organization_trail   = length(var.organization_id) > 0
+  is_gov                  = var.is_gov
   is_gov_commercial       = local.is_gov_commercial
   is_primary_region       = var.primary_region == "eu-central-1"
   primary_region          = var.primary_region
@@ -490,6 +507,7 @@ module "rtvd_eu_west_1" {
   eventbus_arn            = local.eventbus_arn
   eventbridge_role_name   = var.eventbridge_role_name
   is_organization_trail   = length(var.organization_id) > 0
+  is_gov                  = var.is_gov
   is_gov_commercial       = local.is_gov_commercial
   is_primary_region       = var.primary_region == "eu-west-1"
   primary_region          = var.primary_region
@@ -518,6 +536,7 @@ module "rtvd_eu_west_2" {
   eventbus_arn            = local.eventbus_arn
   eventbridge_role_name   = var.eventbridge_role_name
   is_organization_trail   = length(var.organization_id) > 0
+  is_gov                  = var.is_gov
   is_gov_commercial       = local.is_gov_commercial
   is_primary_region       = var.primary_region == "eu-west-2"
   primary_region          = var.primary_region
@@ -546,6 +565,7 @@ module "rtvd_eu_west_3" {
   eventbus_arn            = local.eventbus_arn
   eventbridge_role_name   = var.eventbridge_role_name
   is_organization_trail   = length(var.organization_id) > 0
+  is_gov                  = var.is_gov
   is_gov_commercial       = local.is_gov_commercial
   is_primary_region       = var.primary_region == "eu-west-3"
   primary_region          = var.primary_region
@@ -574,6 +594,7 @@ module "rtvd_eu_south_1" {
   eventbus_arn            = local.eventbus_arn
   eventbridge_role_name   = var.eventbridge_role_name
   is_organization_trail   = length(var.organization_id) > 0
+  is_gov                  = var.is_gov
   is_gov_commercial       = local.is_gov_commercial
   is_primary_region       = var.primary_region == "eu-south-1"
   primary_region          = var.primary_region
@@ -602,6 +623,7 @@ module "rtvd_eu_south_2" {
   eventbus_arn            = local.eventbus_arn
   eventbridge_role_name   = var.eventbridge_role_name
   is_organization_trail   = length(var.organization_id) > 0
+  is_gov                  = var.is_gov
   is_gov_commercial       = local.is_gov_commercial
   is_primary_region       = var.primary_region == "eu-south-2"
   primary_region          = var.primary_region
@@ -630,6 +652,7 @@ module "rtvd_eu_north_1" {
   eventbus_arn            = local.eventbus_arn
   eventbridge_role_name   = var.eventbridge_role_name
   is_organization_trail   = length(var.organization_id) > 0
+  is_gov                  = var.is_gov
   is_gov_commercial       = local.is_gov_commercial
   is_primary_region       = var.primary_region == "eu-north-1"
   primary_region          = var.primary_region
@@ -658,6 +681,7 @@ module "rtvd_eu_central_2" {
   eventbus_arn            = local.eventbus_arn
   eventbridge_role_name   = var.eventbridge_role_name
   is_organization_trail   = length(var.organization_id) > 0
+  is_gov                  = var.is_gov
   is_gov_commercial       = local.is_gov_commercial
   is_primary_region       = var.primary_region == "eu-central-2"
   primary_region          = var.primary_region
@@ -686,6 +710,7 @@ module "rtvd_me_south_1" {
   eventbus_arn            = local.eventbus_arn
   eventbridge_role_name   = var.eventbridge_role_name
   is_organization_trail   = length(var.organization_id) > 0
+  is_gov                  = var.is_gov
   is_gov_commercial       = local.is_gov_commercial
   is_primary_region       = var.primary_region == "me-south-1"
   primary_region          = var.primary_region
@@ -714,6 +739,7 @@ module "rtvd_me_central_1" {
   eventbus_arn            = local.eventbus_arn
   eventbridge_role_name   = var.eventbridge_role_name
   is_organization_trail   = length(var.organization_id) > 0
+  is_gov                  = var.is_gov
   is_gov_commercial       = local.is_gov_commercial
   is_primary_region       = var.primary_region == "me-central-1"
   primary_region          = var.primary_region
@@ -742,6 +768,7 @@ module "rtvd_sa_east_1" {
   eventbus_arn            = local.eventbus_arn
   eventbridge_role_name   = var.eventbridge_role_name
   is_organization_trail   = length(var.organization_id) > 0
+  is_gov                  = var.is_gov
   is_gov_commercial       = local.is_gov_commercial
   is_primary_region       = var.primary_region == "sa-east-1"
   primary_region          = var.primary_region
@@ -770,6 +797,7 @@ module "rtvd_us_gov_east_1" {
   eventbus_arn            = local.eventbus_arn
   eventbridge_role_name   = var.eventbridge_role_name
   is_organization_trail   = length(var.organization_id) > 0
+  is_gov                  = var.is_gov
   is_gov_commercial       = local.is_gov_commercial
   is_primary_region       = var.primary_region == "us-gov-east-1"
   primary_region          = var.primary_region
@@ -798,6 +826,7 @@ module "rtvd_us_gov_west_1" {
   eventbus_arn            = local.eventbus_arn
   eventbridge_role_name   = var.eventbridge_role_name
   is_organization_trail   = length(var.organization_id) > 0
+  is_gov                  = var.is_gov
   is_gov_commercial       = local.is_gov_commercial
   is_primary_region       = var.primary_region == "us-gov-west-1"
   primary_region          = var.primary_region
