@@ -57,6 +57,12 @@ To onboard additional child accounts:
 * Update the module name and AWS profile for the new child account
 * Apply the changes
 
+## DSPM Cross Account Scanning
+
+In this example, DSPM is configured to scan assets in the entire organization from a single account that will host data scanners.
+Note:
+- The host account in the example is the management account
+- It is extremely important that the deployment complete in the host account before it begins in the target accounts. In order to create this dependency, the target modules utilize the output of the host module.
 
 ## Destroy
 

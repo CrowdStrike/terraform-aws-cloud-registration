@@ -93,6 +93,8 @@ module "fcs_account" {
   dspm_dynamodb_access    = local.dspm_dynamodb_access
   dspm_rds_access         = local.dspm_rds_access
   dspm_redshift_access    = local.dspm_redshift_access
+  agentless_scanning_host_account_id   = var.agentless_scanning_host_account_id
+  agentless_scanning_host_role_name    = var.agentless_scanning_host_role_name
 
   providers = {
     crowdstrike = crowdstrike

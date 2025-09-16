@@ -10,6 +10,11 @@ variable "dspm_role_name" {
   default     = "CrowdStrikeDSPMIntegrationRole"
 }
 
+variable "dspm_scanner_role_name" {
+  description = "The unique name of the IAM role that CrowdStrike Scanner will be assuming"
+  type        = string
+  default     = "CrowdStrikeDSPMScannerRole"
+}
 
 variable "integration_role_unique_id" {
   description = "The unique ID of the DSPM integration role"
@@ -37,4 +42,16 @@ variable "vpc_cidr_block" {
   description = "VPC CIDR block"
   type        = string
   default     = "10.0.0.0/16"
+}
+
+variable "agentless_scanning_host_account_id" {
+  type        = string
+  default     = ""
+  description = "The AWS account ID where DSPM host resources are deployed"
+}
+
+variable "agentless_scanning_host_role_name" {
+  type        = string
+  default     = "CrowdStrikeDSPMIntegrationRole"
+  description = "Name of DSPM integration role in host account"
 }

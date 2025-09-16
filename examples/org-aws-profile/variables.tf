@@ -60,3 +60,15 @@ variable "vpc_cidr_block" {
   type        = string
   default     = "10.0.0.0/16"
 }
+
+variable "agentless_scanning_host_account_id" {
+  type        = string
+  default     = ""
+  description = "The AWS account ID where DSPM host resources are deployed"
+}
+
+variable "agentless_scanning_host_role_name" {
+  type        = string
+  default     = "CrowdStrikeDSPMIntegrationRole"
+  description = "Name of DSPM integration role in host account"
+}

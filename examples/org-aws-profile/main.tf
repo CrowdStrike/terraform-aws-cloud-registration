@@ -104,4 +104,6 @@ module "fcs_child_account_1" {
   dspm_dynamodb_access    = local.dspm_dynamodb_access
   dspm_rds_access         = local.dspm_rds_access
   dspm_redshift_access    = local.dspm_redshift_access
+  agentless_scanning_host_account_id   = var.account_id
+  agentless_scanning_host_role_name    = split("/", module.fcs_management_account.integration_role_arn)[1]
 }
