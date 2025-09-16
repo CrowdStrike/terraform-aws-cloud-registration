@@ -16,6 +16,10 @@ resource "aws_ssm_parameter" "agentless_scanning_root_parameter" {
   type = "String"
   tier = "Intelligent-Tiering"
   value = jsonencode({
+    version            = "1.0.0+tf.1"
+    deployment_regions = var.dspm_regions
+    host_account_id    = data.aws_caller_identity.current.account_id
+    scanner_role_arn   = aws_iam_role.crowdstrike_aws_dspm_scanner_role.arn
     permissions = {
       s3_policy       = var.dspm_s3_access ? "${var.dspm_scanner_role_name}/CrowdStrikeBucketReader" : "null"
       rds_policy      = var.dspm_rds_access ? "${var.dspm_role_name}/CrowdStrikeRDSClone" : "null"

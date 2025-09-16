@@ -20,15 +20,17 @@ provider "aws" {
 }
 
 locals {
-  enable_realtime_visibility  = true
-  realtime_visibility_regions = ["all"]
-  primary_region              = "us-east-1"
-  enable_idp                  = true
-  enable_sensor_management    = true
-  enable_dspm                 = true
-  dspm_regions                = ["us-east-1", "us-east-2"]
-  use_existing_cloudtrail     = true
-  dspm_create_nat_gateway     = var.dspm_create_nat_gateway
+  enable_realtime_visibility                  = true
+  realtime_visibility_regions                 = ["all"]
+  primary_region                              = "us-east-1"
+  enable_idp                                  = true
+  enable_sensor_management                    = true
+  enable_dspm                                 = true
+  dspm_regions                                = ["us-east-1", "us-east-2"]
+  use_existing_cloudtrail                     = true
+  dspm_create_nat_gateway                     = var.dspm_create_nat_gateway
+  agentless_scanning_use_custom_vpc           = var.agentless_scanning_use_custom_vpc
+  agentless_scanning_custom_vpc_resources_map = var.agentless_scanning_custom_vpc_resources_map
 
   # customizations
   resource_prefix        = "cs-"
@@ -98,14 +100,16 @@ module "fcs_account_onboarding" {
   dspm_role_name         = crowdstrike_cloud_aws_account.this.dspm_role_name
   cloudtrail_bucket_name = crowdstrike_cloud_aws_account.this.cloudtrail_bucket_name
 
-  resource_prefix         = local.resource_prefix
-  resource_suffix         = local.resource_suffix
-  tags                    = local.tags
-  dspm_create_nat_gateway = local.dspm_create_nat_gateway
-  dspm_s3_access          = var.dspm_s3_access
-  dspm_dynamodb_access    = var.dspm_dynamodb_access
-  dspm_rds_access         = var.dspm_rds_access
-  dspm_redshift_access    = var.dspm_redshift_access
+  resource_prefix                             = local.resource_prefix
+  resource_suffix                             = local.resource_suffix
+  tags                                        = local.tags
+  dspm_create_nat_gateway                     = local.dspm_create_nat_gateway
+  dspm_s3_access                              = var.dspm_s3_access
+  dspm_dynamodb_access                        = var.dspm_dynamodb_access
+  dspm_rds_access                             = var.dspm_rds_access
+  dspm_redshift_access                        = var.dspm_redshift_access
+  agentless_scanning_use_custom_vpc           = local.agentless_scanning_use_custom_vpc
+  agentless_scanning_custom_vpc_resources_map = local.agentless_scanning_custom_vpc_resources_map
 
   providers = {
     aws         = aws.us-east-1
@@ -139,14 +143,16 @@ module "fcs_account_us_east_2" {
   dspm_integration_role_unique_id = module.fcs_account_onboarding.integration_role_unique_id
   dspm_scanner_role_unique_id     = module.fcs_account_onboarding.scanner_role_unique_id
 
-  resource_prefix         = local.resource_prefix
-  resource_suffix         = local.resource_suffix
-  tags                    = local.tags
-  dspm_create_nat_gateway = local.dspm_create_nat_gateway
-  dspm_s3_access          = var.dspm_s3_access
-  dspm_dynamodb_access    = var.dspm_dynamodb_access
-  dspm_rds_access         = var.dspm_rds_access
-  dspm_redshift_access    = var.dspm_redshift_access
+  resource_prefix                             = local.resource_prefix
+  resource_suffix                             = local.resource_suffix
+  tags                                        = local.tags
+  dspm_create_nat_gateway                     = local.dspm_create_nat_gateway
+  dspm_s3_access                              = var.dspm_s3_access
+  dspm_dynamodb_access                        = var.dspm_dynamodb_access
+  dspm_rds_access                             = var.dspm_rds_access
+  dspm_redshift_access                        = var.dspm_redshift_access
+  agentless_scanning_use_custom_vpc           = local.agentless_scanning_use_custom_vpc
+  agentless_scanning_custom_vpc_resources_map = local.agentless_scanning_custom_vpc_resources_map
 
   providers = {
     aws         = aws.us-east-2
@@ -180,14 +186,16 @@ module "fcs_account_us_west_1" {
   dspm_integration_role_unique_id = module.fcs_account_onboarding.integration_role_unique_id
   dspm_scanner_role_unique_id     = module.fcs_account_onboarding.scanner_role_unique_id
 
-  resource_prefix         = local.resource_prefix
-  resource_suffix         = local.resource_suffix
-  tags                    = local.tags
-  dspm_create_nat_gateway = local.dspm_create_nat_gateway
-  dspm_s3_access          = var.dspm_s3_access
-  dspm_dynamodb_access    = var.dspm_dynamodb_access
-  dspm_rds_access         = var.dspm_rds_access
-  dspm_redshift_access    = var.dspm_redshift_access
+  resource_prefix                             = local.resource_prefix
+  resource_suffix                             = local.resource_suffix
+  tags                                        = local.tags
+  dspm_create_nat_gateway                     = local.dspm_create_nat_gateway
+  dspm_s3_access                              = var.dspm_s3_access
+  dspm_dynamodb_access                        = var.dspm_dynamodb_access
+  dspm_rds_access                             = var.dspm_rds_access
+  dspm_redshift_access                        = var.dspm_redshift_access
+  agentless_scanning_use_custom_vpc           = local.agentless_scanning_use_custom_vpc
+  agentless_scanning_custom_vpc_resources_map = local.agentless_scanning_custom_vpc_resources_map
 
   providers = {
     aws         = aws.us-west-1
@@ -221,14 +229,16 @@ module "fcs_account_us_west_2" {
   dspm_integration_role_unique_id = module.fcs_account_onboarding.integration_role_unique_id
   dspm_scanner_role_unique_id     = module.fcs_account_onboarding.scanner_role_unique_id
 
-  resource_prefix         = local.resource_prefix
-  resource_suffix         = local.resource_suffix
-  tags                    = local.tags
-  dspm_create_nat_gateway = local.dspm_create_nat_gateway
-  dspm_s3_access          = var.dspm_s3_access
-  dspm_dynamodb_access    = var.dspm_dynamodb_access
-  dspm_rds_access         = var.dspm_rds_access
-  dspm_redshift_access    = var.dspm_redshift_access
+  resource_prefix                             = local.resource_prefix
+  resource_suffix                             = local.resource_suffix
+  tags                                        = local.tags
+  dspm_create_nat_gateway                     = local.dspm_create_nat_gateway
+  dspm_s3_access                              = var.dspm_s3_access
+  dspm_dynamodb_access                        = var.dspm_dynamodb_access
+  dspm_rds_access                             = var.dspm_rds_access
+  dspm_redshift_access                        = var.dspm_redshift_access
+  agentless_scanning_use_custom_vpc           = local.agentless_scanning_use_custom_vpc
+  agentless_scanning_custom_vpc_resources_map = local.agentless_scanning_custom_vpc_resources_map
 
   providers = {
     aws         = aws.us-west-2
