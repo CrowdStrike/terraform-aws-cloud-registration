@@ -21,6 +21,12 @@ variable "scanner_role_unique_id" {
   type        = string
 }
 
+variable "use_custom_vpc" {
+  description = "Whether to use existing custom VPC resources instead of creating new ones. When true, region_vpc_config must be provided."
+  type        = bool
+  default     = false
+}
+
 variable "region_vpc_config" {
   description = "VPC configuration for the current region"
   type = object({

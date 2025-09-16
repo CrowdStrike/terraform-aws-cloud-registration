@@ -227,6 +227,12 @@ variable "vpc_cidr_block" {
   default     = "10.0.0.0/16"
 }
 
+variable "agentless_scanning_use_custom_vpc" {
+  description = "Use existing custom VPC resources for ALL deployment regions (requires agentless_scanning_custom_vpc_resources_map with all regions)"
+  type        = bool
+  default     = false
+}
+
 variable "agentless_scanning_custom_vpc_resources_map" {
   description = <<-EOT
     Map of regions to custom VPC resources for Agentless Scanning deployment.

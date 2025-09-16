@@ -5,7 +5,7 @@ output "crowdstrike_kms_key" {
 
 output "vpc_id" {
   description = "ID of the VPC (either created or custom)"
-  value       = local.use_custom_vpc ? local.region_custom_vpc_config.vpc : aws_vpc.vpc[0].id
+  value       = var.use_custom_vpc ? var.region_vpc_config.vpc : aws_vpc.vpc[0].id
 }
 
 output "db_subnet_group_name" {
@@ -20,17 +20,17 @@ output "redshift_subnet_group_name" {
 
 output "scanner_subnet_id" {
   description = "ID of the scanner subnet"
-  value       = local.use_custom_vpc ? local.region_custom_vpc_config.scanner_subnet : aws_subnet.private_subnet[0].id
+  value       = var.use_custom_vpc ? var.region_vpc_config.scanner_subnet : aws_subnet.private_subnet[0].id
 }
 
 output "scanner_security_group_id" {
   description = "ID of the scanner security group"
-  value       = local.use_custom_vpc ? local.region_custom_vpc_config.scanner_sg : aws_security_group.ec2_security_group[0].id
+  value       = var.use_custom_vpc ? var.region_vpc_config.scanner_sg : aws_security_group.ec2_security_group[0].id
 }
 
 output "db_security_group_id" {
   description = "ID of the database security group"
-  value       = local.use_custom_vpc ? local.region_custom_vpc_config.db_sg : aws_security_group.db_security_group[0].id
+  value       = var.use_custom_vpc ? var.region_vpc_config.db_sg : aws_security_group.db_security_group[0].id
 }
 
 output "environment_ssm_parameter_name" {

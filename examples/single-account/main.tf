@@ -29,6 +29,7 @@ locals {
   dspm_regions                = ["us-east-1", "us-east-2"]
   use_existing_cloudtrail     = true
   dspm_create_nat_gateway     = var.dspm_create_nat_gateway
+  agentless_scanning_use_custom_vpc           = var.agentless_scanning_use_custom_vpc
   agentless_scanning_custom_vpc_resources_map = var.agentless_scanning_custom_vpc_resources_map
 
   # customizations
@@ -107,6 +108,7 @@ module "fcs_account_onboarding" {
   dspm_dynamodb_access    = var.dspm_dynamodb_access
   dspm_rds_access         = var.dspm_rds_access
   dspm_redshift_access    = var.dspm_redshift_access
+  agentless_scanning_use_custom_vpc           = local.agentless_scanning_use_custom_vpc
   agentless_scanning_custom_vpc_resources_map = local.agentless_scanning_custom_vpc_resources_map
 
   providers = {
@@ -149,6 +151,7 @@ module "fcs_account_us_east_2" {
   dspm_dynamodb_access    = var.dspm_dynamodb_access
   dspm_rds_access         = var.dspm_rds_access
   dspm_redshift_access    = var.dspm_redshift_access
+  agentless_scanning_use_custom_vpc           = local.agentless_scanning_use_custom_vpc
   agentless_scanning_custom_vpc_resources_map = local.agentless_scanning_custom_vpc_resources_map
 
   providers = {
@@ -191,6 +194,7 @@ module "fcs_account_us_west_1" {
   dspm_dynamodb_access    = var.dspm_dynamodb_access
   dspm_rds_access         = var.dspm_rds_access
   dspm_redshift_access    = var.dspm_redshift_access
+  agentless_scanning_use_custom_vpc           = local.agentless_scanning_use_custom_vpc
   agentless_scanning_custom_vpc_resources_map = local.agentless_scanning_custom_vpc_resources_map
 
   providers = {
@@ -233,6 +237,7 @@ module "fcs_account_us_west_2" {
   dspm_dynamodb_access    = var.dspm_dynamodb_access
   dspm_rds_access         = var.dspm_rds_access
   dspm_redshift_access    = var.dspm_redshift_access
+  agentless_scanning_use_custom_vpc           = local.agentless_scanning_use_custom_vpc
   agentless_scanning_custom_vpc_resources_map = local.agentless_scanning_custom_vpc_resources_map
 
   providers = {

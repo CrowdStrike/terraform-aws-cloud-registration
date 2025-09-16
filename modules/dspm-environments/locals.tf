@@ -12,10 +12,4 @@ locals {
   logical_kms_key               = "KMSKey"
   aws_region                    = data.aws_region.current.name
   account_id                    = data.aws_caller_identity.current.account_id
-
-  # Use custom VPC if region_vpc_config is provided
-  use_custom_vpc = var.region_vpc_config != null
-  
-  # Use the passed region-specific config
-  region_custom_vpc_config = var.region_vpc_config
 }

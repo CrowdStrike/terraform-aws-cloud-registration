@@ -120,8 +120,9 @@ module "dspm_environments" {
   scanner_role_unique_id     = local.is_primary_region ? module.dspm_roles[0].scanner_role_unique_id : var.dspm_scanner_role_unique_id
   dspm_create_nat_gateway    = var.dspm_create_nat_gateway
 
-  # Pass region-specific VPC config instead of full map
-  region_vpc_config = lookup(var.agentless_scanning_custom_vpc_resources_map, local.aws_region, null)
+  # Pass explicit boolean decision and region-specific VPC config
+  use_custom_vpc    = var.agentless_scanning_use_custom_vpc
+  region_vpc_config = var.agentless_scanning_use_custom_vpc ? lookup(var.agentless_scanning_custom_vpc_resources_map, local.aws_region, null) : null
 
   tags           = var.tags
   vpc_cidr_block = var.vpc_cidr_block
