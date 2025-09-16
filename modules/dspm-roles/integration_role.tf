@@ -500,14 +500,14 @@ data "aws_iam_policy_document" "crowdstrike_ssm_reader_data" {
 
 # Custom VPC IAM policy
 resource "aws_iam_role_policy" "run_data_scanner_custom_vpcs" {
-  count  = length(var.agentless_scanning_custom_vpc_resources_map) > 0 ? 1 : 0
+  count  = var.agentless_scanning_use_custom_vpc && length(var.agentless_scanning_custom_vpc_resources_map) > 0 ? 1 : 0
   name   = "RunDataScannerCustomVPCs"
   role   = aws_iam_role.crowdstrike_aws_dspm_integration_role.id
   policy = data.aws_iam_policy_document.run_data_scanner_custom_vpcs_data[0].json
 }
 
 data "aws_iam_policy_document" "run_data_scanner_custom_vpcs_data" {
-  count = length(var.agentless_scanning_custom_vpc_resources_map) > 0 ? 1 : 0
+  count = var.agentless_scanning_use_custom_vpc && length(var.agentless_scanning_custom_vpc_resources_map) > 0 ? 1 : 0
 
   # Grants permission to Launch EC2 for CrowdStrike EC2 instance in custom VPCs
   # The condition key ec2:Vpc is applicable to custom VPC resources
