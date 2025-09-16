@@ -67,7 +67,7 @@ terraform {
   required_providers {
     aws = {
       source  = "hashicorp/aws"
-      version = ">= 4.45"
+      version = ">=5.0.0"
     }
     crowdstrike = {
       source  = "CrowdStrike/crowdstrike"
