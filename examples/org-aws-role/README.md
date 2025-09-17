@@ -62,8 +62,6 @@ Note:
 
 ```hcl
 agentless_scanning_host_account_id   = var.account_id
-agentless_scanning_host_role_name    = split("/", module.fcs_management_account.integration_role_arn)[1]
-agentless_scanning_host_scanner_role_name = split("/", module.fcs_management_account.scanner_role_arn)[1]
 ```
 
 ## Destroy

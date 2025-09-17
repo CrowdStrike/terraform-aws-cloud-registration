@@ -7,8 +7,6 @@ locals {
   dspm_regions               = ["us-east-1", "us-east-2"]
   use_existing_cloudtrail    = true
   dspm_create_nat_gateway    = var.dspm_create_nat_gateway
-  dspm_role_name             = "CrowdStrikeDSPMIntegrationRole"
-  dspm_scanner_role_name     = "CrowdStrikeDSPMScannerRole"
   dspm_s3_access             = var.dspm_s3_access
   dspm_dynamodb_access       = var.dspm_dynamodb_access
   dspm_rds_access            = var.dspm_rds_access
@@ -75,8 +73,6 @@ module "fcs_management_account" {
   dspm_dynamodb_access    = local.dspm_dynamodb_access
   dspm_rds_access         = local.dspm_rds_access
   dspm_redshift_access    = local.dspm_redshift_access
-  dspm_role_name          = local.dspm_role_name
-  dspm_scanner_role_name  = local.dspm_scanner_role_name
 }
 
 # for each child account you want to onboard
@@ -110,8 +106,6 @@ module "fcs_child_account_1" {
   dspm_rds_access         = local.dspm_rds_access
   dspm_redshift_access    = local.dspm_redshift_access
   agentless_scanning_host_account_id   = var.account_id
-  agentless_scanning_host_role_name    = local.dspm_role_name
-  agentless_scanning_host_scanner_role_name = local.dspm_scanner_role_name
   dspm_integration_role_unique_id = module.fcs_management_account.integration_role_unique_id
   dspm_scanner_role_unique_id = module.fcs_management_account.scanner_role_unique_id
 }
