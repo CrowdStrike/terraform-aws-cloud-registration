@@ -538,9 +538,9 @@ resource "aws_ssm_parameter" "scan_environment_parameter" {
       CreateNatGW          = var.dspm_create_nat_gateway ? "true" : "false"
       PrivateSubnet        = var.use_custom_vpc ? var.region_vpc_config.scanner_subnet : aws_subnet.private_subnet[0].id
       ScannerSecurityGroup = var.use_custom_vpc ? var.region_vpc_config.scanner_sg : aws_security_group.ec2_security_group[0].id
-      DBSubnetGroup        = aws_db_subnet_group.db_subnet_group.name
+      DBSubnetGroup        = aws_db_subnet_group.db_subnet_group[0].name
       DBSecurityGroup      = var.use_custom_vpc ? var.region_vpc_config.db_sg : aws_security_group.db_security_group[0].id
-      RedshiftSubnetGroup  = aws_redshift_subnet_group.redshift_subnet_group.name
+      RedshiftSubnetGroup  = aws_redshift_subnet_group.redshift_subnet_group[0].name
     } : {}
   ))
   description = "Environment configuration for CrowdStrike Scanning"

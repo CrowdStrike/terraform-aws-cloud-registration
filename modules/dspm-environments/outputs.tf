@@ -10,12 +10,12 @@ output "vpc_id" {
 
 output "db_subnet_group_name" {
   description = "Name of the DB subnet group"
-  value       = aws_db_subnet_group.db_subnet_group.name
+  value       = aws_db_subnet_group.db_subnet_group[0].name
 }
 
 output "redshift_subnet_group_name" {
   description = "Name of the Redshift subnet group"
-  value       = aws_redshift_subnet_group.redshift_subnet_group.name
+  value       = aws_redshift_subnet_group.redshift_subnet_group[0].name
 }
 
 output "scanner_subnet_id" {
