@@ -48,7 +48,7 @@ resource "crowdstrike_cloud_aws_account" "this" {
 
 module "fcs_management_account" {
   source                      = "../../modules/aws-profile/"
-  aws_profile                 = "<aws profile for management account>"
+  aws_profile                 = "797120160429_AdministratorAccess"
   falcon_client_id            = var.falcon_client_id
   falcon_client_secret        = var.falcon_client_secret
   account_id                  = var.account_id
@@ -80,7 +80,7 @@ module "fcs_management_account" {
 # - replace `aws_profile` with the correct profile for your child account
 module "fcs_child_account_1" {
   source                      = "../../modules/aws-profile/"
-  aws_profile                 = "<aws profile for this child account>"
+  aws_profile                 = "260362687268_AdministratorAccess"
   falcon_client_id            = var.falcon_client_id
   falcon_client_secret        = var.falcon_client_secret
   organization_id             = var.organization_id
@@ -104,4 +104,7 @@ module "fcs_child_account_1" {
   dspm_dynamodb_access    = local.dspm_dynamodb_access
   dspm_rds_access         = local.dspm_rds_access
   dspm_redshift_access    = local.dspm_redshift_access
+  agentless_scanning_host_account_id   = var.account_id
+  dspm_integration_role_unique_id = module.fcs_management_account.integration_role_unique_id
+  dspm_scanner_role_unique_id = module.fcs_management_account.scanner_role_unique_id
 }

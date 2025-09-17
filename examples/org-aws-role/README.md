@@ -52,6 +52,17 @@ To onboard additional child accounts:
 2. Update the module name and variables as needed
 3. Apply the changes
 
+## DSPM Cross Account Scanning
+
+In this example, DSPM is configured to scan assets in the entire organization from a single account that will host data scanners. 
+Note:
+- The host account in the example is the management account
+- It is extremely important that the deployment complete in the host account before it begins in the target accounts. In order to create this dependency, the target modules utilize the output of the host module.
+- To instead deploy per-account scanning, in which DSPM hosting infrastructure is deployed in each of the organization's accounts, remove the follow code from the child modules:
+
+```hcl
+agentless_scanning_host_account_id   = var.account_id
+```
 
 ## Destroy
 

@@ -237,19 +237,19 @@ variable "agentless_scanning_custom_vpc_resources_map" {
   description = <<-EOT
     Map of regions to custom VPC resources for Agentless Scanning deployment.
     Each region can specify existing VPC resources to use instead of creating new ones.
-    
+
     Example:
     {
       "us-east-1" = {
         vpc            = "vpc-0123456789abcdef0"
-        scanner_subnet = "subnet-0123456789abcdef0" 
+        scanner_subnet = "subnet-0123456789abcdef0"
         scanner_sg     = "sg-0123456789abcdef0"
         db_subnet_a    = "subnet-1123456789abcdef0"
         db_subnet_b    = "subnet-2123456789abcdef0"
         db_sg          = "sg-1123456789abcdef0"
       }
     }
-    
+
     All resource IDs must exist in the specified region.
   EOT
 
@@ -262,4 +262,22 @@ variable "agentless_scanning_custom_vpc_resources_map" {
     db_sg          = string
   }))
   default = {}
+}
+
+variable "agentless_scanning_host_account_id" {
+  type        = string
+  default     = ""
+  description = "The AWS account ID where DSPM host resources are deployed"
+}
+
+variable "agentless_scanning_host_role_name" {
+  type        = string
+  default     = "CrowdStrikeDSPMIntegrationRole"
+  description = "Name of DSPM integration role in host account"
+}
+
+variable "agentless_scanning_host_scanner_role_name" {
+  type        = string
+  default     = "CrowdStrikeDSPMScannerRole"
+  description = "Name of DSPM scanner role in host account"
 }

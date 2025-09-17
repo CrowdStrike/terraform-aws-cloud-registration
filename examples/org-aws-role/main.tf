@@ -105,4 +105,7 @@ module "fcs_child_account_1" {
   dspm_dynamodb_access    = local.dspm_dynamodb_access
   dspm_rds_access         = local.dspm_rds_access
   dspm_redshift_access    = local.dspm_redshift_access
+  agentless_scanning_host_account_id   = var.account_id
+  dspm_integration_role_unique_id = module.fcs_management_account.integration_role_unique_id
+  dspm_scanner_role_unique_id = module.fcs_management_account.scanner_role_unique_id
 }
