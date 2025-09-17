@@ -16,11 +16,12 @@ resource "aws_ssm_parameter" "agentless_scanning_root_parameter" {
   type = "String"
   tier = "Intelligent-Tiering"
   value = jsonencode({
-    version = "1.0"
-    host_account_id = local.is_host_account ? data.aws_caller_identity.current.account_id : var.agentless_scanning_host_account_id
-    scanner_role_arn = aws_iam_role.crowdstrike_aws_dspm_scanner_role.arn
-    instance_profile = local.is_host_account ? aws_iam_instance_profile.instance_profile.name : "null"
+    version            = "1.0.0+tf.1"
     deployment_regions = var.dspm_regions
+    host_account_id    = data.aws_caller_identity.current.account_id
+    scanner_role_arn   = aws_iam_role.crowdstrike_aws_dspm_scanner_role.arn
+    instance_profile = local.is_host_account ? aws_iam_instance_profile.instance_profile.name : "null"
+    host_account_id = local.is_host_account ? data.aws_caller_identity.current.account_id : var.agentless_scanning_host_account_id
     permissions = {
       s3_policy       = var.dspm_s3_access ? "${var.dspm_scanner_role_name}/CrowdStrikeBucketReader" : "null"
       rds_policy      = var.dspm_rds_access ? "${var.dspm_role_name}/CrowdStrikeRDSClone" : "null"
@@ -207,13 +208,19 @@ resource "aws_iam_role_policy" "crowdstrike_secret_reader" {
     Version = "2012-10-17"
     Statement = [
       {
+        Sid = "SecretsManagerReadClientSecret"
         Action = [
           "secretsmanager:GetSecretValue",
           "secretsmanager:DescribeSecret",
-          "secretsmanager:ListSecrets"
         ]
         Effect   = "Allow"
-        Resource = ["*"]
+        Resource = ["arn:aws:secretsmanager:*:*:secret:CrowdStrikeDSPMClientSecret-*"]
+      },
+      {
+        Sid      = "SecretsManagerListSecrets",
+        Action   = "secretsmanager:ListSecrets",
+        Effect   = "Allow",
+        Resource = "*"
       }
     ]
   })
@@ -237,3 +244,4 @@ resource "aws_iam_role_policy" "crowdstrike_assume_target_scanner_role" {
     ]
   })
 }
+

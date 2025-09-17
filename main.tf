@@ -98,20 +98,22 @@ module "realtime_visibility" {
 }
 
 module "dspm_roles" {
-  count                  = (local.is_primary_region && var.enable_dspm) ? 1 : 0
-  source                 = "./modules/dspm-roles/"
-  falcon_client_id       = var.falcon_client_id
-  falcon_client_secret   = var.falcon_client_secret
-  dspm_role_name         = var.dspm_role_name
-  dspm_scanner_role_name = var.dspm_scanner_role_name
-  intermediate_role_arn  = local.intermediate_role_arn
-  external_id            = local.external_id
-  dspm_regions           = var.dspm_regions
-  dspm_s3_access         = var.dspm_s3_access
-  dspm_dynamodb_access   = var.dspm_dynamodb_access
-  dspm_rds_access        = var.dspm_rds_access
-  dspm_redshift_access   = var.dspm_redshift_access
-  tags                   = var.tags
+  count                                       = (local.is_primary_region && var.enable_dspm) ? 1 : 0
+  source                                      = "./modules/dspm-roles/"
+  falcon_client_id                            = var.falcon_client_id
+  falcon_client_secret                        = var.falcon_client_secret
+  dspm_role_name                              = var.dspm_role_name
+  dspm_scanner_role_name                      = var.dspm_scanner_role_name
+  intermediate_role_arn                       = local.intermediate_role_arn
+  external_id                                 = local.external_id
+  dspm_regions                                = var.dspm_regions
+  agentless_scanning_use_custom_vpc           = var.agentless_scanning_use_custom_vpc
+  agentless_scanning_custom_vpc_resources_map = var.agentless_scanning_custom_vpc_resources_map
+  dspm_s3_access                              = var.dspm_s3_access
+  dspm_dynamodb_access                        = var.dspm_dynamodb_access
+  dspm_rds_access                             = var.dspm_rds_access
+  dspm_redshift_access                        = var.dspm_redshift_access
+  tags                                        = var.tags
   account_id = local.aws_account
   agentless_scanning_host_account_id   = var.agentless_scanning_host_account_id
   agentless_scanning_host_role_name    = var.agentless_scanning_host_role_name
@@ -126,11 +128,16 @@ module "dspm_environments" {
   integration_role_unique_id = local.is_primary_region ? module.dspm_roles[0].integration_role_unique_id : var.dspm_integration_role_unique_id
   scanner_role_unique_id     = local.is_primary_region ? module.dspm_roles[0].scanner_role_unique_id : var.dspm_scanner_role_unique_id
   dspm_create_nat_gateway    = var.dspm_create_nat_gateway
-  tags                       = var.tags
-  vpc_cidr_block             = var.vpc_cidr_block
   account_id = local.aws_account
   agentless_scanning_host_account_id   = var.agentless_scanning_host_account_id
   agentless_scanning_host_role_name    = var.agentless_scanning_host_role_name
+
+  # Pass explicit boolean decision and region-specific VPC config
+  use_custom_vpc    = var.agentless_scanning_use_custom_vpc
+  region_vpc_config = var.agentless_scanning_use_custom_vpc ? lookup(var.agentless_scanning_custom_vpc_resources_map, local.aws_region, null) : null
+
+  tags           = var.tags
+  vpc_cidr_block = var.vpc_cidr_block
 
   depends_on = [module.dspm_roles]
 
