@@ -100,3 +100,31 @@ variable "tags" {
   type        = map(string)
   default     = {}
 }
+
+variable "agentless_scanning_host_account_id" {
+  type        = string
+  default     = ""
+  description = "The AWS account ID where DSPM host resources are deployed"
+}
+
+variable "agentless_scanning_host_role_name" {
+  type        = string
+  default     = "CrowdStrikeDSPMIntegrationRole"
+  description = "Name of DSPM integration role in host account"
+}
+
+variable "agentless_scanning_host_scanner_role_name" {
+  type        = string
+  default     = "CrowdStrikeDSPMScannerRole"
+  description = "Name of DSPM scanner role in host account"
+}
+
+variable "account_id" {
+  type        = string
+  default     = ""
+  description = "The AWS 12 digit account ID"
+  validation {
+    condition     = length(var.account_id) == 0 || can(regex("^[0-9]{12}$", var.account_id))
+    error_message = "account_id must be either empty or the 12-digit AWS account ID"
+  }
+}

@@ -95,6 +95,7 @@ module "fcs_account" {
   dspm_redshift_access    = local.dspm_redshift_access
   agentless_scanning_host_account_id   = var.agentless_scanning_host_account_id
   agentless_scanning_host_role_name    = var.agentless_scanning_host_role_name
+  agentless_scanning_host_scanner_role_name = var.agentless_scanning_host_scanner_role_name
 
   providers = {
     crowdstrike = crowdstrike

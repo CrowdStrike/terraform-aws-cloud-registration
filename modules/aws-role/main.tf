@@ -1,7 +1,10 @@
+data "aws_caller_identity" "current" {}
+
 locals {
   aws_partition     = var.account_type == "gov" ? "aws-us-gov" : "aws"
   is_gov_commercial = var.is_gov && var.account_type == "commercial"
   account_role_arn  = "arn:${local.aws_partition}:iam::${var.account_id}:role/${var.aws_role_name}"
+  aws_account = data.aws_caller_identity.current.account_id
 }
 
 provider "aws" {
@@ -88,4 +91,8 @@ module "dspm_roles" {
   dspm_rds_access        = var.dspm_rds_access
   dspm_redshift_access   = var.dspm_redshift_access
   tags                   = var.tags
+  account_id = local.aws_account
+  agentless_scanning_host_account_id   = var.agentless_scanning_host_account_id
+  agentless_scanning_host_role_name    = var.agentless_scanning_host_role_name
+  agentless_scanning_host_scanner_role_name = var.agentless_scanning_host_scanner_role_name
 }

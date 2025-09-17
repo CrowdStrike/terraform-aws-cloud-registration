@@ -1,5 +1,3 @@
-data "aws_caller_identity" "current" {}
-
 # Policy document for host account
 data "aws_iam_policy_document" "policy_kms_key_host" {
   #checkov:skip=CKV_AWS_356:Root user requires unrestricted KMS access according to AWS documentation https://docs.aws.amazon.com/kms/latest/developerguide/key-policy-default.html
@@ -9,7 +7,7 @@ data "aws_iam_policy_document" "policy_kms_key_host" {
     effect = "Allow"
     principals {
       type        = "AWS"
-      identifiers = [join("", ["arn:aws:iam::", local.account_id, ":root"])]
+      identifiers = ["arn:aws:iam::${local.account_id}:root"]
     }
     actions = [
       "kms:*"
@@ -22,7 +20,7 @@ data "aws_iam_policy_document" "policy_kms_key_host" {
     effect = "Allow"
     principals {
       type        = "AWS"
-      identifiers = [join("", ["arn:aws:iam::", local.account_id, ":role/", var.dspm_role_name])]
+      identifiers = ["arn:aws:iam::${local.account_id}:role/${var.dspm_role_name}"]
     }
     actions = [
       "kms:Create*",
@@ -47,8 +45,8 @@ data "aws_iam_policy_document" "policy_kms_key_host" {
     principals {
       type        = "AWS"
       identifiers = [
-        join("", ["arn:aws:iam::", local.account_id, ":role/", var.dspm_role_name]),
-        join("", ["arn:aws:iam::", local.account_id, ":role/", var.dspm_scanner_role_name])
+        "arn:aws:iam::${local.account_id}:role/${var.dspm_role_name}",
+        "arn:aws:iam::${local.account_id}:role/${var.dspm_scanner_role_name}"
       ]
     }
     actions = [
@@ -72,7 +70,7 @@ data "aws_iam_policy_document" "policy_kms_key_target" {
     effect = "Allow"
     principals {
       type        = "AWS"
-      identifiers = [join("", ["arn:aws:iam::", local.account_id, ":root"])]
+      identifiers = ["arn:aws:iam::${local.account_id}:root"]
     }
     actions = [
       "kms:*"
@@ -85,7 +83,7 @@ data "aws_iam_policy_document" "policy_kms_key_target" {
     effect = "Allow"
     principals {
       type        = "AWS"
-      identifiers = [join("", ["arn:aws:iam::", local.account_id, ":role/", var.dspm_role_name])]
+      identifiers = ["arn:aws:iam::${local.account_id}:role/${var.dspm_role_name}"]
     }
     actions = [
       "kms:Create*",
@@ -110,9 +108,9 @@ data "aws_iam_policy_document" "policy_kms_key_target" {
     principals {
       type        = "AWS"
       identifiers = [
-        join("", ["arn:aws:iam::", local.account_id, ":role/", var.dspm_role_name]),
-        join("", ["arn:aws:iam::", local.account_id, ":role/", var.dspm_scanner_role_name]),
-        join("", ["arn:aws:iam::", var.agentless_scanning_host_account_id, ":role/", var.agentless_scanning_host_role_name])
+        "arn:aws:iam::${local.account_id}:role/${var.dspm_role_name}",
+        "arn:aws:iam::${local.account_id}:role/${var.dspm_scanner_role_name}",
+        "arn:aws:iam::${var.agentless_scanning_host_account_id}:role/${var.agentless_scanning_host_role_name}"
       ]
     }
     actions = [
@@ -132,7 +130,7 @@ data "aws_iam_policy_document" "policy_kms_key_target" {
     principals {
       type        = "AWS"
       identifiers = [
-        join("", ["arn:aws:iam::", var.agentless_scanning_host_account_id, ":role/", var.agentless_scanning_host_role_name])
+        "arn:aws:iam::${var.agentless_scanning_host_account_id}:role/${var.agentless_scanning_host_role_name}"
       ]
     }
     actions = [

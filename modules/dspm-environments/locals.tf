@@ -14,5 +14,6 @@ locals {
   account_id                    = data.aws_caller_identity.current.account_id
   
   # Condition to determine if this is the host account
-  is_host_account = local.account_id == var.agentless_scanning_host_account_id || var.agentless_scanning_host_account_id == ""
+  # If agentless_scanning_host_account_id is empty, this is the host account
+  is_host_account = var.agentless_scanning_host_account_id == var.account_id || var.agentless_scanning_host_account_id == ""
 }

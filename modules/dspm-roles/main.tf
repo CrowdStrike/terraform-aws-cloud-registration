@@ -16,6 +16,11 @@ resource "aws_ssm_parameter" "agentless_scanning_root_parameter" {
   type = "String"
   tier = "Intelligent-Tiering"
   value = jsonencode({
+    version = "1.0"
+    host_account_id = local.is_host_account ? data.aws_caller_identity.current.account_id : var.agentless_scanning_host_account_id
+    scanner_role_arn = aws_iam_role.crowdstrike_aws_dspm_scanner_role.arn
+    instance_profile = local.is_host_account ? aws_iam_instance_profile.instance_profile.name : "null"
+    deployment_regions = var.dspm_regions
     permissions = {
       s3_policy       = var.dspm_s3_access ? "${var.dspm_scanner_role_name}/CrowdStrikeBucketReader" : "null"
       rds_policy      = var.dspm_rds_access ? "${var.dspm_role_name}/CrowdStrikeRDSClone" : "null"
@@ -35,7 +40,7 @@ resource "aws_ssm_parameter" "agentless_scanning_root_parameter" {
 resource "aws_iam_role" "crowdstrike_aws_dspm_scanner_role" {
   name = var.dspm_scanner_role_name
   path = "/"
-  assume_role_policy = jsonencode({
+  assume_role_policy = local.is_host_account ? jsonencode({
     Version = "2012-10-17"
     Statement = [
       {
@@ -44,6 +49,17 @@ resource "aws_iam_role" "crowdstrike_aws_dspm_scanner_role" {
         Principal = {
           Service = "ec2.amazonaws.com"
         }
+      }
+    ]
+  }) : jsonencode({
+    Version = "2008-10-17"
+    Statement = [
+      {
+        Effect = "Allow"
+        Principal = {
+          AWS = "arn:aws:iam::${var.agentless_scanning_host_account_id}:role/${var.agentless_scanning_host_scanner_role_name}"
+        }
+        Action = "sts:AssumeRole"
       }
     ]
   })
@@ -159,7 +175,7 @@ resource "aws_iam_role_policy" "crowdstrike_dynamodb_reader" {
 }
 
 resource "aws_iam_role_policy" "crowdstrike_redshift_reader" {
-  count = var.dspm_redshift_access ? 1 : 0
+  count = (var.dspm_redshift_access && local.is_host_account) ? 1 : 0
   #checkov:skip=CKV_AWS_355:DSPM data scanner requires read access to all scannable redshift assets
   #checkov:skip=CKV_AWS_290,CKV_AWS_287:DSPM data scanner requires redshift:Get* permissions
   name = "CrowdStrikeRedshiftReader"
@@ -184,25 +200,39 @@ resource "aws_iam_role_policy" "crowdstrike_redshift_reader" {
 }
 
 resource "aws_iam_role_policy" "crowdstrike_secret_reader" {
+  count = local.is_host_account ? 1 : 0
   name = "CrowdStrikeSecretReader"
   role = aws_iam_role.crowdstrike_aws_dspm_scanner_role.id
   policy = jsonencode({
     Version = "2012-10-17"
     Statement = [
       {
-        Sid = "SecretsManagerReadClientSecret"
         Action = [
           "secretsmanager:GetSecretValue",
           "secretsmanager:DescribeSecret",
+          "secretsmanager:ListSecrets"
         ]
         Effect   = "Allow"
-        Resource = ["arn:aws:secretsmanager:*:*:secret:CrowdStrikeDSPMClientSecret-*"]
-      },
+        Resource = ["*"]
+      }
+    ]
+  })
+}
+
+resource "aws_iam_role_policy" "crowdstrike_assume_target_scanner_role" {
+  count = local.is_host_account ? 1 : 0
+  name = "CrowdStrikeAssumeTargetScannerRole"
+  role = aws_iam_role.crowdstrike_aws_dspm_scanner_role.id
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
       {
-        Sid      = "SecretsManagerListSecrets",
-        Action   = "secretsmanager:ListSecrets",
-        Effect   = "Allow",
-        Resource = "*"
+        Sid = "AssumeRole"
+        Effect = "Allow"
+        Action = [
+          "sts:AssumeRole"
+        ]
+        Resource = "arn:aws:iam::*:role/*"
       }
     ]
   })

@@ -55,3 +55,13 @@ variable "agentless_scanning_host_role_name" {
   default     = "CrowdStrikeDSPMIntegrationRole"
   description = "Name of DSPM integration role in host account"
 }
+
+variable "account_id" {
+  type        = string
+  default     = ""
+  description = "The AWS 12 digit account ID"
+  validation {
+    condition     = length(var.account_id) == 0 || can(regex("^[0-9]{12}$", var.account_id))
+    error_message = "account_id must be either empty or the 12-digit AWS account ID"
+  }
+}

@@ -106,8 +106,9 @@ module "fcs_account_onboarding" {
   dspm_dynamodb_access    = var.dspm_dynamodb_access
   dspm_rds_access         = var.dspm_rds_access
   dspm_redshift_access    = var.dspm_redshift_access
-  agentless_scanning_host_account_id   = var.agentless_scanning_host_account_id
-  agentless_scanning_host_role_name    = var.agentless_scanning_host_role_name
+  agentless_scanning_host_account_id       = var.agentless_scanning_host_account_id
+  agentless_scanning_host_role_name        = var.agentless_scanning_host_role_name
+  agentless_scanning_host_scanner_role_name = var.agentless_scanning_host_scanner_role_name
 
   providers = {
     aws         = aws.us-east-1
@@ -149,8 +150,9 @@ module "fcs_account_us_east_2" {
   dspm_dynamodb_access    = var.dspm_dynamodb_access
   dspm_rds_access         = var.dspm_rds_access
   dspm_redshift_access    = var.dspm_redshift_access
-  agentless_scanning_host_account_id   = var.agentless_scanning_host_account_id
-  agentless_scanning_host_role_name    = var.agentless_scanning_host_role_name
+  agentless_scanning_host_account_id       = var.agentless_scanning_host_account_id
+  agentless_scanning_host_role_name        = var.agentless_scanning_host_role_name
+  agentless_scanning_host_scanner_role_name = var.agentless_scanning_host_scanner_role_name
 
   providers = {
     aws         = aws.us-east-2
@@ -192,8 +194,9 @@ module "fcs_account_us_west_1" {
   dspm_dynamodb_access    = var.dspm_dynamodb_access
   dspm_rds_access         = var.dspm_rds_access
   dspm_redshift_access    = var.dspm_redshift_access
-  agentless_scanning_host_account_id   = var.agentless_scanning_host_account_id
-  agentless_scanning_host_role_name    = var.agentless_scanning_host_role_name
+  agentless_scanning_host_account_id       = var.agentless_scanning_host_account_id
+  agentless_scanning_host_role_name        = var.agentless_scanning_host_role_name
+  agentless_scanning_host_scanner_role_name = var.agentless_scanning_host_scanner_role_name
 
   providers = {
     aws         = aws.us-west-1
@@ -235,8 +238,9 @@ module "fcs_account_us_west_2" {
   dspm_dynamodb_access    = var.dspm_dynamodb_access
   dspm_rds_access         = var.dspm_rds_access
   dspm_redshift_access    = var.dspm_redshift_access
-  agentless_scanning_host_account_id   = var.agentless_scanning_host_account_id
-  agentless_scanning_host_role_name    = var.agentless_scanning_host_role_name
+  agentless_scanning_host_account_id       = var.agentless_scanning_host_account_id
+  agentless_scanning_host_role_name        = var.agentless_scanning_host_role_name
+  agentless_scanning_host_scanner_role_name = var.agentless_scanning_host_scanner_role_name
 
   providers = {
     aws         = aws.us-west-2

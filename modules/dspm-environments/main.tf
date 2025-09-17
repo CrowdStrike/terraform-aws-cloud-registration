@@ -24,7 +24,7 @@ resource "aws_vpc" "vpc" {
 
 resource "aws_internet_gateway" "internet_gateway" {
   count                = local.is_host_account ? 1 : 0
-  vpc_id = aws_vpc.vpc.id
+  vpc_id = aws_vpc.vpc[0].id
 
   tags = merge(
     var.tags,
@@ -34,12 +34,12 @@ resource "aws_internet_gateway" "internet_gateway" {
     }
   )
 
-  depends_on = [aws_vpc.vpc]
+  depends_on = [aws_vpc.vpc[0]]
 }
 
 resource "aws_subnet" "db_subnet_a" {
   count                = local.is_host_account ? 1 : 0
-  vpc_id            = aws_vpc.vpc.id
+  vpc_id            = aws_vpc.vpc[0].id
   cidr_block        = cidrsubnet("${var.vpc_cidr_block}", 8, 0)
   availability_zone = data.aws_availability_zones.available.names[0]
 
@@ -58,7 +58,7 @@ resource "aws_subnet" "db_subnet_a" {
 
 resource "aws_subnet" "db_subnet_b" {
   count                = local.is_host_account ? 1 : 0
-  vpc_id            = aws_vpc.vpc.id
+  vpc_id            = aws_vpc.vpc[0].id
   cidr_block        = cidrsubnet("${var.vpc_cidr_block}", 8, 1)
   availability_zone = data.aws_availability_zones.available.names[1]
 
@@ -79,7 +79,7 @@ resource "aws_db_subnet_group" "db_subnet_group" {
   count                = local.is_host_account ? 1 : 0
   name        = "${var.deployment_name}-db-subnet-group"
   description = "CrowdStrike Security DB subnet group"
-  subnet_ids  = [aws_subnet.db_subnet_a.id, aws_subnet.db_subnet_b.id]
+  subnet_ids  = [aws_subnet.db_subnet_a[0].id, aws_subnet.db_subnet_b[0].id]
 
   tags = merge(
     var.tags,
@@ -95,7 +95,7 @@ resource "aws_redshift_subnet_group" "redshift_subnet_group" {
   count                = local.is_host_account ? 1 : 0
   name        = "${var.deployment_name}-redshift-subnet-group"
   description = "CrowdStrike Security Redshift subnet group"
-  subnet_ids  = [aws_subnet.db_subnet_a.id, aws_subnet.db_subnet_b.id]
+  subnet_ids  = [aws_subnet.db_subnet_a[0].id, aws_subnet.db_subnet_b[0].id]
 
   tags = merge(
     var.tags,
@@ -109,7 +109,7 @@ resource "aws_redshift_subnet_group" "redshift_subnet_group" {
 
 resource "aws_subnet" "public_subnet" {
   count             = var.dspm_create_nat_gateway && local.is_host_account ? 1 : 0
-  vpc_id            = aws_vpc.vpc.id
+  vpc_id            = aws_vpc.vpc[0].id
   cidr_block        = cidrsubnet("${var.vpc_cidr_block}", 8, 2)
   availability_zone = data.aws_availability_zones.available.names[0]
 
@@ -128,7 +128,7 @@ resource "aws_subnet" "public_subnet" {
 
 resource "aws_subnet" "private_subnet" {
   count                = local.is_host_account ? 1 : 0
-  vpc_id            = aws_vpc.vpc.id
+  vpc_id            = aws_vpc.vpc[0].id
   cidr_block        = cidrsubnet("${var.vpc_cidr_block}", 8, 3)
   availability_zone = data.aws_availability_zones.available.names[0]
 
@@ -148,12 +148,12 @@ resource "aws_subnet" "private_subnet" {
 
 resource "aws_route_table" "public_route_table" {
   count                = local.is_host_account ? 1 : 0
-  vpc_id = aws_vpc.vpc.id
+  vpc_id = aws_vpc.vpc[0].id
 
   # PublicRoute1
   route {
     cidr_block = "0.0.0.0/0"
-    gateway_id = aws_internet_gateway.internet_gateway.id
+    gateway_id = aws_internet_gateway.internet_gateway[0].id
   }
 
   tags = merge(
@@ -197,13 +197,13 @@ resource "aws_nat_gateway" "nat_gateway" {
 
 resource "aws_route_table" "private_route_table" {
   count                = local.is_host_account ? 1 : 0
-  vpc_id = aws_vpc.vpc.id
+  vpc_id = aws_vpc.vpc[0].id
 
   # PrivateRoute - conditionally use NAT Gateway or Internet Gateway
   route {
     cidr_block     = "0.0.0.0/0"
     nat_gateway_id = var.dspm_create_nat_gateway ? aws_nat_gateway.nat_gateway[0].id : null
-    gateway_id     = var.dspm_create_nat_gateway ? null : aws_internet_gateway.internet_gateway.id
+    gateway_id     = var.dspm_create_nat_gateway ? null : aws_internet_gateway.internet_gateway[0].id
   }
 
   tags = merge(
@@ -218,18 +218,18 @@ resource "aws_route_table" "private_route_table" {
 resource "aws_route_table_association" "public_subnet_route_table_association" {
   count          = var.dspm_create_nat_gateway && local.is_host_account ? 1 : 0
   subnet_id      = aws_subnet.public_subnet[0].id
-  route_table_id = aws_route_table.public_route_table.id
+  route_table_id = aws_route_table.public_route_table[0].id
 }
 
 resource "aws_route_table_association" "private_subnet_route_table_association" {
   count                = local.is_host_account ? 1 : 0
-  subnet_id      = aws_subnet.private_subnet.id
-  route_table_id = aws_route_table.private_route_table.id
+  subnet_id      = aws_subnet.private_subnet[0].id
+  route_table_id = aws_route_table.private_route_table[0].id
 }
 
 resource "aws_network_acl" "network_acl" {
   count                = local.is_host_account ? 1 : 0
-  vpc_id = aws_vpc.vpc.id
+  vpc_id = aws_vpc.vpc[0].id
 
   tags = merge(
     var.tags,
@@ -242,7 +242,7 @@ resource "aws_network_acl" "network_acl" {
 
 resource "aws_network_acl_rule" "inbound_a" {
   count                = local.is_host_account ? 1 : 0
-  network_acl_id = aws_network_acl.network_acl.id
+  network_acl_id = aws_network_acl.network_acl[0].id
   rule_number    = 100
   protocol       = "-1"
   rule_action    = "allow"
@@ -252,7 +252,7 @@ resource "aws_network_acl_rule" "inbound_a" {
 
 resource "aws_network_acl_rule" "inbound_b" {
   count                = local.is_host_account ? 1 : 0
-  network_acl_id = aws_network_acl.network_acl.id
+  network_acl_id = aws_network_acl.network_acl[0].id
   rule_number    = 110
   protocol       = "-1"
   rule_action    = "allow"
@@ -262,7 +262,7 @@ resource "aws_network_acl_rule" "inbound_b" {
 
 resource "aws_network_acl_rule" "outbound" {
   count                = local.is_host_account ? 1 : 0
-  network_acl_id = aws_network_acl.network_acl.id
+  network_acl_id = aws_network_acl.network_acl[0].id
   rule_number    = 100
   protocol       = "-1"
   rule_action    = "allow"
@@ -273,25 +273,25 @@ resource "aws_network_acl_rule" "outbound" {
 resource "aws_network_acl_association" "public_subnet_nacl_association" {
   count          = var.dspm_create_nat_gateway && local.is_host_account ? 1 : 0
   subnet_id      = aws_subnet.public_subnet[0].id
-  network_acl_id = aws_network_acl.network_acl.id
+  network_acl_id = aws_network_acl.network_acl[0].id
 }
 
 resource "aws_network_acl_association" "private_subnet_nacl_association" {
   count                = local.is_host_account ? 1 : 0
-  subnet_id      = aws_subnet.private_subnet.id
-  network_acl_id = aws_network_acl.network_acl.id
+  subnet_id      = aws_subnet.private_subnet[0].id
+  network_acl_id = aws_network_acl.network_acl[0].id
 }
 
 resource "aws_network_acl_association" "db_subnet_a_nacl_association" {
   count                = local.is_host_account ? 1 : 0
-  subnet_id      = aws_subnet.db_subnet_a.id
-  network_acl_id = aws_network_acl.network_acl.id
+  subnet_id      = aws_subnet.db_subnet_a[0].id
+  network_acl_id = aws_network_acl.network_acl[0].id
 }
 
 resource "aws_network_acl_association" "db_subnet_b_nacl_association" {
   count                = local.is_host_account ? 1 : 0
-  subnet_id      = aws_subnet.db_subnet_b.id
-  network_acl_id = aws_network_acl.network_acl.id
+  subnet_id      = aws_subnet.db_subnet_b[0].id
+  network_acl_id = aws_network_acl.network_acl[0].id
 }
 
 resource "aws_security_group" "ec2_security_group" {
@@ -299,7 +299,7 @@ resource "aws_security_group" "ec2_security_group" {
   count                = local.is_host_account ? 1 : 0
   name        = "EC2SecurityGroup"
   description = "Security group attached to CrowdStrike provisioned EC2 instances for running data scanners"
-  vpc_id      = aws_vpc.vpc.id
+  vpc_id      = aws_vpc.vpc[0].id
 
   # General outbound traffic
   egress {
@@ -324,7 +324,7 @@ resource "aws_security_group" "db_security_group" {
   count                = local.is_host_account ? 1 : 0
   name        = "DBSecurityGroup"
   description = "Security group attached to RDS instance to allow EC2 instances with specific security groups attached to connect to the database"
-  vpc_id      = aws_vpc.vpc.id
+  vpc_id      = aws_vpc.vpc[0].id
 
   # postgres
   ingress {
@@ -332,7 +332,7 @@ resource "aws_security_group" "db_security_group" {
     from_port       = 5432
     to_port         = 5432
     protocol        = "tcp"
-    security_groups = [aws_security_group.ec2_security_group.id]
+    security_groups = [aws_security_group.ec2_security_group[0].id]
   }
 
   # mysql
@@ -341,7 +341,7 @@ resource "aws_security_group" "db_security_group" {
     from_port       = 3306
     to_port         = 3306
     protocol        = "tcp"
-    security_groups = [aws_security_group.ec2_security_group.id]
+    security_groups = [aws_security_group.ec2_security_group[0].id]
   }
 
   # oracle
@@ -350,7 +350,7 @@ resource "aws_security_group" "db_security_group" {
     from_port       = 1521
     to_port         = 1523
     protocol        = "tcp"
-    security_groups = [aws_security_group.ec2_security_group.id]
+    security_groups = [aws_security_group.ec2_security_group[0].id]
   }
 
   # sql server
@@ -359,7 +359,7 @@ resource "aws_security_group" "db_security_group" {
     from_port       = 1433
     to_port         = 1433
     protocol        = "tcp"
-    security_groups = [aws_security_group.ec2_security_group.id]
+    security_groups = [aws_security_group.ec2_security_group[0].id]
   }
 
   # mongo
@@ -368,7 +368,7 @@ resource "aws_security_group" "db_security_group" {
     from_port       = 27017
     to_port         = 27017
     protocol        = "tcp"
-    security_groups = [aws_security_group.ec2_security_group.id]
+    security_groups = [aws_security_group.ec2_security_group[0].id]
   }
 
   # redis
@@ -377,7 +377,7 @@ resource "aws_security_group" "db_security_group" {
     from_port       = 6379
     to_port         = 6379
     protocol        = "tcp"
-    security_groups = [aws_security_group.ec2_security_group.id]
+    security_groups = [aws_security_group.ec2_security_group[0].id]
   }
 
   # cassandra
@@ -386,7 +386,7 @@ resource "aws_security_group" "db_security_group" {
     from_port       = 9042
     to_port         = 9042
     protocol        = "tcp"
-    security_groups = [aws_security_group.ec2_security_group.id]
+    security_groups = [aws_security_group.ec2_security_group[0].id]
   }
 
   # open search
@@ -395,7 +395,7 @@ resource "aws_security_group" "db_security_group" {
     from_port       = 9200
     to_port         = 9200
     protocol        = "tcp"
-    security_groups = [aws_security_group.ec2_security_group.id]
+    security_groups = [aws_security_group.ec2_security_group[0].id]
   }
 
   # redshift
@@ -404,7 +404,7 @@ resource "aws_security_group" "db_security_group" {
     from_port       = 5439
     to_port         = 5439
     protocol        = "tcp"
-    security_groups = [aws_security_group.ec2_security_group.id]
+    security_groups = [aws_security_group.ec2_security_group[0].id]
   }
 
   tags = merge(
@@ -419,10 +419,10 @@ resource "aws_security_group" "db_security_group" {
 
 resource "aws_vpc_endpoint" "s3_endpoint" {
   count                = local.is_host_account ? 1 : 0
-  vpc_id            = aws_vpc.vpc.id
+  vpc_id            = aws_vpc.vpc[0].id
   service_name      = "com.amazonaws.${local.aws_region}.s3"
   vpc_endpoint_type = "Gateway"
-  route_table_ids   = [aws_route_table.private_route_table.id]
+  route_table_ids   = [aws_route_table.private_route_table[0].id]
 
   policy = jsonencode({
     Version = "2012-10-17"
@@ -437,7 +437,7 @@ resource "aws_vpc_endpoint" "s3_endpoint" {
         Resource  = "*"
         Condition = {
           StringEquals = {
-            "aws:SourceVpc" = aws_vpc.vpc.id
+            "aws:SourceVpc" = aws_vpc.vpc[0].id
           }
         }
       }
@@ -456,10 +456,10 @@ resource "aws_vpc_endpoint" "s3_endpoint" {
 
 resource "aws_vpc_endpoint" "dynamodb_endpoint" {
   count                = local.is_host_account ? 1 : 0
-  vpc_id            = aws_vpc.vpc.id
+  vpc_id            = aws_vpc.vpc[0].id
   service_name      = "com.amazonaws.${local.aws_region}.dynamodb"
   vpc_endpoint_type = "Gateway"
-  route_table_ids   = [aws_route_table.private_route_table.id]
+  route_table_ids   = [aws_route_table.private_route_table[0].id]
 
   policy = jsonencode({
     Version = "2012-10-17"
@@ -479,7 +479,7 @@ resource "aws_vpc_endpoint" "dynamodb_endpoint" {
         Resource  = "*"
         Condition = {
           StringEquals = {
-            "aws:SourceVpc" = aws_vpc.vpc.id
+            "aws:SourceVpc" = aws_vpc.vpc[0].id
           }
         }
       }
@@ -492,6 +492,38 @@ resource "aws_vpc_endpoint" "dynamodb_endpoint" {
       Name                        = "${var.deployment_name}-DynamoDB-Endpoint"
       (local.crowdstrike_tag_key) = local.crowdstrike_tag_value
       (local.logical_tag_key)     = "DynamoDBEndpoint"
+    }
+  )
+}
+
+# Regional SSM parameter containing environment configuration
+resource "aws_ssm_parameter" "scan_environment_parameter" {
+  name = "/CrowdStrike/AgentlessScanning/Environment"
+  type = "String"
+  tier = "Intelligent-Tiering"
+  value = jsonencode(merge(
+    {
+      KMSKey = aws_kms_key.crowdstrike_kms_key.arn
+    },
+    local.is_host_account ? {
+      DBSubnetA            = aws_subnet.db_subnet_a[0].id
+      DBSubnetB            = aws_subnet.db_subnet_b[0].id
+      VpcId                = aws_vpc.vpc[0].id
+      CreateVPC            = "true"
+      CreateNatGW          = var.dspm_create_nat_gateway ? "true" : "false"
+      PrivateSubnet        = aws_subnet.private_subnet[0].id
+      ScannerSecurityGroup = aws_security_group.ec2_security_group[0].id
+      DBSubnetGroup        = aws_db_subnet_group.db_subnet_group[0].name
+      DBSecurityGroup      = aws_security_group.db_security_group[0].id
+      RedshiftSubnetGroup  = aws_redshift_subnet_group.redshift_subnet_group[0].name
+    } : {}
+  ))
+  description = "Environment configuration for CrowdStrike Scanning"
+  tags = merge(
+    var.tags,
+    {
+      (local.crowdstrike_tag_key) = local.crowdstrike_tag_value
+      (local.logical_tag_key)     = "ScanEnvironmentParameter"
     }
   )
 }

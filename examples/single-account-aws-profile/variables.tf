@@ -78,3 +78,9 @@ variable "agentless_scanning_host_role_name" {
   default     = "CrowdStrikeDSPMIntegrationRole"
   description = "Name of DSPM integration role in host account"
 }
+
+variable "agentless_scanning_host_scanner_role_name" {
+  type        = string
+  default     = "CrowdStrikeDSPMScannerRole"
+  description = "Name of DSPM scanner role in host account"
+}

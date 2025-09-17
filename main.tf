@@ -1,5 +1,7 @@
 data "aws_region" "current" {}
 
+data "aws_caller_identity" "current" {}
+
 data "crowdstrike_cloud_aws_account" "target" {
   account_id      = var.account_id
   organization_id = length(var.account_id) != 0 ? null : var.organization_id
@@ -7,6 +9,7 @@ data "crowdstrike_cloud_aws_account" "target" {
 
 locals {
   aws_region        = data.aws_region.current.name
+  aws_account = data.aws_caller_identity.current.account_id
   is_primary_region = local.aws_region == var.primary_region
 
   # if we target by account_id, it will be the only account returned
@@ -109,6 +112,10 @@ module "dspm_roles" {
   dspm_rds_access        = var.dspm_rds_access
   dspm_redshift_access   = var.dspm_redshift_access
   tags                   = var.tags
+  account_id = local.aws_account
+  agentless_scanning_host_account_id   = var.agentless_scanning_host_account_id
+  agentless_scanning_host_role_name    = var.agentless_scanning_host_role_name
+  agentless_scanning_host_scanner_role_name = var.agentless_scanning_host_scanner_role_name
 }
 
 module "dspm_environments" {
@@ -121,6 +128,7 @@ module "dspm_environments" {
   dspm_create_nat_gateway    = var.dspm_create_nat_gateway
   tags                       = var.tags
   vpc_cidr_block             = var.vpc_cidr_block
+  account_id = local.aws_account
   agentless_scanning_host_account_id   = var.agentless_scanning_host_account_id
   agentless_scanning_host_role_name    = var.agentless_scanning_host_role_name
 
