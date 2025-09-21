@@ -216,8 +216,9 @@ module "fcs_account_us_east_2" {
 }
 ```
 
-## DSPM Custom VPC Configuration
+## DSPM Configurations
 
+### Custom VPC 
 For DSPM deployments, you can optionally use your existing network resources instead of the default resources provisioned by CrowdStrike.
 
 **Key Points:**
