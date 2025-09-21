@@ -4,8 +4,8 @@ locals {
   enable_idp                 = true
   enable_sensor_management   = true
   enable_dspm                = true
-  dspm_regions               = ["us-east-1", "us-east-2"]
   use_existing_cloudtrail    = true
+  dspm_regions               = ["us-east-1", "us-east-2"]
   dspm_create_nat_gateway    = var.dspm_create_nat_gateway
   dspm_s3_access             = var.dspm_s3_access
   dspm_dynamodb_access       = var.dspm_dynamodb_access
@@ -105,7 +105,6 @@ module "fcs_child_account_1" {
   dspm_dynamodb_access    = local.dspm_dynamodb_access
   dspm_rds_access         = local.dspm_rds_access
   dspm_redshift_access    = local.dspm_redshift_access
-  agentless_scanning_host_account_id   = var.account_id
-  dspm_integration_role_unique_id = module.fcs_management_account.integration_role_unique_id
-  dspm_scanner_role_unique_id = module.fcs_management_account.scanner_role_unique_id
+  agentless_scanning_host_account_id   = var.account_id # sets the management account as the DSPM host account
+  agentless_scanning_integration_role_unique_id = module.fcs_management_account.agentless_scanning_integration_role_unique_id
 }

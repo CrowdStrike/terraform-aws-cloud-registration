@@ -15,4 +15,6 @@ locals {
   
   # Condition to determine if this is the host account
   is_host_account = var.agentless_scanning_host_account_id == var.account_id || var.agentless_scanning_host_account_id == ""
+  # Condition to determine whether scanning infrastructure should be created in this account
+  create_scanning_infrastructure = local.is_host_account && !var.use_custom_vpc
 }

@@ -20,13 +20,13 @@ resource "aws_ssm_parameter" "agentless_scanning_root_parameter" {
     deployment_regions = var.dspm_regions
     host_account_id    = data.aws_caller_identity.current.account_id
     scanner_role_arn   = aws_iam_role.crowdstrike_aws_dspm_scanner_role.arn
-    instance_profile = local.is_host_account ? aws_iam_instance_profile.instance_profile.name : "null"
+    instance_profile = local.is_host_account ? aws_iam_instance_profile.instance_profile.name : ""
     host_account_id = local.is_host_account ? data.aws_caller_identity.current.account_id : var.agentless_scanning_host_account_id
     permissions = {
-      s3_policy       = var.dspm_s3_access ? "${var.dspm_scanner_role_name}/CrowdStrikeBucketReader" : "null"
-      rds_policy      = var.dspm_rds_access ? "${var.dspm_role_name}/CrowdStrikeRDSClone" : "null"
-      dynamodb_policy = var.dspm_dynamodb_access ? "${var.dspm_scanner_role_name}/CrowdStrikeDynamoDBReader" : "null"
-      redshift_policy = var.dspm_redshift_access ? "${var.dspm_role_name}/CrowdStrikeRedshiftClone" : "null"
+      s3_policy       = var.dspm_s3_access ? "${var.dspm_scanner_role_name}/CrowdStrikeBucketReader" : ""
+      rds_policy      = var.dspm_rds_access ? "${var.dspm_role_name}/CrowdStrikeRDSClone" : ""
+      dynamodb_policy = var.dspm_dynamodb_access ? "${var.dspm_scanner_role_name}/CrowdStrikeDynamoDBReader" : ""
+      redshift_policy = var.dspm_redshift_access ? "${var.dspm_role_name}/CrowdStrikeRedshiftClone" : ""
     }
   })
   description = "Tracks which datastore services are enabled for DSPM scanning via their policies"

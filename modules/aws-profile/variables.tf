@@ -243,29 +243,37 @@ variable "agentless_scanning_host_account_id" {
   type        = string
   default     = ""
   description = "The AWS account ID where DSPM host resources are deployed"
+
+  validation {
+    condition     = var.agentless_scanning_host_account_id == "" || can(regex("^\\d{12}$", var.agentless_scanning_host_account_id))
+    error_message = "Agentless scanning host account ID must be empty or 12 digits."
+  }
 }
 
 variable "agentless_scanning_host_role_name" {
   type        = string
   default     = "CrowdStrikeDSPMIntegrationRole"
-  description = "Name of DSPM integration role in host account"
+  description = "Name of agentless scanning integration role in host account"
+
+  validation {
+    condition     = can(regex("^$|^[a-zA-Z0-9+=,.@_-]{1,64}$", var.agentless_scanning_host_scanner_role_name))
+    error_message = "Role name must be empty or use only alphanumeric and '+=,.@-_' characters, maximum 64 characters."
+  }
 }
 
 variable "agentless_scanning_host_scanner_role_name" {
   type        = string
   default     = "CrowdStrikeDSPMScannerRole"
-  description = "Name of DSPM scanner role in host account"
+  description = "Name of angentless scanning scanner role in host account"
+
+  validation {
+    condition     = can(regex("^$|^[a-zA-Z0-9+=,.@_-]{1,64}$", var.agentless_scanning_host_scanner_role_name))
+    error_message = "Role name must be empty or use only alphanumeric and '+=,.@-_' characters, maximum 64 characters."
+  }
 }
 
-variable "dspm_integration_role_unique_id" {
+variable "agentless_scanning_integration_role_unique_id" {
   description = "The unique ID of the DSPM integration role"
   default     = ""
   type        = string
 }
-
-variable "dspm_scanner_role_unique_id" {
-  description = "The unique ID of the DSPM scanner role"
-  default     = ""
-  type        = string
-}
-
