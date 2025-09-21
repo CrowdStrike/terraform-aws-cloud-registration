@@ -216,6 +216,44 @@ module "fcs_account_us_east_2" {
 }
 ```
 
+## DSPM Configurations
+
+### Custom VPC 
+For DSPM deployments, you can optionally use your existing network resources instead of the default resources provisioned by CrowdStrike.
+
+**Key Points:**
+- Custom VPC settings apply to the entire DSPM deployment across all regions
+- Cannot be applied to specific DSPM regions (all-or-nothing configuration)
+- Requires existing VPC, subnets, and security groups in each DSPM region
+
+For detailed network requirements and validation steps, see the CrowdStrike Falcon documentation for DSPM deployment with custom VPCs.
+
+**Usage:**
+```hcl
+  # Enable custom VPC
+  agentless_scanning_use_custom_vpc = true
+  
+  # Provide existing resources for each region
+  agentless_scanning_custom_vpc_resources_map = {
+    "us-east-1" = {
+      vpc            = "vpc-11223344556677889"
+      scanner_subnet = "subnet-11223344556677887"
+      scanner_sg     = "sg-11223344556677888"
+      db_subnet_a    = "subnet-11223344556677888"
+      db_subnet_b    = "subnet-11223344556677889"
+      db_sg          = "sg-11223344556677889"
+    }
+    "us-west-1" = {
+      vpc            = "vpc-11223344556677888"
+      scanner_subnet = "subnet-11223344556677884"
+      scanner_sg     = "sg-11223344556677886"
+      db_subnet_a    = "subnet-11223344556677885"
+      db_subnet_b    = "subnet-11223344556677886"
+      db_sg          = "sg-11223344556677887"
+    }
+  }
+```
+
 ## Providers
 
 | Name | Version |
