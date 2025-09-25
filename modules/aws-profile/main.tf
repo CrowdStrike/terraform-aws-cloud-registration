@@ -18,11 +18,12 @@ locals {
     }
   )
 
-  external_id            = coalesce(var.external_id, local.account.external_id)
-  intermediate_role_arn  = coalesce(var.intermediate_role_arn, local.account.intermediate_role_arn)
-  iam_role_name          = coalesce(var.iam_role_name, local.account.iam_role_name)
-  eventbus_arn           = coalesce(var.eventbus_arn, local.account.eventbus_arn)
-  cloudtrail_bucket_name = var.use_existing_cloudtrail ? "" : coalesce(var.cloudtrail_bucket_name, local.account.cloudtrail_bucket_name)
+  # Use explicit values when available. fallback to data source on initial creation
+  external_id            = var.external_id != "" ? var.external_id : local.account.external_id
+  intermediate_role_arn  = var.intermediate_role_arn != "" ? var.intermediate_role_arn : local.account.intermediate_role_arn
+  iam_role_name          = var.iam_role_name != "" ? var.iam_role_name : local.account.iam_role_name
+  eventbus_arn           = var.eventbus_arn != "" ? var.eventbus_arn : local.account.eventbus_arn
+  cloudtrail_bucket_name = var.use_existing_cloudtrail ? "" : (var.cloudtrail_bucket_name != "" ? var.cloudtrail_bucket_name : local.account.cloudtrail_bucket_name)
 
   is_gov_commercial = var.is_gov && var.account_type == "commercial"
 }
