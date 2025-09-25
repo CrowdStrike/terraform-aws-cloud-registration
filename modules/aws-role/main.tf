@@ -18,6 +18,11 @@ provider "aws" {
 data "crowdstrike_cloud_aws_account" "target" {
   account_id      = var.account_id
   organization_id = length(var.account_id) != 0 ? null : var.organization_id
+  
+  lifecycle {
+    # Ignore changes to prevent unnecessary updates
+    ignore_changes = [external_id, iam_role_name]
+  }
 }
 
 locals {
@@ -35,11 +40,12 @@ locals {
     }
   )
 
-  external_id            = coalesce(var.external_id, local.account.external_id)
-  intermediate_role_arn  = coalesce(var.intermediate_role_arn, local.account.intermediate_role_arn)
-  iam_role_name          = coalesce(var.iam_role_name, local.account.iam_role_name)
-  eventbus_arn           = coalesce(var.eventbus_arn, local.account.eventbus_arn)
-  cloudtrail_bucket_name = var.use_existing_cloudtrail ? "" : coalesce(var.cloudtrail_bucket_name, local.account.cloudtrail_bucket_name)
+  # Use explicit values when available. fallback to data source on initial creation
+  external_id            = var.external_id != "" ? var.external_id : local.account.external_id
+  intermediate_role_arn  = var.intermediate_role_arn != "" ? var.intermediate_role_arn : local.account.intermediate_role_arn
+  iam_role_name          = var.iam_role_name != "" ? var.iam_role_name : local.account.iam_role_name
+  eventbus_arn           = var.eventbus_arn != "" ? var.eventbus_arn : local.account.eventbus_arn
+  cloudtrail_bucket_name = var.use_existing_cloudtrail ? "" : (var.cloudtrail_bucket_name != "" ? var.cloudtrail_bucket_name : local.account.cloudtrail_bucket_name)
 }
 
 module "asset_inventory" {
