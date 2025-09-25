@@ -3,11 +3,6 @@ data "aws_region" "current" {}
 data "crowdstrike_cloud_aws_account" "target" {
   account_id      = var.account_id
   organization_id = length(var.account_id) != 0 ? null : var.organization_id
-  
-  lifecycle {
-    # Ignore changes to prevent unnecessary updates
-    ignore_changes = [external_id, iam_role_name]
-  }
 }
 
 locals {
