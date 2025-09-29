@@ -237,7 +237,7 @@ resource "aws_iam_role_policy" "crowdstrike_rds_clone_target" {
 # Base RDS policy - common permissions for both host and target accounts
 data "aws_iam_policy_document" "crowdstrike_rds_clone_base" {
   count = var.dspm_rds_access ? 1 : 0
-  
+
   # Grants permission to restore CMK encrypted instances
   statement {
     sid = "KMSPermissionsForRDSRestore"
@@ -546,7 +546,7 @@ resource "aws_iam_role_policy" "crowdstrike_redshift_clone_target" {
 # Host account Redshift policy - full permissions for scanning infrastructure
 data "aws_iam_policy_document" "crowdstrike_redshift_clone_host" {
   count = (var.dspm_redshift_access && local.is_host_account) ? 1 : 0
-  
+
   # Grants permission to create a cluster snapshot and restore cluster from snapshot
   statement {
     sid = "RedshiftPermissionsForRestoring"

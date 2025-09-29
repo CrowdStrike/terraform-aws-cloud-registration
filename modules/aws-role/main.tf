@@ -4,7 +4,7 @@ locals {
   aws_partition     = var.account_type == "gov" ? "aws-us-gov" : "aws"
   is_gov_commercial = var.is_gov && var.account_type == "commercial"
   account_role_arn  = "arn:${local.aws_partition}:iam::${var.account_id}:role/${var.aws_role_name}"
-  aws_account = data.aws_caller_identity.current.account_id
+  aws_account       = data.aws_caller_identity.current.account_id
 }
 
 provider "aws" {
@@ -81,7 +81,7 @@ module "dspm_roles" {
   source                                      = "../dspm-roles/"
   falcon_client_id                            = var.falcon_client_id
   falcon_client_secret                        = var.falcon_client_secret
-  account_id = local.aws_account
+  account_id                                  = local.aws_account
   dspm_role_name                              = var.dspm_role_name
   dspm_scanner_role_name                      = var.dspm_scanner_role_name
   intermediate_role_arn                       = local.intermediate_role_arn
@@ -89,9 +89,9 @@ module "dspm_roles" {
   dspm_regions                                = var.dspm_regions
   agentless_scanning_use_custom_vpc           = var.agentless_scanning_use_custom_vpc
   agentless_scanning_custom_vpc_resources_map = var.agentless_scanning_custom_vpc_resources_map
-  agentless_scanning_host_account_id   = var.agentless_scanning_host_account_id
-  agentless_scanning_host_role_name    = var.agentless_scanning_host_role_name
-  agentless_scanning_host_scanner_role_name = var.agentless_scanning_host_scanner_role_name
+  agentless_scanning_host_account_id          = var.agentless_scanning_host_account_id
+  agentless_scanning_host_role_name           = var.agentless_scanning_host_role_name
+  agentless_scanning_host_scanner_role_name   = var.agentless_scanning_host_scanner_role_name
   dspm_s3_access                              = var.dspm_s3_access
   dspm_dynamodb_access                        = var.dspm_dynamodb_access
   dspm_rds_access                             = var.dspm_rds_access

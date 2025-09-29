@@ -14,7 +14,7 @@ data "aws_iam_policy_document" "policy_kms_key_host" {
     ]
     resources = ["*"]
   }
-  
+
   statement {
     sid    = "Allow administration of the key"
     effect = "Allow"
@@ -38,12 +38,12 @@ data "aws_iam_policy_document" "policy_kms_key_host" {
     ]
     resources = ["*"]
   }
-  
+
   statement {
     sid    = "Allow use of the key"
     effect = "Allow"
     principals {
-      type        = "AWS"
+      type = "AWS"
       identifiers = [
         "arn:aws:iam::${local.account_id}:role/${var.dspm_role_name}",
         "arn:aws:iam::${local.account_id}:role/${var.dspm_scanner_role_name}"
@@ -77,7 +77,7 @@ data "aws_iam_policy_document" "policy_kms_key_target" {
     ]
     resources = ["*"]
   }
-  
+
   statement {
     sid    = "Allow administration of the key"
     effect = "Allow"
@@ -101,12 +101,12 @@ data "aws_iam_policy_document" "policy_kms_key_target" {
     ]
     resources = ["*"]
   }
-  
+
   statement {
     sid    = "Allow use of the key"
     effect = "Allow"
     principals {
-      type        = "AWS"
+      type = "AWS"
       identifiers = [
         "arn:aws:iam::${local.account_id}:role/${var.dspm_role_name}",
         "arn:aws:iam::${local.account_id}:role/${var.dspm_scanner_role_name}",
@@ -123,12 +123,12 @@ data "aws_iam_policy_document" "policy_kms_key_target" {
     ]
     resources = ["*"]
   }
-  
+
   statement {
     sid    = "Allow attachment of persistent resources"
     effect = "Allow"
     principals {
-      type        = "AWS"
+      type = "AWS"
       identifiers = [
         "arn:aws:iam::${var.agentless_scanning_host_account_id}:role/${var.agentless_scanning_host_role_name}"
       ]
