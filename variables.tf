@@ -292,7 +292,7 @@ variable "agentless_scanning_host_scanner_role_name" {
   description = "Name of angentless scanning scanner role in host account"
 
   validation {
-    condition     = can(regex("^$|^[a-zA-Z0-9+=,.@_-]{1,64}$", var.agentless_scanning_host_role_name))
+    condition     = can(regex("^$|^[a-zA-Z0-9+=,.@_-]{1,64}$", var.agentless_scanning_host_scanner_role_name))
     error_message = "Role name must be empty or use only alphanumeric and '+=,.@-_' characters, maximum 64 characters."
   }
 }
