@@ -209,7 +209,7 @@ data "aws_iam_policy_document" "crowdstrike_run_data_scanner_restricted_data" {
       "ssm:GetParameters"
     ]
     effect    = "Allow"
-    resources = ["arn:aws:ssm:*:${data.aws_caller_identity.current.account_id}:parameter/*"]
+    resources = ["arn:aws:ssm:*:*:parameter/*"]
   }
 }
 
