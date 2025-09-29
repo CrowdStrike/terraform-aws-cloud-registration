@@ -65,3 +65,14 @@ variable "vpc_cidr_block" {
   type        = string
   default     = "10.0.0.0/16"
 }
+
+variable "agentless_scanning_host_account_id" {
+  type        = string
+  default     = ""
+  description = "The AWS account ID where DSPM host resources are deployed"
+
+  validation {
+    condition     = var.agentless_scanning_host_account_id == "" || can(regex("^\\d{12}$", var.agentless_scanning_host_account_id))
+    error_message = "Agentless scanning host account ID must be empty or 12 digits."
+  }
+}

@@ -9,4 +9,7 @@ locals {
     for region, resources in var.agentless_scanning_custom_vpc_resources_map :
     "arn:aws:ec2:${region}:${data.aws_caller_identity.current.account_id}:vpc/${resources.vpc}"
   ]
+
+  # Condition to determine if this is the host account
+  is_host_account = var.agentless_scanning_host_account_id == var.account_id || var.agentless_scanning_host_account_id == ""
 }

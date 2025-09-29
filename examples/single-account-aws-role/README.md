@@ -35,6 +35,18 @@ terraform apply
 
 Enter `yes` at command prompt to apply
 
+## DSPM Configurations
+
+### Cross Account Scanning
+
+The account in the example is configured to host DSPM scanning infrastructure.
+
+Alternate configuration options:
+- You may choose to scan this account from a previously onboarded DSPM host account. To scan from a different account:
+    * Ensure the deployment has successfully completed in the host account before deploying any target accounts.
+    * Set the value of the variable `agentless_scanning_host_account_id` as your host AWS account ID.
+    * Set the value of the variable `agentless_scanning_host_role_name` as the name of the DSPM integration role in the host account.
+    * Set the value of the variable `agentless_scanning_host_scanner_role_name` as the name of the DSPM data scanner role in the host account.
 
 ## Destroy
 
