@@ -114,6 +114,18 @@ variable "dspm_redshift_access" {
   default     = true
 }
 
+variable "enable_dspm" {
+  description = "Enable DSPM scanning resources and permissions"
+  type        = bool
+  default     = false
+}
+
+variable "enable_vulnerability_scanning" {
+  description = "Enable vulnerability scanning resources and permissions"
+  type        = bool
+  default     = false
+}
+
 variable "tags" {
   description = "A map of tags to add to all resources that support tagging"
   type        = map(string)

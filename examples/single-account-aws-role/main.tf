@@ -4,6 +4,7 @@ locals {
   enable_idp                                  = true
   enable_sensor_management                    = true
   enable_dspm                                 = true
+  enable_vulnerability_scanning               = true
   dspm_regions                                = ["us-east-1", "us-east-2"]
   use_existing_cloudtrail                     = true
   dspm_create_nat_gateway                     = var.dspm_create_nat_gateway
@@ -63,20 +64,21 @@ resource "crowdstrike_cloud_aws_account" "this" {
 }
 
 module "fcs_account" {
-  source                      = "../../modules/aws-role/"
-  aws_role_name               = var.aws_role_name
-  falcon_client_id            = var.falcon_client_id
-  falcon_client_secret        = var.falcon_client_secret
-  account_id                  = var.account_id
-  primary_region              = local.primary_region
-  enable_sensor_management    = local.enable_sensor_management
-  enable_realtime_visibility  = local.enable_realtime_visibility
-  enable_idp                  = local.enable_idp
-  realtime_visibility_regions = ["all"]
-  use_existing_cloudtrail     = local.use_existing_cloudtrail
-  enable_dspm                 = local.enable_dspm
-  dspm_regions                = local.dspm_regions
-  vpc_cidr_block              = var.vpc_cidr_block
+  source                        = "../../modules/aws-role/"
+  aws_role_name                 = var.aws_role_name
+  falcon_client_id              = var.falcon_client_id
+  falcon_client_secret          = var.falcon_client_secret
+  account_id                    = var.account_id
+  primary_region                = local.primary_region
+  enable_sensor_management      = local.enable_sensor_management
+  enable_realtime_visibility    = local.enable_realtime_visibility
+  enable_idp                    = local.enable_idp
+  realtime_visibility_regions   = ["all"]
+  use_existing_cloudtrail       = local.use_existing_cloudtrail
+  enable_dspm                   = local.enable_dspm
+  enable_vulnerability_scanning = local.enable_vulnerability_scanning
+  dspm_regions                  = local.dspm_regions
+  vpc_cidr_block                = var.vpc_cidr_block
 
   iam_role_name          = crowdstrike_cloud_aws_account.this.iam_role_name
   external_id            = crowdstrike_cloud_aws_account.this.external_id
@@ -97,9 +99,9 @@ module "fcs_account" {
   dspm_redshift_access                        = local.dspm_redshift_access
   agentless_scanning_use_custom_vpc           = local.agentless_scanning_use_custom_vpc
   agentless_scanning_custom_vpc_resources_map = local.agentless_scanning_custom_vpc_resources_map
-  agentless_scanning_host_account_id   = var.agentless_scanning_host_account_id
-  agentless_scanning_host_role_name    = var.agentless_scanning_host_role_name
-  agentless_scanning_host_scanner_role_name = var.agentless_scanning_host_scanner_role_name
+  agentless_scanning_host_account_id          = var.agentless_scanning_host_account_id
+  agentless_scanning_host_role_name           = var.agentless_scanning_host_role_name
+  agentless_scanning_host_scanner_role_name   = var.agentless_scanning_host_scanner_role_name
 
   providers = {
     crowdstrike = crowdstrike

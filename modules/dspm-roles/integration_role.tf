@@ -214,21 +214,21 @@ data "aws_iam_policy_document" "crowdstrike_run_data_scanner_restricted_data" {
 }
 
 resource "aws_iam_role_policy" "crowdstrike_rds_clone" {
-  count  = var.dspm_rds_access ? 1 : 0
+  count  = (var.dspm_rds_access && var.enable_dspm)  ? 1 : 0
   name   = "CrowdStrikeRDSClone"
   role   = aws_iam_role.crowdstrike_aws_dspm_integration_role.id
   policy = data.aws_iam_policy_document.crowdstrike_rds_clone_base[0].json
 }
 
 resource "aws_iam_role_policy" "crowdstrike_rds_clone_host" {
-  count  = (var.dspm_rds_access && local.is_host_account) ? 1 : 0
+  count  = (var.dspm_rds_access && var.enable_dspm && local.is_host_account) ? 1 : 0
   name   = "CrowdStrikeRDSCloneHost"
   role   = aws_iam_role.crowdstrike_aws_dspm_integration_role.id
   policy = data.aws_iam_policy_document.crowdstrike_rds_clone_host[0].json
 }
 
 resource "aws_iam_role_policy" "crowdstrike_rds_clone_target" {
-  count  = (var.dspm_rds_access && !local.is_host_account) ? 1 : 0
+  count  = (var.dspm_rds_access && var.enable_dspm && !local.is_host_account) ? 1 : 0
   name   = "CrowdStrikeRDSCloneTarget"
   role   = aws_iam_role.crowdstrike_aws_dspm_integration_role.id
   policy = data.aws_iam_policy_document.crowdstrike_rds_clone_target[0].json
@@ -236,8 +236,8 @@ resource "aws_iam_role_policy" "crowdstrike_rds_clone_target" {
 
 # Base RDS policy - common permissions for both host and target accounts
 data "aws_iam_policy_document" "crowdstrike_rds_clone_base" {
-  count = var.dspm_rds_access ? 1 : 0
-  
+  count = (var.dspm_rds_access && var.enable_dspm) ? 1 : 0
+
   # Grants permission to restore CMK encrypted instances
   statement {
     sid = "KMSPermissionsForRDSRestore"
@@ -283,7 +283,7 @@ data "aws_iam_policy_document" "crowdstrike_rds_clone_base" {
 
 # Host account RDS policy - full permissions for scanning infrastructure
 data "aws_iam_policy_document" "crowdstrike_rds_clone_host" {
-  count = (var.dspm_rds_access && local.is_host_account) ? 1 : 0
+  count = (var.dspm_rds_access && var.enable_dspm && local.is_host_account) ? 1 : 0
 
   # Grants permission to add only requested tag mentioned in condition to RDS instance and snapshot
   statement {
@@ -451,7 +451,7 @@ data "aws_iam_policy_document" "crowdstrike_rds_clone_host" {
 
 # Target account RDS policy - limited permissions for sharing snapshots
 data "aws_iam_policy_document" "crowdstrike_rds_clone_target" {
-  count = (var.dspm_rds_access && !local.is_host_account) ? 1 : 0
+  count = (var.dspm_rds_access && var.enable_dspm && !local.is_host_account) ? 1 : 0
 
   # Grants permission to add only requested tag mentioned in condition to RDS instance and snapshot
   statement {
@@ -530,14 +530,14 @@ data "aws_iam_policy_document" "crowdstrike_rds_clone_target" {
 }
 
 resource "aws_iam_role_policy" "crowdstrike_redshift_clone_host" {
-  count  = (var.dspm_redshift_access && local.is_host_account) ? 1 : 0
+  count  = (var.dspm_redshift_access && var.enable_dspm && local.is_host_account) ? 1 : 0
   name   = "CrowdStrikeRedshiftClone"
   role   = aws_iam_role.crowdstrike_aws_dspm_integration_role.id
   policy = data.aws_iam_policy_document.crowdstrike_redshift_clone_host[0].json
 }
 
 resource "aws_iam_role_policy" "crowdstrike_redshift_clone_target" {
-  count  = (var.dspm_redshift_access && !local.is_host_account) ? 1 : 0
+  count  = (var.dspm_redshift_access && var.enable_dspm && !local.is_host_account) ? 1 : 0
   name   = "CrowdStrikeRedshiftCloneTarget"
   role   = aws_iam_role.crowdstrike_aws_dspm_integration_role.id
   policy = data.aws_iam_policy_document.crowdstrike_redshift_clone_target[0].json
@@ -545,8 +545,8 @@ resource "aws_iam_role_policy" "crowdstrike_redshift_clone_target" {
 
 # Host account Redshift policy - full permissions for scanning infrastructure
 data "aws_iam_policy_document" "crowdstrike_redshift_clone_host" {
-  count = (var.dspm_redshift_access && local.is_host_account) ? 1 : 0
-  
+  count = (var.dspm_redshift_access && var.enable_dspm && local.is_host_account) ? 1 : 0
+
   # Grants permission to create a cluster snapshot and restore cluster from snapshot
   statement {
     sid = "RedshiftPermissionsForRestoring"
@@ -594,7 +594,7 @@ data "aws_iam_policy_document" "crowdstrike_redshift_clone_host" {
 
 # Target account Redshift policy - limited permissions for sharing snapshots
 data "aws_iam_policy_document" "crowdstrike_redshift_clone_target" {
-  count = (var.dspm_redshift_access && !local.is_host_account) ? 1 : 0
+  count = (var.dspm_redshift_access && var.enable_dspm && !local.is_host_account) ? 1 : 0
 
   # Grants permission to create a cluster snapshot
   statement {
@@ -652,6 +652,268 @@ data "aws_iam_policy_document" "crowdstrike_ssm_reader_data" {
     resources = [
       "arn:aws:ssm:*:${data.aws_caller_identity.current.account_id}:parameter/CrowdStrike/*"
     ]
+  }
+}
+
+# Vulnerability Scanning Base Policy - Common EBS and KMS permissions
+resource "aws_iam_role_policy" "crowdstrike_vulnerability_scanning_base" {
+  count  = var.enable_vulnerability_scanning ? 1 : 0
+  name   = "CrowdStrikeVulnerabilityScanningPolicyBase"
+  role   = aws_iam_role.crowdstrike_aws_dspm_integration_role.id
+  policy = data.aws_iam_policy_document.crowdstrike_vulnerability_scanning_base[0].json
+}
+
+data "aws_iam_policy_document" "crowdstrike_vulnerability_scanning_base" {
+  count = var.enable_vulnerability_scanning ? 1 : 0
+
+  # EBS Volume Access for Snapshot Creation
+  statement {
+    sid = "EBSVolumeAccessForSnapshotCreation"
+    actions = [
+      "ec2:CreateSnapshot"
+    ]
+    effect = "Allow"
+    resources = [
+      "arn:aws:ec2:*:${data.aws_caller_identity.current.account_id}:volume/*"
+    ]
+  }
+
+  # EBS Snapshot Operations Create
+  statement {
+    sid = "EBSSnapshotOperationsCreate"
+    actions = [
+      "ec2:CreateSnapshot"
+    ]
+    effect = "Allow"
+    resources = [
+      "arn:aws:ec2:*::snapshot/*"
+    ]
+    condition {
+      test     = "StringEquals"
+      variable = "aws:RequestTag/${local.crowdstrike_tag_key}"
+      values   = [local.crowdstrike_tag_value]
+    }
+  }
+
+  # EBS Snapshot Delete
+  statement {
+    sid = "EBSSnapshotDelete"
+    actions = [
+      "ec2:DeleteSnapshot"
+    ]
+    effect = "Allow"
+    resources = [
+      "arn:aws:ec2:*::snapshot/*"
+    ]
+    condition {
+      test     = "StringEquals"
+      variable = "ec2:ResourceTag/${local.crowdstrike_tag_key}"
+      values   = [local.crowdstrike_tag_value]
+    }
+  }
+
+  # EBS Snapshot Access for Snapshot Copy
+  statement {
+    sid = "EBSSnapshotAccessForSnapshotCopy"
+    actions = [
+      "ec2:CopySnapshot"
+    ]
+    effect = "Allow"
+    resources = [
+      "arn:aws:ec2:*::snapshot/*"
+    ]
+    condition {
+      test     = "StringEquals"
+      variable = "ec2:ResourceTag/${local.crowdstrike_tag_key}"
+      values   = [local.crowdstrike_tag_value]
+    }
+  }
+
+  # EBS Snapshot Operations Copy
+  statement {
+    sid = "EBSSnapshotOperationsCopy"
+    actions = [
+      "ec2:CopySnapshot"
+    ]
+    effect = "Allow"
+    resources = [
+      "arn:aws:ec2:*::snapshot/*"
+    ]
+    condition {
+      test     = "StringEquals"
+      variable = "aws:RequestTag/${local.crowdstrike_tag_key}"
+      values   = [local.crowdstrike_tag_value]
+    }
+  }
+
+  # Tagging Operations
+  statement {
+    sid = "TaggingOperations"
+    actions = [
+      "ec2:CreateTags"
+    ]
+    effect = "Allow"
+    resources = [
+      "arn:aws:ec2:*::snapshot/*"
+    ]
+    condition {
+      test     = "ForAnyValue:StringEquals"
+      variable = "ec2:CreateAction"
+      values   = ["CreateSnapshot", "CopySnapshot"]
+    }
+  }
+
+  # KMS Permissions for EBS Operations
+  statement {
+    sid = "KMSPermissionsForEBSOps"
+    actions = [
+      "kms:ReEncrypt*",
+      "kms:DescribeKey",
+      "kms:CreateGrant",
+      "kms:GenerateDataKey",
+      "kms:GenerateDataKeyWithoutPlaintext",
+      "kms:Decrypt"
+    ]
+    effect = "Allow"
+    resources = [
+      "arn:aws:kms:*:*:key/*"
+    ]
+    condition {
+      test     = "StringLike"
+      variable = "kms:ViaService"
+      values   = ["ec2.*.amazonaws.com"]
+    }
+  }
+}
+
+# Vulnerability Scanning Host Account Policy - Volume operations in scanning environment
+resource "aws_iam_role_policy" "crowdstrike_vulnerability_scanning_host" {
+  count  = (var.enable_vulnerability_scanning && local.is_host_account) ? 1 : 0
+  name   = "CrowdStrikeVulnerabilityScanningPolicyHostAccount"
+  role   = aws_iam_role.crowdstrike_aws_dspm_integration_role.id
+  policy = data.aws_iam_policy_document.crowdstrike_vulnerability_scanning_host[0].json
+}
+
+data "aws_iam_policy_document" "crowdstrike_vulnerability_scanning_host" {
+  count = (var.enable_vulnerability_scanning && local.is_host_account) ? 1 : 0
+
+  # EBS Snapshot Access for Volume Creation
+  statement {
+    sid = "EBSSnapshotAccessForVolumeCreation"
+    actions = [
+      "ec2:CreateVolume"
+    ]
+    effect = "Allow"
+    resources = [
+      "arn:aws:ec2:*::snapshot/*"
+    ]
+  }
+
+  # EBS Volume Operations Create
+  statement {
+    sid = "EBSVolumeOperationsCreate"
+    actions = [
+      "ec2:CreateVolume"
+    ]
+    effect = "Allow"
+    resources = [
+      "arn:aws:ec2:*:${data.aws_caller_identity.current.account_id}:volume/*"
+    ]
+    condition {
+      test     = "StringEquals"
+      variable = "aws:RequestTag/${local.crowdstrike_tag_key}"
+      values   = [local.crowdstrike_tag_value]
+    }
+  }
+
+  # EBS Volume Operations Delete
+  statement {
+    sid = "EBSVolumeOperationsDelete"
+    actions = [
+      "ec2:DeleteVolume"
+    ]
+    effect = "Allow"
+    resources = [
+      "arn:aws:ec2:*:${data.aws_caller_identity.current.account_id}:volume/*"
+    ]
+    condition {
+      test     = "StringEquals"
+      variable = "ec2:ResourceTag/${local.crowdstrike_tag_key}"
+      values   = [local.crowdstrike_tag_value]
+    }
+  }
+
+  # Tagging Operations
+  statement {
+    sid = "TaggingOperations"
+    actions = [
+      "ec2:CreateTags"
+    ]
+    effect = "Allow"
+    resources = [
+      "arn:aws:ec2:*:${data.aws_caller_identity.current.account_id}:volume/*"
+    ]
+    condition {
+      test     = "ForAnyValue:StringEquals"
+      variable = "ec2:CreateAction"
+      values   = ["CreateVolume"]
+    }
+  }
+}
+
+# Vulnerability Scanning Target Account Policy - Snapshot sharing with host account
+resource "aws_iam_role_policy" "crowdstrike_vulnerability_scanning_target" {
+  count  = (var.enable_vulnerability_scanning && !local.is_host_account) ? 1 : 0
+  name   = "CrowdStrikeVulnerabilityScanningPolicyTargetAccount"
+  role   = aws_iam_role.crowdstrike_aws_dspm_integration_role.id
+  policy = data.aws_iam_policy_document.crowdstrike_vulnerability_scanning_target[0].json
+}
+
+data "aws_iam_policy_document" "crowdstrike_vulnerability_scanning_target" {
+  count = (var.enable_vulnerability_scanning && !local.is_host_account) ? 1 : 0
+
+  # EBS Snapshot Share
+  statement {
+    sid = "EBSSnapshotShare"
+    actions = [
+      "ec2:ModifySnapshotAttribute"
+    ]
+    effect = "Allow"
+    resources = [
+      "arn:aws:ec2:*::snapshot/*"
+    ]
+    condition {
+      test     = "StringEquals"
+      variable = "ec2:ResourceTag/${local.crowdstrike_tag_key}"
+      values   = [local.crowdstrike_tag_value]
+    }
+    condition {
+      test     = "StringEquals"
+      variable = "ec2:Add/userId"
+      values   = [var.agentless_scanning_host_account_id]
+    }
+  }
+
+  # EBS Snapshot Unshare
+  statement {
+    sid = "EBSSnapshotUnshare"
+    actions = [
+      "ec2:ModifySnapshotAttribute"
+    ]
+    effect = "Allow"
+    resources = [
+      "arn:aws:ec2:*::snapshot/*"
+    ]
+    condition {
+      test     = "StringEquals"
+      variable = "ec2:ResourceTag/${local.crowdstrike_tag_key}"
+      values   = [local.crowdstrike_tag_value]
+    }
+    condition {
+      test     = "StringEquals"
+      variable = "ec2:Remove/userId"
+      values   = [var.agentless_scanning_host_account_id]
+    }
   }
 }
 

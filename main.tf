@@ -9,7 +9,7 @@ data "crowdstrike_cloud_aws_account" "target" {
 
 locals {
   aws_region        = data.aws_region.current.name
-  aws_account = data.aws_caller_identity.current.account_id
+  aws_account       = data.aws_caller_identity.current.account_id
   is_primary_region = local.aws_region == var.primary_region
 
   # if we target by account_id, it will be the only account returned
@@ -98,7 +98,7 @@ module "realtime_visibility" {
 }
 
 module "dspm_roles" {
-  count                                       = (local.is_primary_region && var.enable_dspm) ? 1 : 0
+  count                                       = (local.is_primary_region && (var.enable_dspm || var.enable_vulnerability_scanning)) ? 1 : 0
   source                                      = "./modules/dspm-roles/"
   falcon_client_id                            = var.falcon_client_id
   falcon_client_secret                        = var.falcon_client_secret
@@ -113,24 +113,26 @@ module "dspm_roles" {
   dspm_dynamodb_access                        = var.dspm_dynamodb_access
   dspm_rds_access                             = var.dspm_rds_access
   dspm_redshift_access                        = var.dspm_redshift_access
+  enable_dspm                                 = var.enable_dspm
+  enable_vulnerability_scanning               = var.enable_vulnerability_scanning
   tags                                        = var.tags
-  account_id = local.aws_account
-  agentless_scanning_host_account_id   = var.agentless_scanning_host_account_id
-  agentless_scanning_host_role_name    = var.agentless_scanning_host_role_name
-  agentless_scanning_host_scanner_role_name = var.agentless_scanning_host_scanner_role_name
+  account_id                                  = local.aws_account
+  agentless_scanning_host_account_id          = var.agentless_scanning_host_account_id
+  agentless_scanning_host_role_name           = var.agentless_scanning_host_role_name
+  agentless_scanning_host_scanner_role_name   = var.agentless_scanning_host_scanner_role_name
 }
 
 module "dspm_environments" {
-  count                      = var.enable_dspm && contains(var.dspm_regions, local.aws_region) ? 1 : 0
-  source                     = "./modules/dspm-environments/"
-  dspm_role_name             = var.dspm_role_name
-  dspm_scanner_role_name     = var.dspm_scanner_role_name
-  integration_role_unique_id = local.is_primary_region ? module.dspm_roles[0].integration_role_unique_id : var.dspm_integration_role_unique_id
-  scanner_role_unique_id     = local.is_primary_region ? module.dspm_roles[0].scanner_role_unique_id : var.dspm_scanner_role_unique_id
-  dspm_create_nat_gateway    = var.dspm_create_nat_gateway
-  account_id = local.aws_account
-  agentless_scanning_host_account_id   = var.agentless_scanning_host_account_id
-  agentless_scanning_host_role_name    = var.agentless_scanning_host_role_name
+  count                              = (var.enable_dspm || var.enable_vulnerability_scanning) && contains(var.dspm_regions, local.aws_region) ? 1 : 0
+  source                             = "./modules/dspm-environments/"
+  dspm_role_name                     = var.dspm_role_name
+  dspm_scanner_role_name             = var.dspm_scanner_role_name
+  integration_role_unique_id         = local.is_primary_region ? module.dspm_roles[0].integration_role_unique_id : var.dspm_integration_role_unique_id
+  scanner_role_unique_id             = local.is_primary_region ? module.dspm_roles[0].scanner_role_unique_id : var.dspm_scanner_role_unique_id
+  dspm_create_nat_gateway            = var.dspm_create_nat_gateway
+  account_id                         = local.aws_account
+  agentless_scanning_host_account_id = var.agentless_scanning_host_account_id
+  agentless_scanning_host_role_name  = var.agentless_scanning_host_role_name
 
   # Pass explicit boolean decision and region-specific VPC config
   use_custom_vpc    = var.agentless_scanning_use_custom_vpc

@@ -130,6 +130,12 @@ variable "enable_dspm" {
   description = "Set to true to enable Data Security Posture Managment"
 }
 
+variable "enable_vulnerability_scanning" {
+  type        = bool
+  default     = false
+  description = "Set to true to enable Vulnerability Scanning"
+}
+
 variable "dspm_role_name" {
   description = "The unique name of the IAM role that DSPM will be assuming"
   type        = string

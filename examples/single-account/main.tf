@@ -26,6 +26,7 @@ locals {
   enable_idp                                  = true
   enable_sensor_management                    = true
   enable_dspm                                 = true
+  enable_vulnerability_scanning               = true
   dspm_regions                                = ["us-east-1", "us-east-2"]
   use_existing_cloudtrail                     = true
   dspm_create_nat_gateway                     = var.dspm_create_nat_gateway
@@ -73,24 +74,27 @@ resource "crowdstrike_cloud_aws_account" "this" {
     enabled   = local.enable_dspm
     role_name = local.dspm_role_name
   }
+  //TODO: need to check the provider and see what needs to be added  I assume we need to create "vulnerability scanning"  instead of dspm and add there {vulnerability_scanning_enabled, role_name = local.dspm_role_name}
+  // or havning agentless scannning role arn.
   provider = crowdstrike
 }
 
 module "fcs_account_onboarding" {
-  source                     = "../../"
-  falcon_client_id           = var.falcon_client_id
-  falcon_client_secret       = var.falcon_client_secret
-  account_id                 = var.account_id
-  primary_region             = local.primary_region
-  enable_sensor_management   = local.enable_sensor_management
-  enable_realtime_visibility = local.enable_realtime_visibility
-  create_rtvd_rules          = contains(local.realtime_visibility_regions, "all") || contains(local.realtime_visibility_regions, "us-east-1")
-  enable_idp                 = local.enable_idp
-  use_existing_cloudtrail    = local.use_existing_cloudtrail
-  enable_dspm                = local.enable_dspm && contains(local.dspm_regions, "us-east-1")
-  dspm_regions               = local.dspm_regions
-  dspm_scanner_role_name     = local.dspm_scanner_role_name
-  vpc_cidr_block             = var.vpc_cidr_block
+  source                        = "../../"
+  falcon_client_id              = var.falcon_client_id
+  falcon_client_secret          = var.falcon_client_secret
+  account_id                    = var.account_id
+  primary_region                = local.primary_region
+  enable_sensor_management      = local.enable_sensor_management
+  enable_realtime_visibility    = local.enable_realtime_visibility
+  create_rtvd_rules             = contains(local.realtime_visibility_regions, "all") || contains(local.realtime_visibility_regions, "us-east-1")
+  enable_idp                    = local.enable_idp
+  use_existing_cloudtrail       = local.use_existing_cloudtrail
+  enable_dspm                   = local.enable_dspm && contains(local.dspm_regions, "us-east-1")
+  enable_vulnerability_scanning = local.enable_vulnerability_scanning && contains(local.dspm_regions, "us-east-1")
+  dspm_regions                  = local.dspm_regions
+  dspm_scanner_role_name        = local.dspm_scanner_role_name
+  vpc_cidr_block                = var.vpc_cidr_block
 
   iam_role_name          = crowdstrike_cloud_aws_account.this.iam_role_name
   external_id            = crowdstrike_cloud_aws_account.this.external_id
@@ -110,9 +114,9 @@ module "fcs_account_onboarding" {
   dspm_redshift_access                        = var.dspm_redshift_access
   agentless_scanning_use_custom_vpc           = local.agentless_scanning_use_custom_vpc
   agentless_scanning_custom_vpc_resources_map = local.agentless_scanning_custom_vpc_resources_map
-  agentless_scanning_host_account_id       = var.agentless_scanning_host_account_id
-  agentless_scanning_host_role_name        = var.agentless_scanning_host_role_name
-  agentless_scanning_host_scanner_role_name = var.agentless_scanning_host_scanner_role_name
+  agentless_scanning_host_account_id          = var.agentless_scanning_host_account_id
+  agentless_scanning_host_role_name           = var.agentless_scanning_host_role_name
+  agentless_scanning_host_scanner_role_name   = var.agentless_scanning_host_scanner_role_name
 
   providers = {
     aws         = aws.us-east-1
@@ -121,20 +125,21 @@ module "fcs_account_onboarding" {
 }
 
 module "fcs_account_us_east_2" {
-  source                     = "../.."
-  falcon_client_id           = var.falcon_client_id
-  falcon_client_secret       = var.falcon_client_secret
-  account_id                 = var.account_id
-  primary_region             = local.primary_region
-  enable_sensor_management   = local.enable_sensor_management
-  enable_realtime_visibility = local.enable_realtime_visibility
-  create_rtvd_rules          = contains(local.realtime_visibility_regions, "all") || contains(local.realtime_visibility_regions, "us-east-2")
-  enable_idp                 = local.enable_idp
-  use_existing_cloudtrail    = local.use_existing_cloudtrail
-  enable_dspm                = local.enable_dspm && contains(local.dspm_regions, "us-east-2")
-  dspm_regions               = local.dspm_regions
-  dspm_scanner_role_name     = local.dspm_scanner_role_name
-  vpc_cidr_block             = var.vpc_cidr_block
+  source                        = "../.."
+  falcon_client_id              = var.falcon_client_id
+  falcon_client_secret          = var.falcon_client_secret
+  account_id                    = var.account_id
+  primary_region                = local.primary_region
+  enable_sensor_management      = local.enable_sensor_management
+  enable_realtime_visibility    = local.enable_realtime_visibility
+  create_rtvd_rules             = contains(local.realtime_visibility_regions, "all") || contains(local.realtime_visibility_regions, "us-east-2")
+  enable_idp                    = local.enable_idp
+  use_existing_cloudtrail       = local.use_existing_cloudtrail
+  enable_dspm                   = local.enable_dspm && contains(local.dspm_regions, "us-east-2")
+  enable_vulnerability_scanning = local.enable_vulnerability_scanning && contains(local.dspm_regions, "us-east-2")
+  dspm_regions                  = local.dspm_regions
+  dspm_scanner_role_name        = local.dspm_scanner_role_name
+  vpc_cidr_block                = var.vpc_cidr_block
 
   iam_role_name                   = crowdstrike_cloud_aws_account.this.iam_role_name
   external_id                     = crowdstrike_cloud_aws_account.this.external_id
@@ -156,9 +161,9 @@ module "fcs_account_us_east_2" {
   dspm_redshift_access                        = var.dspm_redshift_access
   agentless_scanning_use_custom_vpc           = local.agentless_scanning_use_custom_vpc
   agentless_scanning_custom_vpc_resources_map = local.agentless_scanning_custom_vpc_resources_map
-  agentless_scanning_host_account_id       = var.agentless_scanning_host_account_id
-  agentless_scanning_host_role_name        = var.agentless_scanning_host_role_name
-  agentless_scanning_host_scanner_role_name = var.agentless_scanning_host_scanner_role_name
+  agentless_scanning_host_account_id          = var.agentless_scanning_host_account_id
+  agentless_scanning_host_role_name           = var.agentless_scanning_host_role_name
+  agentless_scanning_host_scanner_role_name   = var.agentless_scanning_host_scanner_role_name
 
   providers = {
     aws         = aws.us-east-2
@@ -167,20 +172,21 @@ module "fcs_account_us_east_2" {
 }
 
 module "fcs_account_us_west_1" {
-  source                     = "../.."
-  falcon_client_id           = var.falcon_client_id
-  falcon_client_secret       = var.falcon_client_secret
-  account_id                 = var.account_id
-  primary_region             = local.primary_region
-  enable_sensor_management   = local.enable_sensor_management
-  enable_realtime_visibility = local.enable_realtime_visibility
-  create_rtvd_rules          = contains(local.realtime_visibility_regions, "all") || contains(local.realtime_visibility_regions, "us-west-1")
-  enable_idp                 = local.enable_idp
-  use_existing_cloudtrail    = local.use_existing_cloudtrail
-  enable_dspm                = local.enable_dspm && contains(local.dspm_regions, "us-west-1")
-  dspm_regions               = local.dspm_regions
-  dspm_scanner_role_name     = local.dspm_scanner_role_name
-  vpc_cidr_block             = var.vpc_cidr_block
+  source                        = "../.."
+  falcon_client_id              = var.falcon_client_id
+  falcon_client_secret          = var.falcon_client_secret
+  account_id                    = var.account_id
+  primary_region                = local.primary_region
+  enable_sensor_management      = local.enable_sensor_management
+  enable_realtime_visibility    = local.enable_realtime_visibility
+  create_rtvd_rules             = contains(local.realtime_visibility_regions, "all") || contains(local.realtime_visibility_regions, "us-west-1")
+  enable_idp                    = local.enable_idp
+  use_existing_cloudtrail       = local.use_existing_cloudtrail
+  enable_dspm                   = local.enable_dspm && contains(local.dspm_regions, "us-west-1")
+  enable_vulnerability_scanning = local.enable_vulnerability_scanning && contains(local.dspm_regions, "us-west-1")
+  dspm_regions                  = local.dspm_regions
+  dspm_scanner_role_name        = local.dspm_scanner_role_name
+  vpc_cidr_block                = var.vpc_cidr_block
 
   iam_role_name                   = crowdstrike_cloud_aws_account.this.iam_role_name
   external_id                     = crowdstrike_cloud_aws_account.this.external_id
@@ -202,9 +208,9 @@ module "fcs_account_us_west_1" {
   dspm_redshift_access                        = var.dspm_redshift_access
   agentless_scanning_use_custom_vpc           = local.agentless_scanning_use_custom_vpc
   agentless_scanning_custom_vpc_resources_map = local.agentless_scanning_custom_vpc_resources_map
-  agentless_scanning_host_account_id       = var.agentless_scanning_host_account_id
-  agentless_scanning_host_role_name        = var.agentless_scanning_host_role_name
-  agentless_scanning_host_scanner_role_name = var.agentless_scanning_host_scanner_role_name
+  agentless_scanning_host_account_id          = var.agentless_scanning_host_account_id
+  agentless_scanning_host_role_name           = var.agentless_scanning_host_role_name
+  agentless_scanning_host_scanner_role_name   = var.agentless_scanning_host_scanner_role_name
 
   providers = {
     aws         = aws.us-west-1
@@ -213,20 +219,21 @@ module "fcs_account_us_west_1" {
 }
 
 module "fcs_account_us_west_2" {
-  source                     = "../.."
-  falcon_client_id           = var.falcon_client_id
-  falcon_client_secret       = var.falcon_client_secret
-  account_id                 = var.account_id
-  primary_region             = local.primary_region
-  enable_sensor_management   = local.enable_sensor_management
-  enable_realtime_visibility = local.enable_realtime_visibility
-  create_rtvd_rules          = contains(local.realtime_visibility_regions, "all") || contains(local.realtime_visibility_regions, "us-west-2")
-  enable_idp                 = local.enable_idp
-  use_existing_cloudtrail    = local.use_existing_cloudtrail
-  enable_dspm                = local.enable_dspm && contains(local.dspm_regions, "us-west-2")
-  dspm_regions               = local.dspm_regions
-  dspm_scanner_role_name     = local.dspm_scanner_role_name
-  vpc_cidr_block             = var.vpc_cidr_block
+  source                        = "../.."
+  falcon_client_id              = var.falcon_client_id
+  falcon_client_secret          = var.falcon_client_secret
+  account_id                    = var.account_id
+  primary_region                = local.primary_region
+  enable_sensor_management      = local.enable_sensor_management
+  enable_realtime_visibility    = local.enable_realtime_visibility
+  create_rtvd_rules             = contains(local.realtime_visibility_regions, "all") || contains(local.realtime_visibility_regions, "us-west-2")
+  enable_idp                    = local.enable_idp
+  use_existing_cloudtrail       = local.use_existing_cloudtrail
+  enable_dspm                   = local.enable_dspm && contains(local.dspm_regions, "us-west-2")
+  enable_vulnerability_scanning = local.enable_vulnerability_scanning && contains(local.dspm_regions, "us-west-2")
+  dspm_regions                  = local.dspm_regions
+  dspm_scanner_role_name        = local.dspm_scanner_role_name
+  vpc_cidr_block                = var.vpc_cidr_block
 
   iam_role_name                   = crowdstrike_cloud_aws_account.this.iam_role_name
   external_id                     = crowdstrike_cloud_aws_account.this.external_id
@@ -248,9 +255,9 @@ module "fcs_account_us_west_2" {
   dspm_redshift_access                        = var.dspm_redshift_access
   agentless_scanning_use_custom_vpc           = local.agentless_scanning_use_custom_vpc
   agentless_scanning_custom_vpc_resources_map = local.agentless_scanning_custom_vpc_resources_map
-  agentless_scanning_host_account_id       = var.agentless_scanning_host_account_id
-  agentless_scanning_host_role_name        = var.agentless_scanning_host_role_name
-  agentless_scanning_host_scanner_role_name = var.agentless_scanning_host_scanner_role_name
+  agentless_scanning_host_account_id          = var.agentless_scanning_host_account_id
+  agentless_scanning_host_role_name           = var.agentless_scanning_host_role_name
+  agentless_scanning_host_scanner_role_name   = var.agentless_scanning_host_scanner_role_name
 
   providers = {
     aws         = aws.us-west-2
