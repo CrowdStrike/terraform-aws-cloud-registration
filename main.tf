@@ -6,7 +6,7 @@ data "crowdstrike_cloud_aws_account" "target" {
 }
 
 locals {
-  aws_region        = data.aws_region.current.region
+  aws_region        = data.aws_region.current.id
   is_primary_region = local.aws_region == var.primary_region
   is_gov_commercial = var.is_gov && var.account_type == "commercial"
 
