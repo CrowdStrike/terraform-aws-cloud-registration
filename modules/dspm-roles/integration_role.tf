@@ -678,62 +678,30 @@ data "aws_iam_policy_document" "crowdstrike_vulnerability_scanning_base" {
     ]
   }
 
-  # EBS Snapshot Operations Create
+  # EBS snapshot delete and snapshot access for copy
   statement {
-    sid = "EBSSnapshotOperationsCreate"
+    sid = "EBSSnapshotDeleteAndCopyAccess"
     actions = [
+      "ec2:DeleteSnapshot",
+      "ec2:CopySnapshot"
+    ]
+    effect = "Allow"
+    resources = [
+      "arn:aws:ec2:*::snapshot/*"
+    ]
+    condition {
+      test     = "StringEquals"
+      variable = "ec2:ResourceTag/${local.crowdstrike_tag_key}"
+      values   = [local.crowdstrike_tag_value]
+    }
+  }
+
+  # EBS snapshot create and copy
+  statement {
+    sid = "EBSSnapshotCreateAndCopy"
+    actions = [
+      "ec2:CopySnapshot",
       "ec2:CreateSnapshot"
-    ]
-    effect = "Allow"
-    resources = [
-      "arn:aws:ec2:*::snapshot/*"
-    ]
-    condition {
-      test     = "StringEquals"
-      variable = "aws:RequestTag/${local.crowdstrike_tag_key}"
-      values   = [local.crowdstrike_tag_value]
-    }
-  }
-
-  # EBS Snapshot Delete
-  statement {
-    sid = "EBSSnapshotDelete"
-    actions = [
-      "ec2:DeleteSnapshot"
-    ]
-    effect = "Allow"
-    resources = [
-      "arn:aws:ec2:*::snapshot/*"
-    ]
-    condition {
-      test     = "StringEquals"
-      variable = "ec2:ResourceTag/${local.crowdstrike_tag_key}"
-      values   = [local.crowdstrike_tag_value]
-    }
-  }
-
-  # EBS Snapshot Access for Snapshot Copy
-  statement {
-    sid = "EBSSnapshotAccessForSnapshotCopy"
-    actions = [
-      "ec2:CopySnapshot"
-    ]
-    effect = "Allow"
-    resources = [
-      "arn:aws:ec2:*::snapshot/*"
-    ]
-    condition {
-      test     = "StringEquals"
-      variable = "ec2:ResourceTag/${local.crowdstrike_tag_key}"
-      values   = [local.crowdstrike_tag_value]
-    }
-  }
-
-  # EBS Snapshot Operations Copy
-  statement {
-    sid = "EBSSnapshotOperationsCopy"
-    actions = [
-      "ec2:CopySnapshot"
     ]
     effect = "Allow"
     resources = [
