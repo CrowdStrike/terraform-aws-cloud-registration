@@ -269,7 +269,7 @@ resource "aws_iam_role_policy" "crowdstrike_ebs_volume_reader" {
           "arn:aws:ec2:*:${data.aws_caller_identity.current.account_id}:instance/*"
         ]
         Condition = {
-          StringLike = {
+          StringEquals = {
             "ec2:ResourceTag/${local.crowdstrike_tag_key}" = local.crowdstrike_tag_value
           }
         }
@@ -292,7 +292,7 @@ resource "aws_iam_role_policy" "crowdstrike_ebs_volume_reader" {
         ]
         Resource = "arn:aws:kms:*:${data.aws_caller_identity.current.account_id}:key/*"
         Condition = {
-          StringEquals = {
+          StringLike = {
             "kms:ViaService" = "ec2.*.amazonaws.com"
           }
         }
