@@ -7,7 +7,7 @@ data "aws_iam_policy_document" "policy_kms_key_host" {
     effect = "Allow"
     principals {
       type        = "AWS"
-      identifiers = ["arn:aws:iam::${local.account_id}:root"]
+      identifiers = [join("", ["arn:aws:iam::", local.account_id, ":root"])]
     }
     actions = [
       "kms:*"
