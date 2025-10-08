@@ -1,9 +1,9 @@
 # Creates instance profile. Attached as IAM role to EC2 instance, used for data scan
 resource "aws_iam_instance_profile" "instance_profile" {
-  count       = local.is_host_account ? 1 : 0
-  name = "CrowdStrikeScannerRoleProfile"
-  path = "/"
-  role = var.dspm_scanner_role_name
+  count = local.is_host_account ? 1 : 0
+  name  = "CrowdStrikeScannerRoleProfile"
+  path  = "/"
+  role  = var.dspm_scanner_role_name
   tags = merge(
     var.tags,
     {

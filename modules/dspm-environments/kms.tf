@@ -51,7 +51,7 @@ data "aws_iam_policy_document" "policy_kms_key_host" {
     sid    = "Allow use of the key"
     effect = "Allow"
     principals {
-      type = "AWS"
+      type        = "AWS"
       identifiers = ["*"]
     }
     actions = [
@@ -129,7 +129,7 @@ data "aws_iam_policy_document" "policy_kms_key_target" {
     sid    = "Allow use of the key to this account"
     effect = "Allow"
     principals {
-      type = "AWS"
+      type        = "AWS"
       identifiers = ["*"]
     }
     actions = [
@@ -163,7 +163,7 @@ data "aws_iam_policy_document" "policy_kms_key_target" {
       ]
     }
     principals {
-      type = "AWS"
+      type        = "AWS"
       identifiers = ["*"]
     }
     actions = [
