@@ -14,7 +14,6 @@ data "aws_iam_policy_document" "policy_kms_key_host" {
     ]
     resources = ["*"]
   }
-
   statement {
     sid    = "Allow administration of the key"
     effect = "Allow"
@@ -46,7 +45,6 @@ data "aws_iam_policy_document" "policy_kms_key_host" {
       ]
     }
   }
-
   statement {
     sid    = "Allow use of the key"
     effect = "Allow"
