@@ -47,7 +47,7 @@ resource "aws_iam_role_policy" "inline_policy" {
         "Action" : [
           "events:PutEvents"
         ],
-        "Resource" : !var.is_gov_commercial ? var.eventbus_arn : "arn:${local.aws_partition}:events:*:${local.account_id}:event-bus/default"
+        "Resource" : !var.is_gov_commercial ? compact(split(",", var.eventbus_arn)) : ["arn:${local.aws_partition}:events:*:${local.account_id}:event-bus/default"]
         "Effect" : "Allow"
       }
     ]
