@@ -557,7 +557,7 @@ data "aws_iam_policy_document" "crowdstrike_redshift_clone_host" {
     effect = "Allow"
     resources = [
       "arn:aws:redshift:*:${data.aws_caller_identity.current.account_id}:cluster:*",
-      "arn:aws:redshift:*:${data.aws_caller_identity.current.account_id}:snapshot:*"
+      "arn:aws:redshift:*:*:snapshot:*"
     ]
   }
 
