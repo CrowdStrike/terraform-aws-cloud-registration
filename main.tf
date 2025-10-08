@@ -148,13 +148,13 @@ module "agentless_scanning_environments" {
   }
 }
 
-# Handle module renames for seamless customer upgrades
-# moved {
-#   from = module.dspm_roles
-#   to   = module.agentless_scanning_roles
-# }
+# Handle module renames
+moved {
+  from = module.dspm_roles
+  to   = module.agentless_scanning_roles
+}
 
-# moved {
-#   from = module.dspm_environments
-#   to   = module.agentless_scanning_environments
-# }
+moved {
+  from = module.dspm_environments
+  to   = module.agentless_scanning_environments
+}

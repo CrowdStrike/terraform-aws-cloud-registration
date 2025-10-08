@@ -101,7 +101,7 @@ module "agentless_scanning_roles" {
   tags                                        = var.tags
 }
 
-# moved {
-#   from = module.dspm_roles
-#   to   = module.agentless_scanning_roles
-# }
+moved {
+  from = module.dspm_roles
+  to   = module.agentless_scanning_roles
+}

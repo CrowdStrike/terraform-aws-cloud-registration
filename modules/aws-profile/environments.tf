@@ -566,143 +566,143 @@ module "agentless_scanning_environment_sa_east_1" {
 }
 
 # US Regions
-# moved {
-#   from = module.dspm_environment_us_east_1
-#   to   = module.agentless_scanning_environment_us_east_1
-# }
+moved {
+  from = module.dspm_environment_us_east_1
+  to   = module.agentless_scanning_environment_us_east_1
+}
 
-# moved {
-#   from = module.dspm_environment_us_east_2
-#   to   = module.agentless_scanning_environment_us_east_2
-# }
+moved {
+  from = module.dspm_environment_us_east_2
+  to   = module.agentless_scanning_environment_us_east_2
+}
 
-# moved {
-#   from = module.dspm_environment_us_west_1
-#   to   = module.agentless_scanning_environment_us_west_1
-# }
+moved {
+  from = module.dspm_environment_us_west_1
+  to   = module.agentless_scanning_environment_us_west_1
+}
 
-# moved {
-#   from = module.dspm_environment_us_west_2
-#   to   = module.agentless_scanning_environment_us_west_2
-# }
+moved {
+  from = module.dspm_environment_us_west_2
+  to   = module.agentless_scanning_environment_us_west_2
+}
 
 # Africa
-# moved {
-#   from = module.dspm_environment_af_south_1
-#   to   = module.agentless_scanning_environment_af_south_1
-# }
+moved {
+  from = module.dspm_environment_af_south_1
+  to   = module.agentless_scanning_environment_af_south_1
+}
 
 # Asia Pacific
-# moved {
-#   from = module.dspm_environment_ap_east_1
-#   to   = module.agentless_scanning_environment_ap_east_1
-# }
+moved {
+  from = module.dspm_environment_ap_east_1
+  to   = module.agentless_scanning_environment_ap_east_1
+}
 
-# moved {
-#   from = module.dspm_environment_ap_south_1
-#   to   = module.agentless_scanning_environment_ap_south_1
-# }
+moved {
+  from = module.dspm_environment_ap_south_1
+  to   = module.agentless_scanning_environment_ap_south_1
+}
 
-# moved {
-#   from = module.dspm_environment_ap_south_2
-#   to   = module.agentless_scanning_environment_ap_south_2
-# }
+moved {
+  from = module.dspm_environment_ap_south_2
+  to   = module.agentless_scanning_environment_ap_south_2
+}
 
-# moved {
-#   from = module.dspm_environment_ap_northeast_1
-#   to   = module.agentless_scanning_environment_ap_northeast_1
-# }
+moved {
+  from = module.dspm_environment_ap_northeast_1
+  to   = module.agentless_scanning_environment_ap_northeast_1
+}
 
-# moved {
-#   from = module.dspm_environment_ap_northeast_2
-#   to   = module.agentless_scanning_environment_ap_northeast_2
-# }
+moved {
+  from = module.dspm_environment_ap_northeast_2
+  to   = module.agentless_scanning_environment_ap_northeast_2
+}
 
-# moved {
-#   from = module.dspm_environment_ap_northeast_3
-#   to   = module.agentless_scanning_environment_ap_northeast_3
-# }
+moved {
+  from = module.dspm_environment_ap_northeast_3
+  to   = module.agentless_scanning_environment_ap_northeast_3
+}
 
-# moved {
-#   from = module.dspm_environment_ap_southeast_1
-#   to   = module.agentless_scanning_environment_ap_southeast_1
-# }
+moved {
+  from = module.dspm_environment_ap_southeast_1
+  to   = module.agentless_scanning_environment_ap_southeast_1
+}
 
-# moved {
-#   from = module.dspm_environment_ap_southeast_2
-#   to   = module.agentless_scanning_environment_ap_southeast_2
-# }
+moved {
+  from = module.dspm_environment_ap_southeast_2
+  to   = module.agentless_scanning_environment_ap_southeast_2
+}
 
-# moved {
-#   from = module.dspm_environment_ap_southeast_3
-#   to   = module.agentless_scanning_environment_ap_southeast_3
-# }
+moved {
+  from = module.dspm_environment_ap_southeast_3
+  to   = module.agentless_scanning_environment_ap_southeast_3
+}
 
-# moved {
-#   from = module.dspm_environment_ap_southeast_4
-#   to   = module.agentless_scanning_environment_ap_southeast_4
-# }
+moved {
+  from = module.dspm_environment_ap_southeast_4
+  to   = module.agentless_scanning_environment_ap_southeast_4
+}
 
 # Canada
-# moved {
-#   from = module.dspm_environment_ca_central_1
-#   to   = module.agentless_scanning_environment_ca_central_1
-# }
+moved {
+  from = module.dspm_environment_ca_central_1
+  to   = module.agentless_scanning_environment_ca_central_1
+}
 
 # Europe
-# moved {
-#   from = module.dspm_environment_eu_central_1
-#   to   = module.agentless_scanning_environment_eu_central_1
-# }
+moved {
+  from = module.dspm_environment_eu_central_1
+  to   = module.agentless_scanning_environment_eu_central_1
+}
 
-# moved {
-#   from = module.dspm_environment_eu_central_2
-#   to   = module.agentless_scanning_environment_eu_central_2
-# }
+moved {
+  from = module.dspm_environment_eu_central_2
+  to   = module.agentless_scanning_environment_eu_central_2
+}
 
-# moved {
-#   from = module.dspm_environment_eu_north_1
-#   to   = module.agentless_scanning_environment_eu_north_1
-# }
+moved {
+  from = module.dspm_environment_eu_north_1
+  to   = module.agentless_scanning_environment_eu_north_1
+}
 
-# moved {
-#   from = module.dspm_environment_eu_south_1
-#   to   = module.agentless_scanning_environment_eu_south_1
-# }
+moved {
+  from = module.dspm_environment_eu_south_1
+  to   = module.agentless_scanning_environment_eu_south_1
+}
 
-# moved {
-#   from = module.dspm_environment_eu_south_2
-#   to   = module.agentless_scanning_environment_eu_south_2
-# }
+moved {
+  from = module.dspm_environment_eu_south_2
+  to   = module.agentless_scanning_environment_eu_south_2
+}
 
-# moved {
-#   from = module.dspm_environment_eu_west_1
-#   to   = module.agentless_scanning_environment_eu_west_1
-# }
+moved {
+  from = module.dspm_environment_eu_west_1
+  to   = module.agentless_scanning_environment_eu_west_1
+}
 
-# moved {
-#   from = module.dspm_environment_eu_west_2
-#   to   = module.agentless_scanning_environment_eu_west_2
-# }
+moved {
+  from = module.dspm_environment_eu_west_2
+  to   = module.agentless_scanning_environment_eu_west_2
+}
 
-# moved {
-#   from = module.dspm_environment_eu_west_3
-#   to   = module.agentless_scanning_environment_eu_west_3
-# }
+moved {
+  from = module.dspm_environment_eu_west_3
+  to   = module.agentless_scanning_environment_eu_west_3
+}
 
 # Middle East
-# moved {
-#   from = module.dspm_environment_me_central_1
-#   to   = module.agentless_scanning_environment_me_central_1
-# }
+moved {
+  from = module.dspm_environment_me_central_1
+  to   = module.agentless_scanning_environment_me_central_1
+}
 
-# moved {
-#   from = module.dspm_environment_me_south_1
-#   to   = module.agentless_scanning_environment_me_south_1
-# }
+moved {
+  from = module.dspm_environment_me_south_1
+  to   = module.agentless_scanning_environment_me_south_1
+}
 
 # South America
-# moved {
-#   from = module.dspm_environment_sa_east_1
-#   to   = module.agentless_scanning_environment_sa_east_1
-# }
+moved {
+  from = module.dspm_environment_sa_east_1
+  to   = module.agentless_scanning_environment_sa_east_1
+}
