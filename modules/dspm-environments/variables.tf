@@ -4,18 +4,6 @@ variable "deployment_name" {
   default     = "dspm-environment"
 }
 
-variable "dspm_role_name" {
-  description = "The unique name of the IAM role that CrowdStrike will be assuming"
-  type        = string
-  default     = "CrowdStrikeDSPMIntegrationRole"
-}
-
-variable "dspm_scanner_role_name" {
-  description = "The unique name of the IAM role that CrowdStrike Scanner will be assuming"
-  type        = string
-  default     = "CrowdStrikeDSPMScannerRole"
-}
-
 variable "integration_role_unique_id" {
   description = "The unique ID of the DSPM integration role"
   type        = string

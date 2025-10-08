@@ -20,7 +20,7 @@ data "aws_iam_policy_document" "policy_kms_key_host" {
     effect = "Allow"
     principals {
       type        = "AWS"
-      identifiers = ["arn:aws:iam::${local.account_id}:role/${var.dspm_role_name}"]
+      identifiers = ["*"]
     }
     actions = [
       "kms:Create*",
@@ -37,6 +37,14 @@ data "aws_iam_policy_document" "policy_kms_key_host" {
       "kms:CancelKeyDeletion"
     ]
     resources = ["*"]
+    condition {
+      test     = "StringEquals"
+      variable = "aws:userId"
+      values = [
+        var.integration_role_unique_id,
+        "${var.integration_role_unique_id}:*",
+      ]
+    }
   }
 
   statement {
@@ -44,10 +52,7 @@ data "aws_iam_policy_document" "policy_kms_key_host" {
     effect = "Allow"
     principals {
       type = "AWS"
-      identifiers = [
-        "arn:aws:iam::${local.account_id}:role/${var.dspm_role_name}",
-        "arn:aws:iam::${local.account_id}:role/${var.dspm_scanner_role_name}"
-      ]
+      identifiers = ["*"]
     }
     actions = [
       "kms:DescribeKey",
@@ -58,6 +63,16 @@ data "aws_iam_policy_document" "policy_kms_key_host" {
       "kms:GenerateDataKeyWithoutPlaintext"
     ]
     resources = ["*"]
+    condition {
+      test     = "StringLike"
+      variable = "aws:userId"
+      values = [
+        var.integration_role_unique_id,
+        "${var.integration_role_unique_id}:*",
+        var.scanner_role_unique_id,
+        "${var.scanner_role_unique_id}:*"
+      ]
+    }
   }
 }
 
@@ -83,7 +98,7 @@ data "aws_iam_policy_document" "policy_kms_key_target" {
     effect = "Allow"
     principals {
       type        = "AWS"
-      identifiers = ["arn:aws:iam::${local.account_id}:role/${var.dspm_role_name}"]
+      identifiers = ["*"]
     }
     actions = [
       "kms:Create*",
@@ -100,18 +115,56 @@ data "aws_iam_policy_document" "policy_kms_key_target" {
       "kms:CancelKeyDeletion"
     ]
     resources = ["*"]
+    condition {
+      test     = "StringEquals"
+      variable = "aws:userId"
+      values = [
+        var.integration_role_unique_id,
+        "${var.integration_role_unique_id}:*",
+      ]
+    }
   }
 
   statement {
-    sid    = "Allow use of the key"
+    sid    = "Allow use of the key to this account"
+    effect = "Allow"
+    principals {
+      type = "AWS"
+      identifiers = ["*"]
+    }
+    actions = [
+      "kms:DescribeKey",
+      "kms:Encrypt",
+      "kms:Decrypt",
+      "kms:ReEncrypt*",
+      "kms:GenerateDataKey",
+      "kms:GenerateDataKeyWithoutPlaintext"
+    ]
+    resources = ["*"]
+    condition {
+      test     = "StringLike"
+      variable = "aws:userId"
+      values = [
+        var.integration_role_unique_id,
+        "${var.integration_role_unique_id}:*",
+        var.scanner_role_unique_id,
+        "${var.scanner_role_unique_id}:*"
+      ]
+    }
+  }
+
+  statement {
+    sid    = "Allow use of the key to host account"
     effect = "Allow"
     principals {
       type = "AWS"
       identifiers = [
-        "arn:aws:iam::${local.account_id}:role/${var.dspm_role_name}",
-        "arn:aws:iam::${local.account_id}:role/${var.dspm_scanner_role_name}",
         "arn:aws:iam::${var.agentless_scanning_host_account_id}:role/${var.agentless_scanning_host_role_name}"
       ]
+    }
+    principals {
+      type = "AWS"
+      identifiers = ["*"]
     }
     actions = [
       "kms:DescribeKey",
@@ -123,6 +176,7 @@ data "aws_iam_policy_document" "policy_kms_key_target" {
     ]
     resources = ["*"]
   }
+
 
   statement {
     sid    = "Allow attachment of persistent resources"

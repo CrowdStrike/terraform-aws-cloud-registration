@@ -106,5 +106,5 @@ module "fcs_child_account_1" {
   dspm_rds_access                               = local.dspm_rds_access
   dspm_redshift_access                          = local.dspm_redshift_access
   agentless_scanning_host_account_id            = var.account_id # sets the management account as the DSPM host account
-  agentless_scanning_integration_role_unique_id = module.fcs_management_account.agentless_scanning_integration_role_unique_id
+  agentless_scanning_host_role_name = module.fcs_management_account.agentless_scanning_integration_role_name
 }

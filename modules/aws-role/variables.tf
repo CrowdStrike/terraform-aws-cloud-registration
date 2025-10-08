@@ -271,9 +271,3 @@ variable "agentless_scanning_host_scanner_role_name" {
     error_message = "Role name must be empty or use only alphanumeric and '+=,.@-_' characters, maximum 64 characters."
   }
 }
-
-variable "agentless_scanning_integration_role_unique_id" {
-  description = "The unique ID of the DSPM integration role"
-  default     = ""
-  type        = string
-}
