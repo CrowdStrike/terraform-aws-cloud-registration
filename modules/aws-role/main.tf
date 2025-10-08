@@ -76,9 +76,9 @@ module "sensor_management" {
   }
 
 }
-module "dspm_roles" {
+module "agentless_scanning_roles" {
   count                                       = ((var.enable_dspm || var.enable_vulnerability_scanning) && !var.is_gov) ? 1 : 0
-  source                                      = "../dspm-roles/"
+  source                                      = "../agentless-scanning-roles/"
   falcon_client_id                            = var.falcon_client_id
   falcon_client_secret                        = var.falcon_client_secret
   account_id                                  = local.aws_account
@@ -100,3 +100,8 @@ module "dspm_roles" {
   enable_vulnerability_scanning               = var.enable_vulnerability_scanning
   tags                                        = var.tags
 }
+
+# moved {
+#   from = module.dspm_roles
+#   to   = module.agentless_scanning_roles
+# }

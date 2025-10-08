@@ -97,9 +97,9 @@ module "realtime_visibility" {
   }
 }
 
-module "dspm_roles" {
+module "agentless_scanning_roles" {
   count                                       = (local.is_primary_region && (var.enable_dspm || var.enable_vulnerability_scanning)) ? 1 : 0
-  source                                      = "./modules/dspm-roles/"
+  source                                      = "./modules/agentless-scanning-roles/"
   falcon_client_id                            = var.falcon_client_id
   falcon_client_secret                        = var.falcon_client_secret
   dspm_role_name                              = var.dspm_role_name
@@ -122,13 +122,13 @@ module "dspm_roles" {
   agentless_scanning_host_scanner_role_name   = var.agentless_scanning_host_scanner_role_name
 }
 
-module "dspm_environments" {
+module "agentless_scanning_environments" {
   count                              = (var.enable_dspm || var.enable_vulnerability_scanning) && contains(var.dspm_regions, local.aws_region) ? 1 : 0
-  source                             = "./modules/dspm-environments/"
+  source                             = "./modules/agentless-scanning-environments/"
   dspm_role_name                     = var.dspm_role_name
   dspm_scanner_role_name             = var.dspm_scanner_role_name
-  integration_role_unique_id         = local.is_primary_region ? module.dspm_roles[0].integration_role_unique_id : var.dspm_integration_role_unique_id
-  scanner_role_unique_id             = local.is_primary_region ? module.dspm_roles[0].scanner_role_unique_id : var.dspm_scanner_role_unique_id
+  integration_role_unique_id         = local.is_primary_region ? module.agentless_scanning_roles[0].integration_role_unique_id : var.dspm_integration_role_unique_id
+  scanner_role_unique_id             = local.is_primary_region ? module.agentless_scanning_roles[0].scanner_role_unique_id : var.dspm_scanner_role_unique_id
   dspm_create_nat_gateway            = var.dspm_create_nat_gateway
   account_id                         = local.aws_account
   agentless_scanning_host_account_id = var.agentless_scanning_host_account_id
@@ -141,9 +141,20 @@ module "dspm_environments" {
   tags           = var.tags
   vpc_cidr_block = var.vpc_cidr_block
 
-  depends_on = [module.dspm_roles]
+  depends_on = [module.agentless_scanning_roles]
 
   providers = {
     aws = aws
   }
 }
+
+# Handle module renames for seamless customer upgrades
+# moved {
+#   from = module.dspm_roles
+#   to   = module.agentless_scanning_roles
+# }
+
+# moved {
+#   from = module.dspm_environments
+#   to   = module.agentless_scanning_environments
+# }
