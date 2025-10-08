@@ -44,6 +44,12 @@ variable "eventbridge_role_name" {
   description = "The eventbridge role name"
 }
 
+variable "is_gov" {
+  type        = bool
+  default     = false
+  description = "Set to true if you are deploying in gov Falcon"
+}
+
 variable "is_gov_commercial" {
   type        = bool
   default     = false

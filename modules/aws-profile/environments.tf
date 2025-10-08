@@ -106,6 +106,13 @@ module "dspm_environment_ap_east_1" {
   agentless_scanning_host_account_id = var.agentless_scanning_host_account_id
   agentless_scanning_host_role_name  = var.agentless_scanning_host_role_name
   account_id                         = local.aws_account
+  count                      = (contains(var.dspm_regions, "ap-east-1") && var.enable_dspm && !var.is_gov) ? 1 : 0
+  source                     = "../dspm-environments/"
+  integration_role_unique_id = module.dspm_roles[0].integration_role_unique_id
+  scanner_role_unique_id     = module.dspm_roles[0].scanner_role_unique_id
+  dspm_create_nat_gateway    = var.dspm_create_nat_gateway
+  vpc_cidr_block             = var.vpc_cidr_block
+  tags                       = var.tags
   providers = {
     aws = aws.ap-east-1
   }
