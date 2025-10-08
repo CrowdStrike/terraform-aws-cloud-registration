@@ -25,9 +25,10 @@ locals {
   primary_region                              = "us-east-1"
   enable_idp                                  = true
   enable_sensor_management                    = true
-  enable_dspm                                 = true
-  enable_vulnerability_scanning               = true
-  dspm_regions                                = ["us-east-1", "us-east-2"]
+  # TODO: adar revert and use locals.
+  enable_dspm                                 = var.enable_dspm
+  enable_vulnerability_scanning               = var.enable_vulnerability_scanning
+  dspm_regions                                = var.dspm_regions
   use_existing_cloudtrail                     = true
   dspm_create_nat_gateway                     = var.dspm_create_nat_gateway
   agentless_scanning_use_custom_vpc           = var.agentless_scanning_use_custom_vpc
@@ -74,6 +75,7 @@ resource "crowdstrike_cloud_aws_account" "this" {
     enabled   = local.enable_dspm
     role_name = local.dspm_role_name
   }
+
   //TODO: need to check the provider and see what needs to be added  I assume we need to create "vulnerability scanning"  instead of dspm and add there {vulnerability_scanning_enabled, role_name = local.dspm_role_name}
   // or havning agentless scannning role arn.
   provider = crowdstrike
@@ -93,7 +95,7 @@ module "fcs_account_onboarding" {
   enable_dspm                   = local.enable_dspm && contains(local.dspm_regions, "us-east-1")
   enable_vulnerability_scanning = local.enable_vulnerability_scanning && contains(local.dspm_regions, "us-east-1")
   dspm_regions                  = local.dspm_regions
-  dspm_scanner_role_name        = local.dspm_scanner_role_name
+  # dspm_scanner_role_name        = local.dspm_scanner_role_name
   vpc_cidr_block                = var.vpc_cidr_block
 
   iam_role_name          = crowdstrike_cloud_aws_account.this.iam_role_name
@@ -138,7 +140,7 @@ module "fcs_account_us_east_2" {
   enable_dspm                   = local.enable_dspm && contains(local.dspm_regions, "us-east-2")
   enable_vulnerability_scanning = local.enable_vulnerability_scanning && contains(local.dspm_regions, "us-east-2")
   dspm_regions                  = local.dspm_regions
-  dspm_scanner_role_name        = local.dspm_scanner_role_name
+  # dspm_scanner_role_name        = local.dspm_scanner_role_name
   vpc_cidr_block                = var.vpc_cidr_block
 
   iam_role_name                   = crowdstrike_cloud_aws_account.this.iam_role_name
@@ -185,7 +187,7 @@ module "fcs_account_us_west_1" {
   enable_dspm                   = local.enable_dspm && contains(local.dspm_regions, "us-west-1")
   enable_vulnerability_scanning = local.enable_vulnerability_scanning && contains(local.dspm_regions, "us-west-1")
   dspm_regions                  = local.dspm_regions
-  dspm_scanner_role_name        = local.dspm_scanner_role_name
+  # dspm_scanner_role_name        = local.dspm_scanner_role_name
   vpc_cidr_block                = var.vpc_cidr_block
 
   iam_role_name                   = crowdstrike_cloud_aws_account.this.iam_role_name
@@ -232,7 +234,7 @@ module "fcs_account_us_west_2" {
   enable_dspm                   = local.enable_dspm && contains(local.dspm_regions, "us-west-2")
   enable_vulnerability_scanning = local.enable_vulnerability_scanning && contains(local.dspm_regions, "us-west-2")
   dspm_regions                  = local.dspm_regions
-  dspm_scanner_role_name        = local.dspm_scanner_role_name
+  # dspm_scanner_role_name        = local.dspm_scanner_role_name
   vpc_cidr_block                = var.vpc_cidr_block
 
   iam_role_name                   = crowdstrike_cloud_aws_account.this.iam_role_name
