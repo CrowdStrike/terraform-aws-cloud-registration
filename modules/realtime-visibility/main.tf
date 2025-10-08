@@ -20,7 +20,15 @@ resource "aws_iam_role" "eventbridge" {
           "Service" : "events.amazonaws.com"
         },
         "Effect" : "Allow",
-        "Sid" : ""
+        "Sid" : "",
+        "Condition" : {
+          "StringEquals" : {
+            "aws:SourceAccount" : local.account_id
+          },
+          "ArnLike" : {
+            "aws:SourceArn" : "arn:${local.aws_partition}:events:*:${local.account_id}:rule/*"
+          }
+        }
       }
     ]
   })
@@ -39,7 +47,7 @@ resource "aws_iam_role_policy" "inline_policy" {
         "Action" : [
           "events:PutEvents"
         ],
-        "Resource" : !var.is_gov_commercial ? "arn:${local.aws_partition}:events:*:*:event-bus/cs-*" : "arn:${local.aws_partition}:events:*:*:event-bus/default"
+        "Resource" : !var.is_gov_commercial ? var.eventbus_arn : "arn:${local.aws_partition}:events:*:${local.account_id}:event-bus/default"
         "Effect" : "Allow"
       }
     ]
