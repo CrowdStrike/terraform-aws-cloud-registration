@@ -1,4 +1,5 @@
 data "aws_region" "current" {}
+data "aws_caller_identity" "current" {}
 
 data "aws_availability_zones" "available" {
   state = "available"
@@ -15,9 +16,9 @@ data "aws_subnet" "custom_db_subnet_b" {
   id    = var.region_vpc_config.db_subnet_b
 }
 
-# Create new VPC resources only when use_custom_vpc is false
+# Create new VPC resources only when create scanning infrastructure is true
 resource "aws_vpc" "vpc" {
-  count                = var.use_custom_vpc ? 0 : 1
+  count                = local.create_scanning_infrastructure ? 1 : 0
   cidr_block           = var.vpc_cidr_block
   enable_dns_support   = true
   enable_dns_hostnames = true
@@ -33,7 +34,7 @@ resource "aws_vpc" "vpc" {
 }
 
 resource "aws_internet_gateway" "internet_gateway" {
-  count  = var.use_custom_vpc ? 0 : 1
+  count  = local.create_scanning_infrastructure ? 1 : 0
   vpc_id = aws_vpc.vpc[0].id
 
   tags = merge(
@@ -44,11 +45,11 @@ resource "aws_internet_gateway" "internet_gateway" {
     }
   )
 
-  depends_on = [aws_vpc.vpc]
+  depends_on = [aws_vpc.vpc[0]]
 }
 
 resource "aws_subnet" "db_subnet_a" {
-  count             = var.use_custom_vpc ? 0 : 1
+  count             = local.create_scanning_infrastructure ? 1 : 0
   vpc_id            = aws_vpc.vpc[0].id
   cidr_block        = cidrsubnet("${var.vpc_cidr_block}", 8, 0)
   availability_zone = data.aws_availability_zones.available.names[0]
@@ -67,7 +68,7 @@ resource "aws_subnet" "db_subnet_a" {
 }
 
 resource "aws_subnet" "db_subnet_b" {
-  count             = var.use_custom_vpc ? 0 : 1
+  count             = local.create_scanning_infrastructure ? 1 : 0
   vpc_id            = aws_vpc.vpc[0].id
   cidr_block        = cidrsubnet("${var.vpc_cidr_block}", 8, 1)
   availability_zone = data.aws_availability_zones.available.names[1]
@@ -86,6 +87,7 @@ resource "aws_subnet" "db_subnet_b" {
 }
 
 resource "aws_db_subnet_group" "db_subnet_group" {
+  count       = local.is_host_account ? 1 : 0
   name        = "${var.deployment_name}-db-subnet-group-${var.use_custom_vpc ? var.region_vpc_config.vpc : aws_vpc.vpc[0].id}"
   description = "CrowdStrike Security DB subnet group"
   subnet_ids = var.use_custom_vpc ? [
@@ -108,6 +110,7 @@ resource "aws_db_subnet_group" "db_subnet_group" {
 }
 
 resource "aws_redshift_subnet_group" "redshift_subnet_group" {
+  count       = local.is_host_account ? 1 : 0
   name        = "${var.deployment_name}-redshift-subnet-group-${var.use_custom_vpc ? var.region_vpc_config.vpc : aws_vpc.vpc[0].id}"
   description = "CrowdStrike Security Redshift subnet group"
   subnet_ids = var.use_custom_vpc ? [
@@ -130,7 +133,7 @@ resource "aws_redshift_subnet_group" "redshift_subnet_group" {
 }
 
 resource "aws_subnet" "public_subnet" {
-  count             = var.dspm_create_nat_gateway && !var.use_custom_vpc ? 1 : 0
+  count             = var.dspm_create_nat_gateway && local.create_scanning_infrastructure ? 1 : 0
   vpc_id            = aws_vpc.vpc[0].id
   cidr_block        = cidrsubnet("${var.vpc_cidr_block}", 8, 2)
   availability_zone = data.aws_availability_zones.available.names[0]
@@ -149,7 +152,7 @@ resource "aws_subnet" "public_subnet" {
 }
 
 resource "aws_subnet" "private_subnet" {
-  count             = var.use_custom_vpc ? 0 : 1
+  count             = local.create_scanning_infrastructure ? 1 : 0
   vpc_id            = aws_vpc.vpc[0].id
   cidr_block        = cidrsubnet("${var.vpc_cidr_block}", 8, 3)
   availability_zone = data.aws_availability_zones.available.names[0]
@@ -169,7 +172,7 @@ resource "aws_subnet" "private_subnet" {
 }
 
 resource "aws_route_table" "public_route_table" {
-  count  = var.use_custom_vpc ? 0 : 1
+  count  = local.create_scanning_infrastructure ? 1 : 0
   vpc_id = aws_vpc.vpc[0].id
 
   # PublicRoute1
@@ -190,7 +193,7 @@ resource "aws_route_table" "public_route_table" {
 }
 
 resource "aws_eip" "elastic_ip_address" {
-  count  = var.dspm_create_nat_gateway && !var.use_custom_vpc ? 1 : 0
+  count  = var.dspm_create_nat_gateway && local.create_scanning_infrastructure ? 1 : 0
   domain = "vpc"
   tags = merge(
     var.tags,
@@ -203,7 +206,7 @@ resource "aws_eip" "elastic_ip_address" {
 }
 
 resource "aws_nat_gateway" "nat_gateway" {
-  count         = var.dspm_create_nat_gateway && !var.use_custom_vpc ? 1 : 0
+  count         = var.dspm_create_nat_gateway && local.create_scanning_infrastructure ? 1 : 0
   allocation_id = aws_eip.elastic_ip_address[0].id
   subnet_id     = aws_subnet.public_subnet[0].id
 
@@ -218,7 +221,7 @@ resource "aws_nat_gateway" "nat_gateway" {
 
 
 resource "aws_route_table" "private_route_table" {
-  count  = var.use_custom_vpc ? 0 : 1
+  count  = local.create_scanning_infrastructure ? 1 : 0
   vpc_id = aws_vpc.vpc[0].id
 
   # PrivateRoute - conditionally use NAT Gateway or Internet Gateway
@@ -238,19 +241,19 @@ resource "aws_route_table" "private_route_table" {
 }
 
 resource "aws_route_table_association" "public_subnet_route_table_association" {
-  count          = var.dspm_create_nat_gateway && !var.use_custom_vpc ? 1 : 0
+  count          = var.dspm_create_nat_gateway && local.create_scanning_infrastructure ? 1 : 0
   subnet_id      = aws_subnet.public_subnet[0].id
   route_table_id = aws_route_table.public_route_table[0].id
 }
 
 resource "aws_route_table_association" "private_subnet_route_table_association" {
-  count          = var.use_custom_vpc ? 0 : 1
+  count          = local.create_scanning_infrastructure ? 1 : 0
   subnet_id      = aws_subnet.private_subnet[0].id
   route_table_id = aws_route_table.private_route_table[0].id
 }
 
 resource "aws_network_acl" "network_acl" {
-  count  = var.use_custom_vpc ? 0 : 1
+  count  = local.create_scanning_infrastructure ? 1 : 0
   vpc_id = aws_vpc.vpc[0].id
 
   tags = merge(
@@ -263,7 +266,7 @@ resource "aws_network_acl" "network_acl" {
 }
 
 resource "aws_network_acl_rule" "inbound_a" {
-  count          = var.use_custom_vpc ? 0 : 1
+  count          = local.create_scanning_infrastructure ? 1 : 0
   network_acl_id = aws_network_acl.network_acl[0].id
   rule_number    = 100
   protocol       = "-1"
@@ -273,7 +276,7 @@ resource "aws_network_acl_rule" "inbound_a" {
 }
 
 resource "aws_network_acl_rule" "inbound_b" {
-  count          = var.use_custom_vpc ? 0 : 1
+  count          = local.create_scanning_infrastructure ? 1 : 0
   network_acl_id = aws_network_acl.network_acl[0].id
   rule_number    = 110
   protocol       = "-1"
@@ -283,7 +286,7 @@ resource "aws_network_acl_rule" "inbound_b" {
 }
 
 resource "aws_network_acl_rule" "outbound" {
-  count          = var.use_custom_vpc ? 0 : 1
+  count          = local.create_scanning_infrastructure ? 1 : 0
   network_acl_id = aws_network_acl.network_acl[0].id
   rule_number    = 100
   protocol       = "-1"
@@ -293,32 +296,32 @@ resource "aws_network_acl_rule" "outbound" {
 }
 
 resource "aws_network_acl_association" "public_subnet_nacl_association" {
-  count          = var.dspm_create_nat_gateway && !var.use_custom_vpc ? 1 : 0
+  count          = var.dspm_create_nat_gateway && local.create_scanning_infrastructure ? 1 : 0
   subnet_id      = aws_subnet.public_subnet[0].id
   network_acl_id = aws_network_acl.network_acl[0].id
 }
 
 resource "aws_network_acl_association" "private_subnet_nacl_association" {
-  count          = var.use_custom_vpc ? 0 : 1
+  count          = local.create_scanning_infrastructure ? 1 : 0
   subnet_id      = aws_subnet.private_subnet[0].id
   network_acl_id = aws_network_acl.network_acl[0].id
 }
 
 resource "aws_network_acl_association" "db_subnet_a_nacl_association" {
-  count          = var.use_custom_vpc ? 0 : 1
+  count          = local.create_scanning_infrastructure ? 1 : 0
   subnet_id      = aws_subnet.db_subnet_a[0].id
   network_acl_id = aws_network_acl.network_acl[0].id
 }
 
 resource "aws_network_acl_association" "db_subnet_b_nacl_association" {
-  count          = var.use_custom_vpc ? 0 : 1
+  count          = local.create_scanning_infrastructure ? 1 : 0
   subnet_id      = aws_subnet.db_subnet_b[0].id
   network_acl_id = aws_network_acl.network_acl[0].id
 }
 
 resource "aws_security_group" "ec2_security_group" {
-  count = var.use_custom_vpc ? 0 : 1
   #checkov:skip=CKV_AWS_382:Data scanner must be allowed to access undetermined ports to support scanning new services
+  count       = local.create_scanning_infrastructure ? 1 : 0
   name        = "EC2SecurityGroup"
   description = "Security group attached to CrowdStrike provisioned EC2 instances for running data scanners"
   vpc_id      = aws_vpc.vpc[0].id
@@ -343,7 +346,7 @@ resource "aws_security_group" "ec2_security_group" {
 }
 
 resource "aws_security_group" "db_security_group" {
-  count       = var.use_custom_vpc ? 0 : 1
+  count       = local.create_scanning_infrastructure ? 1 : 0
   name        = "DBSecurityGroup"
   description = "Security group attached to RDS instance to allow EC2 instances with specific security groups attached to connect to the database"
   vpc_id      = aws_vpc.vpc[0].id
@@ -440,7 +443,7 @@ resource "aws_security_group" "db_security_group" {
 }
 
 resource "aws_vpc_endpoint" "s3_endpoint" {
-  count             = var.use_custom_vpc ? 0 : 1
+  count             = local.create_scanning_infrastructure ? 1 : 0
   vpc_id            = aws_vpc.vpc[0].id
   service_name      = "com.amazonaws.${local.aws_region}.s3"
   vpc_endpoint_type = "Gateway"
@@ -477,7 +480,7 @@ resource "aws_vpc_endpoint" "s3_endpoint" {
 }
 
 resource "aws_vpc_endpoint" "dynamodb_endpoint" {
-  count             = var.use_custom_vpc ? 0 : 1
+  count             = local.create_scanning_infrastructure ? 1 : 0
   vpc_id            = aws_vpc.vpc[0].id
   service_name      = "com.amazonaws.${local.aws_region}.dynamodb"
   vpc_endpoint_type = "Gateway"
@@ -523,19 +526,23 @@ resource "aws_ssm_parameter" "scan_environment_parameter" {
   name = "/CrowdStrike/AgentlessScanning/Environment"
   type = "String"
   tier = "Intelligent-Tiering"
-  value = jsonencode({
-    DBSubnetA            = var.use_custom_vpc ? var.region_vpc_config.db_subnet_a : aws_subnet.db_subnet_a[0].id
-    DBSubnetB            = var.use_custom_vpc ? var.region_vpc_config.db_subnet_b : aws_subnet.db_subnet_b[0].id
-    VpcId                = var.use_custom_vpc ? var.region_vpc_config.vpc : aws_vpc.vpc[0].id
-    CreateVPC            = var.use_custom_vpc ? "false" : "true"
-    CreateNatGW          = var.dspm_create_nat_gateway ? "true" : "false"
-    PrivateSubnet        = var.use_custom_vpc ? var.region_vpc_config.scanner_subnet : aws_subnet.private_subnet[0].id
-    ScannerSecurityGroup = var.use_custom_vpc ? var.region_vpc_config.scanner_sg : aws_security_group.ec2_security_group[0].id
-    DBSubnetGroup        = aws_db_subnet_group.db_subnet_group.name
-    DBSecurityGroup      = var.use_custom_vpc ? var.region_vpc_config.db_sg : aws_security_group.db_security_group[0].id
-    RedshiftSubnetGroup  = aws_redshift_subnet_group.redshift_subnet_group.name
-    KMSKey               = aws_kms_key.crowdstrike_kms_key.arn
-  })
+  value = jsonencode(merge(
+    {
+      KMSKey = aws_kms_key.crowdstrike_kms_key.arn
+    },
+    local.is_host_account ? {
+      DBSubnetA            = var.use_custom_vpc ? var.region_vpc_config.db_subnet_a : aws_subnet.db_subnet_a[0].id
+      DBSubnetB            = var.use_custom_vpc ? var.region_vpc_config.db_subnet_b : aws_subnet.db_subnet_b[0].id
+      VpcId                = var.use_custom_vpc ? var.region_vpc_config.vpc : aws_vpc.vpc[0].id
+      CreateVPC            = var.use_custom_vpc ? "false" : "true"
+      CreateNatGW          = var.dspm_create_nat_gateway ? "true" : "false"
+      PrivateSubnet        = var.use_custom_vpc ? var.region_vpc_config.scanner_subnet : aws_subnet.private_subnet[0].id
+      ScannerSecurityGroup = var.use_custom_vpc ? var.region_vpc_config.scanner_sg : aws_security_group.ec2_security_group[0].id
+      DBSubnetGroup        = aws_db_subnet_group.db_subnet_group[0].name
+      DBSecurityGroup      = var.use_custom_vpc ? var.region_vpc_config.db_sg : aws_security_group.db_security_group[0].id
+      RedshiftSubnetGroup  = aws_redshift_subnet_group.redshift_subnet_group[0].name
+    } : {}
+  ))
   description = "Environment configuration for CrowdStrike Scanning"
   tags = merge(
     var.tags,
