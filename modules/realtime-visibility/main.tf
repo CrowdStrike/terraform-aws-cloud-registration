@@ -6,6 +6,13 @@ locals {
   account_id    = data.aws_caller_identity.current.account_id
   aws_region    = data.aws_region.current.id
   aws_partition = data.aws_partition.current.partition
+
+  # Extract CrowdStrike account ID from eventbus_arn for cross-account resource scoping
+  # Example eventbus_arn: "arn:aws:events:us-east-1:123456789012:event-bus/cs-prod-123"
+  # Provides flexibility for multiple registrations without requiring redeployment
+  cs_account_id = !var.is_gov_commercial && var.eventbus_arn != "" ? (
+    try(split(":", var.eventbus_arn)[4], "*")
+  ) : ""
 }
 
 resource "aws_iam_role" "eventbridge" {
@@ -20,7 +27,15 @@ resource "aws_iam_role" "eventbridge" {
           "Service" : "events.amazonaws.com"
         },
         "Effect" : "Allow",
-        "Sid" : ""
+        "Sid" : "",
+        "Condition" : {
+          "StringEquals" : {
+            "aws:SourceAccount" : local.account_id
+          },
+          "ArnLike" : {
+            "aws:SourceArn" : "arn:${local.aws_partition}:events:*:${local.account_id}:rule/*"
+          }
+        }
       }
     ]
   })
@@ -39,7 +54,7 @@ resource "aws_iam_role_policy" "inline_policy" {
         "Action" : [
           "events:PutEvents"
         ],
-        "Resource" : !var.is_gov_commercial ? "arn:${local.aws_partition}:events:*:*:event-bus/cs-*" : "arn:${local.aws_partition}:events:*:*:event-bus/default"
+        "Resource" : !var.is_gov_commercial ? "arn:${local.aws_partition}:events:*:${local.cs_account_id}:event-bus/cs-*" : "arn:${local.aws_partition}:events:*:${local.account_id}:event-bus/default"
         "Effect" : "Allow"
       }
     ]
