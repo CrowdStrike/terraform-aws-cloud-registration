@@ -4,8 +4,8 @@ locals {
   enable_idp                 = true
   enable_sensor_management   = true
   enable_dspm                = true
-  use_existing_cloudtrail    = true
   dspm_regions               = ["us-east-1", "us-east-2"]
+  use_existing_cloudtrail    = true
   dspm_create_nat_gateway    = var.dspm_create_nat_gateway
   dspm_s3_access             = var.dspm_s3_access
   dspm_dynamodb_access       = var.dspm_dynamodb_access
