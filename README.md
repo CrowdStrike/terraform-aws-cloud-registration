@@ -218,6 +218,19 @@ module "fcs_account_us_east_2" {
 
 ## DSPM Configurations
 
+### Cross Account Scannning
+
+You can configure your DSPM deployment to create a DSPM host account or a DSPM target account. 
+A DSPM host account has all the networking infrastructure required to host DSPM data scanners.
+A DSPM target account is scanned by a previously onboarded host account.
+
+The provided usage example will deploy a DSPM host account.
+To instead deploy a DSPM target account:
+   * Ensure the deployment has successfully completed in the host account before deploying any target accounts.
+   * Set the value of the variable `agentless_scanning_host_account_id` as your host AWS account ID.
+   * Set the value of the variable `agentless_scanning_host_role_name` as the name of the DSPM integration role in the host account.
+   * Set the value of the variable `agentless_scanning_host_scanner_role_name` as the name of the DSPM data scanner role in the host account.
+  
 ### Custom VPC 
 For DSPM deployments, you can optionally use your existing network resources instead of the default resources provisioned by CrowdStrike.
 
