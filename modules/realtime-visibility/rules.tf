@@ -106,13 +106,13 @@ locals {
 }
 
 resource "aws_cloudwatch_event_rule" "rw" {
-  count         = var.create_rules ? 1 : 0
+  count         = local.use_eventbridge_method && var.create_rules ? 1 : 0
   name          = local.rule_name
   event_pattern = local.event_pattern
 }
 
 resource "aws_cloudwatch_event_target" "rw" {
-  count     = var.create_rules ? 1 : 0
+  count     = local.use_eventbridge_method && var.create_rules ? 1 : 0
   target_id = local.target_id
   arn       = local.eventbus_arn
   rule      = aws_cloudwatch_event_rule.rw[0].name
@@ -125,13 +125,13 @@ resource "aws_cloudwatch_event_target" "rw" {
 
 
 resource "aws_cloudwatch_event_rule" "ro" {
-  count         = var.create_rules ? 1 : 0
+  count         = local.use_eventbridge_method && var.create_rules ? 1 : 0
   name          = local.ro_rule_name
   event_pattern = local.ro_event_pattern
 }
 
 resource "aws_cloudwatch_event_target" "ro" {
-  count     = var.create_rules ? 1 : 0
+  count     = local.use_eventbridge_method && var.create_rules ? 1 : 0
   target_id = local.target_id
   arn       = local.eventbus_arn
   rule      = aws_cloudwatch_event_rule.ro[0].name

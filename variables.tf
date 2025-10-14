@@ -226,3 +226,38 @@ variable "vpc_cidr_block" {
   type        = string
   default     = "10.0.0.0/16"
 }
+
+# S3 Log Ingestion Variables
+variable "log_ingestion_method" {
+  type        = string
+  default     = "eventbridge"
+  description = "Choose the method for ingesting CloudTrail logs - EventBridge (default) or S3"
+  validation {
+    condition     = contains(["eventbridge", "s3"], var.log_ingestion_method)
+    error_message = "log_ingestion_method must be either 'eventbridge' or 's3'"
+  }
+}
+
+variable "log_ingestion_s3_bucket_name" {
+  type        = string
+  default     = ""
+  description = "S3 bucket name containing CloudTrail logs (required when log_ingestion_method=s3)"
+}
+
+variable "log_ingestion_sns_topic_arn" {
+  type        = string
+  default     = ""
+  description = "SNS topic ARN that publishes S3 object creation events (required when log_ingestion_method=s3)"
+}
+
+variable "log_ingestion_s3_bucket_prefix" {
+  type        = string
+  default     = ""
+  description = "Optional S3 bucket prefix/path for CloudTrail logs (when log_ingestion_method=s3)"
+}
+
+variable "log_ingestion_kms_key_arn" {
+  type        = string
+  default     = ""
+  description = "Optional KMS key ARN for decrypting S3 objects (when log_ingestion_method=s3)"
+}

@@ -84,6 +84,14 @@ module "realtime_visibility" {
   resource_prefix         = var.resource_prefix
   resource_suffix         = var.resource_suffix
   tags                    = var.tags
+  # S3 Log Ingestion Variables
+  log_ingestion_method           = var.log_ingestion_method
+  log_ingestion_s3_bucket_name   = var.log_ingestion_s3_bucket_name
+  log_ingestion_sns_topic_arn    = var.log_ingestion_sns_topic_arn
+  log_ingestion_s3_bucket_prefix = var.log_ingestion_s3_bucket_prefix
+  log_ingestion_kms_key_arn      = var.log_ingestion_kms_key_arn
+  external_id                    = local.external_id
+  intermediate_role_arn          = local.intermediate_role_arn
 
   depends_on = [
     data.crowdstrike_cloud_aws_account.target,
