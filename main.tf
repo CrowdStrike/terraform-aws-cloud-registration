@@ -8,6 +8,7 @@ data "crowdstrike_cloud_aws_account" "target" {
 locals {
   aws_region        = data.aws_region.current.id
   is_primary_region = local.aws_region == var.primary_region
+  is_gov_commercial = var.is_gov && var.account_type == "commercial"
 
   # if we target by account_id, it will be the only account returned
   # if we target by organization_id, we pick the first one because all accounts will have the same settings
@@ -76,7 +77,8 @@ module "realtime_visibility" {
   eventbridge_role_name   = var.eventbridge_role_name
   eventbus_arn            = local.eventbus_arn
   is_organization_trail   = length(var.organization_id) > 0
-  is_gov_commercial       = var.is_gov && var.account_type == "commercial"
+  is_gov                  = var.is_gov
+  is_gov_commercial       = local.is_gov_commercial
   is_primary_region       = local.is_primary_region
   create_rules            = var.create_rtvd_rules
   primary_region          = var.primary_region

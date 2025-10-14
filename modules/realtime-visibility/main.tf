@@ -39,8 +39,7 @@ resource "aws_iam_role_policy" "inline_policy" {
         "Action" : [
           "events:PutEvents"
         ],
-        # todo update hardcoded rule name
-        "Resource" : !var.is_gov_commercial ? "arn:${local.aws_partition}:events:*:*:event-bus/cs-*" : "arn:aws:events:*:*:event-bus/default"
+        "Resource" : !var.is_gov_commercial ? "arn:${local.aws_partition}:events:*:*:event-bus/cs-*" : "arn:${local.aws_partition}:events:*:*:event-bus/default"
         "Effect" : "Allow"
       }
     ]
