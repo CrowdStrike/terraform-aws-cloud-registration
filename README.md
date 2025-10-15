@@ -216,67 +216,17 @@ module "fcs_account_us_east_2" {
 }
 ```
 
-## DSPM Configurations
-
-### Cross Account Scannning
-
-You can configure your DSPM deployment to create a DSPM host account or a DSPM target account. 
-A DSPM host account has all the networking infrastructure required to host DSPM data scanners.
-A DSPM target account is scanned by a previously onboarded host account.
-
-The provided usage example will deploy a DSPM host account.
-To instead deploy a DSPM target account:
-   * Ensure the deployment has successfully completed in the host account before deploying any target accounts.
-   * Set the value of the variable `agentless_scanning_host_account_id` as your host AWS account ID.
-   * Set the value of the variable `agentless_scanning_host_role_name` as the name of the DSPM integration role in the host account.
-   * Set the value of the variable `agentless_scanning_host_scanner_role_name` as the name of the DSPM data scanner role in the host account.
-  
-### Custom VPC 
-For DSPM deployments, you can optionally use your existing network resources instead of the default resources provisioned by CrowdStrike.
-
-**Key Points:**
-- Custom VPC settings apply to the entire DSPM deployment across all regions
-- Cannot be applied to specific DSPM regions (all-or-nothing configuration)
-- Requires existing VPC, subnets, and security groups in each DSPM region
-
-For detailed network requirements and validation steps, see the CrowdStrike Falcon documentation for DSPM deployment with custom VPCs.
-
-**Usage:**
-```hcl
-  # Enable custom VPC
-  agentless_scanning_use_custom_vpc = true
-  
-  # Provide existing resources for each region
-  agentless_scanning_custom_vpc_resources_map = {
-    "us-east-1" = {
-      vpc            = "vpc-11223344556677889"
-      scanner_subnet = "subnet-11223344556677887"
-      scanner_sg     = "sg-11223344556677888"
-      db_subnet_a    = "subnet-11223344556677888"
-      db_subnet_b    = "subnet-11223344556677889"
-      db_sg          = "sg-11223344556677889"
-    }
-    "us-west-1" = {
-      vpc            = "vpc-11223344556677888"
-      scanner_subnet = "subnet-11223344556677884"
-      scanner_sg     = "sg-11223344556677886"
-      db_subnet_a    = "subnet-11223344556677885"
-      db_subnet_b    = "subnet-11223344556677886"
-      db_sg          = "sg-11223344556677887"
-    }
-  }
-```
-
 ## Providers
 
 | Name | Version |
 |------|---------|
-| <a name="provider_aws"></a> [aws](#provider\_aws) | >= 5.0.0 |
-| <a name="provider_crowdstrike"></a> [crowdstrike](#provider\_crowdstrike) | >= 0.0.19 |
+| <a name="provider_aws"></a> [aws](#provider\_aws) | 6.11.0 |
+| <a name="provider_crowdstrike"></a> [crowdstrike](#provider\_crowdstrike) | 0.0.36 |
 ## Resources
 
 | Name | Type |
 |------|------|
+| [aws_caller_identity.current](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/caller_identity) | data source |
 | [aws_region.current](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/region) | data source |
 | [crowdstrike_cloud_aws_account.target](https://registry.terraform.io/providers/CrowdStrike/crowdstrike/latest/docs/data-sources/cloud_aws_account) | data source |
 ## Inputs
@@ -285,6 +235,11 @@ For detailed network requirements and validation steps, see the CrowdStrike Falc
 |------|-------------|------|---------|:--------:|
 | <a name="input_account_id"></a> [account\_id](#input\_account\_id) | The AWS 12 digit account ID | `string` | `""` | no |
 | <a name="input_account_type"></a> [account\_type](#input\_account\_type) | Account type can be either 'commercial' or 'gov' | `string` | `"commercial"` | no |
+| <a name="input_agentless_scanning_custom_vpc_resources_map"></a> [agentless\_scanning\_custom\_vpc\_resources\_map](#input\_agentless\_scanning\_custom\_vpc\_resources\_map) | Map of regions to custom VPC resources for Agentless Scanning deployment.<br/>Each region can specify existing VPC resources to use instead of creating new ones.<br/><br/>Example:<br/>{<br/>  "us-east-1" = {<br/>    vpc            = "vpc-0123456789abcdef0"<br/>    scanner\_subnet = "subnet-0123456789abcdef0"<br/>    scanner\_sg     = "sg-0123456789abcdef0"<br/>    db\_subnet\_a    = "subnet-1123456789abcdef0"<br/>    db\_subnet\_b    = "subnet-2123456789abcdef0"<br/>    db\_sg          = "sg-1123456789abcdef0"<br/>  }<br/>}<br/><br/>All resource IDs must exist in the specified region. | <pre>map(object({<br/>    vpc            = string<br/>    scanner_subnet = string<br/>    scanner_sg     = string<br/>    db_subnet_a    = string<br/>    db_subnet_b    = string<br/>    db_sg          = string<br/>  }))</pre> | `{}` | no |
+| <a name="input_agentless_scanning_host_account_id"></a> [agentless\_scanning\_host\_account\_id](#input\_agentless\_scanning\_host\_account\_id) | The AWS account ID where DSPM host resources are deployed | `string` | `""` | no |
+| <a name="input_agentless_scanning_host_role_name"></a> [agentless\_scanning\_host\_role\_name](#input\_agentless\_scanning\_host\_role\_name) | Name of agentless scanning integration role in host account | `string` | `"CrowdStrikeDSPMIntegrationRole"` | no |
+| <a name="input_agentless_scanning_host_scanner_role_name"></a> [agentless\_scanning\_host\_scanner\_role\_name](#input\_agentless\_scanning\_host\_scanner\_role\_name) | Name of angentless scanning scanner role in host account | `string` | `"CrowdStrikeDSPMScannerRole"` | no |
+| <a name="input_agentless_scanning_use_custom_vpc"></a> [agentless\_scanning\_use\_custom\_vpc](#input\_agentless\_scanning\_use\_custom\_vpc) | Use existing custom VPC resources for ALL deployment regions (requires agentless\_scanning\_custom\_vpc\_resources\_map with all regions) | `bool` | `false` | no |
 | <a name="input_cloudtrail_bucket_name"></a> [cloudtrail\_bucket\_name](#input\_cloudtrail\_bucket\_name) | Name of the S3 bucket for CloudTrail logs | `string` | `""` | no |
 | <a name="input_create_rtvd_rules"></a> [create\_rtvd\_rules](#input\_create\_rtvd\_rules) | Set to false if you don't want to enable monitoring in this region | `bool` | `true` | no |
 | <a name="input_dspm_create_nat_gateway"></a> [dspm\_create\_nat\_gateway](#input\_dspm\_create\_nat\_gateway) | Set to true to create a NAT Gateway for DSPM scanning environments | `bool` | `true` | no |
