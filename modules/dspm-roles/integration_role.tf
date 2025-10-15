@@ -29,7 +29,7 @@ resource "aws_iam_role" "crowdstrike_aws_dspm_integration_role" {
     var.tags,
     {
       (local.crowdstrike_tag_key) = local.crowdstrike_tag_value
-      RootRegion                  = data.aws_region.current.name
+      RootRegion                  = data.aws_region.current.id
     }
   )
 }

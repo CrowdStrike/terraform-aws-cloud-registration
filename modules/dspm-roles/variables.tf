@@ -132,17 +132,6 @@ variable "agentless_scanning_host_account_id" {
   }
 }
 
-variable "agentless_scanning_host_role_name" {
-  type        = string
-  default     = "CrowdStrikeDSPMIntegrationRole"
-  description = "Name of agentless scanning integration role in host account"
-
-  validation {
-    condition     = can(regex("^$|^[a-zA-Z0-9+=,.@_-]{1,64}$", var.agentless_scanning_host_role_name))
-    error_message = "Role name must be empty or use only alphanumeric and '+=,.@-_' characters, maximum 64 characters."
-  }
-}
-
 variable "agentless_scanning_host_scanner_role_name" {
   type        = string
   default     = "CrowdStrikeDSPMScannerRole"
