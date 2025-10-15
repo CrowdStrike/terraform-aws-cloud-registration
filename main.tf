@@ -118,7 +118,6 @@ module "dspm_roles" {
   tags                                        = var.tags
   account_id                                  = local.aws_account
   agentless_scanning_host_account_id          = var.agentless_scanning_host_account_id
-  agentless_scanning_host_role_name           = var.agentless_scanning_host_role_name
   agentless_scanning_host_scanner_role_name   = var.agentless_scanning_host_scanner_role_name
 }
 
