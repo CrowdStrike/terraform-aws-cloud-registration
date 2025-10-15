@@ -1,3 +1,5 @@
+data "aws_caller_identity" "current" {}
+
 data "crowdstrike_cloud_aws_account" "target" {
   account_id      = var.account_id
   organization_id = length(var.account_id) != 0 ? null : var.organization_id
@@ -6,6 +8,8 @@ data "crowdstrike_cloud_aws_account" "target" {
 locals {
   # if we target by account_id, it will be the only account returned
   # if we target by organization_id, we pick the first one because all accounts will have the same settings
+  aws_account = data.aws_caller_identity.current.account_id
+
   account = try(
     data.crowdstrike_cloud_aws_account.target.accounts[0],
     {
@@ -60,18 +64,23 @@ module "sensor_management" {
 
 
 module "dspm_roles" {
-  count                  = (var.enable_dspm && !var.is_gov) ? 1 : 0
-  source                 = "../dspm-roles/"
-  falcon_client_id       = var.falcon_client_id
-  falcon_client_secret   = var.falcon_client_secret
-  dspm_role_name         = var.dspm_role_name
-  dspm_scanner_role_name = var.dspm_scanner_role_name
-  intermediate_role_arn  = local.intermediate_role_arn
-  external_id            = local.external_id
-  dspm_regions           = var.dspm_regions
-  dspm_s3_access         = var.dspm_s3_access
-  dspm_dynamodb_access   = var.dspm_dynamodb_access
-  dspm_rds_access        = var.dspm_rds_access
-  dspm_redshift_access   = var.dspm_redshift_access
-  tags                   = var.tags
+  count                                       = (var.enable_dspm && !var.is_gov) ? 1 : 0
+  source                                      = "../dspm-roles/"
+  falcon_client_id                            = var.falcon_client_id
+  falcon_client_secret                        = var.falcon_client_secret
+  account_id                                  = local.aws_account
+  dspm_role_name                              = var.dspm_role_name
+  dspm_scanner_role_name                      = var.dspm_scanner_role_name
+  intermediate_role_arn                       = local.intermediate_role_arn
+  external_id                                 = local.external_id
+  dspm_regions                                = var.dspm_regions
+  agentless_scanning_use_custom_vpc           = var.agentless_scanning_use_custom_vpc
+  agentless_scanning_custom_vpc_resources_map = var.agentless_scanning_custom_vpc_resources_map
+  agentless_scanning_host_account_id          = var.agentless_scanning_host_account_id
+  agentless_scanning_host_scanner_role_name   = var.agentless_scanning_host_scanner_role_name
+  dspm_s3_access                              = var.dspm_s3_access
+  dspm_dynamodb_access                        = var.dspm_dynamodb_access
+  dspm_rds_access                             = var.dspm_rds_access
+  dspm_redshift_access                        = var.dspm_redshift_access
+  tags                                        = var.tags
 }

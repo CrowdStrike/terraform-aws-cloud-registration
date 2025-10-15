@@ -57,6 +57,25 @@ To onboard additional child accounts:
 * Update the module name and AWS profile for the new child account
 * Apply the changes
 
+## DSPM Configurations
+
+### Cross Account Scannning
+
+In this example, DSPM is configured to scan assets in the entire organization from a single account that will host data scanners. 
+It is important that the deployment complete in the host account before it begins in the target accounts. In order to create this dependency, the target modules utilize the output of the host module.
+
+Alternate configuration options:
+- In this example, the host account is the management account. You may choose to configure a different account in the organization as the host account. To configure a different host account:
+  * Set the value of the variable `agentless_scanning_host_account_id` to your chosen host account.
+  * In all target account modules, set the variables `agentless_scanning_host_role_name` to depend on the output of your host account module in order to ensure the host deployment completes first. Example: 
+    * ```hcl
+      agentless_scanning_host_role_name  = module.<name of host account module>.agentless_scanning_integration_role_name
+  
+- You may also choose to configure per-account scanning, in which DSPM host infrastructure is deployed in each of the organization's accounts. To configure per-account scanning:
+  * Do not pass any value for the variable `agentless_scanning_host_account_id`. In the provided example, remove the following code from the child account modules:
+    * ```hcl
+      agentless_scanning_host_account_id   = var.account_id
+  * When deploying per-account scanning, there is no need to pass a value for the variable `agentless_scanning_host_role_name` to any of the modules.
 
 ## Destroy
 
