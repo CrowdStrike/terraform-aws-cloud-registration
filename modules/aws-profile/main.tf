@@ -10,6 +10,15 @@ locals {
   # if we target by organization_id, we pick the first one because all accounts will have the same settings
   aws_account = data.aws_caller_identity.current.account_id
 
+  # Smart precedence logic for region variables:
+  # 1. If agentless_scanning_regions is custom (non-default) → use it (highest priority)
+  # 2. Else if dspm_regions is set → use it (backward compatibility)
+  # 3. Else → use agentless_scanning_regions default (fallback)
+  agentless_is_custom = var.agentless_scanning_regions != ["us-east-1"]
+  agentless_scanning_regions = local.agentless_is_custom ? var.agentless_scanning_regions : (
+    length(var.dspm_regions) > 0 ? var.dspm_regions : var.agentless_scanning_regions
+  )
+
   account = try(
     data.crowdstrike_cloud_aws_account.target.accounts[0],
     {
@@ -73,7 +82,7 @@ module "agentless_scanning_roles" {
   dspm_scanner_role_name                      = var.dspm_scanner_role_name
   intermediate_role_arn                       = local.intermediate_role_arn
   external_id                                 = local.external_id
-  dspm_regions                                = var.dspm_regions
+  agentless_scanning_regions                  = local.agentless_scanning_regions
   agentless_scanning_use_custom_vpc           = var.agentless_scanning_use_custom_vpc
   agentless_scanning_custom_vpc_resources_map = var.agentless_scanning_custom_vpc_resources_map
   agentless_scanning_host_account_id          = var.agentless_scanning_host_account_id

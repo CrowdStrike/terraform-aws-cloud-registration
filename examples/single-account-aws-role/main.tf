@@ -5,7 +5,7 @@ locals {
   enable_sensor_management                    = true
   enable_dspm                                 = true
   enable_vulnerability_scanning               = true
-  dspm_regions                                = ["us-east-1", "us-east-2"]
+  agentless_scanning_regions                  = ["us-east-1", "us-east-2"]
   use_existing_cloudtrail                     = true
   dspm_create_nat_gateway                     = var.dspm_create_nat_gateway
   dspm_s3_access                              = var.dspm_s3_access
@@ -77,7 +77,7 @@ module "fcs_account" {
   use_existing_cloudtrail       = local.use_existing_cloudtrail
   enable_dspm                   = local.enable_dspm
   enable_vulnerability_scanning = local.enable_vulnerability_scanning
-  dspm_regions                  = local.dspm_regions
+  agentless_scanning_regions    = local.agentless_scanning_regions
   vpc_cidr_block                = var.vpc_cidr_block
 
   iam_role_name          = crowdstrike_cloud_aws_account.this.iam_role_name

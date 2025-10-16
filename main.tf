@@ -12,6 +12,15 @@ locals {
   aws_account       = data.aws_caller_identity.current.account_id
   is_primary_region = local.aws_region == var.primary_region
 
+  # Smart precedence logic for region variables:
+  # 1. If agentless_scanning_regions is custom (non-default) → use it (highest priority)
+  # 2. Else if dspm_regions is set → use it (backward compatibility)
+  # 3. Else → use agentless_scanning_regions default (fallback)
+  agentless_is_custom = var.agentless_scanning_regions != ["us-east-1"]
+  agentless_scanning_regions = local.agentless_is_custom ? var.agentless_scanning_regions : (
+    length(var.dspm_regions) > 0 ? var.dspm_regions : var.agentless_scanning_regions
+  )
+
   # if we target by account_id, it will be the only account returned
   # if we target by organization_id, we pick the first one because all accounts will have the same settings
   account = try(
@@ -106,7 +115,7 @@ module "agentless_scanning_roles" {
   dspm_scanner_role_name                      = var.dspm_scanner_role_name
   intermediate_role_arn                       = local.intermediate_role_arn
   external_id                                 = local.external_id
-  dspm_regions                                = var.dspm_regions
+  agentless_scanning_regions                  = local.agentless_scanning_regions
   agentless_scanning_use_custom_vpc           = var.agentless_scanning_use_custom_vpc
   agentless_scanning_custom_vpc_resources_map = var.agentless_scanning_custom_vpc_resources_map
   dspm_s3_access                              = var.dspm_s3_access
@@ -123,7 +132,7 @@ module "agentless_scanning_roles" {
 }
 
 module "agentless_scanning_environments" {
-  count                              = (var.enable_dspm || var.enable_vulnerability_scanning) && contains(var.dspm_regions, local.aws_region) ? 1 : 0
+  count                              = (var.enable_dspm || var.enable_vulnerability_scanning) && contains(local.agentless_scanning_regions, local.aws_region) ? 1 : 0
   source                             = "./modules/agentless-scanning-environments/"
   dspm_role_name                     = var.dspm_role_name
   dspm_scanner_role_name             = var.dspm_scanner_role_name

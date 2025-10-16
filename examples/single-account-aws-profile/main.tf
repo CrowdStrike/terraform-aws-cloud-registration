@@ -5,7 +5,7 @@ locals {
   enable_sensor_management                    = false
   enable_dspm                                 = false
   enable_vulnerability_scanning               = false
-  dspm_regions                                = ["us-west-1"]
+  agentless_scanning_regions                  = ["us-west-1"]
   use_existing_cloudtrail                     = true
   dspm_create_nat_gateway                     = var.dspm_create_nat_gateway
   dspm_s3_access                              = var.dspm_s3_access
@@ -77,7 +77,7 @@ module "fcs_account" {
   use_existing_cloudtrail                     = local.use_existing_cloudtrail
   enable_dspm                                 = local.enable_dspm
   enable_vulnerability_scanning               = local.enable_vulnerability_scanning
-  dspm_regions                                = local.dspm_regions
+  agentless_scanning_regions                                = local.agentless_scanning_regions
   agentless_scanning_use_custom_vpc           = local.agentless_scanning_use_custom_vpc
   agentless_scanning_custom_vpc_resources_map = local.agentless_scanning_custom_vpc_resources_map
   vpc_cidr_block                              = var.vpc_cidr_block

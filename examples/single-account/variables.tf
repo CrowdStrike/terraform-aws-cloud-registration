@@ -113,36 +113,3 @@ variable "agentless_scanning_host_scanner_role_name" {
     error_message = "Role name must be empty or use only alphanumeric and '+=,.@-_' characters, maximum 64 characters."
   }
 }
-
-## TODO:  adar delete those
-variable "dspm_regions" {
-  description = "The regions in which DSPM scanning environments will be created"
-  type        = list(string)
-  default     = ["us-east-1", "us-east-2"]
-
-  validation {
-    condition     = length(var.dspm_regions) > 0
-    error_message = "At least one DSPM region must be specified."
-  }
-
-  validation {
-    condition = alltrue([
-      for region in var.dspm_regions :
-      can(regex("^(?:us|eu|ap|sa|ca|af|me|il)-(?:north|south|east|west|central|northeast|southeast|southwest|northwest)-[1-4]$", region))
-    ])
-    error_message = "Each element in the dspm_regions list must be a valid AWS region (e.g., 'us-east-1', 'eu-west-2') that is supported by DSPM."
-  }
-}
-
-
-variable "enable_dspm" {
-  type        = bool
-  default     = true
-  description = "Set to true to enable Data Security Posture Managment"
-}
-
-variable "enable_vulnerability_scanning" {
-  type        = bool
-  default     = false
-  description = "Set to true to enable Vulnerability Scanning"
-}

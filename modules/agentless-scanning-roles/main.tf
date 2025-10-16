@@ -21,7 +21,7 @@ resource "aws_ssm_parameter" "agentless_scanning_root_parameter" {
       dspm_scanning_enabled          = var.enable_dspm
       vulnerability_scanning_enabled = var.enable_vulnerability_scanning
     }
-    deployment_regions = var.dspm_regions
+    deployment_regions = var.agentless_scanning_regions
     host_account_id    = data.aws_caller_identity.current.account_id
     scanner_role_arn   = aws_iam_role.crowdstrike_aws_dspm_scanner_role.arn
     instance_profile   = local.is_host_account ? aws_iam_instance_profile.instance_profile.name : ""

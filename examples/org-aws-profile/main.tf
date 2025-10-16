@@ -6,7 +6,7 @@ locals {
   enable_dspm                   = true
   enable_vulnerability_scanning = true
   use_existing_cloudtrail       = true
-  dspm_regions                  = ["us-east-1", "us-east-2"]
+  agentless_scanning_regions    = ["us-east-1", "us-east-2"]
   dspm_create_nat_gateway       = var.dspm_create_nat_gateway
   dspm_s3_access                = var.dspm_s3_access
   dspm_dynamodb_access          = var.dspm_dynamodb_access
@@ -62,7 +62,7 @@ module "fcs_management_account" {
   use_existing_cloudtrail       = local.use_existing_cloudtrail
   enable_dspm                   = local.enable_dspm
   enable_vulnerability_scanning = local.enable_vulnerability_scanning
-  dspm_regions                  = local.dspm_regions
+  agentless_scanning_regions                  = local.agentless_scanning_regions
   vpc_cidr_block                = var.vpc_cidr_block
 
   iam_role_name           = crowdstrike_cloud_aws_account.this.iam_role_name
@@ -92,9 +92,9 @@ module "fcs_child_account_1" {
   enable_idp                    = local.enable_idp
   realtime_visibility_regions   = ["all"]
   use_existing_cloudtrail       = true # use the cloudtrail at the org level
-  enable_dspm                   = local.enable_dspm && contains(local.dspm_regions, "us-east-2")
-  enable_vulnerability_scanning = local.enable_vulnerability_scanning && contains(local.dspm_regions, "us-east-2")
-  dspm_regions                  = local.dspm_regions
+  enable_dspm                   = local.enable_dspm && contains(local.agentless_scanning_regions, "us-east-2")
+  enable_vulnerability_scanning = local.enable_vulnerability_scanning && contains(local.agentless_scanning_regions, "us-east-2")
+  agentless_scanning_regions                  = local.agentless_scanning_regions
   vpc_cidr_block                = var.vpc_cidr_block
 
   iam_role_name                                 = crowdstrike_cloud_aws_account.this.iam_role_name
