@@ -4,18 +4,6 @@ variable "deployment_name" {
   default     = "dspm-environment"
 }
 
-variable "dspm_role_name" {
-  description = "The unique name of the IAM role that CrowdStrike will be assuming"
-  type        = string
-  default     = "CrowdStrikeDSPMIntegrationRole"
-}
-
-variable "dspm_scanner_role_name" {
-  description = "The unique name of the IAM role that CrowdStrike Scanner will be assuming"
-  type        = string
-  default     = "CrowdStrikeDSPMScannerRole"
-}
-
 variable "integration_role_unique_id" {
   description = "The unique ID of the DSPM integration role"
   type        = string
@@ -43,6 +31,18 @@ variable "region_vpc_config" {
     db_sg          = string
   })
   default = null
+
+  validation {
+    condition = var.region_vpc_config == null || (
+      can(regex("^vpc-[a-f0-9]{8}(?:[a-f0-9]{9})?$", var.region_vpc_config.vpc)) &&
+      can(regex("^subnet-[a-f0-9]{8}(?:[a-f0-9]{9})?$", var.region_vpc_config.scanner_subnet)) &&
+      can(regex("^sg-[a-f0-9]{8}(?:[a-f0-9]{9})?$", var.region_vpc_config.scanner_sg)) &&
+      can(regex("^subnet-[a-f0-9]{8}(?:[a-f0-9]{9})?$", var.region_vpc_config.db_subnet_a)) &&
+      can(regex("^subnet-[a-f0-9]{8}(?:[a-f0-9]{9})?$", var.region_vpc_config.db_subnet_b)) &&
+      can(regex("^sg-[a-f0-9]{8}(?:[a-f0-9]{9})?$", var.region_vpc_config.db_sg))
+    )
+    error_message = "All AWS resource IDs must be valid format: VPC IDs must start with 'vpc-', subnet IDs must start with 'subnet-', and security group IDs must start with 'sg-', followed by 8 or 17 hexadecimal characters."
+  }
 }
 
 variable "dspm_create_nat_gateway" {

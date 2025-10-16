@@ -65,9 +65,9 @@ variable "agentless_scanning_regions" {
   validation {
     condition = alltrue([
       for region in var.agentless_scanning_regions :
-      can(regex("^(?:us|eu|ap|sa|ca|af|me|il)-(?:north|south|east|west|central|northeast|southeast|southwest|northwest)-[1-4]$", region))
-    ])
-    error_message = "Each element in the agentless_scanning_regions list must be a valid AWS region (e.g., 'us-east-1', 'eu-west-2')."
+      (can(regex("^(?:us|eu|ap|sa|ca|af|me|il)-(?:north|south|east|west|central|northeast|southeast|southwest|northwest)-[1-4]$", region)) ||
+      can(regex("^us-gov-(?:east|west)-1$", region)))    ])
+    error_message = "Each element in the agentless_scanning_regions list must be a valid AWS region (e.g., 'us-east-1', 'eu-west-2', 'us-gov-east-1', 'us-gov-west-1')."
   }
 }
 
@@ -140,17 +140,6 @@ variable "agentless_scanning_host_account_id" {
   validation {
     condition     = var.agentless_scanning_host_account_id == "" || can(regex("^\\d{12}$", var.agentless_scanning_host_account_id))
     error_message = "Agentless scanning host account ID must be empty or 12 digits."
-  }
-}
-
-variable "agentless_scanning_host_role_name" {
-  type        = string
-  default     = "CrowdStrikeDSPMIntegrationRole"
-  description = "Name of agentless scanning integration role in host account"
-
-  validation {
-    condition     = can(regex("^$|^[a-zA-Z0-9+=,.@_-]{1,64}$", var.agentless_scanning_host_role_name))
-    error_message = "Role name must be empty or use only alphanumeric and '+=,.@-_' characters, maximum 64 characters."
   }
 }
 
