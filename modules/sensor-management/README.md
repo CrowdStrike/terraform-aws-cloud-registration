@@ -15,7 +15,7 @@ terraform {
   required_providers {
     aws = {
       source  = "hashicorp/aws"
-      version = ">=5.0.0"
+      version = ">= 5.0.0"
     }
     crowdstrike = {
       source  = "CrowdStrike/crowdstrike"
@@ -49,7 +49,7 @@ module "sensor_management" {
 
 | Name | Version |
 |------|---------|
-| <a name="provider_aws"></a> [aws](#provider\_aws) | >= 4.45 |
+| <a name="provider_aws"></a> [aws](#provider\_aws) | >= 5.0.0 |
 ## Resources
 
 | Name | Type |

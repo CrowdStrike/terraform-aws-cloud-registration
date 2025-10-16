@@ -77,7 +77,7 @@ module "fcs_account" {
   use_existing_cloudtrail                     = local.use_existing_cloudtrail
   enable_dspm                                 = local.enable_dspm
   enable_vulnerability_scanning               = local.enable_vulnerability_scanning
-  agentless_scanning_regions                                = local.agentless_scanning_regions
+  agentless_scanning_regions                  = local.agentless_scanning_regions
   agentless_scanning_use_custom_vpc           = local.agentless_scanning_use_custom_vpc
   agentless_scanning_custom_vpc_resources_map = local.agentless_scanning_custom_vpc_resources_map
   vpc_cidr_block                              = var.vpc_cidr_block

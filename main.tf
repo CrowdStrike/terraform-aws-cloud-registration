@@ -8,9 +8,10 @@ data "crowdstrike_cloud_aws_account" "target" {
 }
 
 locals {
-  aws_region        = data.aws_region.current.name
+  aws_region        = data.aws_region.current.id
   aws_account       = data.aws_caller_identity.current.account_id
   is_primary_region = local.aws_region == var.primary_region
+  is_gov_commercial = var.is_gov && var.account_type == "commercial"
 
   # Smart precedence logic for region variables:
   # 1. If agentless_scanning_regions is custom (non-default) → use it (highest priority)
@@ -38,7 +39,7 @@ locals {
   external_id            = coalesce(var.external_id, local.account.external_id)
   intermediate_role_arn  = coalesce(var.intermediate_role_arn, local.account.intermediate_role_arn)
   iam_role_name          = coalesce(var.iam_role_name, local.account.iam_role_name)
-  eventbus_arn           = coalesce(var.eventbus_arn, local.account.eventbus_arn)
+  eventbus_arn           = local.is_gov_commercial ? "" : coalesce(var.eventbus_arn, local.account.eventbus_arn)
   cloudtrail_bucket_name = var.use_existing_cloudtrail ? "" : coalesce(var.cloudtrail_bucket_name, local.account.cloudtrail_bucket_name)
 }
 
@@ -87,7 +88,8 @@ module "realtime_visibility" {
   eventbridge_role_name   = var.eventbridge_role_name
   eventbus_arn            = local.eventbus_arn
   is_organization_trail   = length(var.organization_id) > 0
-  is_gov_commercial       = var.is_gov && var.account_type == "commercial"
+  is_gov                  = var.is_gov
+  is_gov_commercial       = local.is_gov_commercial
   is_primary_region       = local.is_primary_region
   create_rules            = var.create_rtvd_rules
   primary_region          = var.primary_region
@@ -127,15 +129,12 @@ module "agentless_scanning_roles" {
   tags                                        = var.tags
   account_id                                  = local.aws_account
   agentless_scanning_host_account_id          = var.agentless_scanning_host_account_id
-  agentless_scanning_host_role_name           = var.agentless_scanning_host_role_name
   agentless_scanning_host_scanner_role_name   = var.agentless_scanning_host_scanner_role_name
 }
 
 module "agentless_scanning_environments" {
   count                              = (var.enable_dspm || var.enable_vulnerability_scanning) && contains(local.agentless_scanning_regions, local.aws_region) ? 1 : 0
   source                             = "./modules/agentless-scanning-environments/"
-  dspm_role_name                     = var.dspm_role_name
-  dspm_scanner_role_name             = var.dspm_scanner_role_name
   integration_role_unique_id         = local.is_primary_region ? module.agentless_scanning_roles[0].integration_role_unique_id : var.dspm_integration_role_unique_id
   scanner_role_unique_id             = local.is_primary_region ? module.agentless_scanning_roles[0].scanner_role_unique_id : var.dspm_scanner_role_unique_id
   dspm_create_nat_gateway            = var.dspm_create_nat_gateway

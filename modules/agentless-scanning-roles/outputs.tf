@@ -1,6 +1,6 @@
-output "dspm_role_arn" {
+output "integration_role_name" {
   description = "The arn of the IAM role that CrowdStrike will be assuming"
-  value       = aws_iam_role.crowdstrike_aws_dspm_integration_role.arn
+  value       = aws_iam_role.crowdstrike_aws_dspm_integration_role.name
 }
 
 output "integration_role_unique_id" {
@@ -8,9 +8,9 @@ output "integration_role_unique_id" {
   value       = aws_iam_role.crowdstrike_aws_dspm_integration_role.unique_id
 }
 
-output "dspm_scanner_role_arn" {
+output "scanner_role_name" {
   description = "The arn of the IAM role that CrowdStrike Scanner will be assuming"
-  value       = aws_iam_role.crowdstrike_aws_dspm_scanner_role.arn
+  value       = aws_iam_role.crowdstrike_aws_dspm_scanner_role.name
 }
 
 output "scanner_role_unique_id" {

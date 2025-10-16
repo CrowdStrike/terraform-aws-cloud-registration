@@ -4,7 +4,7 @@ data "aws_partition" "current" {}
 
 locals {
   account_id    = data.aws_caller_identity.current.account_id
-  aws_region    = data.aws_region.current.name
+  aws_region    = data.aws_region.current.id
   aws_partition = data.aws_partition.current.partition
 }
 
@@ -45,7 +45,7 @@ resource "aws_iam_role_policy" "invoke_lambda" {
           "lambda:InvokeAsync"
         ]
         Effect   = "Allow"
-        Resource = "arn:${local.aws_partition}:lambda:*:${local.account_id}:function:cs-*"
+        Resource = "arn:${local.aws_partition}:lambda:*:${local.account_id}:function:${var.resource_prefix}cs-*"
         Sid      = "InvokeLambda"
       },
       {
@@ -92,8 +92,8 @@ resource "aws_iam_role_policy" "orchestrator" {
         ]
         Effect = "Allow"
         Resource = [
-          "arn:aws:ssm:*:*:document/*",
-          "arn:aws:ec2:*:*:instance/*"
+          "arn:${local.aws_partition}:ssm:*:*:document/*",
+          "arn:${local.aws_partition}:ec2:*:*:instance/*"
         ]
       },
       {
@@ -103,8 +103,8 @@ resource "aws_iam_role_policy" "orchestrator" {
         ]
         Effect = "Allow"
         Resource = [
-          "arn:aws:logs:*:*:log-group:/aws/lambda/cs-*",
-          "arn:aws:logs:*:*:log-group:/aws/lambda/cs-*:log-stream:*"
+          "arn:${local.aws_partition}:logs:*:*:log-group:/aws/lambda/${var.resource_prefix}cs-*",
+          "arn:${local.aws_partition}:logs:*:*:log-group:/aws/lambda/${var.resource_prefix}cs-*:log-stream:*"
         ]
         Sid = "Logging"
       },
@@ -113,7 +113,7 @@ resource "aws_iam_role_policy" "orchestrator" {
           "secretsmanager:GetSecretValue"
         ]
         Effect   = "Allow"
-        Resource = "arn:aws:secretsmanager:${local.aws_region}:${local.account_id}:secret:/CrowdStrike/CSPM/SensorManagement/FalconAPICredentials-??????"
+        Resource = "arn:${local.aws_partition}:secretsmanager:${local.aws_region}:${local.account_id}:secret:/CrowdStrike/CSPM/SensorManagement/FalconAPICredentials-??????"
         Sid      = "GetFalconCredentials"
       }
     ]

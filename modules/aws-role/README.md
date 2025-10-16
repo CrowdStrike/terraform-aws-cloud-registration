@@ -67,7 +67,7 @@ terraform {
   required_providers {
     aws = {
       source  = "hashicorp/aws"
-      version = ">=5.0.0"
+      version = ">= 5.0.0"
     }
     crowdstrike = {
       source  = "CrowdStrike/crowdstrike"
@@ -189,12 +189,13 @@ module "fcs_child_account_1" {
 
 | Name | Version |
 |------|---------|
-| <a name="provider_aws"></a> [aws](#provider\_aws) | >= 4.45 |
+| <a name="provider_aws"></a> [aws](#provider\_aws) | >= 5.0.0 |
 | <a name="provider_crowdstrike"></a> [crowdstrike](#provider\_crowdstrike) | >= 0.0.19 |
 ## Resources
 
 | Name | Type |
 |------|------|
+| [aws_caller_identity.current](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/caller_identity) | data source |
 | [aws_regions.available](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/regions) | data source |
 | [crowdstrike_cloud_aws_account.target](https://registry.terraform.io/providers/CrowdStrike/crowdstrike/latest/docs/data-sources/cloud_aws_account) | data source |
 ## Inputs
@@ -203,10 +204,20 @@ module "fcs_child_account_1" {
 |------|-------------|------|---------|:--------:|
 | <a name="input_account_id"></a> [account\_id](#input\_account\_id) | The AWS 12 digit account ID | `string` | `""` | no |
 | <a name="input_account_type"></a> [account\_type](#input\_account\_type) | Account type can be either 'commercial' or 'gov' | `string` | `"commercial"` | no |
+| <a name="input_agentless_scanning_custom_vpc_resources_map"></a> [agentless\_scanning\_custom\_vpc\_resources\_map](#input\_agentless\_scanning\_custom\_vpc\_resources\_map) | Map of region-specific VPC resources for existing VPC deployment. Keys are region names, values are objects containing VPC resource IDs. | <pre>map(object({<br/>    vpc            = string<br/>    scanner_subnet = string<br/>    scanner_sg     = string<br/>    db_subnet_a    = string<br/>    db_subnet_b    = string<br/>    db_sg          = string<br/>  }))</pre> | `{}` | no |
+| <a name="input_agentless_scanning_host_account_id"></a> [agentless\_scanning\_host\_account\_id](#input\_agentless\_scanning\_host\_account\_id) | The AWS account ID where DSPM host resources are deployed | `string` | `""` | no |
+| <a name="input_agentless_scanning_host_role_name"></a> [agentless\_scanning\_host\_role\_name](#input\_agentless\_scanning\_host\_role\_name) | Name of agentless scanning integration role in host account | `string` | `"CrowdStrikeDSPMIntegrationRole"` | no |
+| <a name="input_agentless_scanning_host_scanner_role_name"></a> [agentless\_scanning\_host\_scanner\_role\_name](#input\_agentless\_scanning\_host\_scanner\_role\_name) | Name of angentless scanning scanner role in host account | `string` | `"CrowdStrikeDSPMScannerRole"` | no |
+| <a name="input_agentless_scanning_use_custom_vpc"></a> [agentless\_scanning\_use\_custom\_vpc](#input\_agentless\_scanning\_use\_custom\_vpc) | Use existing custom VPC resources for ALL deployment regions (requires agentless\_scanning\_custom\_vpc\_resources\_map with all regions) | `bool` | `false` | no |
 | <a name="input_aws_role_name"></a> [aws\_role\_name](#input\_aws\_role\_name) | The AWS profile to be used for this registration | `string` | n/a | yes |
 | <a name="input_cloudtrail_bucket_name"></a> [cloudtrail\_bucket\_name](#input\_cloudtrail\_bucket\_name) | Name of the S3 bucket for CloudTrail logs | `string` | `""` | no |
+| <a name="input_dspm_create_nat_gateway"></a> [dspm\_create\_nat\_gateway](#input\_dspm\_create\_nat\_gateway) | Set to true to create a NAT Gateway for DSPM scanning environments | `bool` | `true` | no |
+| <a name="input_dspm_dynamodb_access"></a> [dspm\_dynamodb\_access](#input\_dspm\_dynamodb\_access) | Apply permissions for DynamoDB table scanning | `bool` | `true` | no |
+| <a name="input_dspm_rds_access"></a> [dspm\_rds\_access](#input\_dspm\_rds\_access) | Apply permissions for RDS instance scanning | `bool` | `true` | no |
+| <a name="input_dspm_redshift_access"></a> [dspm\_redshift\_access](#input\_dspm\_redshift\_access) | Apply permissions for Redshift cluster scanning | `bool` | `true` | no |
 | <a name="input_dspm_regions"></a> [dspm\_regions](#input\_dspm\_regions) | The regions in which DSPM scanning environments will be created | `list(string)` | <pre>[<br/>  "us-east-1"<br/>]</pre> | no |
 | <a name="input_dspm_role_name"></a> [dspm\_role\_name](#input\_dspm\_role\_name) | The unique name of the IAM role that DSPM will be assuming | `string` | `"CrowdStrikeDSPMIntegrationRole"` | no |
+| <a name="input_dspm_s3_access"></a> [dspm\_s3\_access](#input\_dspm\_s3\_access) | Apply permissions for S3 bucket scanning | `bool` | `true` | no |
 | <a name="input_dspm_scanner_role_name"></a> [dspm\_scanner\_role\_name](#input\_dspm\_scanner\_role\_name) | The unique name of the IAM role that CrowdStrike Scanner will be assuming | `string` | `"CrowdStrikeDSPMScannerRole"` | no |
 | <a name="input_enable_dspm"></a> [enable\_dspm](#input\_enable\_dspm) | Set to true to enable Data Security Posture Managment | `bool` | `false` | no |
 | <a name="input_enable_idp"></a> [enable\_idp](#input\_enable\_idp) | Set to true to install Identity Protection resources | `bool` | `false` | no |
@@ -229,7 +240,10 @@ module "fcs_child_account_1" {
 | <a name="input_tags"></a> [tags](#input\_tags) | A map of tags to add to all resources that support tagging | `map(string)` | `{}` | no |
 | <a name="input_use_existing_cloudtrail"></a> [use\_existing\_cloudtrail](#input\_use\_existing\_cloudtrail) | Set to true if you already have a cloudtrail | `bool` | `false` | no |
 | <a name="input_use_existing_iam_reader_role"></a> [use\_existing\_iam\_reader\_role](#input\_use\_existing\_iam\_reader\_role) | Set to true if you want to use an existing IAM role for asset inventory | `bool` | `false` | no |
+| <a name="input_vpc_cidr_block"></a> [vpc\_cidr\_block](#input\_vpc\_cidr\_block) | VPC CIDR block | `string` | `"10.0.0.0/16"` | no |
 ## Outputs
 
-No outputs.
+| Name | Description |
+|------|-------------|
+| <a name="output_agentless_scanning_integration_role_name"></a> [agentless\_scanning\_integration\_role\_name](#output\_agentless\_scanning\_integration\_role\_name) | The name of the agentless scanning integration role |
 <!-- END_TF_DOCS -->

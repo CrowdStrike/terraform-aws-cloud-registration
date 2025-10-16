@@ -1,0 +1,87 @@
+name: CI
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  format-check:
+    runs-on: ubuntu-latest
+    name: Check Terraform formatting
+
+    steps:
+      - name: Checkout source code
+        uses: actions/checkout@v5
+
+      - name: Terraform format check
+        uses: dflook/terraform-fmt-check@v2
+        with:
+          path: .
+
+  validate:
+    runs-on: ubuntu-latest
+    name: Validate Terraform configuration
+    strategy:
+      matrix:
+        path:
+          - "."
+          - "examples/org-aws-profile"
+          - "examples/org-aws-role"
+          - "examples/single-account"
+          - "examples/single-account-aws-profile"
+          - "examples/single-account-aws-role"
+          - "modules/asset-inventory"
+          - "modules/aws-profile"
+          - "modules/aws-role"
+          - "modules/dspm-environments"
+          - "modules/dspm-roles"
+          - "modules/realtime-visibility"
+          - "modules/sensor-management"
+
+    steps:
+      - name: Checkout source code
+        uses: actions/checkout@v5
+
+      - name: Terraform validate
+        uses: dflook/terraform-validate@v2
+        with:
+          path: ${{ matrix.path }}
+
+  docs:
+    runs-on: ubuntu-latest
+    name: Check terraform documentation
+
+    steps:
+      - name: Checkout source code
+        uses: actions/checkout@v5
+      - uses: terraform-docs/gh-actions@v1.4.1
+        with:
+          working-dir: .
+          config-file: .terraform-docs.yml
+          fail-on-diff: true
+          recursive: true
+
+  tflint:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout source code
+        uses: actions/checkout@v5
+
+      - name: Cache plugin dir
+        uses: actions/cache@v4.2.4
+        with:
+          path: ~/.tflint.d/plugins
+          key: tflint-${{ hashFiles('.tflint.hcl') }}
+
+      - name: Setup TFLint
+        uses: terraform-linters/setup-tflint@v5
+
+      - name: Init TFLint
+        run: tflint --init
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+
+      - name: Run TFLint
+        run: tflint --recursive --config "$(pwd)/.tflint.hcl" -f compact

@@ -29,7 +29,7 @@ resource "aws_iam_role" "crowdstrike_aws_dspm_integration_role" {
     var.tags,
     {
       (local.crowdstrike_tag_key) = local.crowdstrike_tag_value
-      RootRegion                  = data.aws_region.current.name
+      RootRegion                  = data.aws_region.current.id
     }
   )
 }
@@ -140,7 +140,7 @@ data "aws_iam_policy_document" "crowdstrike_run_data_scanner_restricted_data" {
     }
   }
 
-  # Grants permission to Launch EC2 for CrowdStrike EC2 instance  
+  # Grants permission to Launch EC2 for CrowdStrike EC2 instance
   # The condition key ec2:ResourceTag is applicable to below resources
   statement {
     sid    = "AllowRunInstances"
@@ -221,7 +221,7 @@ resource "aws_iam_role_policy" "crowdstrike_rds_clone" {
 }
 
 resource "aws_iam_role_policy" "crowdstrike_rds_clone_host" {
-  count  = (var.dspm_rds_access && var.enable_dspm && local.is_host_account) ? 1 : 0
+  count  = (var.dspm_rds_access &&var.enable_dspm && local.is_host_account) ? 1 : 0
   name   = "CrowdStrikeRDSCloneHost"
   role   = aws_iam_role.crowdstrike_aws_dspm_integration_role.id
   policy = data.aws_iam_policy_document.crowdstrike_rds_clone_host[0].json
@@ -557,7 +557,7 @@ data "aws_iam_policy_document" "crowdstrike_redshift_clone_host" {
     effect = "Allow"
     resources = [
       "arn:aws:redshift:*:${data.aws_caller_identity.current.account_id}:cluster:*",
-      "arn:aws:redshift:*:${data.aws_caller_identity.current.account_id}:snapshot:*"
+      "arn:aws:redshift:*:*:snapshot:*"
     ]
   }
 
@@ -652,6 +652,37 @@ data "aws_iam_policy_document" "crowdstrike_ssm_reader_data" {
     resources = [
       "arn:aws:ssm:*:${data.aws_caller_identity.current.account_id}:parameter/CrowdStrike/*"
     ]
+  }
+}
+
+# Custom VPC IAM policy
+resource "aws_iam_role_policy" "run_data_scanner_custom_vpcs" {
+  count  = var.agentless_scanning_use_custom_vpc && local.is_host_account && length(var.agentless_scanning_custom_vpc_resources_map) > 0 ? 1 : 0
+  name   = "RunDataScannerCustomVPCs"
+  role   = aws_iam_role.crowdstrike_aws_dspm_integration_role.id
+  policy = data.aws_iam_policy_document.run_data_scanner_custom_vpcs_data[0].json
+}
+
+data "aws_iam_policy_document" "run_data_scanner_custom_vpcs_data" {
+  count = var.agentless_scanning_use_custom_vpc && length(var.agentless_scanning_custom_vpc_resources_map) > 0 ? 1 : 0
+
+  # Grants permission to Launch EC2 for CrowdStrike EC2 instance in custom VPCs
+  # The condition key ec2:Vpc is applicable to custom VPC resources
+  statement {
+    sid = "AllowRunInstancesCustomVpc"
+    actions = [
+      "ec2:RunInstances"
+    ]
+    effect = "Allow"
+    resources = [
+      "arn:aws:ec2:*:${data.aws_caller_identity.current.account_id}:security-group/*",
+      "arn:aws:ec2:*:${data.aws_caller_identity.current.account_id}:subnet/*"
+    ]
+    condition {
+      test     = "ForAnyValue:StringEquals"
+      variable = "ec2:Vpc"
+      values   = local.custom_vpc_arns
+    }
   }
 }
 
@@ -881,37 +912,6 @@ data "aws_iam_policy_document" "crowdstrike_vulnerability_scanning_target" {
       test     = "StringEquals"
       variable = "ec2:Remove/userId"
       values   = [var.agentless_scanning_host_account_id]
-    }
-  }
-}
-
-# Custom VPC IAM policy
-resource "aws_iam_role_policy" "run_data_scanner_custom_vpcs" {
-  count  = var.agentless_scanning_use_custom_vpc && local.is_host_account && length(var.agentless_scanning_custom_vpc_resources_map) > 0 ? 1 : 0
-  name   = "RunDataScannerCustomVPCs"
-  role   = aws_iam_role.crowdstrike_aws_dspm_integration_role.id
-  policy = data.aws_iam_policy_document.run_data_scanner_custom_vpcs_data[0].json
-}
-
-data "aws_iam_policy_document" "run_data_scanner_custom_vpcs_data" {
-  count = var.agentless_scanning_use_custom_vpc && length(var.agentless_scanning_custom_vpc_resources_map) > 0 ? 1 : 0
-
-  # Grants permission to Launch EC2 for CrowdStrike EC2 instance in custom VPCs
-  # The condition key ec2:Vpc is applicable to custom VPC resources
-  statement {
-    sid = "AllowRunInstancesCustomVpc"
-    actions = [
-      "ec2:RunInstances"
-    ]
-    effect = "Allow"
-    resources = [
-      "arn:aws:ec2:*:${data.aws_caller_identity.current.account_id}:security-group/*",
-      "arn:aws:ec2:*:${data.aws_caller_identity.current.account_id}:subnet/*"
-    ]
-    condition {
-      test     = "ForAnyValue:StringEquals"
-      variable = "ec2:Vpc"
-      values   = local.custom_vpc_arns
     }
   }
 }

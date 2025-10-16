@@ -54,7 +54,10 @@ resource "aws_iam_role_policy" "this" {
           "auditmanager:GetControl",
           "backup:DescribeBackupVault",
           "backup:DescribeRecoveryPoint",
+          "backup:GetBackupPlan",
+          "backup:GetBackupSelection",
           "backup:ListBackupPlans",
+          "backup:ListBackupSelections",
           "backup:ListRecoveryPointsByBackupVault",
           "batch:DescribeJobQueues",
           "bedrock:GetAgent",
@@ -99,6 +102,8 @@ resource "aws_iam_role_policy" "this" {
           "codepipeline:ListWebhooks",
           "cognito-idp:GetGroup",
           "cognito-idp:GetLogDeliveryConfiguration",
+          "connect:DescribeInstance",
+          "connect:ListTagsForResource",
           "detective:ListDatasourcePackages",
           "detective:ListTagsForResource",
           "ecr:BatchGetImage",
@@ -151,6 +156,7 @@ resource "aws_iam_role_policy" "this" {
           "lightsail:GetRelationalDatabase",
           "lightsail:GetRelationalDatabases",
           "macie2:DescribeClassificationJob",
+          "macie2:GetMacieSession",
           "macie2:ListClassificationJobs",
           "macie2:ListTagsForResource",
           "memorydb:DescribeACLs",
@@ -169,6 +175,7 @@ resource "aws_iam_role_policy" "this" {
           "states:ListStateMachineAliases",
           "states:ListStateMachineVersions",
           "states:ListTagsForResource",
+          "storagegateway:DescribeSMBFileShares",
           "waf-regional:GetIPSet",
           "waf-regional:GetRule",
           "waf-regional:GetRuleGroup",
@@ -176,7 +183,9 @@ resource "aws_iam_role_policy" "this" {
           "waf-regional:ListIPSets",
           "waf-regional:ListRuleGroups",
           "waf-regional:ListRules",
-          "wafv2:GetRuleGroup"
+          "wafv2:GetRuleGroup",
+          "wisdom:ListAssistants",
+          "wisdom:ListTagsForResource"
         ]
       },
       {

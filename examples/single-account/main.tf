@@ -74,7 +74,6 @@ resource "crowdstrike_cloud_aws_account" "this" {
     enabled   = local.enable_dspm
     role_name = local.dspm_role_name
   }
-
   provider = crowdstrike
 }
 
