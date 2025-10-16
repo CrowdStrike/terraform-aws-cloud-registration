@@ -1,10 +1,11 @@
 data "aws_caller_identity" "current" {}
 
 locals {
-  aws_partition     = var.account_type == "gov" ? "aws-us-gov" : "aws"
-  is_gov_commercial = var.is_gov && var.account_type == "commercial"
-  account_role_arn  = "arn:${local.aws_partition}:iam::${var.account_id}:role/${var.aws_role_name}"
-  aws_account       = data.aws_caller_identity.current.account_id
+  aws_partition              = var.account_type == "gov" ? "aws-us-gov" : "aws"
+  is_gov_commercial          = var.is_gov && var.account_type == "commercial"
+  account_role_arn           = "arn:${local.aws_partition}:iam::${var.account_id}:role/${var.aws_role_name}"
+  aws_account                = data.aws_caller_identity.current.account_id
+  agentless_scanning_enabled = (var.enable_dspm || var.enable_vulnerability_scanning)
 }
 
 provider "aws" {
@@ -87,7 +88,7 @@ module "sensor_management" {
 
 }
 module "agentless_scanning_roles" {
-  count                                       = ((var.enable_dspm || var.enable_vulnerability_scanning) && !var.is_gov) ? 1 : 0
+  count                                       = (local.agentless_scanning_enabled && !var.is_gov) ? 1 : 0
   source                                      = "../agentless-scanning-roles/"
   falcon_client_id                            = var.falcon_client_id
   falcon_client_secret                        = var.falcon_client_secret

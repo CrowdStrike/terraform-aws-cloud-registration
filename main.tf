@@ -13,6 +13,7 @@ locals {
   is_primary_region = local.aws_region == var.primary_region
   is_gov_commercial = var.is_gov && var.account_type == "commercial"
 
+  agentless_scanning_enabled = (var.enable_dspm || var.enable_vulnerability_scanning)
   # Smart precedence logic for region variables:
   # 1. If agentless_scanning_regions is custom (non-default) → use it (highest priority)
   # 2. Else if dspm_regions is set → use it (backward compatibility)
@@ -109,7 +110,7 @@ module "realtime_visibility" {
 }
 
 module "agentless_scanning_roles" {
-  count                                       = (local.is_primary_region && (var.enable_dspm || var.enable_vulnerability_scanning)) ? 1 : 0
+  count                                       = (local.is_primary_region && local.agentless_scanning_enabled) ? 1 : 0
   source                                      = "./modules/agentless-scanning-roles/"
   falcon_client_id                            = var.falcon_client_id
   falcon_client_secret                        = var.falcon_client_secret
@@ -133,7 +134,7 @@ module "agentless_scanning_roles" {
 }
 
 module "agentless_scanning_environments" {
-  count                              = (var.enable_dspm || var.enable_vulnerability_scanning) && contains(local.agentless_scanning_regions, local.aws_region) ? 1 : 0
+  count                              = local.agentless_scanning_enabled && contains(local.agentless_scanning_regions, local.aws_region) ? 1 : 0
   source                             = "./modules/agentless-scanning-environments/"
   integration_role_unique_id         = local.is_primary_region ? module.agentless_scanning_roles[0].integration_role_unique_id : var.dspm_integration_role_unique_id
   scanner_role_unique_id             = local.is_primary_region ? module.agentless_scanning_roles[0].scanner_role_unique_id : var.dspm_scanner_role_unique_id

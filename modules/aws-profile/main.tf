@@ -10,6 +10,7 @@ locals {
   # if we target by organization_id, we pick the first one because all accounts will have the same settings
   aws_account = data.aws_caller_identity.current.account_id
 
+  agentless_scanning_enabled = (var.enable_dspm || var.enable_vulnerability_scanning)
   # Smart precedence logic for region variables:
   # 1. If agentless_scanning_regions is custom (non-default) → use it (highest priority)
   # 2. Else if dspm_regions is set → use it (backward compatibility)
@@ -73,7 +74,7 @@ module "sensor_management" {
 
 
 module "agentless_scanning_roles" {
-  count                                       = ((var.enable_dspm || var.enable_vulnerability_scanning) && !var.is_gov) ? 1 : 0
+  count                                       = (local.agentless_scanning_enabled && !var.is_gov) ? 1 : 0
   source                                      = "../agentless-scanning-roles/"
   falcon_client_id                            = var.falcon_client_id
   falcon_client_secret                        = var.falcon_client_secret
