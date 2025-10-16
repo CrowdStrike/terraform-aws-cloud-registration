@@ -102,6 +102,7 @@ resource "aws_sqs_queue_policy" "cloudtrail_logs_sqs_policy" {
   queue_url = aws_sqs_queue.cloudtrail_logs_sqs[0].id
 
   policy = jsonencode({
+    Version = "2012-10-17"
     Statement = [
       {
         Effect = "Allow"
