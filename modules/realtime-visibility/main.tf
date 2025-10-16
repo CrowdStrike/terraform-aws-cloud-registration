@@ -4,7 +4,7 @@ data "aws_partition" "current" {}
 
 locals {
   account_id    = data.aws_caller_identity.current.account_id
-  aws_region    = data.aws_region.current.name
+  aws_region    = data.aws_region.current.id
   aws_partition = data.aws_partition.current.partition
 
   # Conditional logic for log ingestion methods
@@ -49,8 +49,7 @@ resource "aws_iam_role_policy" "inline_policy" {
         "Action" : [
           "events:PutEvents"
         ],
-        # todo update hardcoded rule name
-        "Resource" : !var.is_gov_commercial ? "arn:${local.aws_partition}:events:*:*:event-bus/cs-*" : "arn:aws:events:*:*:event-bus/default"
+        "Resource" : !var.is_gov_commercial ? "arn:${local.aws_partition}:events:*:*:event-bus/cs-*" : "arn:${local.aws_partition}:events:*:*:event-bus/default"
         "Effect" : "Allow"
       }
     ]

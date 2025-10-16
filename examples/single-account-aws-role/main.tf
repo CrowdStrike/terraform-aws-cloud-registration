@@ -1,16 +1,18 @@
 locals {
-  enable_realtime_visibility = true
-  primary_region             = "us-east-1"
-  enable_idp                 = true
-  enable_sensor_management   = true
-  enable_dspm                = true
-  dspm_regions               = ["us-east-1", "us-east-2"]
-  use_existing_cloudtrail    = true
-  dspm_create_nat_gateway    = var.dspm_create_nat_gateway
-  dspm_s3_access             = var.dspm_s3_access
-  dspm_dynamodb_access       = var.dspm_dynamodb_access
-  dspm_rds_access            = var.dspm_rds_access
-  dspm_redshift_access       = var.dspm_redshift_access
+  enable_realtime_visibility                  = true
+  primary_region                              = "us-east-1"
+  enable_idp                                  = true
+  enable_sensor_management                    = true
+  enable_dspm                                 = true
+  dspm_regions                                = ["us-east-1", "us-east-2"]
+  use_existing_cloudtrail                     = true
+  dspm_create_nat_gateway                     = var.dspm_create_nat_gateway
+  dspm_s3_access                              = var.dspm_s3_access
+  dspm_dynamodb_access                        = var.dspm_dynamodb_access
+  dspm_rds_access                             = var.dspm_rds_access
+  dspm_redshift_access                        = var.dspm_redshift_access
+  agentless_scanning_use_custom_vpc           = var.agentless_scanning_use_custom_vpc
+  agentless_scanning_custom_vpc_resources_map = var.agentless_scanning_custom_vpc_resources_map
 
   # customizations
   resource_prefix        = "cs-"
@@ -85,14 +87,19 @@ module "fcs_account" {
   cloudtrail_bucket_name = crowdstrike_cloud_aws_account.this.cloudtrail_bucket_name
   dspm_scanner_role_name = local.dspm_scanner_role_name
 
-  resource_prefix         = local.resource_prefix
-  resource_suffix         = local.resource_suffix
-  tags                    = local.tags
-  dspm_create_nat_gateway = local.dspm_create_nat_gateway
-  dspm_s3_access          = local.dspm_s3_access
-  dspm_dynamodb_access    = local.dspm_dynamodb_access
-  dspm_rds_access         = local.dspm_rds_access
-  dspm_redshift_access    = local.dspm_redshift_access
+  resource_prefix                             = local.resource_prefix
+  resource_suffix                             = local.resource_suffix
+  tags                                        = local.tags
+  dspm_create_nat_gateway                     = local.dspm_create_nat_gateway
+  dspm_s3_access                              = local.dspm_s3_access
+  dspm_dynamodb_access                        = local.dspm_dynamodb_access
+  dspm_rds_access                             = local.dspm_rds_access
+  dspm_redshift_access                        = local.dspm_redshift_access
+  agentless_scanning_use_custom_vpc           = local.agentless_scanning_use_custom_vpc
+  agentless_scanning_custom_vpc_resources_map = local.agentless_scanning_custom_vpc_resources_map
+  agentless_scanning_host_account_id          = var.agentless_scanning_host_account_id
+  agentless_scanning_host_role_name           = var.agentless_scanning_host_role_name
+  agentless_scanning_host_scanner_role_name   = var.agentless_scanning_host_scanner_role_name
 
   providers = {
     crowdstrike = crowdstrike

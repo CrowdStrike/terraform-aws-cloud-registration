@@ -1,8 +1,9 @@
 # Creates instance profile. Attached as IAM role to EC2 instance, used for data scan
 resource "aws_iam_instance_profile" "instance_profile" {
-  name = "CrowdStrikeScannerRoleProfile"
-  path = "/"
-  role = var.dspm_scanner_role_name
+  count = local.is_host_account ? 1 : 0
+  name  = "CrowdStrikeScannerRoleProfile"
+  path  = "/"
+  role  = var.dspm_scanner_role_name
   tags = merge(
     var.tags,
     {
@@ -16,11 +17,16 @@ resource "aws_ssm_parameter" "agentless_scanning_root_parameter" {
   type = "String"
   tier = "Intelligent-Tiering"
   value = jsonencode({
+    version            = "1.0.0+tf.1"
+    deployment_regions = var.dspm_regions
+    scanner_role_arn   = aws_iam_role.crowdstrike_aws_dspm_scanner_role.arn
+    instance_profile   = local.is_host_account ? aws_iam_instance_profile.instance_profile[0].name : ""
+    host_account_id    = local.is_host_account ? data.aws_caller_identity.current.account_id : var.agentless_scanning_host_account_id
     permissions = {
-      s3_policy       = var.dspm_s3_access ? "${var.dspm_scanner_role_name}/CrowdStrikeBucketReader" : "null"
-      rds_policy      = var.dspm_rds_access ? "${var.dspm_role_name}/CrowdStrikeRDSClone" : "null"
-      dynamodb_policy = var.dspm_dynamodb_access ? "${var.dspm_scanner_role_name}/CrowdStrikeDynamoDBReader" : "null"
-      redshift_policy = var.dspm_redshift_access ? "${var.dspm_role_name}/CrowdStrikeRedshiftClone" : "null"
+      s3_policy       = var.dspm_s3_access ? "${var.dspm_scanner_role_name}/CrowdStrikeBucketReader" : ""
+      rds_policy      = var.dspm_rds_access ? "${var.dspm_role_name}/CrowdStrikeRDSClone" : ""
+      dynamodb_policy = var.dspm_dynamodb_access ? "${var.dspm_scanner_role_name}/CrowdStrikeDynamoDBReader" : ""
+      redshift_policy = var.dspm_redshift_access ? "${var.dspm_role_name}/CrowdStrikeRedshiftClone" : ""
     }
   })
   description = "Tracks which datastore services are enabled for DSPM scanning via their policies"
@@ -35,7 +41,7 @@ resource "aws_ssm_parameter" "agentless_scanning_root_parameter" {
 resource "aws_iam_role" "crowdstrike_aws_dspm_scanner_role" {
   name = var.dspm_scanner_role_name
   path = "/"
-  assume_role_policy = jsonencode({
+  assume_role_policy = local.is_host_account ? jsonencode({
     Version = "2012-10-17"
     Statement = [
       {
@@ -44,6 +50,17 @@ resource "aws_iam_role" "crowdstrike_aws_dspm_scanner_role" {
         Principal = {
           Service = "ec2.amazonaws.com"
         }
+      }
+    ]
+    }) : jsonencode({
+    Version = "2008-10-17"
+    Statement = [
+      {
+        Effect = "Allow"
+        Principal = {
+          AWS = "arn:aws:iam::${var.agentless_scanning_host_account_id}:role/${var.agentless_scanning_host_scanner_role_name}"
+        }
+        Action = "sts:AssumeRole"
       }
     ]
   })
@@ -159,7 +176,7 @@ resource "aws_iam_role_policy" "crowdstrike_dynamodb_reader" {
 }
 
 resource "aws_iam_role_policy" "crowdstrike_redshift_reader" {
-  count = var.dspm_redshift_access ? 1 : 0
+  count = (var.dspm_redshift_access && local.is_host_account) ? 1 : 0
   #checkov:skip=CKV_AWS_355:DSPM data scanner requires read access to all scannable redshift assets
   #checkov:skip=CKV_AWS_290,CKV_AWS_287:DSPM data scanner requires redshift:Get* permissions
   name = "CrowdStrikeRedshiftReader"
@@ -184,8 +201,9 @@ resource "aws_iam_role_policy" "crowdstrike_redshift_reader" {
 }
 
 resource "aws_iam_role_policy" "crowdstrike_secret_reader" {
-  name = "CrowdStrikeSecretReader"
-  role = aws_iam_role.crowdstrike_aws_dspm_scanner_role.id
+  count = local.is_host_account ? 1 : 0
+  name  = "CrowdStrikeSecretReader"
+  role  = aws_iam_role.crowdstrike_aws_dspm_scanner_role.id
   policy = jsonencode({
     Version = "2012-10-17"
     Statement = [
@@ -207,3 +225,23 @@ resource "aws_iam_role_policy" "crowdstrike_secret_reader" {
     ]
   })
 }
+
+resource "aws_iam_role_policy" "crowdstrike_assume_target_scanner_role" {
+  count = local.is_host_account ? 1 : 0
+  name  = "CrowdStrikeAssumeTargetScannerRole"
+  role  = aws_iam_role.crowdstrike_aws_dspm_scanner_role.id
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Sid    = "AssumeRole"
+        Effect = "Allow"
+        Action = [
+          "sts:AssumeRole"
+        ]
+        Resource = "arn:aws:iam::*:role/*"
+      }
+    ]
+  })
+}
+

@@ -10,6 +10,11 @@ locals {
   logical_ec2_security_group    = "EC2SecurityGroup"
   logical_db_security_group     = "DBSecurityGroup"
   logical_kms_key               = "KMSKey"
-  aws_region                    = data.aws_region.current.name
+  aws_region                    = data.aws_region.current.id
   account_id                    = data.aws_caller_identity.current.account_id
+
+  # Condition to determine if this is the host account
+  is_host_account = var.agentless_scanning_host_account_id == var.account_id || var.agentless_scanning_host_account_id == ""
+  # Condition to determine whether scanning infrastructure should be created in this account
+  create_scanning_infrastructure = local.is_host_account && !var.use_custom_vpc
 }
