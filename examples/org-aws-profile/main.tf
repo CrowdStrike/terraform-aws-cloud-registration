@@ -94,7 +94,7 @@ module "fcs_child_account_1" {
   use_existing_cloudtrail       = true # use the cloudtrail at the org level
   enable_dspm                   = local.enable_dspm && contains(local.agentless_scanning_regions, "us-east-2")
   enable_vulnerability_scanning = local.enable_vulnerability_scanning && contains(local.agentless_scanning_regions, "us-east-2")
-  agentless_scanning_regions                  = local.agentless_scanning_regions
+  agentless_scanning_regions    = local.agentless_scanning_regions
   vpc_cidr_block                = var.vpc_cidr_block
 
   iam_role_name                      = crowdstrike_cloud_aws_account.this.iam_role_name

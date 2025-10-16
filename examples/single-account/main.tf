@@ -90,7 +90,7 @@ module "fcs_account_onboarding" {
   use_existing_cloudtrail       = local.use_existing_cloudtrail
   enable_dspm                   = local.enable_dspm && contains(local.agentless_scanning_regions, "us-east-1")
   enable_vulnerability_scanning = local.enable_vulnerability_scanning && contains(local.agentless_scanning_regions, "us-east-1")
-  agentless_scanning_regions                  = local.agentless_scanning_regions
+  agentless_scanning_regions    = local.agentless_scanning_regions
   dspm_scanner_role_name        = local.dspm_scanner_role_name
   vpc_cidr_block                = var.vpc_cidr_block
 
@@ -135,7 +135,7 @@ module "fcs_account_us_east_2" {
   use_existing_cloudtrail       = local.use_existing_cloudtrail
   enable_dspm                   = local.enable_dspm && contains(local.agentless_scanning_regions, "us-east-2")
   enable_vulnerability_scanning = local.enable_vulnerability_scanning && contains(local.agentless_scanning_regions, "us-east-2")
-  agentless_scanning_regions                  = local.agentless_scanning_regions
+  agentless_scanning_regions    = local.agentless_scanning_regions
   dspm_scanner_role_name        = local.dspm_scanner_role_name
   vpc_cidr_block                = var.vpc_cidr_block
 
@@ -182,7 +182,7 @@ module "fcs_account_us_west_1" {
   use_existing_cloudtrail       = local.use_existing_cloudtrail
   enable_dspm                   = local.enable_dspm && contains(local.agentless_scanning_regions, "us-west-1")
   enable_vulnerability_scanning = local.enable_vulnerability_scanning && contains(local.agentless_scanning_regions, "us-west-1")
-  agentless_scanning_regions                  = local.agentless_scanning_regions
+  agentless_scanning_regions    = local.agentless_scanning_regions
   dspm_scanner_role_name        = local.dspm_scanner_role_name
   vpc_cidr_block                = var.vpc_cidr_block
 
@@ -229,7 +229,7 @@ module "fcs_account_us_west_2" {
   use_existing_cloudtrail       = local.use_existing_cloudtrail
   enable_dspm                   = local.enable_dspm && contains(local.agentless_scanning_regions, "us-west-2")
   enable_vulnerability_scanning = local.enable_vulnerability_scanning && contains(local.agentless_scanning_regions, "us-west-2")
-  agentless_scanning_regions                  = local.agentless_scanning_regions
+  agentless_scanning_regions    = local.agentless_scanning_regions
   dspm_scanner_role_name        = local.dspm_scanner_role_name
   vpc_cidr_block                = var.vpc_cidr_block
 

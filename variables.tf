@@ -184,7 +184,7 @@ variable "dspm_regions" {
 
 check "dspm_regions_deprecation" {
   assert {
-    condition = length(var.dspm_regions) == 0
+    condition     = length(var.dspm_regions) == 0
     error_message = "DEPRECATION WARNING: 'dspm_regions' is deprecated. Please use 'agentless_scanning_regions' instead."
   }
 }

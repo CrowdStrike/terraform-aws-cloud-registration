@@ -214,14 +214,14 @@ data "aws_iam_policy_document" "crowdstrike_run_data_scanner_restricted_data" {
 }
 
 resource "aws_iam_role_policy" "crowdstrike_rds_clone" {
-  count  = (var.dspm_rds_access && var.enable_dspm)  ? 1 : 0
+  count  = (var.dspm_rds_access && var.enable_dspm) ? 1 : 0
   name   = "CrowdStrikeRDSClone"
   role   = aws_iam_role.crowdstrike_aws_dspm_integration_role.id
   policy = data.aws_iam_policy_document.crowdstrike_rds_clone_base[0].json
 }
 
 resource "aws_iam_role_policy" "crowdstrike_rds_clone_host" {
-  count  = (var.dspm_rds_access &&var.enable_dspm && local.is_host_account) ? 1 : 0
+  count  = (var.dspm_rds_access && var.enable_dspm && local.is_host_account) ? 1 : 0
   name   = "CrowdStrikeRDSCloneHost"
   role   = aws_iam_role.crowdstrike_aws_dspm_integration_role.id
   policy = data.aws_iam_policy_document.crowdstrike_rds_clone_host[0].json
