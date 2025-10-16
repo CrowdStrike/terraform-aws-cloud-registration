@@ -228,6 +228,7 @@ variable "vpc_cidr_block" {
   default     = "10.0.0.0/16"
 }
 
+
 variable "agentless_scanning_use_custom_vpc" {
   description = "Use existing custom VPC resources for ALL deployment regions (requires agentless_scanning_custom_vpc_resources_map with all regions)"
   type        = bool
@@ -296,4 +297,40 @@ variable "agentless_scanning_host_scanner_role_name" {
     condition     = can(regex("^$|^[a-zA-Z0-9+=,.@_-]{1,64}$", var.agentless_scanning_host_scanner_role_name))
     error_message = "Role name must be empty or use only alphanumeric and '+=,.@-_' characters, maximum 64 characters."
   }
+}
+
+
+# S3 Log Ingestion Variables
+variable "log_ingestion_method" {
+  type        = string
+  default     = "eventbridge"
+  description = "Choose the method for ingesting CloudTrail logs - EventBridge (default) or S3"
+  validation {
+    condition     = contains(["eventbridge", "s3"], var.log_ingestion_method)
+    error_message = "log_ingestion_method must be either 'eventbridge' or 's3'"
+  }
+}
+
+variable "log_ingestion_s3_bucket_name" {
+  type        = string
+  default     = ""
+  description = "S3 bucket name containing CloudTrail logs (required when log_ingestion_method=s3)"
+}
+
+variable "log_ingestion_sns_topic_arn" {
+  type        = string
+  default     = ""
+  description = "SNS topic ARN that publishes S3 object creation events (required when log_ingestion_method=s3)"
+}
+
+variable "log_ingestion_s3_bucket_prefix" {
+  type        = string
+  default     = ""
+  description = "Optional S3 bucket prefix/path for CloudTrail logs (when log_ingestion_method=s3)"
+}
+
+variable "log_ingestion_kms_key_arn" {
+  type        = string
+  default     = ""
+  description = "Optional KMS key ARN for decrypting S3 objects (when log_ingestion_method=s3)"
 }
