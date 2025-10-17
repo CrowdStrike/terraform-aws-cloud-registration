@@ -132,7 +132,7 @@ resource "aws_sns_topic_subscription" "cloudtrail_logs_sns_subscription" {
 # Cross-account IAM role for S3 log consumption
 resource "aws_iam_role" "s3_log_role" {
   count = local.use_s3_method_and_sns_topic_in_current_account && var.is_primary_region ? 1 : 0
-  name  = "${var.resource_prefix}S3LogIngestion${var.resource_suffix}"
+  name  = "${var.resource_prefix}CrowdStrikeCloudTrailReader${var.resource_suffix}"
 
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
