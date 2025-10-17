@@ -70,7 +70,7 @@ variable "falcon_client_secret" {
 
 variable "eventbus_arn" {
   type        = string
-  description = "Eventbus ARN to send events to"
+  description = "EventBus ARN(s) to send events to - single ARN for commercial, comma-separated for gov multi-region"
 }
 
 variable "resource_prefix" {
