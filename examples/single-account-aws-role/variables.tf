@@ -31,8 +31,8 @@ variable "me" {
   description = "The user running terraform"
 }
 
-variable "dspm_create_nat_gateway" {
-  description = "Set to true to create a NAT Gateway for DSPM scanning environments"
+variable "agentless_scanning_create_nat_gateway" {
+  description = "Set to true to create a NAT Gateway for agentless scanning environments"
   type        = bool
   default     = true
 }
@@ -111,7 +111,7 @@ variable "agentless_scanning_host_role_name" {
 variable "agentless_scanning_host_scanner_role_name" {
   type        = string
   default     = "CrowdStrikeDSPMScannerRole"
-  description = "Name of angentless scanning scanner role in host account"
+  description = "Name of agentless scanning scanner role in host account"
 
   validation {
     condition     = can(regex("^$|^[a-zA-Z0-9+=,.@_-]{1,64}$", var.agentless_scanning_host_scanner_role_name))

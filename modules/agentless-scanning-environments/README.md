@@ -105,10 +105,10 @@ module "dspm_environments" {
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
 | <a name="input_account_id"></a> [account\_id](#input\_account\_id) | The AWS 12 digit account ID | `string` | `""` | no |
+| <a name="input_agentless_scanning_create_nat_gateway"></a> [agentless\_scanning\_create\_nat\_gateway](#input\_agentless\_scanning\_create\_nat\_gateway) | Set to true to create a NAT Gateway for agentless scanning environments | `bool` | `true` | no |
 | <a name="input_agentless_scanning_host_account_id"></a> [agentless\_scanning\_host\_account\_id](#input\_agentless\_scanning\_host\_account\_id) | The AWS account ID where DSPM host resources are deployed | `string` | `""` | no |
-| <a name="input_agentless_scanning_host_role_name"></a> [agentless\_scanning\_host\_role\_name](#input\_agentless\_scanning\_host\_role\_name) | Name of agentless scanning integration role in host account | `string` | `"CrowdStrikeDSPMIntegrationRole"` | no |
+| <a name="input_agentless_scanning_host_role_name"></a> [agentless\_scanning\_host\_role\_name](#input\_agentless\_scanning\_host\_role\_name) | Name of agentless scanning integration role in host account | `string` | `"CrowdStrikeAgentlessScanningIntegrationRole"` | no |
 | <a name="input_deployment_name"></a> [deployment\_name](#input\_deployment\_name) | The deployment name will be used in environment installation | `string` | `"dspm-environment"` | no |
-| <a name="input_dspm_create_nat_gateway"></a> [dspm\_create\_nat\_gateway](#input\_dspm\_create\_nat\_gateway) | Set to true to create a NAT Gateway for DSPM scanning environments | `bool` | `true` | no |
 | <a name="input_integration_role_unique_id"></a> [integration\_role\_unique\_id](#input\_integration\_role\_unique\_id) | The unique ID of the DSPM integration role | `string` | n/a | yes |
 | <a name="input_region_vpc_config"></a> [region\_vpc\_config](#input\_region\_vpc\_config) | VPC configuration for the current region | <pre>object({<br/>    vpc            = string<br/>    scanner_subnet = string<br/>    scanner_sg     = string<br/>    db_subnet_a    = string<br/>    db_subnet_b    = string<br/>    db_sg          = string<br/>  })</pre> | `null` | no |
 | <a name="input_scanner_role_unique_id"></a> [scanner\_role\_unique\_id](#input\_scanner\_role\_unique\_id) | The unique ID of the DSPM scanner role | `string` | n/a | yes |
