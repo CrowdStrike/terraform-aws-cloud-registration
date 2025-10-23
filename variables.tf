@@ -349,9 +349,9 @@ variable "agentless_scanning_role_name" {
 
   validation {
     condition = !(
-    var.dspm_role_name != "CrowdStrikeDSPMIntegrationRole" &&
-    var.agentless_scanning_role_name != "CrowdStrikeAgentlessScanningIntegrationRole" &&
-    var.dspm_role_name != var.agentless_scanning_role_name
+      var.dspm_role_name != "CrowdStrikeDSPMIntegrationRole" &&
+      var.agentless_scanning_role_name != "CrowdStrikeAgentlessScanningIntegrationRole" &&
+      var.dspm_role_name != var.agentless_scanning_role_name
     )
 
     error_message = <<EOF
@@ -368,9 +368,9 @@ variable "agentless_scanning_scanner_role_name" {
 
   validation {
     condition = !(
-    var.dspm_scanner_role_name != "CrowdStrikeDSPMScannerRole" &&
-    var.agentless_scanning_scanner_role_name != "CrowdStrikeAgentlessScanningScannerRole" &&
-    var.dspm_scanner_role_name != var.agentless_scanning_scanner_role_name
+      var.dspm_scanner_role_name != "CrowdStrikeDSPMScannerRole" &&
+      var.agentless_scanning_scanner_role_name != "CrowdStrikeAgentlessScanningScannerRole" &&
+      var.dspm_scanner_role_name != var.agentless_scanning_scanner_role_name
     )
 
     error_message = <<EOF
