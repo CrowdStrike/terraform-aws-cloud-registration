@@ -5,12 +5,16 @@ locals {
   is_gov_commercial          = var.is_gov && var.account_type == "commercial"
   account_role_arn           = "arn:${local.aws_partition}:iam::${var.account_id}:role/${var.aws_role_name}"
   aws_account                = data.aws_caller_identity.current.account_id
+
   agentless_scanning_enabled = (var.enable_dspm || var.enable_vulnerability_scanning)
 
-  # Smart precedence logic for role names:
-  # 1. If agentless_scanning_role_name is custom (non-default) → use it (highest priority)
-  # 2. Else if dspm_role_name is custom + agentless_scanning_role_name is default → use dspm_role_name (backward compatibility)
-  # 3. Else → use agentless_scanning_role_name default (fallback)
+  # Use agentless_scanning_regions if customized, otherwise fall back to dspm_regions for backward compatibility
+  agentless_scanning_regions_is_custom = var.agentless_scanning_regions != ["us-east-1"]
+  agentless_scanning_regions = local.agentless_scanning_regions_is_custom ? var.agentless_scanning_regions : (
+    length(var.dspm_regions) > 0 ? var.dspm_regions : var.agentless_scanning_regions
+  )
+
+  # Use agentless custom role names if provided, with dspm custom role names as fallback for backward compatibility
   dspm_role_is_default      = var.dspm_role_name == "CrowdStrikeDSPMIntegrationRole"
   agentless_role_is_default = var.agentless_scanning_role_name == "CrowdStrikeAgentlessScanningIntegrationRole"
 
@@ -18,10 +22,7 @@ locals {
     !local.dspm_role_is_default ? var.dspm_role_name : var.agentless_scanning_role_name
   )
 
-  # Smart precedence logic for scanner role names:
-  # 1. If agentless_scanning_scanner_role_name is custom (non-default) → use it (highest priority)
-  # 2. Else if dspm_scanner_role_name is custom + agentless_scanning_scanner_role_name is default → use dspm_scanner_role_name (backward compatibility)
-  # 3. Else → use agentless_scanning_scanner_role_name default (fallback)
+  # Scanner role follows same precedence pattern
   dspm_scanner_role_is_default      = var.dspm_scanner_role_name == "CrowdStrikeDSPMScannerRole"
   agentless_scanner_role_is_default = var.agentless_scanning_scanner_role_name == "CrowdStrikeAgentlessScanningScannerRole"
 
@@ -53,16 +54,6 @@ data "crowdstrike_cloud_aws_account" "target" {
 locals {
   # if we target by account_id, it will be the only account returned
   # if we target by organization_id, we pick the first one because all accounts will have the same settings
-
-  # Smart precedence logic for region variables:
-  # 1. If agentless_scanning_regions is custom (non-default) → use it (highest priority)
-  # 2. Else if dspm_regions is set → use it (backward compatibility)
-  # 3. Else → use agentless_scanning_regions default (fallback)
-  agentless_is_custom = var.agentless_scanning_regions != ["us-east-1"]
-  agentless_scanning_regions = local.agentless_is_custom ? var.agentless_scanning_regions : (
-    length(var.dspm_regions) > 0 ? var.dspm_regions : var.agentless_scanning_regions
-  )
-
   account = try(
     data.crowdstrike_cloud_aws_account.target.accounts[0],
     {
