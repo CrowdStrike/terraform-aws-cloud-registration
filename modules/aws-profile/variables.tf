@@ -141,25 +141,6 @@ variable "enable_vulnerability_scanning" {
   default     = false
 }
 
-variable "agentless_scanning_role_name" {
-  description = "The unique name of the IAM role that Agentless scanning will be assuming"
-  type        = string
-  default     = "CrowdStrikeAgentlessScanningIntegrationRole"
-
-  validation {
-    condition = !(
-      var.dspm_role_name != "CrowdStrikeDSPMIntegrationRole" &&
-      var.agentless_scanning_role_name != "CrowdStrikeAgentlessScanningIntegrationRole" &&
-      var.dspm_role_name != var.agentless_scanning_role_name
-    )
-
-    error_message = <<EOF
-CONFIGURATION CONFLICT: Both 'dspm_role_name' and 'agentless_scanning_role_name' are set to different custom values.
-Please use only 'agentless_scanning_role_name'.
-EOF
-  }
-}
-
 variable "dspm_role_name" {
   description = "DEPRECATED: Use agentless_scanning_role_name instead. The unique name of the IAM role that DSPM will be assuming"
   type        = string
@@ -170,25 +151,6 @@ check "dspm_role_name_deprecation" {
   assert {
     condition     = var.dspm_role_name == "CrowdStrikeDSPMIntegrationRole"
     error_message = "DEPRECATION WARNING: 'dspm_role_name' is deprecated. Please use 'agentless_scanning_role_name' instead."
-  }
-}
-
-variable "agentless_scanning_scanner_role_name" {
-  description = "The unique name of the IAM role that Agentless scanning scanner will be assuming"
-  type        = string
-  default     = "CrowdStrikeAgentlessScanningScannerRole"
-
-  validation {
-    condition = !(
-      var.dspm_scanner_role_name != "CrowdStrikeDSPMScannerRole" &&
-      var.agentless_scanning_scanner_role_name != "CrowdStrikeAgentlessScanningScannerRole" &&
-      var.dspm_scanner_role_name != var.agentless_scanning_scanner_role_name
-    )
-
-    error_message = <<EOF
-CONFIGURATION CONFLICT: Both 'dspm_scanner_role_name' and 'agentless_scanning_scanner_role_name' are set to different custom values.
-Please use only 'agentless_scanning_scanner_role_name'.
-EOF
   }
 }
 
@@ -205,25 +167,6 @@ check "dspm_scanner_role_name_deprecation" {
   }
 }
 
-variable "agentless_scanning_regions" {
-  description = "List of regions where agentless scanning (DSPM and vulnerability scanning) will be deployed"
-  type        = list(string)
-  default     = ["us-east-1"]
-
-  validation {
-    condition     = length(var.agentless_scanning_regions) > 0
-    error_message = "At least one agentless scanning region must be specified."
-  }
-
-  validation {
-    condition = alltrue([
-      for region in var.agentless_scanning_regions :
-      (can(regex("^(?:us|eu|ap|sa|ca|af|me|il)-(?:north|south|east|west|central|northeast|southeast|southwest|northwest)-[1-4]$", region)) ||
-      can(regex("^us-gov-(?:east|west)-1$", region)))
-    ])
-    error_message = "Each element in the agentless_scanning_regions list must be a valid AWS region (e.g., 'us-east-1', 'eu-west-2', 'us-gov-east-1', 'us-gov-west-1')."
-  }
-}
 
 variable "dspm_regions" {
   description = "DEPRECATED: Use agentless_scanning_regions instead. List of regions where DSPM scanning will be deployed"
@@ -263,12 +206,6 @@ variable "tags" {
   description = "A map of tags to add to all resources that support tagging"
   type        = map(string)
   default     = {}
-}
-
-variable "agentless_scanning_create_nat_gateway" {
-  description = "Set to true to create a NAT Gateway for agentless scanning environments"
-  type        = bool
-  default     = true
 }
 
 variable "dspm_create_nat_gateway" {
@@ -364,4 +301,68 @@ variable "agentless_scanning_host_scanner_role_name" {
     condition     = can(regex("^$|^[a-zA-Z0-9+=,.@_-]{1,64}$", var.agentless_scanning_host_scanner_role_name))
     error_message = "Role name must be empty or use only alphanumeric and '+=,.@-_' characters, maximum 64 characters."
   }
+}
+
+variable "agentless_scanning_role_name" {
+  description = "The unique name of the IAM role that Agentless scanning will be assuming"
+  type        = string
+  default     = "CrowdStrikeAgentlessScanningIntegrationRole"
+
+  validation {
+    condition = !(
+    var.dspm_role_name != "CrowdStrikeDSPMIntegrationRole" &&
+    var.agentless_scanning_role_name != "CrowdStrikeAgentlessScanningIntegrationRole" &&
+    var.dspm_role_name != var.agentless_scanning_role_name
+    )
+
+    error_message = <<EOF
+CONFIGURATION CONFLICT: Both 'dspm_role_name' and 'agentless_scanning_role_name' are set to different custom values.
+Please use only 'agentless_scanning_role_name'.
+EOF
+  }
+}
+
+variable "agentless_scanning_scanner_role_name" {
+  description = "The unique name of the IAM role that Agentless scanning scanner will be assuming"
+  type        = string
+  default     = "CrowdStrikeAgentlessScanningScannerRole"
+
+  validation {
+    condition = !(
+    var.dspm_scanner_role_name != "CrowdStrikeDSPMScannerRole" &&
+    var.agentless_scanning_scanner_role_name != "CrowdStrikeAgentlessScanningScannerRole" &&
+    var.dspm_scanner_role_name != var.agentless_scanning_scanner_role_name
+    )
+
+    error_message = <<EOF
+CONFIGURATION CONFLICT: Both 'dspm_scanner_role_name' and 'agentless_scanning_scanner_role_name' are set to different custom values.
+Please use only 'agentless_scanning_scanner_role_name'.
+EOF
+  }
+}
+
+variable "agentless_scanning_regions" {
+  description = "List of regions where agentless scanning (DSPM and vulnerability scanning) will be deployed"
+  type        = list(string)
+  default     = ["us-east-1"]
+
+  validation {
+    condition     = length(var.agentless_scanning_regions) > 0
+    error_message = "At least one agentless scanning region must be specified."
+  }
+
+  validation {
+    condition = alltrue([
+      for region in var.agentless_scanning_regions :
+      (can(regex("^(?:us|eu|ap|sa|ca|af|me|il)-(?:north|south|east|west|central|northeast|southeast|southwest|northwest)-[1-4]$", region)) ||
+      can(regex("^us-gov-(?:east|west)-1$", region)))
+    ])
+    error_message = "Each element in the agentless_scanning_regions list must be a valid AWS region (e.g., 'us-east-1', 'eu-west-2', 'us-gov-east-1', 'us-gov-west-1')."
+  }
+}
+
+variable "agentless_scanning_create_nat_gateway" {
+  description = "Set to true to create a NAT Gateway for agentless scanning environments"
+  type        = bool
+  default     = true
 }
