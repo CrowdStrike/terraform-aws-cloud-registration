@@ -20,7 +20,7 @@ data "aws_iam_policy_document" "assume_role" {
   }
 }
 
-resource "aws_iam_role" "crowdstrike_aws_dspm_integration_role" {
+resource "aws_iam_role" "crowdstrike_aws_agentless_scanning_integration_role" {
   name                 = var.agentless_scanning_role_name
   path                 = "/"
   max_session_duration = 43200
@@ -34,14 +34,19 @@ resource "aws_iam_role" "crowdstrike_aws_dspm_integration_role" {
   )
 }
 
+moved {
+  from = aws_iam_role.crowdstrike_aws_dspm_integration_role
+  to   = aws_iam_role.crowdstrike_aws_agentless_scanning_integration_role
+}
+
 resource "aws_iam_role_policy_attachment" "security_audit" {
-  role       = aws_iam_role.crowdstrike_aws_dspm_integration_role.name
+  role       = aws_iam_role.crowdstrike_aws_agentless_scanning_integration_role.name
   policy_arn = "arn:aws:iam::aws:policy/SecurityAudit"
 }
 
 resource "aws_iam_role_policy" "crowdstrike_cloud_scan_supplemental" {
   name   = "CrowdStrikeCloudScanSupplemental"
-  role   = aws_iam_role.crowdstrike_aws_dspm_integration_role.id
+  role   = aws_iam_role.crowdstrike_aws_agentless_scanning_integration_role.id
   policy = data.aws_iam_policy_document.crowdstrike_cloud_scan_supplemental_data.json
 }
 
@@ -76,7 +81,7 @@ data "aws_iam_policy_document" "crowdstrike_cloud_scan_supplemental_data" {
 resource "aws_iam_role_policy" "crowdstrike_run_data_scanner_restricted" {
   count  = local.is_host_account ? 1 : 0
   name   = "RunDataScannerRestricted"
-  role   = aws_iam_role.crowdstrike_aws_dspm_integration_role.id
+  role   = aws_iam_role.crowdstrike_aws_agentless_scanning_integration_role.id
   policy = data.aws_iam_policy_document.crowdstrike_run_data_scanner_restricted_data[0].json
 }
 
@@ -216,21 +221,21 @@ data "aws_iam_policy_document" "crowdstrike_run_data_scanner_restricted_data" {
 resource "aws_iam_role_policy" "crowdstrike_rds_clone" {
   count  = (var.dspm_rds_access && var.enable_dspm) ? 1 : 0
   name   = "CrowdStrikeRDSClone"
-  role   = aws_iam_role.crowdstrike_aws_dspm_integration_role.id
+  role   = aws_iam_role.crowdstrike_aws_agentless_scanning_integration_role.id
   policy = data.aws_iam_policy_document.crowdstrike_rds_clone_base[0].json
 }
 
 resource "aws_iam_role_policy" "crowdstrike_rds_clone_host" {
   count  = (var.dspm_rds_access && var.enable_dspm && local.is_host_account) ? 1 : 0
   name   = "CrowdStrikeRDSCloneHost"
-  role   = aws_iam_role.crowdstrike_aws_dspm_integration_role.id
+  role   = aws_iam_role.crowdstrike_aws_agentless_scanning_integration_role.id
   policy = data.aws_iam_policy_document.crowdstrike_rds_clone_host[0].json
 }
 
 resource "aws_iam_role_policy" "crowdstrike_rds_clone_target" {
   count  = (var.dspm_rds_access && var.enable_dspm && !local.is_host_account) ? 1 : 0
   name   = "CrowdStrikeRDSCloneTarget"
-  role   = aws_iam_role.crowdstrike_aws_dspm_integration_role.id
+  role   = aws_iam_role.crowdstrike_aws_agentless_scanning_integration_role.id
   policy = data.aws_iam_policy_document.crowdstrike_rds_clone_target[0].json
 }
 
@@ -532,14 +537,14 @@ data "aws_iam_policy_document" "crowdstrike_rds_clone_target" {
 resource "aws_iam_role_policy" "crowdstrike_redshift_clone_host" {
   count  = (var.dspm_redshift_access && var.enable_dspm && local.is_host_account) ? 1 : 0
   name   = "CrowdStrikeRedshiftClone"
-  role   = aws_iam_role.crowdstrike_aws_dspm_integration_role.id
+  role   = aws_iam_role.crowdstrike_aws_agentless_scanning_integration_role.id
   policy = data.aws_iam_policy_document.crowdstrike_redshift_clone_host[0].json
 }
 
 resource "aws_iam_role_policy" "crowdstrike_redshift_clone_target" {
   count  = (var.dspm_redshift_access && var.enable_dspm && !local.is_host_account) ? 1 : 0
   name   = "CrowdStrikeRedshiftCloneTarget"
-  role   = aws_iam_role.crowdstrike_aws_dspm_integration_role.id
+  role   = aws_iam_role.crowdstrike_aws_agentless_scanning_integration_role.id
   policy = data.aws_iam_policy_document.crowdstrike_redshift_clone_target[0].json
 }
 
@@ -639,7 +644,7 @@ data "aws_iam_policy_document" "crowdstrike_redshift_clone_target" {
 
 resource "aws_iam_role_policy" "crowdstrike_ssm_reader" {
   name   = "CrowdStrikeSSMReader"
-  role   = aws_iam_role.crowdstrike_aws_dspm_integration_role.id
+  role   = aws_iam_role.crowdstrike_aws_agentless_scanning_integration_role.id
   policy = data.aws_iam_policy_document.crowdstrike_ssm_reader_data.json
 }
 
@@ -659,7 +664,7 @@ data "aws_iam_policy_document" "crowdstrike_ssm_reader_data" {
 resource "aws_iam_role_policy" "run_data_scanner_custom_vpcs" {
   count  = var.agentless_scanning_use_custom_vpc && local.is_host_account && length(var.agentless_scanning_custom_vpc_resources_map) > 0 ? 1 : 0
   name   = "RunDataScannerCustomVPCs"
-  role   = aws_iam_role.crowdstrike_aws_dspm_integration_role.id
+  role   = aws_iam_role.crowdstrike_aws_agentless_scanning_integration_role.id
   policy = data.aws_iam_policy_document.run_data_scanner_custom_vpcs_data[0].json
 }
 
@@ -690,7 +695,7 @@ data "aws_iam_policy_document" "run_data_scanner_custom_vpcs_data" {
 resource "aws_iam_role_policy" "crowdstrike_vulnerability_scanning_base" {
   count  = var.enable_vulnerability_scanning ? 1 : 0
   name   = "CrowdStrikeVulnerabilityScanningPolicyBase"
-  role   = aws_iam_role.crowdstrike_aws_dspm_integration_role.id
+  role   = aws_iam_role.crowdstrike_aws_agentless_scanning_integration_role.id
   policy = data.aws_iam_policy_document.crowdstrike_vulnerability_scanning_base[0].json
 }
 
@@ -789,7 +794,7 @@ data "aws_iam_policy_document" "crowdstrike_vulnerability_scanning_base" {
 resource "aws_iam_role_policy" "crowdstrike_vulnerability_scanning_host" {
   count  = (var.enable_vulnerability_scanning && local.is_host_account) ? 1 : 0
   name   = "CrowdStrikeVulnerabilityScanningPolicyHostAccount"
-  role   = aws_iam_role.crowdstrike_aws_dspm_integration_role.id
+  role   = aws_iam_role.crowdstrike_aws_agentless_scanning_integration_role.id
   policy = data.aws_iam_policy_document.crowdstrike_vulnerability_scanning_host[0].json
 }
 
@@ -864,7 +869,7 @@ data "aws_iam_policy_document" "crowdstrike_vulnerability_scanning_host" {
 resource "aws_iam_role_policy" "crowdstrike_vulnerability_scanning_target" {
   count  = (var.enable_vulnerability_scanning && !local.is_host_account) ? 1 : 0
   name   = "CrowdStrikeVulnerabilityScanningPolicyTargetAccount"
-  role   = aws_iam_role.crowdstrike_aws_dspm_integration_role.id
+  role   = aws_iam_role.crowdstrike_aws_agentless_scanning_integration_role.id
   policy = data.aws_iam_policy_document.crowdstrike_vulnerability_scanning_target[0].json
 }
 

@@ -23,7 +23,7 @@ resource "aws_ssm_parameter" "agentless_scanning_root_parameter" {
       dspm_scanning_enabled          = var.enable_dspm
       vulnerability_scanning_enabled = var.enable_vulnerability_scanning
     }
-    scanner_role_arn = aws_iam_role.crowdstrike_aws_dspm_scanner_role.arn
+    scanner_role_arn = aws_iam_role.crowdstrike_aws_agentless_scanning_scanner_role.arn
     instance_profile = local.is_host_account ? aws_iam_instance_profile.instance_profile[0].name : ""
     host_account_id  = local.is_host_account ? data.aws_caller_identity.current.account_id : var.agentless_scanning_host_account_id
     permissions = {
@@ -42,7 +42,7 @@ resource "aws_ssm_parameter" "agentless_scanning_root_parameter" {
   )
 }
 
-resource "aws_iam_role" "crowdstrike_aws_dspm_scanner_role" {
+resource "aws_iam_role" "crowdstrike_aws_agentless_scanning_scanner_role" {
   name = var.agentless_scanning_scanner_role_name
   path = "/"
   assume_role_policy = local.is_host_account ? jsonencode({
@@ -76,8 +76,13 @@ resource "aws_iam_role" "crowdstrike_aws_dspm_scanner_role" {
   )
 }
 
+moved {
+  from = aws_iam_role.crowdstrike_aws_dspm_scanner_role
+  to   = aws_iam_role.crowdstrike_aws_agentless_scanning_scanner_role
+}
+
 resource "aws_iam_role_policy_attachment" "cloud_watch_logs_read_only_access" {
-  role       = aws_iam_role.crowdstrike_aws_dspm_scanner_role.name
+  role       = aws_iam_role.crowdstrike_aws_agentless_scanning_scanner_role.name
   policy_arn = "arn:aws:iam::aws:policy/CloudWatchLogsReadOnlyAccess"
 }
 
@@ -85,7 +90,7 @@ resource "aws_iam_role_policy_attachment" "cloud_watch_logs_read_only_access" {
 resource "aws_iam_role_policy" "crowdstrike_logs_reader" {
   #checkov:skip=CKV_AWS_355:DSPM data scanner requires read access to logs for all scannable assets
   name = "CrowdStrikeLogsReader"
-  role = aws_iam_role.crowdstrike_aws_dspm_scanner_role.id
+  role = aws_iam_role.crowdstrike_aws_agentless_scanning_scanner_role.id
   policy = jsonencode({
     Version = "2012-10-17"
     Statement = [
@@ -126,7 +131,7 @@ resource "aws_iam_role_policy" "crowdstrike_bucket_reader" {
   count = var.dspm_s3_access ? 1 : 0
   #checkov:skip=CKV_AWS_288,CKV_AWS_355:DSPM data scanner requires read access to all scannable s3 assets
   name = "CrowdStrikeBucketReader"
-  role = aws_iam_role.crowdstrike_aws_dspm_scanner_role.id
+  role = aws_iam_role.crowdstrike_aws_agentless_scanning_scanner_role.id
   policy = jsonencode({
     Version = "2012-10-17"
     Statement = [
@@ -158,7 +163,7 @@ resource "aws_iam_role_policy" "crowdstrike_dynamodb_reader" {
   count = var.dspm_dynamodb_access ? 1 : 0
   #checkov:skip=CKV_AWS_355:DSPM data scanner requires read access to all scannable dynamodb assets
   name = "CrowdStrikeDynamoDBReader"
-  role = aws_iam_role.crowdstrike_aws_dspm_scanner_role.id
+  role = aws_iam_role.crowdstrike_aws_agentless_scanning_scanner_role.id
   policy = jsonencode({
     Version = "2012-10-17"
     Statement = [
@@ -184,7 +189,7 @@ resource "aws_iam_role_policy" "crowdstrike_redshift_reader" {
   #checkov:skip=CKV_AWS_355:DSPM data scanner requires read access to all scannable redshift assets
   #checkov:skip=CKV_AWS_290,CKV_AWS_287:DSPM data scanner requires redshift:Get* permissions
   name = "CrowdStrikeRedshiftReader"
-  role = aws_iam_role.crowdstrike_aws_dspm_scanner_role.id
+  role = aws_iam_role.crowdstrike_aws_agentless_scanning_scanner_role.id
   policy = jsonencode({
     Version = "2012-10-17"
     Statement = [
@@ -207,7 +212,7 @@ resource "aws_iam_role_policy" "crowdstrike_redshift_reader" {
 resource "aws_iam_role_policy" "crowdstrike_secret_reader" {
   count = local.is_host_account ? 1 : 0
   name  = "CrowdStrikeSecretReader"
-  role  = aws_iam_role.crowdstrike_aws_dspm_scanner_role.id
+  role  = aws_iam_role.crowdstrike_aws_agentless_scanning_scanner_role.id
   policy = jsonencode({
     Version = "2012-10-17"
     Statement = [
@@ -233,7 +238,7 @@ resource "aws_iam_role_policy" "crowdstrike_secret_reader" {
 resource "aws_iam_role_policy" "crowdstrike_assume_target_scanner_role" {
   count = local.is_host_account ? 1 : 0
   name  = "CrowdStrikeAssumeTargetScannerRole"
-  role  = aws_iam_role.crowdstrike_aws_dspm_scanner_role.id
+  role  = aws_iam_role.crowdstrike_aws_agentless_scanning_scanner_role.id
   policy = jsonencode({
     Version = "2012-10-17"
     Statement = [
@@ -253,7 +258,7 @@ resource "aws_iam_role_policy" "crowdstrike_assume_target_scanner_role" {
 resource "aws_iam_role_policy" "crowdstrike_ebs_volume_reader" {
   count = (var.enable_vulnerability_scanning && local.is_host_account) ? 1 : 0
   name  = "CrowdStrikeEBSVolumeReader"
-  role  = aws_iam_role.crowdstrike_aws_dspm_scanner_role.id
+  role  = aws_iam_role.crowdstrike_aws_agentless_scanning_scanner_role.id
   policy = jsonencode({
     Version = "2012-10-17"
     Statement = [
