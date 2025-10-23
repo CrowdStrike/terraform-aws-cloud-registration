@@ -119,7 +119,7 @@ module "rules_us_east_2" {
 | <a name="input_cloudtrail_bucket_name"></a> [cloudtrail\_bucket\_name](#input\_cloudtrail\_bucket\_name) | Name of the S3 bucket for CloudTrail logs | `string` | n/a | yes |
 | <a name="input_create_rules"></a> [create\_rules](#input\_create\_rules) | Set to false if you don't want to enable monitoring in this region | `bool` | `true` | no |
 | <a name="input_eventbridge_role_name"></a> [eventbridge\_role\_name](#input\_eventbridge\_role\_name) | The eventbridge role name | `string` | `"CrowdStrikeCSPMEventBridge"` | no |
-| <a name="input_eventbus_arn"></a> [eventbus\_arn](#input\_eventbus\_arn) | Eventbus ARN to send events to | `string` | n/a | yes |
+| <a name="input_eventbus_arn"></a> [eventbus\_arn](#input\_eventbus\_arn) | EventBus ARN(s) to send events to - single ARN for commercial, comma-separated for gov multi-region | `string` | n/a | yes |
 | <a name="input_falcon_client_id"></a> [falcon\_client\_id](#input\_falcon\_client\_id) | Falcon API Client ID | `string` | n/a | yes |
 | <a name="input_falcon_client_secret"></a> [falcon\_client\_secret](#input\_falcon\_client\_secret) | Falcon API Client Secret | `string` | n/a | yes |
 | <a name="input_is_gov"></a> [is\_gov](#input\_is\_gov) | Set to true if you are deploying in gov Falcon | `bool` | `false` | no |
