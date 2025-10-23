@@ -21,7 +21,7 @@ data "aws_iam_policy_document" "assume_role" {
 }
 
 resource "aws_iam_role" "crowdstrike_aws_dspm_integration_role" {
-  name                 = var.dspm_role_name
+  name                 = var.agentless_scanning_role_name
   path                 = "/"
   max_session_duration = 43200
   assume_role_policy   = data.aws_iam_policy_document.assume_role.json
@@ -194,7 +194,7 @@ data "aws_iam_policy_document" "crowdstrike_run_data_scanner_restricted_data" {
     ]
     effect = "Allow"
     resources = [
-      "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/${var.dspm_scanner_role_name}"
+      "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/${var.agentless_scanning_scanner_role_name}"
     ]
     condition {
       test     = "StringEquals"

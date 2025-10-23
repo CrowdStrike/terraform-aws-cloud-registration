@@ -11,6 +11,7 @@ locals {
   aws_account = data.aws_caller_identity.current.account_id
 
   agentless_scanning_enabled = (var.enable_dspm || var.enable_vulnerability_scanning)
+
   # Smart precedence logic for region variables:
   # 1. If agentless_scanning_regions is custom (non-default) → use it (highest priority)
   # 2. Else if dspm_regions is set → use it (backward compatibility)
@@ -19,6 +20,32 @@ locals {
   agentless_scanning_regions = local.agentless_is_custom ? var.agentless_scanning_regions : (
     length(var.dspm_regions) > 0 ? var.dspm_regions : var.agentless_scanning_regions
   )
+
+  # Smart precedence logic for role names:
+  # 1. If agentless_scanning_role_name is custom (non-default) → use it (highest priority)
+  # 2. Else if dspm_role_name is custom + agentless_scanning_role_name is default → use dspm_role_name (backward compatibility)
+  # 3. Else → use agentless_scanning_role_name default (fallback)
+  dspm_role_is_default      = var.dspm_role_name == "CrowdStrikeDSPMIntegrationRole"
+  agentless_role_is_default = var.agentless_scanning_role_name == "CrowdStrikeAgentlessScanningIntegrationRole"
+
+  agentless_scanning_role_name = !local.agentless_role_is_default ? var.agentless_scanning_role_name : (
+    !local.dspm_role_is_default ? var.dspm_role_name : var.agentless_scanning_role_name
+  )
+
+  # Smart precedence logic for scanner role names:
+  # 1. If agentless_scanning_scanner_role_name is custom (non-default) → use it (highest priority)
+  # 2. Else if dspm_scanner_role_name is custom + agentless_scanning_scanner_role_name is default → use dspm_scanner_role_name (backward compatibility)
+  # 3. Else → use agentless_scanning_scanner_role_name default (fallback)
+  dspm_scanner_role_is_default      = var.dspm_scanner_role_name == "CrowdStrikeDSPMScannerRole"
+  agentless_scanner_role_is_default = var.agentless_scanning_scanner_role_name == "CrowdStrikeAgentlessScanningScannerRole"
+
+  agentless_scanning_scanner_role_name = !local.agentless_scanner_role_is_default ? var.agentless_scanning_scanner_role_name : (
+    !local.dspm_scanner_role_is_default ? var.dspm_scanner_role_name : var.agentless_scanning_scanner_role_name
+  )
+
+  # Boolean AND logic for create_nat_gateway:
+  # If either variable is false, result is false
+  agentless_scanning_create_nat_gateway = var.agentless_scanning_create_nat_gateway && var.dspm_create_nat_gateway
 
   account = try(
     data.crowdstrike_cloud_aws_account.target.accounts[0],
@@ -79,8 +106,8 @@ module "agentless_scanning_roles" {
   falcon_client_id                            = var.falcon_client_id
   falcon_client_secret                        = var.falcon_client_secret
   account_id                                  = local.aws_account
-  dspm_role_name                              = var.dspm_role_name
-  dspm_scanner_role_name                      = var.dspm_scanner_role_name
+  agentless_scanning_role_name                = local.agentless_scanning_role_name
+  agentless_scanning_scanner_role_name        = local.agentless_scanning_scanner_role_name
   intermediate_role_arn                       = local.intermediate_role_arn
   external_id                                 = local.external_id
   agentless_scanning_regions                  = local.agentless_scanning_regions

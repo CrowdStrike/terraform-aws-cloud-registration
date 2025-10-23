@@ -136,16 +136,75 @@ variable "enable_vulnerability_scanning" {
   description = "Set to true to enable Vulnerability Scanning"
 }
 
+variable "agentless_scanning_role_name" {
+  description = "The unique name of the IAM role that Agentless scanning will be assuming"
+  type        = string
+  default     = "CrowdStrikeAgentlessScanningIntegrationRole"
+
+  validation {
+    condition = !(
+      var.dspm_role_name != "CrowdStrikeDSPMIntegrationRole" &&
+      var.agentless_scanning_role_name != "CrowdStrikeAgentlessScanningIntegrationRole" &&
+      var.dspm_role_name != var.agentless_scanning_role_name
+    )
+
+    error_message = <<EOF
+CONFIGURATION CONFLICT: Both 'dspm_role_name' and 'agentless_scanning_role_name' are set to different custom values.
+Please use only 'agentless_scanning_role_name'.
+EOF
+  }
+}
+
 variable "dspm_role_name" {
-  description = "The unique name of the IAM role that DSPM will be assuming"
+  description = "DEPRECATED: Use agentless_scanning_role_name instead. The unique name of the IAM role that DSPM will be assuming"
   type        = string
   default     = "CrowdStrikeDSPMIntegrationRole"
 }
 
+check "dspm_role_name_deprecation" {
+  assert {
+    condition     = var.dspm_role_name == "CrowdStrikeDSPMIntegrationRole"
+    error_message = "DEPRECATION WARNING: 'dspm_role_name' is deprecated. Please use 'agentless_scanning_role_name' instead."
+  }
+}
+
+variable "agentless_scanning_scanner_role_name" {
+  description = "The unique name of the IAM role that Agentless scanning scanner will be assuming"
+  type        = string
+  default     = "CrowdStrikeAgentlessScanningScannerRole"
+
+  validation {
+    condition = !(
+      var.dspm_scanner_role_name != "CrowdStrikeDSPMScannerRole" &&
+      var.agentless_scanning_scanner_role_name != "CrowdStrikeAgentlessScanningScannerRole" &&
+      var.dspm_scanner_role_name != var.agentless_scanning_scanner_role_name
+    )
+
+    error_message = <<EOF
+CONFIGURATION CONFLICT: Both 'dspm_scanner_role_name' and 'agentless_scanning_scanner_role_name' are set to different custom values.
+Please use only 'agentless_scanning_scanner_role_name'.
+EOF
+  }
+}
+
 variable "dspm_scanner_role_name" {
-  description = "The unique name of the IAM role that CrowdStrike Scanner will be assuming"
+  description = "DEPRECATED: Use agentless_scanning_scanner_role_name instead. The unique name of the IAM role that CrowdStrike Scanner will be assuming"
   type        = string
   default     = "CrowdStrikeDSPMScannerRole"
+}
+
+check "dspm_scanner_role_name_deprecation" {
+  assert {
+    condition     = var.dspm_scanner_role_name == "CrowdStrikeDSPMScannerRole"
+    error_message = "DEPRECATION WARNING: 'dspm_scanner_role_name' is deprecated. Please use 'agentless_scanning_scanner_role_name' instead."
+  }
+}
+
+check "dspm_scanner_role_unique_id_deprecation" {
+  assert {
+    condition     = var.dspm_scanner_role_unique_id == ""
+    error_message = "DEPRECATION WARNING: 'dspm_scanner_role_unique_id' is deprecated. Please use 'agentless_scanning_scanner_role_unique_id' instead."
+  }
 }
 
 variable "agentless_scanning_regions" {
@@ -190,10 +249,23 @@ check "dspm_regions_deprecation" {
   }
 }
 
-variable "dspm_create_nat_gateway" {
-  description = "Set to true to create a NAT Gateway for DSPM scanning environments"
+variable "agentless_scanning_create_nat_gateway" {
+  description = "Set to true to create a NAT Gateway for agentless scanning environments"
   type        = bool
   default     = true
+}
+
+variable "dspm_create_nat_gateway" {
+  description = "DEPRECATED: Use agentless_scanning_create_nat_gateway instead. Set to true to create a NAT Gateway for DSPM scanning environments"
+  type        = bool
+  default     = true
+}
+
+check "dspm_create_nat_gateway_deprecation" {
+  assert {
+    condition     = var.dspm_create_nat_gateway == true
+    error_message = "DEPRECATION WARNING: 'dspm_create_nat_gateway' is deprecated. Please use 'agentless_scanning_create_nat_gateway' instead."
+  }
 }
 
 variable "dspm_s3_access" {
@@ -220,14 +292,33 @@ variable "dspm_redshift_access" {
   default     = true
 }
 
+variable "agentless_scanning_integration_role_unique_id" {
+  description = "The unique ID of the Agentless scanning integration role"
+  type        = string
+  default     = ""
+}
+
 variable "dspm_integration_role_unique_id" {
-  description = "The unique ID of the DSPM integration role"
+  description = "DEPRECATED: Use agentless_scanning_integration_role_unique_id instead. The unique ID of the DSPM integration role"
   default     = ""
   type        = string
 }
 
+check "dspm_integration_role_unique_id_deprecation" {
+  assert {
+    condition     = var.dspm_integration_role_unique_id == ""
+    error_message = "DEPRECATION WARNING: 'dspm_integration_role_unique_id' is deprecated. Please use 'agentless_scanning_integration_role_unique_id' instead."
+  }
+}
+
+variable "agentless_scanning_scanner_role_unique_id" {
+  description = "The unique ID of the Agentless scanning scanner role"
+  type        = string
+  default     = ""
+}
+
 variable "dspm_scanner_role_unique_id" {
-  description = "The unique ID of the DSPM scanner role"
+  description = "DEPRECATED: Use agentless_scanning_scanner_role_unique_id instead. The unique ID of the DSPM scanner role"
   default     = ""
   type        = string
 }

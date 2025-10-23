@@ -45,8 +45,8 @@ variable "region_vpc_config" {
   }
 }
 
-variable "dspm_create_nat_gateway" {
-  description = "Set to true to create a NAT Gateway for DSPM scanning environments"
+variable "agentless_scanning_create_nat_gateway" {
+  description = "Set to true to create a NAT Gateway for agentless scanning environments"
   type        = bool
   default     = true
 }

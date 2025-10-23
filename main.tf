@@ -14,6 +14,7 @@ locals {
   is_gov_commercial = var.is_gov && var.account_type == "commercial"
 
   agentless_scanning_enabled = (var.enable_dspm || var.enable_vulnerability_scanning)
+
   # Smart precedence logic for region variables:
   # 1. If agentless_scanning_regions is custom (non-default) → use it (highest priority)
   # 2. Else if dspm_regions is set → use it (backward compatibility)
@@ -22,6 +23,36 @@ locals {
   agentless_scanning_regions = local.agentless_is_custom ? var.agentless_scanning_regions : (
     length(var.dspm_regions) > 0 ? var.dspm_regions : var.agentless_scanning_regions
   )
+
+  # Smart precedence logic for role names:
+  # 1. If agentless_scanning_role_name is custom (non-default) → use it (highest priority)
+  # 2. Else if dspm_role_name is custom + agentless_scanning_role_name is default → use dspm_role_name (backward compatibility)
+  # 3. Else → use agentless_scanning_role_name default (fallback)
+  dspm_role_is_default      = var.dspm_role_name == "CrowdStrikeDSPMIntegrationRole"
+  agentless_role_is_default = var.agentless_scanning_role_name == "CrowdStrikeAgentlessScanningIntegrationRole"
+
+  agentless_scanning_role_name = !local.agentless_role_is_default ? var.agentless_scanning_role_name : (
+    !local.dspm_role_is_default ? var.dspm_role_name : var.agentless_scanning_role_name
+  )
+
+  # Smart precedence logic for scanner role names:
+  # 1. If agentless_scanning_scanner_role_name is custom (non-default) → use it (highest priority)
+  # 2. Else if dspm_scanner_role_name is custom + agentless_scanning_scanner_role_name is default → use dspm_scanner_role_name (backward compatibility)
+  # 3. Else → use agentless_scanning_scanner_role_name default (fallback)
+  dspm_scanner_role_is_default      = var.dspm_scanner_role_name == "CrowdStrikeDSPMScannerRole"
+  agentless_scanner_role_is_default = var.agentless_scanning_scanner_role_name == "CrowdStrikeAgentlessScanningScannerRole"
+
+  agentless_scanning_scanner_role_name = !local.agentless_scanner_role_is_default ? var.agentless_scanning_scanner_role_name : (
+    !local.dspm_scanner_role_is_default ? var.dspm_scanner_role_name : var.agentless_scanning_scanner_role_name
+  )
+
+  agentless_scanning_integration_role_unique_id = var.agentless_scanning_integration_role_unique_id != "" ? var.agentless_scanning_integration_role_unique_id : var.dspm_integration_role_unique_id
+
+  agentless_scanning_scanner_role_unique_id = var.agentless_scanning_scanner_role_unique_id != "" ? var.agentless_scanning_scanner_role_unique_id : var.dspm_scanner_role_unique_id
+
+  # Boolean AND logic for create_nat_gateway:
+  # If either variable is false, result is false
+  agentless_scanning_create_nat_gateway = var.agentless_scanning_create_nat_gateway && var.dspm_create_nat_gateway
 
   # if we target by account_id, it will be the only account returned
   # if we target by organization_id, we pick the first one because all accounts will have the same settings
@@ -114,8 +145,8 @@ module "agentless_scanning_roles" {
   source                                      = "./modules/agentless-scanning-roles/"
   falcon_client_id                            = var.falcon_client_id
   falcon_client_secret                        = var.falcon_client_secret
-  dspm_role_name                              = var.dspm_role_name
-  dspm_scanner_role_name                      = var.dspm_scanner_role_name
+  agentless_scanning_role_name                = local.agentless_scanning_role_name
+  agentless_scanning_scanner_role_name        = local.agentless_scanning_scanner_role_name
   intermediate_role_arn                       = local.intermediate_role_arn
   external_id                                 = local.external_id
   agentless_scanning_regions                  = local.agentless_scanning_regions
@@ -134,14 +165,14 @@ module "agentless_scanning_roles" {
 }
 
 module "agentless_scanning_environments" {
-  count                              = local.agentless_scanning_enabled && contains(local.agentless_scanning_regions, local.aws_region) ? 1 : 0
-  source                             = "./modules/agentless-scanning-environments/"
-  integration_role_unique_id         = local.is_primary_region ? module.agentless_scanning_roles[0].integration_role_unique_id : var.dspm_integration_role_unique_id
-  scanner_role_unique_id             = local.is_primary_region ? module.agentless_scanning_roles[0].scanner_role_unique_id : var.dspm_scanner_role_unique_id
-  dspm_create_nat_gateway            = var.dspm_create_nat_gateway
-  account_id                         = local.aws_account
-  agentless_scanning_host_account_id = var.agentless_scanning_host_account_id
-  agentless_scanning_host_role_name  = var.agentless_scanning_host_role_name
+  count                                 = local.agentless_scanning_enabled && contains(local.agentless_scanning_regions, local.aws_region) ? 1 : 0
+  source                                = "./modules/agentless-scanning-environments/"
+  integration_role_unique_id            = local.is_primary_region ? module.agentless_scanning_roles[0].integration_role_unique_id : local.agentless_scanning_integration_role_unique_id
+  scanner_role_unique_id                = local.is_primary_region ? module.agentless_scanning_roles[0].scanner_role_unique_id : local.agentless_scanning_scanner_role_unique_id
+  agentless_scanning_create_nat_gateway = local.agentless_scanning_create_nat_gateway
+  account_id                            = local.aws_account
+  agentless_scanning_host_account_id    = var.agentless_scanning_host_account_id
+  agentless_scanning_host_role_name     = var.agentless_scanning_host_role_name
 
   # Pass explicit boolean decision and region-specific VPC config
   use_custom_vpc    = var.agentless_scanning_use_custom_vpc

@@ -7,7 +7,7 @@ locals {
   enable_vulnerability_scanning               = true
   agentless_scanning_regions                  = ["us-east-1", "us-east-2"]
   use_existing_cloudtrail                     = true
-  dspm_create_nat_gateway                     = var.dspm_create_nat_gateway
+  agentless_scanning_create_nat_gateway       = var.agentless_scanning_create_nat_gateway
   dspm_s3_access                              = var.dspm_s3_access
   dspm_dynamodb_access                        = var.dspm_dynamodb_access
   dspm_rds_access                             = var.dspm_rds_access
@@ -16,12 +16,12 @@ locals {
   agentless_scanning_custom_vpc_resources_map = var.agentless_scanning_custom_vpc_resources_map
 
   # customizations
-  resource_prefix        = "cs-"
-  resource_suffix        = "-cspm"
-  custom_role_name       = "${local.resource_prefix}reader-role${local.resource_suffix}"
-  dspm_role_name         = "${local.resource_prefix}dspm-integration${local.resource_suffix}"
-  dspm_scanner_role_name = "${local.resource_prefix}dspm-scanner${local.resource_suffix}"
-  eventbridge_role_name  = "${local.resource_prefix}eventbridge-role${local.resource_suffix}"
+  resource_prefix                      = "cs-"
+  resource_suffix                      = "-cspm"
+  custom_role_name                     = "${local.resource_prefix}reader-role${local.resource_suffix}"
+  agentless_scanning_role_name         = "${local.resource_prefix}agentless-scanning-integration${local.resource_suffix}"
+  agentless_scanning_scanner_role_name = "${local.resource_prefix}agentless-scanning-scanner${local.resource_suffix}"
+  eventbridge_role_name                = "${local.resource_prefix}eventbridge-role${local.resource_suffix}"
   tags = {
     DeployedBy = var.me
     Product    = "FalconCloudSecurity"
@@ -58,7 +58,7 @@ resource "crowdstrike_cloud_aws_account" "this" {
 
   dspm = {
     enabled   = local.enable_dspm
-    role_name = local.dspm_role_name
+    role_name = local.agentless_scanning_role_name
   }
   provider = crowdstrike
 }
@@ -80,19 +80,19 @@ module "fcs_account" {
   agentless_scanning_regions    = local.agentless_scanning_regions
   vpc_cidr_block                = var.vpc_cidr_block
 
-  iam_role_name          = crowdstrike_cloud_aws_account.this.iam_role_name
-  external_id            = crowdstrike_cloud_aws_account.this.external_id
-  intermediate_role_arn  = crowdstrike_cloud_aws_account.this.intermediate_role_arn
-  eventbus_arn           = crowdstrike_cloud_aws_account.this.eventbus_arn
-  eventbridge_role_name  = local.eventbridge_role_name
-  dspm_role_name         = crowdstrike_cloud_aws_account.this.dspm_role_name
-  cloudtrail_bucket_name = crowdstrike_cloud_aws_account.this.cloudtrail_bucket_name
-  dspm_scanner_role_name = local.dspm_scanner_role_name
+  iam_role_name                        = crowdstrike_cloud_aws_account.this.iam_role_name
+  external_id                          = crowdstrike_cloud_aws_account.this.external_id
+  intermediate_role_arn                = crowdstrike_cloud_aws_account.this.intermediate_role_arn
+  eventbus_arn                         = crowdstrike_cloud_aws_account.this.eventbus_arn
+  eventbridge_role_name                = local.eventbridge_role_name
+  agentless_scanning_role_name         = crowdstrike_cloud_aws_account.this.dspm_role_name
+  cloudtrail_bucket_name               = crowdstrike_cloud_aws_account.this.cloudtrail_bucket_name
+  agentless_scanning_scanner_role_name = local.agentless_scanning_scanner_role_name
 
   resource_prefix                             = local.resource_prefix
   resource_suffix                             = local.resource_suffix
   tags                                        = local.tags
-  dspm_create_nat_gateway                     = local.dspm_create_nat_gateway
+  agentless_scanning_create_nat_gateway       = local.agentless_scanning_create_nat_gateway
   dspm_s3_access                              = local.dspm_s3_access
   dspm_dynamodb_access                        = local.dspm_dynamodb_access
   dspm_rds_access                             = local.dspm_rds_access

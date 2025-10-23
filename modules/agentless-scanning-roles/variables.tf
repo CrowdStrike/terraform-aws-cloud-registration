@@ -1,13 +1,13 @@
-variable "dspm_role_name" {
-  description = "The unique name of the IAM role that CrowdStrike will be assuming"
+variable "agentless_scanning_role_name" {
+  description = "The unique name of the IAM role that Agentless scanning will be assuming"
   type        = string
-  default     = "CrowdStrikeDSPMIntegrationRole"
+  default     = "CrowdStrikeAgentlessScanningIntegrationRole"
 }
 
-variable "dspm_scanner_role_name" {
-  description = "The unique name of the IAM role that CrowdStrike Scanner will be assuming"
+variable "agentless_scanning_scanner_role_name" {
+  description = "The unique name of the IAM role that Agentless scanning scanner will be assuming"
   type        = string
-  default     = "CrowdStrikeDSPMScannerRole"
+  default     = "CrowdStrikeAgentlessScanningScannerRole"
 }
 
 variable "falcon_client_id" {
