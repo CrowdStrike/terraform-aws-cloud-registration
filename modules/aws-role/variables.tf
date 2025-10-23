@@ -16,7 +16,7 @@ variable "aws_role_name" {
 }
 
 variable "primary_region" {
-  description = "Region for deploying global AWS resources (IAM roles, policies, etc.) that are account-wide and only need to be created once. Distinct from dspm_regions which controls region-specific resource deployment."
+  description = "Region for deploying global AWS resources (IAM roles, policies, etc.) that are account-wide and only need to be created once. Distinct from agentless_scanning_regions which controls region-specific resource deployment."
   type        = string
 }
 
@@ -282,7 +282,7 @@ variable "agentless_scanning_host_account_id" {
 
 variable "agentless_scanning_host_role_name" {
   type        = string
-  default     = "CrowdStrikeDSPMIntegrationRole"
+  default     = "CrowdStrikeAgentlessScanningIntegrationRole"
   description = "Name of agentless scanning integration role in host account"
 
   validation {
@@ -293,8 +293,8 @@ variable "agentless_scanning_host_role_name" {
 
 variable "agentless_scanning_host_scanner_role_name" {
   type        = string
-  default     = "CrowdStrikeDSPMScannerRole"
-  description = "Name of angentless scanning scanner role in host account"
+  default     = "CrowdStrikeAgentlessScanningScannerRole"
+  description = "Name of agentless scanning scanner role in host account"
 
   validation {
     condition     = can(regex("^$|^[a-zA-Z0-9+=,.@_-]{1,64}$", var.agentless_scanning_host_scanner_role_name))
@@ -341,7 +341,7 @@ EOF
 }
 
 variable "agentless_scanning_regions" {
-  description = "List of regions where agentless scanning (DSPM and vulnerability scanning) will be deployed"
+  description = "List of regions where agentless scanning will be deployed"
   type        = list(string)
   default     = ["us-east-1"]
 
