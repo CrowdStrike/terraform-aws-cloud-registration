@@ -5,8 +5,8 @@ locals {
   enable_sensor_management              = true
   enable_dspm                           = true
   enable_vulnerability_scanning         = true
-  use_existing_cloudtrail               = true
   agentless_scanning_regions            = ["us-east-1", "us-east-2"]
+  use_existing_cloudtrail               = true
   agentless_scanning_create_nat_gateway = var.agentless_scanning_create_nat_gateway
   dspm_s3_access                        = var.dspm_s3_access
   dspm_dynamodb_access                  = var.dspm_dynamodb_access

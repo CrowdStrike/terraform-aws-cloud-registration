@@ -23,7 +23,7 @@ locals {
   enable_realtime_visibility                  = true
   realtime_visibility_regions                 = ["all"]
   primary_region                              = "us-east-1"
-  enable_idp                                  = false
+  enable_idp                                  = true
   enable_sensor_management                    = true
   enable_dspm                                 = true
   enable_vulnerability_scanning               = true
