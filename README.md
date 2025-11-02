@@ -12,7 +12,9 @@ Key features:
 - Real-time Visibility and Detection
 - Identity Protection (IDP)
 - Sensor Management
-- Data Security Posture Management (DSPM)
+- Agentless Scanning:
+   - Data Security Posture Management (DSPM)
+   - Vulnerability Scanning
 
 > [!NOTE]
 > For multi-region deployments, this module needs to be instantiated separately for each region where FCS components are required.

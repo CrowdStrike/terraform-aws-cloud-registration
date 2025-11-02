@@ -1,6 +1,6 @@
 # FCS Single Account Registration Example
 
-This example demonstrates how to register a single AWS account with CrowdStrike Falcon Cloud Security (FCS) using an AWS CLI profile. It showcases the deployment of multiple FCS features including Real-time Visibility, Identity Protection (IDP), Sensor Management, and DSPM.
+This example demonstrates how to register a single AWS account with CrowdStrike Falcon Cloud Security (FCS) using an AWS CLI profile. It showcases the deployment of multiple FCS features including Real-time Visibility, Identity Protection (IDP), Sensor Management, and Agentless Scanning (DSPM/Vulnerability scanning).
 
 ## Features Enabled
 
@@ -8,7 +8,9 @@ This example demonstrates how to register a single AWS account with CrowdStrike 
 - Real-time Visibility (using existing CloudTrail)
 - Identity Protection (IDP)
 - Sensor Management
-- Data Security and Posture Management (DSPM)
+- Agentless Scanning:
+  - Data Security Posture Management (DSPM)
+  - Vulnerability Scanning
 
 ## Prerequisites
 
@@ -35,28 +37,28 @@ terraform apply
 
 Enter `yes` at command prompt to apply
 
-## DSPM Configurations
+## Agentless Scanning Configurations
 
 ### Cross Account Scanning
 
-The account in the example is configured to host DSPM scanning infrastructure.
+The account in the example is configured to host Agentless scanning infrastructure.
 
 Alternate configuration options:
-- You may choose to scan this account from a previously onboarded DSPM host account. To scan from a different account:
+- You may choose to scan this account from a previously onboarded Agentless scanning host account. To scan from a different account:
     * Ensure the deployment has successfully completed in the host account before deploying any target accounts.
     * Set the value of the variable `agentless_scanning_host_account_id` as your host AWS account ID.
-    * Set the value of the variable `agentless_scanning_host_role_name` as the name of the DSPM integration role in the host account.
-    * Set the value of the variable `agentless_scanning_host_scanner_role_name` as the name of the DSPM data scanner role in the host account.
+    * Set the value of the variable `agentless_scanning_host_role_name` as the name of the Agentless scanning integration role in the host account.
+    * Set the value of the variable `agentless_scanning_host_scanner_role_name` as the name of the Agentless scanning data scanner role in the host account.
 
 ### Custom VPC
-For DSPM deployments, you can optionally use your existing network resources instead of the default resources provisioned by CrowdStrike.
+For Agentless scanning deployments, you can optionally use your existing network resources instead of the default resources provisioned by CrowdStrike.
 
 **Key Points:**
-- Custom VPC settings apply to the entire DSPM deployment across all regions
-- Cannot be applied to specific DSPM regions (all-or-nothing configuration)
-- Requires existing VPC, subnets, and security groups in each DSPM region
+- Custom VPC settings apply to the entire Agentless scanning deployment across all regions
+- Cannot be applied to specific Agentless scanning regions (all-or-nothing configuration)
+- Requires existing VPC, subnets, and security groups in each Agentless scanning region
 
-For detailed network requirements and validation steps, see the CrowdStrike Falcon documentation for DSPM deployment with custom VPCs.
+For detailed network requirements and validation steps, see the CrowdStrike Falcon documentation for Agentless scanning deployment with custom VPCs.
 
 **Usage:**
 ```hcl
