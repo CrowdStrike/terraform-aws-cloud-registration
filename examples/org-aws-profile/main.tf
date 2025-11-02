@@ -97,8 +97,8 @@ module "fcs_child_account_1" {
   enable_idp                    = local.enable_idp
   realtime_visibility_regions   = ["all"]
   use_existing_cloudtrail       = true # use the cloudtrail at the org level
-  enable_dspm                   = local.enable_dspm && contains(local.agentless_scanning_regions, "us-east-2")
-  enable_vulnerability_scanning = local.enable_vulnerability_scanning && contains(local.agentless_scanning_regions, "us-east-2")
+  enable_dspm                   = local.enable_dspm
+  enable_vulnerability_scanning = local.enable_vulnerability_scanning
   agentless_scanning_regions    = local.agentless_scanning_regions
   vpc_cidr_block                = var.vpc_cidr_block
 
