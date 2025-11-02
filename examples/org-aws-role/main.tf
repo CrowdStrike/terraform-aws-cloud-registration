@@ -45,6 +45,10 @@ resource "crowdstrike_cloud_aws_account" "this" {
   dspm = {
     enabled = local.enable_dspm
   }
+
+  vulnerability_scanning = {
+    enabled = local.enable_vulnerability_scanning
+  }
 }
 
 module "fcs_management_account" {

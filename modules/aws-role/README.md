@@ -97,7 +97,8 @@ locals {
   enable_idp                 = true
   enable_sensor_management   = true
   enable_dspm                = true
-  dspm_regions               = ["us-east-1", "us-east-2"]
+  enable_vulnerability_scanning         = true
+  agentless_scanning_regions            = ["us-east-1", "us-east-2"]
   use_existing_cloudtrail    = true
 }
 
@@ -132,6 +133,10 @@ resource "crowdstrike_cloud_aws_account" "this" {
   dspm = {
     enabled = local.enable_dspm
   }
+
+  vulnerability_scanning = {
+    enabled   = local.enable_vulnerability_scanning
+  }
 }
 
 module "fcs_management_account" {
@@ -147,8 +152,9 @@ module "fcs_management_account" {
   enable_idp                  = local.enable_idp
   realtime_visibility_regions = ["all"]
   use_existing_cloudtrail     = local.use_existing_cloudtrail
-  enable_dspm                 = local.enable_dspm
-  dspm_regions                = local.dspm_regions
+  enable_dspm                   = local.enable_dspm
+  enable_vulnerability_scanning = local.enable_vulnerability_scanning
+  agentless_scanning_regions    = local.agentless_scanning_regions
 
   iam_role_name          = crowdstrike_cloud_aws_account.this.iam_role_name
   external_id            = crowdstrike_cloud_aws_account.this.external_id
@@ -174,14 +180,17 @@ module "fcs_child_account_1" {
   enable_idp                  = local.enable_idp
   realtime_visibility_regions = ["all"]
   use_existing_cloudtrail     = true # use the cloudtrail at the org level
-  enable_dspm                 = local.enable_dspm
-  dspm_regions                = local.dspm_regions
+  enable_dspm                   = local.enable_dspm
+  enable_vulnerability_scanning = local.enable_vulnerability_scanning
+  agentless_scanning_regions    = local.agentless_scanning_regions
 
   iam_role_name          = crowdstrike_cloud_aws_account.this.iam_role_name
   external_id            = crowdstrike_cloud_aws_account.this.external_id
   intermediate_role_arn  = crowdstrike_cloud_aws_account.this.intermediate_role_arn
   eventbus_arn           = crowdstrike_cloud_aws_account.this.eventbus_arn
   cloudtrail_bucket_name = "" # not needed for child accounts
+  agentless_scanning_host_account_id    = var.account_id                                                         # sets the management account as the DSPM host account
+  agentless_scanning_host_role_name     = module.fcs_management_account.agentless_scanning_integration_role_name # creates dependency on agentless scanning host module
 }
 ```
 

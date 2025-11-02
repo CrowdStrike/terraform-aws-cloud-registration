@@ -78,6 +78,12 @@ resource "crowdstrike_cloud_aws_account" "this" {
     enabled   = local.enable_dspm
     role_name = local.agentless_scanning_role_name
   }
+
+  vulnerability_scanning = {
+    enabled   = local.enable_vulnerability_scanning
+    role_name = local.agentless_scanning_role_name
+  }
+
   provider = crowdstrike
 }
 
@@ -103,7 +109,7 @@ module "fcs_account_onboarding" {
   intermediate_role_arn        = crowdstrike_cloud_aws_account.this.intermediate_role_arn
   eventbus_arn                 = crowdstrike_cloud_aws_account.this.eventbus_arn
   eventbridge_role_name        = local.eventbridge_role_name
-  agentless_scanning_role_name = crowdstrike_cloud_aws_account.this.dspm_role_name
+  agentless_scanning_role_name = crowdstrike_cloud_aws_account.this.agentless_scanning_role_name
   cloudtrail_bucket_name       = crowdstrike_cloud_aws_account.this.cloudtrail_bucket_name
 
   resource_prefix                             = local.resource_prefix
@@ -148,7 +154,7 @@ module "fcs_account_us_east_2" {
   intermediate_role_arn                         = crowdstrike_cloud_aws_account.this.intermediate_role_arn
   eventbus_arn                                  = crowdstrike_cloud_aws_account.this.eventbus_arn
   eventbridge_role_name                         = local.eventbridge_role_name
-  agentless_scanning_role_name                  = crowdstrike_cloud_aws_account.this.dspm_role_name
+  agentless_scanning_role_name                  = crowdstrike_cloud_aws_account.this.agentless_scanning_role_name
   cloudtrail_bucket_name                        = crowdstrike_cloud_aws_account.this.cloudtrail_bucket_name
   agentless_scanning_integration_role_unique_id = module.fcs_account_onboarding.integration_role_unique_id
   agentless_scanning_scanner_role_unique_id     = module.fcs_account_onboarding.scanner_role_unique_id
@@ -195,7 +201,7 @@ module "fcs_account_us_west_1" {
   intermediate_role_arn                         = crowdstrike_cloud_aws_account.this.intermediate_role_arn
   eventbus_arn                                  = crowdstrike_cloud_aws_account.this.eventbus_arn
   eventbridge_role_name                         = local.eventbridge_role_name
-  agentless_scanning_role_name                  = crowdstrike_cloud_aws_account.this.dspm_role_name
+  agentless_scanning_role_name                  = crowdstrike_cloud_aws_account.this.agentless_scanning_role_name
   cloudtrail_bucket_name                        = crowdstrike_cloud_aws_account.this.cloudtrail_bucket_name
   agentless_scanning_integration_role_unique_id = module.fcs_account_onboarding.integration_role_unique_id
   agentless_scanning_scanner_role_unique_id     = module.fcs_account_onboarding.scanner_role_unique_id
@@ -242,7 +248,7 @@ module "fcs_account_us_west_2" {
   intermediate_role_arn                         = crowdstrike_cloud_aws_account.this.intermediate_role_arn
   eventbus_arn                                  = crowdstrike_cloud_aws_account.this.eventbus_arn
   eventbridge_role_name                         = local.eventbridge_role_name
-  agentless_scanning_role_name                  = crowdstrike_cloud_aws_account.this.dspm_role_name
+  agentless_scanning_role_name                  = crowdstrike_cloud_aws_account.this.agentless_scanning_role_name
   cloudtrail_bucket_name                        = crowdstrike_cloud_aws_account.this.cloudtrail_bucket_name
   agentless_scanning_integration_role_unique_id = module.fcs_account_onboarding.integration_role_unique_id
   agentless_scanning_scanner_role_unique_id     = module.fcs_account_onboarding.scanner_role_unique_id
