@@ -105,7 +105,7 @@ locals {
   enable_idp                    = true
   enable_sensor_management      = true
   enable_dspm                   = true
-  agentless_scanning_regions            = ["us-east-1", "us-east-2"]
+  agentless_scanning_regions    = ["us-east-1", "us-east-2"]
   enable_vulnerability_scanning = true
   use_existing_cloudtrail       = true
 }
@@ -148,19 +148,19 @@ resource "crowdstrike_cloud_aws_account" "this" {
 }
 
 module "fcs_management_account" {
-  source                     = "CrowdStrike/cloud-registration/aws//modules/aws-profile"
-  aws_profile                = "<aws profile for your management account>"
-  falcon_client_id           = var.falcon_client_id
-  falcon_client_secret       = var.falcon_client_secret
-  account_id                 = var.account_id
-  organization_id            = local.organization_id
-  primary_region             = local.primary_region
-  enable_sensor_management   = local.enable_sensor_management
-  enable_realtime_visibility = local.enable_realtime_visibility
-  enable_idp                 = local.enable_idp
-  realtime_visibility_regions = ["all"]
-  use_existing_cloudtrail    = local.use_existing_cloudtrail
-  enable_dspm                = local.enable_dspm
+  source                        = "CrowdStrike/cloud-registration/aws//modules/aws-profile"
+  aws_profile                   = "<aws profile for your management account>"
+  falcon_client_id              = var.falcon_client_id
+  falcon_client_secret          = var.falcon_client_secret
+  account_id                    = var.account_id
+  organization_id               = local.organization_id
+  primary_region                = local.primary_region
+  enable_sensor_management      = local.enable_sensor_management
+  enable_realtime_visibility    = local.enable_realtime_visibility
+  enable_idp                    = local.enable_idp
+  realtime_visibility_regions   = ["all"]
+  use_existing_cloudtrail       = local.use_existing_cloudtrail
+  enable_dspm                   = local.enable_dspm
   enable_vulnerability_scanning = local.enable_vulnerability_scanning
   agentless_scanning_regions    = local.agentless_scanning_regions
 
@@ -175,27 +175,27 @@ module "fcs_management_account" {
 # - duplicate this module
 # - replace `aws_profile` with the correct profile for your child account
 module "fcs_child_account_1" {
-  source                     = "CrowdStrike/cloud-registration/aws//modules/aws-profile"
-  aws_profile                = "<aws profile for this child account>"
-  falcon_client_id           = var.falcon_client_id
-  falcon_client_secret       = var.falcon_client_secret
-  organization_id            = var.organization_id
-  primary_region             = local.primary_region
-  enable_sensor_management   = local.enable_sensor_management
-  enable_realtime_visibility = local.enable_realtime_visibility
-  enable_idp                 = local.enable_idp
-  realtime_visibility_regions = ["all"]
-  use_existing_cloudtrail = true # use the cloudtrail at the org level
-  enable_dspm                = local.enable_dspm
-  enable_vulnerability_scanning = local.enable_vulnerability_scanning
-  agentless_scanning_regions    = local.agentless_scanning_regions
-  iam_role_name          = crowdstrike_cloud_aws_account.this.iam_role_name
-  external_id            = crowdstrike_cloud_aws_account.this.external_id
-  intermediate_role_arn  = crowdstrike_cloud_aws_account.this.intermediate_role_arn
-  eventbus_arn           = crowdstrike_cloud_aws_account.this.eventbus_arn
-  cloudtrail_bucket_name = "" # not needed for child accounts
-  agentless_scanning_host_account_id    = var.account_id                                                         # sets the management account as the agentless scanning host account
-  agentless_scanning_host_role_name     = module.fcs_management_account.agentless_scanning_integration_role_name # creates dependency on agentless scanning host module
+  source                             = "CrowdStrike/cloud-registration/aws//modules/aws-profile"
+  aws_profile                        = "<aws profile for this child account>"
+  falcon_client_id                   = var.falcon_client_id
+  falcon_client_secret               = var.falcon_client_secret
+  organization_id                    = var.organization_id
+  primary_region                     = local.primary_region
+  enable_sensor_management           = local.enable_sensor_management
+  enable_realtime_visibility         = local.enable_realtime_visibility
+  enable_idp                         = local.enable_idp
+  realtime_visibility_regions        = ["all"]
+  use_existing_cloudtrail            = true # use the cloudtrail at the org level
+  enable_dspm                        = local.enable_dspm
+  enable_vulnerability_scanning      = local.enable_vulnerability_scanning
+  agentless_scanning_regions         = local.agentless_scanning_regions
+  iam_role_name                      = crowdstrike_cloud_aws_account.this.iam_role_name
+  external_id                        = crowdstrike_cloud_aws_account.this.external_id
+  intermediate_role_arn              = crowdstrike_cloud_aws_account.this.intermediate_role_arn
+  eventbus_arn                       = crowdstrike_cloud_aws_account.this.eventbus_arn
+  cloudtrail_bucket_name             = ""                                                                     # not needed for child accounts
+  agentless_scanning_host_account_id = var.account_id                                                         # sets the management account as the agentless scanning host account
+  agentless_scanning_host_role_name  = module.fcs_management_account.agentless_scanning_integration_role_name # creates dependency on agentless scanning host module
 }
 ```
 

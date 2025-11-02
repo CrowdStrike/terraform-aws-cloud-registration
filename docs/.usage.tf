@@ -35,14 +35,14 @@ variable "account_id" {
 }
 
 locals {
-  enable_realtime_visibility = true
-  primary_region             = "us-east-1"
-  enable_idp                 = true
-  enable_sensor_management   = true
-  enable_dspm                = true
-  agentless_scanning_regions               = ["us-east-1", "us-east-2"]
+  enable_realtime_visibility    = true
+  primary_region                = "us-east-1"
+  enable_idp                    = true
+  enable_sensor_management      = true
+  enable_dspm                   = true
+  agentless_scanning_regions    = ["us-east-1", "us-east-2"]
   enable_vulnerability_scanning = true
-  use_existing_cloudtrail    = true
+  use_existing_cloudtrail       = true
 }
 
 provider "crowdstrike" {
@@ -85,30 +85,30 @@ resource "crowdstrike_cloud_aws_account" "this" {
   }
 
   vulnerability_scanning = {
-    enabled   = local.enable_vulnerability_scanning
+    enabled = local.enable_vulnerability_scanning
   }
 }
 
 module "fcs_account_onboarding" {
-  source                     = "CrowdStrike/cloud-registration/aws"
-  falcon_client_id           = var.falcon_client_id
-  falcon_client_secret       = var.falcon_client_secret
-  account_id                 = var.account_id
-  primary_region             = local.primary_region
-  enable_sensor_management   = local.enable_sensor_management
-  enable_realtime_visibility = local.enable_realtime_visibility
-  enable_idp                 = local.enable_idp
-  use_existing_cloudtrail    = local.use_existing_cloudtrail
-  enable_dspm                          = local.enable_dspm && contains(local.agentless_scanning_regions, "us-east-1")
-  enable_vulnerability_scanning        = local.enable_vulnerability_scanning && contains(local.agentless_scanning_regions, "us-east-1")
-  agentless_scanning_regions           = local.agentless_scanning_regions
+  source                        = "CrowdStrike/cloud-registration/aws"
+  falcon_client_id              = var.falcon_client_id
+  falcon_client_secret          = var.falcon_client_secret
+  account_id                    = var.account_id
+  primary_region                = local.primary_region
+  enable_sensor_management      = local.enable_sensor_management
+  enable_realtime_visibility    = local.enable_realtime_visibility
+  enable_idp                    = local.enable_idp
+  use_existing_cloudtrail       = local.use_existing_cloudtrail
+  enable_dspm                   = local.enable_dspm && contains(local.agentless_scanning_regions, "us-east-1")
+  enable_vulnerability_scanning = local.enable_vulnerability_scanning && contains(local.agentless_scanning_regions, "us-east-1")
+  agentless_scanning_regions    = local.agentless_scanning_regions
 
-  iam_role_name          = crowdstrike_cloud_aws_account.this.iam_role_name
-  external_id            = crowdstrike_cloud_aws_account.this.external_id
-  intermediate_role_arn  = crowdstrike_cloud_aws_account.this.intermediate_role_arn
-  eventbus_arn           = crowdstrike_cloud_aws_account.this.eventbus_arn
+  iam_role_name                = crowdstrike_cloud_aws_account.this.iam_role_name
+  external_id                  = crowdstrike_cloud_aws_account.this.external_id
+  intermediate_role_arn        = crowdstrike_cloud_aws_account.this.intermediate_role_arn
+  eventbus_arn                 = crowdstrike_cloud_aws_account.this.eventbus_arn
   agentless_scanning_role_name = crowdstrike_cloud_aws_account.this.agentless_scanning_role_name
-  cloudtrail_bucket_name = crowdstrike_cloud_aws_account.this.cloudtrail_bucket_name
+  cloudtrail_bucket_name       = crowdstrike_cloud_aws_account.this.cloudtrail_bucket_name
 
   providers = {
     aws         = aws.us-east-1
@@ -120,25 +120,25 @@ module "fcs_account_onboarding" {
 # - duplicate this module
 # - update the provider with region specific one
 module "fcs_account_us_east_2" {
-  source                     = "CrowdStrike/cloud-registration/aws"
-  falcon_client_id           = var.falcon_client_id
-  falcon_client_secret       = var.falcon_client_secret
-  account_id                 = var.account_id
-  primary_region             = local.primary_region
-  enable_sensor_management   = local.enable_sensor_management
-  enable_realtime_visibility = local.enable_realtime_visibility
-  enable_idp                 = local.enable_idp
-  use_existing_cloudtrail    = local.use_existing_cloudtrail
-  enable_dspm                          = local.enable_dspm && contains(local.agentless_scanning_regions, "us-east-2")
-  enable_vulnerability_scanning        = local.enable_vulnerability_scanning && contains(local.agentless_scanning_regions, "us-east-2")
-  agentless_scanning_regions           = local.agentless_scanning_regions
+  source                        = "CrowdStrike/cloud-registration/aws"
+  falcon_client_id              = var.falcon_client_id
+  falcon_client_secret          = var.falcon_client_secret
+  account_id                    = var.account_id
+  primary_region                = local.primary_region
+  enable_sensor_management      = local.enable_sensor_management
+  enable_realtime_visibility    = local.enable_realtime_visibility
+  enable_idp                    = local.enable_idp
+  use_existing_cloudtrail       = local.use_existing_cloudtrail
+  enable_dspm                   = local.enable_dspm && contains(local.agentless_scanning_regions, "us-east-2")
+  enable_vulnerability_scanning = local.enable_vulnerability_scanning && contains(local.agentless_scanning_regions, "us-east-2")
+  agentless_scanning_regions    = local.agentless_scanning_regions
 
-  iam_role_name          = crowdstrike_cloud_aws_account.this.iam_role_name
-  external_id            = crowdstrike_cloud_aws_account.this.external_id
-  intermediate_role_arn  = crowdstrike_cloud_aws_account.this.intermediate_role_arn
-  eventbus_arn           = crowdstrike_cloud_aws_account.this.eventbus_arn
+  iam_role_name                                 = crowdstrike_cloud_aws_account.this.iam_role_name
+  external_id                                   = crowdstrike_cloud_aws_account.this.external_id
+  intermediate_role_arn                         = crowdstrike_cloud_aws_account.this.intermediate_role_arn
+  eventbus_arn                                  = crowdstrike_cloud_aws_account.this.eventbus_arn
   agentless_scanning_role_name                  = crowdstrike_cloud_aws_account.this.agentless_scanning_role_name
-  cloudtrail_bucket_name = crowdstrike_cloud_aws_account.this.cloudtrail_bucket_name
+  cloudtrail_bucket_name                        = crowdstrike_cloud_aws_account.this.cloudtrail_bucket_name
   agentless_scanning_integration_role_unique_id = module.fcs_account_onboarding.integration_role_unique_id
   agentless_scanning_scanner_role_unique_id     = module.fcs_account_onboarding.scanner_role_unique_id
 
