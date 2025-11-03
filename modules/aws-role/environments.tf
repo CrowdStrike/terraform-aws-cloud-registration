@@ -3,7 +3,7 @@ module "agentless_scanning_environment_us_east_1" {
   source                                = "../agentless-scanning-environments/"
   integration_role_unique_id            = module.agentless_scanning_roles[0].integration_role_unique_id
   scanner_role_unique_id                = module.agentless_scanning_roles[0].scanner_role_unique_id
-  agentless_scanning_create_nat_gateway = var.dspm_create_nat_gateway
+  agentless_scanning_create_nat_gateway = var.agentless_scanning_create_nat_gateway
   use_custom_vpc                        = var.agentless_scanning_use_custom_vpc
   region_vpc_config                     = lookup(var.agentless_scanning_custom_vpc_resources_map, "us-east-1", null)
   vpc_cidr_block                        = var.vpc_cidr_block
@@ -22,7 +22,7 @@ module "agentless_scanning_environment_us_east_2" {
   source                                = "../agentless-scanning-environments/"
   integration_role_unique_id            = module.agentless_scanning_roles[0].integration_role_unique_id
   scanner_role_unique_id                = module.agentless_scanning_roles[0].scanner_role_unique_id
-  agentless_scanning_create_nat_gateway = var.dspm_create_nat_gateway
+  agentless_scanning_create_nat_gateway = var.agentless_scanning_create_nat_gateway
   use_custom_vpc                        = var.agentless_scanning_use_custom_vpc
   region_vpc_config                     = lookup(var.agentless_scanning_custom_vpc_resources_map, "us-east-2", null)
   vpc_cidr_block                        = var.vpc_cidr_block

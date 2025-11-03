@@ -5,12 +5,12 @@ variable "deployment_name" {
 }
 
 variable "integration_role_unique_id" {
-  description = "The unique ID of the DSPM integration role"
+  description = "The unique ID of the agentless scanning integration role"
   type        = string
 }
 
 variable "scanner_role_unique_id" {
-  description = "The unique ID of the DSPM scanner role"
+  description = "The unique ID of the agentless scanning scanner role"
   type        = string
 }
 
@@ -66,7 +66,7 @@ variable "vpc_cidr_block" {
 variable "agentless_scanning_host_account_id" {
   type        = string
   default     = ""
-  description = "The AWS account ID where DSPM host resources are deployed"
+  description = "The AWS account ID where agentless scanning host resources are deployed"
 
   validation {
     condition     = var.agentless_scanning_host_account_id == "" || can(regex("^\\d{12}$", var.agentless_scanning_host_account_id))
