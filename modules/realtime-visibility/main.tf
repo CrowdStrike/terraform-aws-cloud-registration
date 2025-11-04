@@ -13,9 +13,12 @@ locals {
   has_kms_key            = var.log_ingestion_kms_key_arn != ""
   has_s3_prefix          = var.log_ingestion_s3_bucket_prefix != ""
 
-  # Parse SNS topic ARN to extract account ID and only create S3 resources if it matches current account
+  # Parse SNS topic ARN to extract account ID and region, only create S3 resources if both match current account and region
   sns_topic_account_id                           = var.log_ingestion_sns_topic_arn != "" ? split(":", var.log_ingestion_sns_topic_arn)[4] : ""
+  sns_topic_region                               = var.log_ingestion_sns_topic_arn != "" ? split(":", var.log_ingestion_sns_topic_arn)[3] : ""
   use_s3_method_and_sns_topic_in_current_account = local.use_s3_method && var.log_ingestion_sns_topic_arn != "" && local.sns_topic_account_id == local.account_id
+  use_s3_method_and_sns_topic_in_current_region  = local.use_s3_method && var.log_ingestion_sns_topic_arn != "" && local.sns_topic_region == local.aws_region
+  use_s3_method_and_sns_topic_matches_current    = local.use_s3_method_and_sns_topic_in_current_account && local.use_s3_method_and_sns_topic_in_current_region
 }
 
 resource "aws_iam_role" "eventbridge" {
@@ -70,7 +73,7 @@ resource "aws_cloudtrail" "this" {
 
 # Dead Letter Queue for failed CloudTrail log messages
 resource "aws_sqs_queue" "cloudtrail_logs_dlq" {
-  count                     = local.use_s3_method_and_sns_topic_in_current_account ? 1 : 0
+  count                     = local.use_s3_method_and_sns_topic_matches_current ? 1 : 0
   name                      = "${var.resource_prefix}CrowdStrikeCloudTrailLogsDLQ${var.resource_suffix}"
   message_retention_seconds = 1209600 # 14 days
   tags = merge(var.tags, {
@@ -80,7 +83,7 @@ resource "aws_sqs_queue" "cloudtrail_logs_dlq" {
 
 # SQS Queue for S3-based log consumption method
 resource "aws_sqs_queue" "cloudtrail_logs_sqs" {
-  count                      = local.use_s3_method_and_sns_topic_in_current_account ? 1 : 0
+  count                      = local.use_s3_method_and_sns_topic_matches_current ? 1 : 0
   name                       = "${var.resource_prefix}CrowdStrikeCloudTrailLogsSQS${var.resource_suffix}"
   message_retention_seconds  = 1209600 # 14 days
   visibility_timeout_seconds = 300     # 5 minutes
@@ -97,7 +100,7 @@ resource "aws_sqs_queue" "cloudtrail_logs_sqs" {
 
 # SQS Queue Policy to allow SNS to send messages
 resource "aws_sqs_queue_policy" "cloudtrail_logs_sqs_policy" {
-  count     = local.use_s3_method_and_sns_topic_in_current_account ? 1 : 0
+  count     = local.use_s3_method_and_sns_topic_matches_current ? 1 : 0
   queue_url = aws_sqs_queue.cloudtrail_logs_sqs[0].id
 
   policy = jsonencode({
@@ -122,7 +125,7 @@ resource "aws_sqs_queue_policy" "cloudtrail_logs_sqs_policy" {
 
 # SNS Subscription to link SNS topic to SQS queue
 resource "aws_sns_topic_subscription" "cloudtrail_logs_sns_subscription" {
-  count                = local.use_s3_method_and_sns_topic_in_current_account ? 1 : 0
+  count                = local.use_s3_method_and_sns_topic_matches_current ? 1 : 0
   protocol             = "sqs"
   topic_arn            = var.log_ingestion_sns_topic_arn
   endpoint             = aws_sqs_queue.cloudtrail_logs_sqs[0].arn
@@ -131,7 +134,7 @@ resource "aws_sns_topic_subscription" "cloudtrail_logs_sns_subscription" {
 
 # Cross-account IAM role for S3 log consumption
 resource "aws_iam_role" "s3_log_role" {
-  count = local.use_s3_method_and_sns_topic_in_current_account && var.is_primary_region ? 1 : 0
+  count = local.use_s3_method_and_sns_topic_matches_current && var.is_primary_region ? 1 : 0
   name  = "${var.resource_prefix}CrowdStrikeCloudTrailReader${var.resource_suffix}"
 
   assume_role_policy = jsonencode({
@@ -163,7 +166,7 @@ resource "aws_iam_role" "s3_log_role" {
 
 # IAM Policy for S3-based log consumption permissions
 resource "aws_iam_policy" "s3_log_consumption_policy" {
-  count = local.use_s3_method_and_sns_topic_in_current_account && var.is_primary_region ? 1 : 0
+  count = local.use_s3_method_and_sns_topic_matches_current && var.is_primary_region ? 1 : 0
   name  = "CrowdStrikeS3LogConsumption"
 
   policy = jsonencode({
@@ -193,12 +196,23 @@ resource "aws_iam_policy" "s3_log_consumption_policy" {
           "sqs:ReceiveMessage",
           "sqs:DeleteMessage",
           "sqs:ChangeMessageVisibility",
-          "sqs:GetQueueAttributes"
+          "sqs:GetQueueAttributes",
+          "sqs:SendMessage"
         ]
         Resource = [
           aws_sqs_queue.cloudtrail_logs_sqs[0].arn,
           aws_sqs_queue.cloudtrail_logs_dlq[0].arn
         ]
+      },
+      # CloudWatch metrics permissions for SQS monitoring
+      {
+        Sid    = "CloudWatchSQSMetricsAccess"
+        Effect = "Allow"
+        Action = [
+          "cloudwatch:GetMetricStatistics",
+          "cloudwatch:ListMetrics"
+        ]
+        Resource = "*"
       }
       ], local.has_kms_key ? [
       # KMS permissions for decryption (if KMS key provided)
@@ -217,7 +231,7 @@ resource "aws_iam_policy" "s3_log_consumption_policy" {
 
 # Attach policy to role
 resource "aws_iam_role_policy_attachment" "s3_log_consumption_policy_attachment" {
-  count      = local.use_s3_method_and_sns_topic_in_current_account && var.is_primary_region ? 1 : 0
+  count      = local.use_s3_method_and_sns_topic_matches_current && var.is_primary_region ? 1 : 0
   role       = aws_iam_role.s3_log_role[0].name
   policy_arn = aws_iam_policy.s3_log_consumption_policy[0].arn
 }
