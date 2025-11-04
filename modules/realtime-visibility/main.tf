@@ -74,27 +74,27 @@ resource "aws_cloudtrail" "this" {
 # Dead Letter Queue for failed CloudTrail log messages
 resource "aws_sqs_queue" "cloudtrail_logs_dlq" {
   count                     = local.use_s3_method_and_sns_topic_matches_current ? 1 : 0
-  name                      = "${var.resource_prefix}CrowdStrikeCloudTrailLogsDLQ${var.resource_suffix}"
+  name                      = "${var.resource_prefix}CloudTrailLogsDLQ${var.resource_suffix}"
   message_retention_seconds = 1209600 # 14 days
   tags = merge(var.tags, {
-    Name = "${var.resource_prefix}CrowdStrikeCloudTrailLogsDLQ${var.resource_suffix}"
+    Name = "${var.resource_prefix}CloudTrailLogsDLQ${var.resource_suffix}"
   })
 }
 
 # SQS Queue for S3-based log consumption method
 resource "aws_sqs_queue" "cloudtrail_logs_sqs" {
   count                      = local.use_s3_method_and_sns_topic_matches_current ? 1 : 0
-  name                       = "${var.resource_prefix}CrowdStrikeCloudTrailLogsSQS${var.resource_suffix}"
+  name                       = "${var.resource_prefix}CloudTrailLogsSQS${var.resource_suffix}"
   message_retention_seconds  = 1209600 # 14 days
   visibility_timeout_seconds = 300     # 5 minutes
 
   redrive_policy = jsonencode({
     deadLetterTargetArn = aws_sqs_queue.cloudtrail_logs_dlq[0].arn
-    maxReceiveCount     = 3
+    maxReceiveCount     = 5
   })
 
   tags = merge(var.tags, {
-    Name = "${var.resource_prefix}CrowdStrikeCloudTrailLogsSQS${var.resource_suffix}"
+    Name = "${var.resource_prefix}CloudTrailLogsSQS${var.resource_suffix}"
   })
 }
 
