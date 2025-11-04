@@ -134,7 +134,7 @@ resource "aws_sns_topic_subscription" "cloudtrail_logs_sns_subscription" {
 
 # Cross-account IAM role for S3 log consumption
 resource "aws_iam_role" "s3_log_role" {
-  count = local.use_s3_method_and_sns_topic_matches_current && var.is_primary_region ? 1 : 0
+  count = local.use_s3_method_and_sns_topic_matches_current ? 1 : 0
   name  = "${var.resource_prefix}CrowdStrikeCloudTrailReader${var.resource_suffix}"
 
   assume_role_policy = jsonencode({
@@ -166,7 +166,7 @@ resource "aws_iam_role" "s3_log_role" {
 
 # IAM Policy for S3-based log consumption permissions
 resource "aws_iam_policy" "s3_log_consumption_policy" {
-  count = local.use_s3_method_and_sns_topic_matches_current && var.is_primary_region ? 1 : 0
+  count = local.use_s3_method_and_sns_topic_matches_current ? 1 : 0
   name  = "CrowdStrikeS3LogConsumption"
 
   policy = jsonencode({
@@ -231,7 +231,7 @@ resource "aws_iam_policy" "s3_log_consumption_policy" {
 
 # Attach policy to role
 resource "aws_iam_role_policy_attachment" "s3_log_consumption_policy_attachment" {
-  count      = local.use_s3_method_and_sns_topic_matches_current && var.is_primary_region ? 1 : 0
+  count      = local.use_s3_method_and_sns_topic_matches_current ? 1 : 0
   role       = aws_iam_role.s3_log_role[0].name
   policy_arn = aws_iam_policy.s3_log_consumption_policy[0].arn
 }
