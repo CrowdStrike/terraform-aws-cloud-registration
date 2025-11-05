@@ -27,10 +27,10 @@ resource "aws_ssm_parameter" "agentless_scanning_root_parameter" {
     instance_profile = local.is_host_account ? aws_iam_instance_profile.instance_profile[0].name : ""
     host_account_id  = local.is_host_account ? data.aws_caller_identity.current.account_id : var.agentless_scanning_host_account_id
     permissions = {
-      s3_policy       = var.dspm_s3_access ? "${var.agentless_scanning_scanner_role_name}/CrowdStrikeBucketReader" : ""
-      rds_policy      = var.dspm_rds_access ? "${var.agentless_scanning_role_name}/CrowdStrikeRDSClone" : ""
-      dynamodb_policy = var.dspm_dynamodb_access ? "${var.agentless_scanning_scanner_role_name}/CrowdStrikeDynamoDBReader" : ""
-      redshift_policy = var.dspm_redshift_access ? "${var.agentless_scanning_role_name}/CrowdStrikeRedshiftClone" : ""
+      s3_policy       = (var.enable_dspm && var.dspm_s3_access) ? "${var.agentless_scanning_scanner_role_name}/CrowdStrikeBucketReader" : ""
+      rds_policy      = (var.enable_dspm && var.dspm_rds_access) ? "${var.agentless_scanning_role_name}/CrowdStrikeRDSClone" : ""
+      dynamodb_policy = (var.enable_dspm && var.dspm_dynamodb_access) ? "${var.agentless_scanning_scanner_role_name}/CrowdStrikeDynamoDBReader" : ""
+      redshift_policy = (var.enable_dspm && var.dspm_redshift_access) ? "${var.agentless_scanning_role_name}/CrowdStrikeRedshiftClone" : ""
     }
   })
   description = "Tracks which datastore services are enabled for DSPM scanning via their policies"
@@ -128,7 +128,7 @@ resource "aws_iam_role_policy" "crowdstrike_logs_reader" {
 }
 
 resource "aws_iam_role_policy" "crowdstrike_bucket_reader" {
-  count = var.dspm_s3_access ? 1 : 0
+  count = (var.enable_dspm && var.dspm_s3_access) ? 1 : 0
   #checkov:skip=CKV_AWS_288,CKV_AWS_355:DSPM data scanner requires read access to all scannable s3 assets
   name = "CrowdStrikeBucketReader"
   role = aws_iam_role.crowdstrike_aws_agentless_scanning_scanner_role.id
@@ -160,7 +160,7 @@ resource "aws_iam_role_policy" "crowdstrike_bucket_reader" {
 }
 
 resource "aws_iam_role_policy" "crowdstrike_dynamodb_reader" {
-  count = var.dspm_dynamodb_access ? 1 : 0
+  count = (var.enable_dspm && var.dspm_dynamodb_access) ? 1 : 0
   #checkov:skip=CKV_AWS_355:DSPM data scanner requires read access to all scannable dynamodb assets
   name = "CrowdStrikeDynamoDBReader"
   role = aws_iam_role.crowdstrike_aws_agentless_scanning_scanner_role.id
@@ -185,7 +185,7 @@ resource "aws_iam_role_policy" "crowdstrike_dynamodb_reader" {
 }
 
 resource "aws_iam_role_policy" "crowdstrike_redshift_reader" {
-  count = (var.dspm_redshift_access && local.is_host_account) ? 1 : 0
+  count = (var.enable_dspm && var.dspm_redshift_access && local.is_host_account) ? 1 : 0
   #checkov:skip=CKV_AWS_355:DSPM data scanner requires read access to all scannable redshift assets
   #checkov:skip=CKV_AWS_290,CKV_AWS_287:DSPM data scanner requires redshift:Get* permissions
   name = "CrowdStrikeRedshiftReader"

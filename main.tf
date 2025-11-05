@@ -16,7 +16,7 @@ locals {
   agentless_scanning_enabled = (var.enable_dspm || var.enable_vulnerability_scanning)
 
   # Use agentless_scanning_regions if customized, otherwise fall back to dspm_regions for backward compatibility
-  agentless_scanning_regions_is_custom = var.agentless_scanning_regions != ["us-east-1"]
+  agentless_scanning_regions_is_custom = var.agentless_scanning_regions != tolist(["us-east-1"])
   agentless_scanning_regions = local.agentless_scanning_regions_is_custom ? var.agentless_scanning_regions : (
     length(var.dspm_regions) > 0 ? var.dspm_regions : var.agentless_scanning_regions
   )
