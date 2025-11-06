@@ -75,7 +75,7 @@ module "fcs_management_account" {
   intermediate_role_arn                 = crowdstrike_cloud_aws_account.this.intermediate_role_arn
   eventbus_arn                          = crowdstrike_cloud_aws_account.this.eventbus_arn
   cloudtrail_bucket_name                = crowdstrike_cloud_aws_account.this.cloudtrail_bucket_name
-  agentless_scanning_role_name              = crowdstrike_cloud_aws_account.this.agentless_scanning_role_name
+  agentless_scanning_role_name          = crowdstrike_cloud_aws_account.this.agentless_scanning_role_name
   agentless_scanning_create_nat_gateway = local.agentless_scanning_create_nat_gateway
   dspm_s3_access                        = local.dspm_s3_access
   dspm_dynamodb_access                  = local.dspm_dynamodb_access
