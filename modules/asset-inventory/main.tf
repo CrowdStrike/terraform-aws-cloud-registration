@@ -109,6 +109,8 @@ resource "aws_iam_role_policy" "this" {
           "ecr:BatchGetImage",
           "ecr:GetDownloadUrlForLayer",
           "ecr:GetRegistryScanningConfiguration",
+          "eks:DescribeAddon",
+          "eks:ListAddons",
           "elasticfilesystem:DescribeAccessPoints",
           "fms:GetAdminAccount",
           "fms:GetPolicy",
