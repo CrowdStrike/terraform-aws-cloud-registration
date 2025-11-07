@@ -124,10 +124,13 @@ variable "log_ingestion_kms_key_arn" {
 
 variable "external_id" {
   type        = string
+  default     = ""
   description = "External ID for secure cross-account role assumption"
 }
 
+
 variable "intermediate_role_arn" {
   type        = string
+  default     = ""
   description = "CrowdStrike Role ARN for cross-account access"
 }
