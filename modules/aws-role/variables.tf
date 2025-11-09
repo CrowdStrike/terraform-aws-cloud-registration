@@ -144,12 +144,12 @@ variable "enable_vulnerability_scanning" {
 variable "dspm_role_name" {
   description = "DEPRECATED: Use agentless_scanning_role_name instead. The unique name of the IAM role that DSPM will be assuming"
   type        = string
-  default     = "CrowdStrikeDSPMIntegrationRole"
+  default     = ""
 }
 
 check "dspm_role_name_deprecation" {
   assert {
-    condition     = var.dspm_role_name == "CrowdStrikeDSPMIntegrationRole"
+    condition     = var.dspm_role_name == ""
     error_message = "DEPRECATION WARNING: 'dspm_role_name' is deprecated. Please use 'agentless_scanning_role_name' instead."
   }
 }
@@ -309,7 +309,7 @@ variable "agentless_scanning_role_name" {
 
   validation {
     condition = !(
-      var.dspm_role_name != "CrowdStrikeDSPMIntegrationRole" &&
+      var.dspm_role_name != "" &&
       var.agentless_scanning_role_name != "CrowdStrikeAgentlessScanningIntegrationRole" &&
       var.dspm_role_name != var.agentless_scanning_role_name
     )
