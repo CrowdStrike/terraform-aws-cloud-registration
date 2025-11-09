@@ -226,7 +226,7 @@ module "fcs_child_account_1" {
 | <a name="input_dspm_rds_access"></a> [dspm\_rds\_access](#input\_dspm\_rds\_access) | Apply permissions for RDS instance scanning | `bool` | `true` | no |
 | <a name="input_dspm_redshift_access"></a> [dspm\_redshift\_access](#input\_dspm\_redshift\_access) | Apply permissions for Redshift cluster scanning | `bool` | `true` | no |
 | <a name="input_dspm_regions"></a> [dspm\_regions](#input\_dspm\_regions) | DEPRECATED: Use agentless\_scanning\_regions instead. List of regions where DSPM scanning will be deployed | `list(string)` | `[]` | no |
-| <a name="input_dspm_role_name"></a> [dspm\_role\_name](#input\_dspm\_role\_name) | DEPRECATED: Use agentless\_scanning\_role\_name instead. The unique name of the IAM role that DSPM will be assuming | `string` | `"CrowdStrikeDSPMIntegrationRole"` | no |
+| <a name="input_dspm_role_name"></a> [dspm\_role\_name](#input\_dspm\_role\_name) | DEPRECATED: Use agentless\_scanning\_role\_name instead. The unique name of the IAM role that DSPM will be assuming | `string` | `""` | no |
 | <a name="input_dspm_s3_access"></a> [dspm\_s3\_access](#input\_dspm\_s3\_access) | Apply permissions for S3 bucket scanning | `bool` | `true` | no |
 | <a name="input_dspm_scanner_role_name"></a> [dspm\_scanner\_role\_name](#input\_dspm\_scanner\_role\_name) | DEPRECATED: Use agentless\_scanning\_scanner\_role\_name instead. The unique name of the IAM role that CrowdStrike Scanner will be assuming | `string` | `"CrowdStrikeDSPMScannerRole"` | no |
 | <a name="input_enable_dspm"></a> [enable\_dspm](#input\_enable\_dspm) | Set to true to enable Data Security Posture Managment | `bool` | `false` | no |
