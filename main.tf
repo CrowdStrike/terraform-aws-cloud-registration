@@ -21,12 +21,12 @@ locals {
     length(var.dspm_regions) > 0 ? var.dspm_regions : var.agentless_scanning_regions
   )
 
-  # Use agentless custom role names if provided, with dspm custom role names as fallback for backward compatibility
-  dspm_role_is_default      = var.dspm_role_name == "CrowdStrikeDSPMIntegrationRole"
+  # Use agentless custom role name if provided, with DSPM role name as fallback for backward compatibility
+  dspm_role_name_is_set     = var.dspm_role_name != ""
   agentless_role_is_default = var.agentless_scanning_role_name == "CrowdStrikeAgentlessScanningIntegrationRole"
 
   agentless_scanning_role_name = !local.agentless_role_is_default ? var.agentless_scanning_role_name : (
-    !local.dspm_role_is_default ? var.dspm_role_name : var.agentless_scanning_role_name
+    local.dspm_role_name_is_set ? var.dspm_role_name : var.agentless_scanning_role_name
   )
 
   # Scanner role follows same precedence pattern
