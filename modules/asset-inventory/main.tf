@@ -43,8 +43,13 @@ resource "aws_iam_role_policy" "this" {
         Effect   = "Allow"
         Resource = "*"
         Action = [
+          "account:GetContactInformation",
           "aoss:BatchGetCollection",
+          "aoss:GetAccessPolicy",
+          "aoss:GetSecurityPolicy",
+          "aoss:ListAccessPolicies",
           "aoss:ListCollections",
+          "aoss:ListSecurityPolicies",
           "appsync:GetApiCache",
           "appsync:GetGraphqlApi",
           "appsync:GetGraphqlApiEnvironmentVariables",
@@ -89,6 +94,7 @@ resource "aws_iam_role_policy" "this" {
           "bedrock:ListProvisionedModelThroughputs",
           "cassandra:Select",
           "cloudformation:GetTemplateSummary",
+          "cloudformation:ListChangeSets",
           "codeartifact:DescribeDomain",
           "codeartifact:DescribeRepository",
           "codeartifact:ListDomains",
@@ -158,6 +164,7 @@ resource "aws_iam_role_policy" "this" {
           "lightsail:GetRelationalDatabase",
           "lightsail:GetRelationalDatabases",
           "macie2:DescribeClassificationJob",
+          "macie2:GetAutomatedDiscoveryConfiguration",
           "macie2:GetMacieSession",
           "macie2:ListClassificationJobs",
           "macie2:ListTagsForResource",
