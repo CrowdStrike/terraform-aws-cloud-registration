@@ -40,8 +40,8 @@ locals {
   enable_idp                    = true
   enable_sensor_management      = true
   enable_dspm                   = true
-  agentless_scanning_regions    = ["us-east-1", "us-east-2"]
   enable_vulnerability_scanning = true
+  agentless_scanning_regions    = ["us-east-1", "us-east-2"]
   use_existing_cloudtrail       = true
 }
 
@@ -116,7 +116,7 @@ module "fcs_account_onboarding" {
   }
 }
 
-# for each region where you want to onboard Real-time Visibility or DSPM/Vulnerability Scanning features
+# for each region where you want to onboard Real-time Visibility, DSPM or Vulnerability Scanning features
 # - duplicate this module
 # - update the provider with region specific one
 module "fcs_account_us_east_2" {
