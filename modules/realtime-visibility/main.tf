@@ -1,10 +1,6 @@
 data "aws_caller_identity" "current" {}
 data "aws_region" "current" {}
 data "aws_partition" "current" {}
-data "aws_arn" "sns_topic" {
-  count = var.log_ingestion_sns_topic_arn != "" ? 1 : 0
-  arn   = var.log_ingestion_sns_topic_arn
-}
 
 locals {
   account_id    = data.aws_caller_identity.current.account_id
@@ -18,8 +14,8 @@ locals {
   has_s3_prefix          = var.log_ingestion_s3_bucket_prefix != ""
 
   # Parse SNS topic ARN to extract account ID and region, only create S3 resources if both match current account and region
-  sns_topic_account_id = var.log_ingestion_sns_topic_arn != "" ? data.aws_arn.sns_topic[0].account : ""
-  sns_topic_region     = var.log_ingestion_sns_topic_arn != "" ? data.aws_arn.sns_topic[0].region : ""
+  sns_topic_account_id                           = var.log_ingestion_sns_topic_arn != "" ? split(":", var.log_ingestion_sns_topic_arn)[4] : ""
+  sns_topic_region                               = var.log_ingestion_sns_topic_arn != "" ? split(":", var.log_ingestion_sns_topic_arn)[3] : ""
   use_s3_method_and_sns_topic_in_current_account = local.use_s3_method && var.log_ingestion_sns_topic_arn != "" && local.sns_topic_account_id == local.account_id
   use_s3_method_and_sns_topic_in_current_region  = local.use_s3_method && var.log_ingestion_sns_topic_arn != "" && local.sns_topic_region == local.aws_region
   use_s3_method_and_sns_topic_matches_current    = local.use_s3_method_and_sns_topic_in_current_account && local.use_s3_method_and_sns_topic_in_current_region
