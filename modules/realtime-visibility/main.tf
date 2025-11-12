@@ -175,7 +175,7 @@ resource "aws_iam_role" "s3_log_role" {
 # IAM Policy for S3-based log consumption permissions
 resource "aws_iam_policy" "s3_log_consumption_policy" {
   count = local.use_s3_method_and_sns_topic_matches_current ? 1 : 0
-  name  = "CrowdStrikeS3LogConsumption"
+  name  = "${var.resource_prefix}CrowdStrikeS3LogConsumption${var.resource_suffix}"
 
   policy = jsonencode({
     Version = "2012-10-17"
