@@ -21,7 +21,7 @@ jobs:
 
   validate:
     runs-on: ubuntu-latest
-    name: Validate Terraform configuration
+    name: Validate
     strategy:
       matrix:
         path:
