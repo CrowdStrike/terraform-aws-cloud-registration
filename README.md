@@ -187,7 +187,13 @@ module "fcs_account_onboarding" {
   }
 }
 
-# for each region where you want to onboard Real-time Visibility or DSPM features
+# for each region where you want to onboard DSPM features
+# - duplicate this module
+# - update the provider with region specific one
+# If you want to onboard Real-time Visibility with 'eventbridge' as the log_ingestion_method, for each region you want to onboard Real-Time Visibility features
+# - duplicate this module
+# - update the provider with region specific one
+# If you want to onboard Real-time Visibility with 's3' as the log_ingestion_method, for the region that your SNS topic is in
 # - duplicate this module
 # - update the provider with region specific one
 module "fcs_account_us_east_2" {

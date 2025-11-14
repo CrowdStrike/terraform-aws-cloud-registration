@@ -304,7 +304,7 @@ variable "agentless_scanning_host_scanner_role_name" {
 variable "log_ingestion_method" {
   type        = string
   default     = "eventbridge"
-  description = "Choose the method for ingesting CloudTrail logs - EventBridge (default) or S3"
+  description = "Choose the method for ingesting CloudTrail logs - eventbridge (default) or s3. If s3 is selected, be sure to deploy to the region associated with the SNS topic connected to your CloudTrail instance."
   validation {
     condition     = contains(["eventbridge", "s3"], var.log_ingestion_method)
     error_message = "log_ingestion_method must be either 'eventbridge' or 's3'"
