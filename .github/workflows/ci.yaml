@@ -15,7 +15,7 @@ jobs:
         uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
 
       - name: Terraform format check
-        uses: dflook/terraform-fmt-check@10eaa13fa61437aa51be2d12fafe95f152e3512d # v2.2.2
+        uses: dflook/terraform-fmt-check@ff37545fa0e818467e88bc8456cc8a7b202b1b60
         with:
           path: .
 
@@ -44,7 +44,7 @@ jobs:
         uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
 
       - name: Terraform validate
-        uses: dflook/terraform-validate@03889814f1c6cf2fea714787218b2f4edc85c369 # v2.2.2
+        uses: dflook/terraform-validate@ff93d08a956c97fbc5f5e8c5778705baf7ae3108
         with:
           path: ${{ matrix.path }}
 
