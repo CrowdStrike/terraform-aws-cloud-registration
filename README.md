@@ -269,7 +269,7 @@ module "fcs_account_us_east_2" {
 | <a name="input_dspm_regions"></a> [dspm\_regions](#input\_dspm\_regions) | DEPRECATED: Use agentless\_scanning\_regions instead. List of regions where DSPM scanning will be deployed | `list(string)` | `[]` | no |
 | <a name="input_dspm_role_name"></a> [dspm\_role\_name](#input\_dspm\_role\_name) | DEPRECATED: Use agentless\_scanning\_role\_name instead. The unique name of the IAM role that DSPM will be assuming | `string` | `""` | no |
 | <a name="input_dspm_s3_access"></a> [dspm\_s3\_access](#input\_dspm\_s3\_access) | Apply permissions for S3 bucket scanning | `bool` | `true` | no |
-| <a name="input_dspm_scanner_role_name"></a> [dspm\_scanner\_role\_name](#input\_dspm\_scanner\_role\_name) | DEPRECATED: Use agentless\_scanning\_scanner\_role\_name instead. The unique name of the IAM role that CrowdStrike Scanner will be assuming | `string` | `"CrowdStrikeDSPMScannerRole"` | no |
+| <a name="input_dspm_scanner_role_name"></a> [dspm\_scanner\_role\_name](#input\_dspm\_scanner\_role\_name) | DEPRECATED: Use agentless\_scanning\_scanner\_role\_name instead. The unique name of the IAM role that CrowdStrike Scanner will be assuming | `string` | `""` | no |
 | <a name="input_dspm_scanner_role_unique_id"></a> [dspm\_scanner\_role\_unique\_id](#input\_dspm\_scanner\_role\_unique\_id) | DEPRECATED: Use agentless\_scanning\_scanner\_role\_unique\_id instead. The unique ID of the DSPM scanner role | `string` | `""` | no |
 | <a name="input_enable_dspm"></a> [enable\_dspm](#input\_enable\_dspm) | Set to true to enable Data Security Posture Managment | `bool` | `false` | no |
 | <a name="input_enable_idp"></a> [enable\_idp](#input\_enable\_idp) | Set to true to install Identity Protection resources | `bool` | `false` | no |

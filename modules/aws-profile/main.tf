@@ -27,11 +27,11 @@ locals {
   )
 
   # Scanner role follows same precedence pattern
-  dspm_scanner_role_is_default      = var.dspm_scanner_role_name == "CrowdStrikeDSPMScannerRole"
+  dspm_scanner_role_is_set          = var.dspm_scanner_role_name != ""
   agentless_scanner_role_is_default = var.agentless_scanning_scanner_role_name == "CrowdStrikeAgentlessScanningScannerRole"
 
   agentless_scanning_scanner_role_name = !local.agentless_scanner_role_is_default ? var.agentless_scanning_scanner_role_name : (
-    !local.dspm_scanner_role_is_default ? var.dspm_scanner_role_name : var.agentless_scanning_scanner_role_name
+    local.dspm_scanner_role_is_set ? var.dspm_scanner_role_name : var.agentless_scanning_scanner_role_name
   )
 
   # Boolean AND logic for create_nat_gateway:

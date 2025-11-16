@@ -152,12 +152,12 @@ check "dspm_role_name_deprecation" {
 variable "dspm_scanner_role_name" {
   description = "DEPRECATED: Use agentless_scanning_scanner_role_name instead. The unique name of the IAM role that CrowdStrike Scanner will be assuming"
   type        = string
-  default     = "CrowdStrikeDSPMScannerRole"
+  default     = ""
 }
 
 check "dspm_scanner_role_name_deprecation" {
   assert {
-    condition     = var.dspm_scanner_role_name == "CrowdStrikeDSPMScannerRole"
+    condition     = var.dspm_scanner_role_name == ""
     error_message = "DEPRECATION WARNING: 'dspm_scanner_role_name' is deprecated. Please use 'agentless_scanning_scanner_role_name' instead."
   }
 }
@@ -368,7 +368,7 @@ variable "agentless_scanning_scanner_role_name" {
 
   validation {
     condition = !(
-      var.dspm_scanner_role_name != "CrowdStrikeDSPMScannerRole" &&
+      var.dspm_scanner_role_name != "" &&
       var.agentless_scanning_scanner_role_name != "CrowdStrikeAgentlessScanningScannerRole" &&
       var.dspm_scanner_role_name != var.agentless_scanning_scanner_role_name
     )

@@ -99,7 +99,7 @@ variable "agentless_scanning_host_account_id" {
 
 variable "agentless_scanning_host_role_name" {
   type        = string
-  default     = "CrowdStrikeDSPMIntegrationRole"
+  default     = "CrowdStrikeAgentlessScanningIntegrationRole"
   description = "Name of agentless scanning integration role in host account"
 
   validation {
@@ -110,7 +110,7 @@ variable "agentless_scanning_host_role_name" {
 
 variable "agentless_scanning_host_scanner_role_name" {
   type        = string
-  default     = "CrowdStrikeDSPMScannerRole"
+  default     = "CrowdStrikeAgentlessScanningScannerRole"
   description = "Name of agentless scanning scanner role in host account"
 
   validation {
