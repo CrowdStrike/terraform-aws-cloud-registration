@@ -3,7 +3,7 @@ resource "aws_iam_instance_profile" "instance_profile" {
   count = local.is_host_account ? 1 : 0
   name  = "CrowdStrikeScannerRoleProfile"
   path  = "/"
-  role  = var.dspm_scanner_role_name
+  role  = var.agentless_scanning_scanner_role_name
   tags = merge(
     var.tags,
     {
@@ -18,15 +18,19 @@ resource "aws_ssm_parameter" "agentless_scanning_root_parameter" {
   tier = "Intelligent-Tiering"
   value = jsonencode({
     version            = "1.0.0+tf.1"
-    deployment_regions = var.dspm_regions
-    scanner_role_arn   = aws_iam_role.crowdstrike_aws_dspm_scanner_role.arn
-    instance_profile   = local.is_host_account ? aws_iam_instance_profile.instance_profile[0].name : ""
-    host_account_id    = local.is_host_account ? data.aws_caller_identity.current.account_id : var.agentless_scanning_host_account_id
+    deployment_regions = var.agentless_scanning_regions
+    scan_products = {
+      dspm_scanning_enabled          = var.enable_dspm
+      vulnerability_scanning_enabled = var.enable_vulnerability_scanning
+    }
+    scanner_role_arn = aws_iam_role.crowdstrike_aws_agentless_scanning_scanner_role.arn
+    instance_profile = local.is_host_account ? aws_iam_instance_profile.instance_profile[0].name : ""
+    host_account_id  = local.is_host_account ? data.aws_caller_identity.current.account_id : var.agentless_scanning_host_account_id
     permissions = {
-      s3_policy       = var.dspm_s3_access ? "${var.dspm_scanner_role_name}/CrowdStrikeBucketReader" : ""
-      rds_policy      = var.dspm_rds_access ? "${var.dspm_role_name}/CrowdStrikeRDSClone" : ""
-      dynamodb_policy = var.dspm_dynamodb_access ? "${var.dspm_scanner_role_name}/CrowdStrikeDynamoDBReader" : ""
-      redshift_policy = var.dspm_redshift_access ? "${var.dspm_role_name}/CrowdStrikeRedshiftClone" : ""
+      s3_policy       = (var.enable_dspm && var.dspm_s3_access) ? "${var.agentless_scanning_scanner_role_name}/CrowdStrikeBucketReader" : ""
+      rds_policy      = (var.enable_dspm && var.dspm_rds_access) ? "${var.agentless_scanning_role_name}/CrowdStrikeRDSClone" : ""
+      dynamodb_policy = (var.enable_dspm && var.dspm_dynamodb_access) ? "${var.agentless_scanning_scanner_role_name}/CrowdStrikeDynamoDBReader" : ""
+      redshift_policy = (var.enable_dspm && var.dspm_redshift_access) ? "${var.agentless_scanning_role_name}/CrowdStrikeRedshiftClone" : ""
     }
   })
   description = "Tracks which datastore services are enabled for DSPM scanning via their policies"
@@ -38,8 +42,8 @@ resource "aws_ssm_parameter" "agentless_scanning_root_parameter" {
   )
 }
 
-resource "aws_iam_role" "crowdstrike_aws_dspm_scanner_role" {
-  name = var.dspm_scanner_role_name
+resource "aws_iam_role" "crowdstrike_aws_agentless_scanning_scanner_role" {
+  name = var.agentless_scanning_scanner_role_name
   path = "/"
   assume_role_policy = local.is_host_account ? jsonencode({
     Version = "2012-10-17"
@@ -72,8 +76,13 @@ resource "aws_iam_role" "crowdstrike_aws_dspm_scanner_role" {
   )
 }
 
+moved {
+  from = aws_iam_role.crowdstrike_aws_dspm_scanner_role
+  to   = aws_iam_role.crowdstrike_aws_agentless_scanning_scanner_role
+}
+
 resource "aws_iam_role_policy_attachment" "cloud_watch_logs_read_only_access" {
-  role       = aws_iam_role.crowdstrike_aws_dspm_scanner_role.name
+  role       = aws_iam_role.crowdstrike_aws_agentless_scanning_scanner_role.name
   policy_arn = "arn:aws:iam::aws:policy/CloudWatchLogsReadOnlyAccess"
 }
 
@@ -81,7 +90,7 @@ resource "aws_iam_role_policy_attachment" "cloud_watch_logs_read_only_access" {
 resource "aws_iam_role_policy" "crowdstrike_logs_reader" {
   #checkov:skip=CKV_AWS_355:DSPM data scanner requires read access to logs for all scannable assets
   name = "CrowdStrikeLogsReader"
-  role = aws_iam_role.crowdstrike_aws_dspm_scanner_role.id
+  role = aws_iam_role.crowdstrike_aws_agentless_scanning_scanner_role.id
   policy = jsonencode({
     Version = "2012-10-17"
     Statement = [
@@ -119,10 +128,10 @@ resource "aws_iam_role_policy" "crowdstrike_logs_reader" {
 }
 
 resource "aws_iam_role_policy" "crowdstrike_bucket_reader" {
-  count = var.dspm_s3_access ? 1 : 0
+  count = (var.enable_dspm && var.dspm_s3_access) ? 1 : 0
   #checkov:skip=CKV_AWS_288,CKV_AWS_355:DSPM data scanner requires read access to all scannable s3 assets
   name = "CrowdStrikeBucketReader"
-  role = aws_iam_role.crowdstrike_aws_dspm_scanner_role.id
+  role = aws_iam_role.crowdstrike_aws_agentless_scanning_scanner_role.id
   policy = jsonencode({
     Version = "2012-10-17"
     Statement = [
@@ -151,10 +160,10 @@ resource "aws_iam_role_policy" "crowdstrike_bucket_reader" {
 }
 
 resource "aws_iam_role_policy" "crowdstrike_dynamodb_reader" {
-  count = var.dspm_dynamodb_access ? 1 : 0
+  count = (var.enable_dspm && var.dspm_dynamodb_access) ? 1 : 0
   #checkov:skip=CKV_AWS_355:DSPM data scanner requires read access to all scannable dynamodb assets
   name = "CrowdStrikeDynamoDBReader"
-  role = aws_iam_role.crowdstrike_aws_dspm_scanner_role.id
+  role = aws_iam_role.crowdstrike_aws_agentless_scanning_scanner_role.id
   policy = jsonencode({
     Version = "2012-10-17"
     Statement = [
@@ -176,11 +185,11 @@ resource "aws_iam_role_policy" "crowdstrike_dynamodb_reader" {
 }
 
 resource "aws_iam_role_policy" "crowdstrike_redshift_reader" {
-  count = (var.dspm_redshift_access && local.is_host_account) ? 1 : 0
+  count = (var.enable_dspm && var.dspm_redshift_access && local.is_host_account) ? 1 : 0
   #checkov:skip=CKV_AWS_355:DSPM data scanner requires read access to all scannable redshift assets
   #checkov:skip=CKV_AWS_290,CKV_AWS_287:DSPM data scanner requires redshift:Get* permissions
   name = "CrowdStrikeRedshiftReader"
-  role = aws_iam_role.crowdstrike_aws_dspm_scanner_role.id
+  role = aws_iam_role.crowdstrike_aws_agentless_scanning_scanner_role.id
   policy = jsonencode({
     Version = "2012-10-17"
     Statement = [
@@ -203,7 +212,7 @@ resource "aws_iam_role_policy" "crowdstrike_redshift_reader" {
 resource "aws_iam_role_policy" "crowdstrike_secret_reader" {
   count = local.is_host_account ? 1 : 0
   name  = "CrowdStrikeSecretReader"
-  role  = aws_iam_role.crowdstrike_aws_dspm_scanner_role.id
+  role  = aws_iam_role.crowdstrike_aws_agentless_scanning_scanner_role.id
   policy = jsonencode({
     Version = "2012-10-17"
     Statement = [
@@ -229,7 +238,7 @@ resource "aws_iam_role_policy" "crowdstrike_secret_reader" {
 resource "aws_iam_role_policy" "crowdstrike_assume_target_scanner_role" {
   count = local.is_host_account ? 1 : 0
   name  = "CrowdStrikeAssumeTargetScannerRole"
-  role  = aws_iam_role.crowdstrike_aws_dspm_scanner_role.id
+  role  = aws_iam_role.crowdstrike_aws_agentless_scanning_scanner_role.id
   policy = jsonencode({
     Version = "2012-10-17"
     Statement = [
@@ -240,6 +249,58 @@ resource "aws_iam_role_policy" "crowdstrike_assume_target_scanner_role" {
           "sts:AssumeRole"
         ]
         Resource = "arn:aws:iam::*:role/*"
+      }
+    ]
+  })
+}
+
+# EBS Volume Reader Policy for Vulnerability Scanning
+resource "aws_iam_role_policy" "crowdstrike_ebs_volume_reader" {
+  count = (var.enable_vulnerability_scanning && local.is_host_account) ? 1 : 0
+  name  = "CrowdStrikeEBSVolumeReader"
+  role  = aws_iam_role.crowdstrike_aws_agentless_scanning_scanner_role.id
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Sid    = "AttachEBSVolumes"
+        Effect = "Allow"
+        Action = [
+          "ec2:AttachVolume",
+          "ec2:DetachVolume"
+        ]
+        Resource = [
+          "arn:aws:ec2:*:${data.aws_caller_identity.current.account_id}:volume/*",
+          "arn:aws:ec2:*:${data.aws_caller_identity.current.account_id}:instance/*"
+        ]
+        Condition = {
+          StringEquals = {
+            "ec2:ResourceTag/${local.crowdstrike_tag_key}" = local.crowdstrike_tag_value
+          }
+        }
+      },
+      {
+        Sid    = "AllowDescribeVolumesAndInstanceAttributes"
+        Effect = "Allow"
+        Action = [
+          "ec2:DescribeVolumes",
+          "ec2:DescribeInstanceAttribute"
+        ]
+        Resource = "*"
+      },
+      {
+        Sid    = "AllowUseOfKMSKeyForEBS"
+        Effect = "Allow"
+        Action = [
+          "kms:Decrypt",
+          "kms:CreateGrant"
+        ]
+        Resource = "arn:aws:kms:*:${data.aws_caller_identity.current.account_id}:key/*"
+        Condition = {
+          StringLike = {
+            "kms:ViaService" = "ec2.*.amazonaws.com"
+          }
+        }
       }
     ]
   })

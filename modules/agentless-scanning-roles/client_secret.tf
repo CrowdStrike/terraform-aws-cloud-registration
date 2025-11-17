@@ -7,7 +7,7 @@ resource "aws_secretsmanager_secret" "client_secrets" {
     {
       (local.crowdstrike_tag_key)        = local.crowdstrike_tag_value
       (local.logical_tag_key)            = "ClientSecrets"
-      (local.deployment_regions_tag_key) = join("/", var.dspm_regions)
+      (local.deployment_regions_tag_key) = join("/", var.agentless_scanning_regions)
     }
   )
   recovery_window_in_days = 0

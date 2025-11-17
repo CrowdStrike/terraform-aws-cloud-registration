@@ -16,7 +16,7 @@ variable "aws_profile" {
 }
 
 variable "primary_region" {
-  description = "Region for deploying global AWS resources (IAM roles, policies, etc.) that are account-wide and only need to be created once. Distinct from dspm_regions which controls region-specific resource deployment."
+  description = "Region for deploying global AWS resources (IAM roles, policies, etc.) that are account-wide and only need to be created once. Distinct from agentless_scanning_regions which controls region-specific resource deployment."
   type        = string
 }
 
@@ -135,35 +135,58 @@ variable "enable_dspm" {
   description = " Set to true to enable Data Security Posture Managment"
 }
 
+variable "enable_vulnerability_scanning" {
+  description = "Enable vulnerability scanning resources and permissions"
+  type        = bool
+  default     = false
+}
+
 variable "dspm_role_name" {
-  description = "The unique name of the IAM role that DSPM will be assuming"
+  description = "DEPRECATED: Use agentless_scanning_role_name instead. The unique name of the IAM role that DSPM will be assuming"
   type        = string
-  default     = "CrowdStrikeDSPMIntegrationRole"
+  default     = ""
+}
+
+check "dspm_role_name_deprecation" {
+  assert {
+    condition     = var.dspm_role_name == ""
+    error_message = "DEPRECATION WARNING: 'dspm_role_name' is deprecated. Please use 'agentless_scanning_role_name' instead."
+  }
 }
 
 variable "dspm_scanner_role_name" {
-  description = "The unique name of the IAM role that CrowdStrike Scanner will be assuming"
+  description = "DEPRECATED: Use agentless_scanning_scanner_role_name instead. The unique name of the IAM role that CrowdStrike Scanner will be assuming"
   type        = string
-  default     = "CrowdStrikeDSPMScannerRole"
+  default     = ""
 }
 
-variable "dspm_regions" {
-  description = "The regions in which DSPM scanning environments will be created"
-  type        = list(string)
-  default     = ["us-east-1"]
-
-  validation {
-    condition     = length(var.dspm_regions) > 0
-    error_message = "At least one DSPM region must be specified."
+check "dspm_scanner_role_name_deprecation" {
+  assert {
+    condition     = var.dspm_scanner_role_name == ""
+    error_message = "DEPRECATION WARNING: 'dspm_scanner_role_name' is deprecated. Please use 'agentless_scanning_scanner_role_name' instead."
   }
+}
+
+
+variable "dspm_regions" {
+  description = "DEPRECATED: Use agentless_scanning_regions instead. List of regions where DSPM scanning will be deployed"
+  type        = list(string)
+  default     = []
 
   validation {
-    condition = alltrue([
+    condition = length(var.dspm_regions) == 0 || alltrue([
       for region in var.dspm_regions :
       (can(regex("^(?:us|eu|ap|sa|ca|af|me|il)-(?:north|south|east|west|central|northeast|southeast|southwest|northwest)-[1-4]$", region)) ||
       can(regex("^us-gov-(?:east|west)-1$", region)))
     ])
     error_message = "Each element in the dspm_regions list must be a valid AWS region (e.g., 'us-east-1', 'eu-west-2', 'us-gov-east-1', 'us-gov-west-1') that is supported by DSPM."
+  }
+}
+
+check "dspm_regions_deprecation" {
+  assert {
+    condition     = length(var.dspm_regions) == 0
+    error_message = "DEPRECATION WARNING: 'dspm_regions' is deprecated. Please use 'agentless_scanning_regions' instead."
   }
 }
 
@@ -186,9 +209,16 @@ variable "tags" {
 }
 
 variable "dspm_create_nat_gateway" {
-  description = "Set to true to create a NAT Gateway for DSPM scanning environments"
+  description = "DEPRECATED: Use agentless_scanning_create_nat_gateway instead. Set to true to create a NAT Gateway for DSPM scanning environments"
   type        = bool
   default     = true
+}
+
+check "dspm_create_nat_gateway_deprecation" {
+  assert {
+    condition     = var.dspm_create_nat_gateway == true
+    error_message = "DEPRECATION WARNING: 'dspm_create_nat_gateway' is deprecated. Please use 'agentless_scanning_create_nat_gateway' instead."
+  }
 }
 
 variable "dspm_s3_access" {
@@ -243,7 +273,7 @@ variable "agentless_scanning_custom_vpc_resources_map" {
 variable "agentless_scanning_host_account_id" {
   type        = string
   default     = ""
-  description = "The AWS account ID where DSPM host resources are deployed"
+  description = "The AWS account ID where agentless scanning host resources are deployed"
 
   validation {
     condition     = var.agentless_scanning_host_account_id == "" || can(regex("^\\d{12}$", var.agentless_scanning_host_account_id))
@@ -253,7 +283,7 @@ variable "agentless_scanning_host_account_id" {
 
 variable "agentless_scanning_host_role_name" {
   type        = string
-  default     = "CrowdStrikeDSPMIntegrationRole"
+  default     = "CrowdStrikeAgentlessScanningIntegrationRole"
   description = "Name of agentless scanning integration role in host account"
 
   validation {
@@ -264,11 +294,75 @@ variable "agentless_scanning_host_role_name" {
 
 variable "agentless_scanning_host_scanner_role_name" {
   type        = string
-  default     = "CrowdStrikeDSPMScannerRole"
-  description = "Name of angentless scanning scanner role in host account"
+  default     = "CrowdStrikeAgentlessScanningScannerRole"
+  description = "Name of agentless scanning scanner role in host account"
 
   validation {
     condition     = can(regex("^$|^[a-zA-Z0-9+=,.@_-]{1,64}$", var.agentless_scanning_host_scanner_role_name))
     error_message = "Role name must be empty or use only alphanumeric and '+=,.@-_' characters, maximum 64 characters."
   }
+}
+
+variable "agentless_scanning_role_name" {
+  description = "The unique name of the IAM role that Agentless scanning will be assuming"
+  type        = string
+  default     = "CrowdStrikeAgentlessScanningIntegrationRole"
+
+  validation {
+    condition = !(
+      var.dspm_role_name != "" &&
+      var.agentless_scanning_role_name != "CrowdStrikeAgentlessScanningIntegrationRole" &&
+      var.dspm_role_name != var.agentless_scanning_role_name
+    )
+
+    error_message = <<EOF
+CONFIGURATION CONFLICT: Both 'dspm_role_name' and 'agentless_scanning_role_name' are set to different custom values.
+Please use only 'agentless_scanning_role_name'.
+EOF
+  }
+}
+
+variable "agentless_scanning_scanner_role_name" {
+  description = "The unique name of the IAM role that Agentless scanning scanner will be assuming"
+  type        = string
+  default     = "CrowdStrikeAgentlessScanningScannerRole"
+
+  validation {
+    condition = !(
+      var.dspm_scanner_role_name != "" &&
+      var.agentless_scanning_scanner_role_name != "CrowdStrikeAgentlessScanningScannerRole" &&
+      var.dspm_scanner_role_name != var.agentless_scanning_scanner_role_name
+    )
+
+    error_message = <<EOF
+CONFIGURATION CONFLICT: Both 'dspm_scanner_role_name' and 'agentless_scanning_scanner_role_name' are set to different custom values.
+Please use only 'agentless_scanning_scanner_role_name'.
+EOF
+  }
+}
+
+variable "agentless_scanning_regions" {
+  description = "List of regions where agentless scanning will be deployed"
+  type        = list(string)
+  default     = ["us-east-1"]
+
+  validation {
+    condition     = length(var.agentless_scanning_regions) > 0
+    error_message = "At least one agentless scanning region must be specified."
+  }
+
+  validation {
+    condition = alltrue([
+      for region in var.agentless_scanning_regions :
+      (can(regex("^(?:us|eu|ap|sa|ca|af|me|il)-(?:north|south|east|west|central|northeast|southeast|southwest|northwest)-[1-4]$", region)) ||
+      can(regex("^us-gov-(?:east|west)-1$", region)))
+    ])
+    error_message = "Each element in the agentless_scanning_regions list must be a valid AWS region (e.g., 'us-east-1', 'eu-west-2', 'us-gov-east-1', 'us-gov-west-1')."
+  }
+}
+
+variable "agentless_scanning_create_nat_gateway" {
+  description = "Set to true to create a NAT Gateway for agentless scanning environments"
+  type        = bool
+  default     = true
 }

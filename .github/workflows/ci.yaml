@@ -34,8 +34,8 @@ jobs:
           - "modules/asset-inventory"
           - "modules/aws-profile"
           - "modules/aws-role"
-          - "modules/dspm-environments"
-          - "modules/dspm-roles"
+          - "modules/agentless-scanning-environments"
+          - "modules/agentless-scanning-roles"
           - "modules/realtime-visibility"
           - "modules/sensor-management"
 

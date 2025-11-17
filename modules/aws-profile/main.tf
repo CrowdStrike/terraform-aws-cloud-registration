@@ -10,6 +10,34 @@ locals {
   # if we target by organization_id, we pick the first one because all accounts will have the same settings
   aws_account = data.aws_caller_identity.current.account_id
 
+  agentless_scanning_enabled = (var.enable_dspm || var.enable_vulnerability_scanning)
+
+  # Use agentless_scanning_regions if customized, otherwise fall back to dspm_regions for backward compatibility
+  agentless_scanning_regions_is_custom = var.agentless_scanning_regions != tolist(["us-east-1"])
+  agentless_scanning_regions = local.agentless_scanning_regions_is_custom ? var.agentless_scanning_regions : (
+    length(var.dspm_regions) > 0 ? var.dspm_regions : var.agentless_scanning_regions
+  )
+
+  # Use agentless custom role name if provided, with DSPM role name as fallback for backward compatibility
+  dspm_role_name_is_set     = var.dspm_role_name != ""
+  agentless_role_is_default = var.agentless_scanning_role_name == "CrowdStrikeAgentlessScanningIntegrationRole"
+
+  agentless_scanning_role_name = !local.agentless_role_is_default ? var.agentless_scanning_role_name : (
+    local.dspm_role_name_is_set ? var.dspm_role_name : var.agentless_scanning_role_name
+  )
+
+  # Scanner role follows same precedence pattern
+  dspm_scanner_role_is_set          = var.dspm_scanner_role_name != ""
+  agentless_scanner_role_is_default = var.agentless_scanning_scanner_role_name == "CrowdStrikeAgentlessScanningScannerRole"
+
+  agentless_scanning_scanner_role_name = !local.agentless_scanner_role_is_default ? var.agentless_scanning_scanner_role_name : (
+    local.dspm_scanner_role_is_set ? var.dspm_scanner_role_name : var.agentless_scanning_scanner_role_name
+  )
+
+  # Boolean AND logic for create_nat_gateway:
+  # If either variable is false, result is false
+  agentless_scanning_create_nat_gateway = var.agentless_scanning_create_nat_gateway && var.dspm_create_nat_gateway
+
   account = try(
     data.crowdstrike_cloud_aws_account.target.accounts[0],
     {
@@ -63,17 +91,17 @@ module "sensor_management" {
 }
 
 
-module "dspm_roles" {
-  count                                       = (var.enable_dspm && !var.is_gov) ? 1 : 0
-  source                                      = "../dspm-roles/"
+module "agentless_scanning_roles" {
+  count                                       = (local.agentless_scanning_enabled && !var.is_gov) ? 1 : 0
+  source                                      = "../agentless-scanning-roles/"
   falcon_client_id                            = var.falcon_client_id
   falcon_client_secret                        = var.falcon_client_secret
   account_id                                  = local.aws_account
-  dspm_role_name                              = var.dspm_role_name
-  dspm_scanner_role_name                      = var.dspm_scanner_role_name
+  agentless_scanning_role_name                = local.agentless_scanning_role_name
+  agentless_scanning_scanner_role_name        = local.agentless_scanning_scanner_role_name
   intermediate_role_arn                       = local.intermediate_role_arn
   external_id                                 = local.external_id
-  dspm_regions                                = var.dspm_regions
+  agentless_scanning_regions                  = local.agentless_scanning_regions
   agentless_scanning_use_custom_vpc           = var.agentless_scanning_use_custom_vpc
   agentless_scanning_custom_vpc_resources_map = var.agentless_scanning_custom_vpc_resources_map
   agentless_scanning_host_account_id          = var.agentless_scanning_host_account_id
@@ -82,5 +110,12 @@ module "dspm_roles" {
   dspm_dynamodb_access                        = var.dspm_dynamodb_access
   dspm_rds_access                             = var.dspm_rds_access
   dspm_redshift_access                        = var.dspm_redshift_access
+  enable_dspm                                 = var.enable_dspm
+  enable_vulnerability_scanning               = var.enable_vulnerability_scanning
   tags                                        = var.tags
+}
+
+moved {
+  from = module.dspm_roles
+  to   = module.agentless_scanning_roles
 }

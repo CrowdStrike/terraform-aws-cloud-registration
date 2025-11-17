@@ -200,7 +200,7 @@ data "aws_iam_policy_document" "policy_kms_key_target" {
 }
 
 resource "aws_kms_key" "crowdstrike_kms_key" {
-  description              = "CrowdStrike DSPM KMS Key"
+  description              = "CrowdStrike Agentless Scanning KMS Key"
   enable_key_rotation      = true
   deletion_window_in_days  = 20
   customer_master_key_spec = "SYMMETRIC_DEFAULT"
@@ -217,6 +217,6 @@ resource "aws_kms_key" "crowdstrike_kms_key" {
 }
 
 resource "aws_kms_alias" "crowdstrike_key_alias" {
-  name          = "alias/CrowdStrikeDSPMKey"
+  name          = "alias/CrowdStrikeAgentlessScanningKey"
   target_key_id = aws_kms_key.crowdstrike_kms_key.arn
 }

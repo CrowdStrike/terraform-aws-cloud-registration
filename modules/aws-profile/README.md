@@ -71,7 +71,7 @@ terraform {
     }
     crowdstrike = {
       source  = "CrowdStrike/crowdstrike"
-      version = ">= 0.0.19"
+      version = ">= 0.0.44"
     }
   }
 }
@@ -99,14 +99,15 @@ variable "account_id" {
 }
 
 locals {
-  organization_id            = "<your aws organization id>"
-  enable_realtime_visibility = true
-  primary_region             = "us-east-1"
-  enable_idp                 = true
-  enable_sensor_management   = true
-  enable_dspm                = true
-  dspm_regions               = ["us-east-1", "us-east-2"]
-  use_existing_cloudtrail    = true
+  organization_id               = "<your aws organization id>"
+  enable_realtime_visibility    = true
+  primary_region                = "us-east-1"
+  enable_idp                    = true
+  enable_sensor_management      = true
+  enable_dspm                   = true
+  agentless_scanning_regions    = ["us-east-1", "us-east-2"]
+  enable_vulnerability_scanning = true
+  use_existing_cloudtrail       = true
 }
 
 provider "crowdstrike" {
@@ -140,23 +141,28 @@ resource "crowdstrike_cloud_aws_account" "this" {
   dspm = {
     enabled = local.enable_dspm
   }
+
+  vulnerability_scanning = {
+    enabled = local.enable_vulnerability_scanning
+  }
 }
 
 module "fcs_management_account" {
-  source                      = "CrowdStrike/cloud-registration/aws//modules/aws-profile"
-  aws_profile                 = "<aws profile for your management account>"
-  falcon_client_id            = var.falcon_client_id
-  falcon_client_secret        = var.falcon_client_secret
-  account_id                  = var.account_id
-  organization_id             = local.organization_id
-  primary_region              = local.primary_region
-  enable_sensor_management    = local.enable_sensor_management
-  enable_realtime_visibility  = local.enable_realtime_visibility
-  enable_idp                  = local.enable_idp
-  realtime_visibility_regions = ["all"]
-  use_existing_cloudtrail     = local.use_existing_cloudtrail
-  enable_dspm                 = local.enable_dspm
-  dspm_regions                = local.dspm_regions
+  source                        = "CrowdStrike/cloud-registration/aws//modules/aws-profile"
+  aws_profile                   = "<aws profile for your management account>"
+  falcon_client_id              = var.falcon_client_id
+  falcon_client_secret          = var.falcon_client_secret
+  account_id                    = var.account_id
+  organization_id               = local.organization_id
+  primary_region                = local.primary_region
+  enable_sensor_management      = local.enable_sensor_management
+  enable_realtime_visibility    = local.enable_realtime_visibility
+  enable_idp                    = local.enable_idp
+  realtime_visibility_regions   = ["all"]
+  use_existing_cloudtrail       = local.use_existing_cloudtrail
+  enable_dspm                   = local.enable_dspm
+  enable_vulnerability_scanning = local.enable_vulnerability_scanning
+  agentless_scanning_regions    = local.agentless_scanning_regions
 
   iam_role_name          = crowdstrike_cloud_aws_account.this.iam_role_name
   external_id            = crowdstrike_cloud_aws_account.this.external_id
@@ -169,25 +175,27 @@ module "fcs_management_account" {
 # - duplicate this module
 # - replace `aws_profile` with the correct profile for your child account
 module "fcs_child_account_1" {
-  source                      = "CrowdStrike/cloud-registration/aws//modules/aws-profile"
-  aws_profile                 = "<aws profile for this child account>"
-  falcon_client_id            = var.falcon_client_id
-  falcon_client_secret        = var.falcon_client_secret
-  organization_id             = var.organization_id
-  primary_region              = local.primary_region
-  enable_sensor_management    = local.enable_sensor_management
-  enable_realtime_visibility  = local.enable_realtime_visibility
-  enable_idp                  = local.enable_idp
-  realtime_visibility_regions = ["all"]
-  use_existing_cloudtrail     = true # use the cloudtrail at the org level
-  enable_dspm                 = local.enable_dspm
-  dspm_regions                = local.dspm_regions
-
-  iam_role_name          = crowdstrike_cloud_aws_account.this.iam_role_name
-  external_id            = crowdstrike_cloud_aws_account.this.external_id
-  intermediate_role_arn  = crowdstrike_cloud_aws_account.this.intermediate_role_arn
-  eventbus_arn           = crowdstrike_cloud_aws_account.this.eventbus_arn
-  cloudtrail_bucket_name = "" # not needed for child accounts
+  source                             = "CrowdStrike/cloud-registration/aws//modules/aws-profile"
+  aws_profile                        = "<aws profile for this child account>"
+  falcon_client_id                   = var.falcon_client_id
+  falcon_client_secret               = var.falcon_client_secret
+  organization_id                    = var.organization_id
+  primary_region                     = local.primary_region
+  enable_sensor_management           = local.enable_sensor_management
+  enable_realtime_visibility         = local.enable_realtime_visibility
+  enable_idp                         = local.enable_idp
+  realtime_visibility_regions        = ["all"]
+  use_existing_cloudtrail            = true # use the cloudtrail at the org level
+  enable_dspm                        = local.enable_dspm
+  enable_vulnerability_scanning      = local.enable_vulnerability_scanning
+  agentless_scanning_regions         = local.agentless_scanning_regions
+  iam_role_name                      = crowdstrike_cloud_aws_account.this.iam_role_name
+  external_id                        = crowdstrike_cloud_aws_account.this.external_id
+  intermediate_role_arn              = crowdstrike_cloud_aws_account.this.intermediate_role_arn
+  eventbus_arn                       = crowdstrike_cloud_aws_account.this.eventbus_arn
+  cloudtrail_bucket_name             = ""                                                                     # not needed for child accounts
+  agentless_scanning_host_account_id = var.account_id                                                         # sets the management account as the agentless scanning host account
+  agentless_scanning_host_role_name  = module.fcs_management_account.agentless_scanning_integration_role_name # creates dependency on agentless scanning host module
 }
 ```
 
@@ -196,7 +204,7 @@ module "fcs_child_account_1" {
 | Name | Version |
 |------|---------|
 | <a name="provider_aws"></a> [aws](#provider\_aws) | >= 5.0.0 |
-| <a name="provider_crowdstrike"></a> [crowdstrike](#provider\_crowdstrike) | >= 0.0.19 |
+| <a name="provider_crowdstrike"></a> [crowdstrike](#provider\_crowdstrike) | >= 0.0.44 |
 ## Resources
 
 | Name | Type |
@@ -210,25 +218,30 @@ module "fcs_child_account_1" {
 |------|-------------|------|---------|:--------:|
 | <a name="input_account_id"></a> [account\_id](#input\_account\_id) | The AWS 12 digit account ID | `string` | `""` | no |
 | <a name="input_account_type"></a> [account\_type](#input\_account\_type) | Account type can be either 'commercial' or 'gov' | `string` | `"commercial"` | no |
+| <a name="input_agentless_scanning_create_nat_gateway"></a> [agentless\_scanning\_create\_nat\_gateway](#input\_agentless\_scanning\_create\_nat\_gateway) | Set to true to create a NAT Gateway for agentless scanning environments | `bool` | `true` | no |
 | <a name="input_agentless_scanning_custom_vpc_resources_map"></a> [agentless\_scanning\_custom\_vpc\_resources\_map](#input\_agentless\_scanning\_custom\_vpc\_resources\_map) | Map of region-specific VPC resources for existing VPC deployment. Keys are region names, values are objects containing VPC resource IDs. | <pre>map(object({<br/>    vpc            = string<br/>    scanner_subnet = string<br/>    scanner_sg     = string<br/>    db_subnet_a    = string<br/>    db_subnet_b    = string<br/>    db_sg          = string<br/>  }))</pre> | `{}` | no |
-| <a name="input_agentless_scanning_host_account_id"></a> [agentless\_scanning\_host\_account\_id](#input\_agentless\_scanning\_host\_account\_id) | The AWS account ID where DSPM host resources are deployed | `string` | `""` | no |
-| <a name="input_agentless_scanning_host_role_name"></a> [agentless\_scanning\_host\_role\_name](#input\_agentless\_scanning\_host\_role\_name) | Name of agentless scanning integration role in host account | `string` | `"CrowdStrikeDSPMIntegrationRole"` | no |
-| <a name="input_agentless_scanning_host_scanner_role_name"></a> [agentless\_scanning\_host\_scanner\_role\_name](#input\_agentless\_scanning\_host\_scanner\_role\_name) | Name of angentless scanning scanner role in host account | `string` | `"CrowdStrikeDSPMScannerRole"` | no |
+| <a name="input_agentless_scanning_host_account_id"></a> [agentless\_scanning\_host\_account\_id](#input\_agentless\_scanning\_host\_account\_id) | The AWS account ID where agentless scanning host resources are deployed | `string` | `""` | no |
+| <a name="input_agentless_scanning_host_role_name"></a> [agentless\_scanning\_host\_role\_name](#input\_agentless\_scanning\_host\_role\_name) | Name of agentless scanning integration role in host account | `string` | `"CrowdStrikeAgentlessScanningIntegrationRole"` | no |
+| <a name="input_agentless_scanning_host_scanner_role_name"></a> [agentless\_scanning\_host\_scanner\_role\_name](#input\_agentless\_scanning\_host\_scanner\_role\_name) | Name of agentless scanning scanner role in host account | `string` | `"CrowdStrikeAgentlessScanningScannerRole"` | no |
+| <a name="input_agentless_scanning_regions"></a> [agentless\_scanning\_regions](#input\_agentless\_scanning\_regions) | List of regions where agentless scanning will be deployed | `list(string)` | <pre>[<br/>  "us-east-1"<br/>]</pre> | no |
+| <a name="input_agentless_scanning_role_name"></a> [agentless\_scanning\_role\_name](#input\_agentless\_scanning\_role\_name) | The unique name of the IAM role that Agentless scanning will be assuming | `string` | `"CrowdStrikeAgentlessScanningIntegrationRole"` | no |
+| <a name="input_agentless_scanning_scanner_role_name"></a> [agentless\_scanning\_scanner\_role\_name](#input\_agentless\_scanning\_scanner\_role\_name) | The unique name of the IAM role that Agentless scanning scanner will be assuming | `string` | `"CrowdStrikeAgentlessScanningScannerRole"` | no |
 | <a name="input_agentless_scanning_use_custom_vpc"></a> [agentless\_scanning\_use\_custom\_vpc](#input\_agentless\_scanning\_use\_custom\_vpc) | Use existing custom VPC resources for ALL deployment regions (requires agentless\_scanning\_custom\_vpc\_resources\_map with all regions) | `bool` | `false` | no |
 | <a name="input_aws_profile"></a> [aws\_profile](#input\_aws\_profile) | The AWS profile to be used for this registration | `string` | n/a | yes |
 | <a name="input_cloudtrail_bucket_name"></a> [cloudtrail\_bucket\_name](#input\_cloudtrail\_bucket\_name) | Name of the S3 bucket for CloudTrail logs | `string` | `""` | no |
-| <a name="input_dspm_create_nat_gateway"></a> [dspm\_create\_nat\_gateway](#input\_dspm\_create\_nat\_gateway) | Set to true to create a NAT Gateway for DSPM scanning environments | `bool` | `true` | no |
+| <a name="input_dspm_create_nat_gateway"></a> [dspm\_create\_nat\_gateway](#input\_dspm\_create\_nat\_gateway) | DEPRECATED: Use agentless\_scanning\_create\_nat\_gateway instead. Set to true to create a NAT Gateway for DSPM scanning environments | `bool` | `true` | no |
 | <a name="input_dspm_dynamodb_access"></a> [dspm\_dynamodb\_access](#input\_dspm\_dynamodb\_access) | Apply permissions for DynamoDB table scanning | `bool` | `true` | no |
 | <a name="input_dspm_rds_access"></a> [dspm\_rds\_access](#input\_dspm\_rds\_access) | Apply permissions for RDS instance scanning | `bool` | `true` | no |
 | <a name="input_dspm_redshift_access"></a> [dspm\_redshift\_access](#input\_dspm\_redshift\_access) | Apply permissions for Redshift cluster scanning | `bool` | `true` | no |
-| <a name="input_dspm_regions"></a> [dspm\_regions](#input\_dspm\_regions) | The regions in which DSPM scanning environments will be created | `list(string)` | <pre>[<br/>  "us-east-1"<br/>]</pre> | no |
-| <a name="input_dspm_role_name"></a> [dspm\_role\_name](#input\_dspm\_role\_name) | The unique name of the IAM role that DSPM will be assuming | `string` | `"CrowdStrikeDSPMIntegrationRole"` | no |
+| <a name="input_dspm_regions"></a> [dspm\_regions](#input\_dspm\_regions) | DEPRECATED: Use agentless\_scanning\_regions instead. List of regions where DSPM scanning will be deployed | `list(string)` | `[]` | no |
+| <a name="input_dspm_role_name"></a> [dspm\_role\_name](#input\_dspm\_role\_name) | DEPRECATED: Use agentless\_scanning\_role\_name instead. The unique name of the IAM role that DSPM will be assuming | `string` | `""` | no |
 | <a name="input_dspm_s3_access"></a> [dspm\_s3\_access](#input\_dspm\_s3\_access) | Apply permissions for S3 bucket scanning | `bool` | `true` | no |
-| <a name="input_dspm_scanner_role_name"></a> [dspm\_scanner\_role\_name](#input\_dspm\_scanner\_role\_name) | The unique name of the IAM role that CrowdStrike Scanner will be assuming | `string` | `"CrowdStrikeDSPMScannerRole"` | no |
+| <a name="input_dspm_scanner_role_name"></a> [dspm\_scanner\_role\_name](#input\_dspm\_scanner\_role\_name) | DEPRECATED: Use agentless\_scanning\_scanner\_role\_name instead. The unique name of the IAM role that CrowdStrike Scanner will be assuming | `string` | `""` | no |
 | <a name="input_enable_dspm"></a> [enable\_dspm](#input\_enable\_dspm) | Set to true to enable Data Security Posture Managment | `bool` | `false` | no |
 | <a name="input_enable_idp"></a> [enable\_idp](#input\_enable\_idp) | Set to true to install Identity Protection resources | `bool` | `false` | no |
 | <a name="input_enable_realtime_visibility"></a> [enable\_realtime\_visibility](#input\_enable\_realtime\_visibility) | Set to true to install realtime visibility resources | `bool` | `false` | no |
 | <a name="input_enable_sensor_management"></a> [enable\_sensor\_management](#input\_enable\_sensor\_management) | Set to true to install 1Click Sensor Management resources | `bool` | n/a | yes |
+| <a name="input_enable_vulnerability_scanning"></a> [enable\_vulnerability\_scanning](#input\_enable\_vulnerability\_scanning) | Enable vulnerability scanning resources and permissions | `bool` | `false` | no |
 | <a name="input_eventbridge_role_name"></a> [eventbridge\_role\_name](#input\_eventbridge\_role\_name) | The eventbridge role name | `string` | `"CrowdStrikeCSPMEventBridge"` | no |
 | <a name="input_eventbus_arn"></a> [eventbus\_arn](#input\_eventbus\_arn) | Eventbus ARN to send events to | `string` | `""` | no |
 | <a name="input_external_id"></a> [external\_id](#input\_external\_id) | The external ID used to assume the AWS reader role | `string` | `""` | no |
@@ -239,7 +252,7 @@ module "fcs_child_account_1" {
 | <a name="input_is_gov"></a> [is\_gov](#input\_is\_gov) | Set to true if your falcon cloud is gov | `bool` | `false` | no |
 | <a name="input_organization_id"></a> [organization\_id](#input\_organization\_id) | The AWS Organization ID. Leave blank when onboarding single account | `string` | `""` | no |
 | <a name="input_permissions_boundary"></a> [permissions\_boundary](#input\_permissions\_boundary) | The name of the policy used to set the permissions boundary for IAM roles | `string` | `""` | no |
-| <a name="input_primary_region"></a> [primary\_region](#input\_primary\_region) | Region for deploying global AWS resources (IAM roles, policies, etc.) that are account-wide and only need to be created once. Distinct from dspm\_regions which controls region-specific resource deployment. | `string` | n/a | yes |
+| <a name="input_primary_region"></a> [primary\_region](#input\_primary\_region) | Region for deploying global AWS resources (IAM roles, policies, etc.) that are account-wide and only need to be created once. Distinct from agentless\_scanning\_regions which controls region-specific resource deployment. | `string` | n/a | yes |
 | <a name="input_realtime_visibility_regions"></a> [realtime\_visibility\_regions](#input\_realtime\_visibility\_regions) | The list of regions where Real-time visibility and detection should be enabled. Use ["all"] to onboard all regions | `list(string)` | <pre>[<br/>  "all"<br/>]</pre> | no |
 | <a name="input_resource_prefix"></a> [resource\_prefix](#input\_resource\_prefix) | The prefix to be added to all resource names | `string` | `"CrowdStrike-"` | no |
 | <a name="input_resource_suffix"></a> [resource\_suffix](#input\_resource\_suffix) | The suffix to be added to all resource names | `string` | `""` | no |
