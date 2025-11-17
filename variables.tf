@@ -313,34 +313,20 @@ variable "log_ingestion_method" {
 
 variable "log_ingestion_s3_bucket_name" {
   type        = string
-  default     = ""
   description = "S3 bucket name containing CloudTrail logs (required when log_ingestion_method=s3)"
-
-  validation {
-    condition     = var.log_ingestion_method != "s3" || var.log_ingestion_s3_bucket_name != ""
-    error_message = "log_ingestion_s3_bucket_name is required when log_ingestion_method is 's3'"
-  }
 }
 
 variable "log_ingestion_sns_topic_arn" {
   type        = string
-  default     = ""
   description = "SNS topic ARN that publishes S3 object creation events (required when log_ingestion_method=s3)"
-
-  validation {
-    condition     = var.log_ingestion_method != "s3" || var.log_ingestion_sns_topic_arn != ""
-    error_message = "log_ingestion_sns_topic_arn is required when log_ingestion_method is 's3'"
-}
 }
 
 variable "log_ingestion_s3_bucket_prefix" {
   type        = string
-  default     = ""
   description = "Optional S3 bucket prefix/path for CloudTrail logs (when log_ingestion_method=s3)"
 }
 
 variable "log_ingestion_kms_key_arn" {
   type        = string
-  default     = ""
   description = "Optional KMS key ARN for decrypting S3 objects (when log_ingestion_method=s3)"
 }
