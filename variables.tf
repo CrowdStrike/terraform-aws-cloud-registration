@@ -142,10 +142,24 @@ variable "dspm_role_name" {
   default     = ""
 }
 
+check "dspm_role_name_deprecation" {
+  assert {
+    condition     = var.dspm_role_name == ""
+    error_message = "DEPRECATION WARNING: 'dspm_role_name' is deprecated. Please use 'agentless_scanning_role_name' instead."
+  }
+}
+
 variable "dspm_scanner_role_name" {
   description = "DEPRECATED: Use agentless_scanning_scanner_role_name instead. The unique name of the IAM role that CrowdStrike Scanner will be assuming"
   type        = string
   default     = ""
+}
+
+check "dspm_scanner_role_name_deprecation" {
+  assert {
+    condition     = var.dspm_scanner_role_name == ""
+    error_message = "DEPRECATION WARNING: 'dspm_scanner_role_name' is deprecated. Please use 'agentless_scanning_scanner_role_name' instead."
+  }
 }
 
 variable "dspm_regions" {
@@ -163,11 +177,25 @@ variable "dspm_regions" {
   }
 }
 
+check "dspm_regions_deprecation" {
+  assert {
+    condition     = length(var.dspm_regions) == 0
+    error_message = "DEPRECATION WARNING: 'dspm_regions' is deprecated. Please use 'agentless_scanning_regions' instead."
+  }
+}
+
 
 variable "dspm_create_nat_gateway" {
   description = "DEPRECATED: Use agentless_scanning_create_nat_gateway instead. Set to true to create a NAT Gateway for DSPM scanning environments"
   type        = bool
   default     = true
+}
+
+check "dspm_create_nat_gateway_deprecation" {
+  assert {
+    condition     = var.dspm_create_nat_gateway == true
+    error_message = "DEPRECATION WARNING: 'dspm_create_nat_gateway' is deprecated. Please use 'agentless_scanning_create_nat_gateway' instead."
+  }
 }
 
 variable "dspm_s3_access" {
@@ -200,10 +228,24 @@ variable "dspm_integration_role_unique_id" {
   type        = string
 }
 
+check "dspm_integration_role_unique_id_deprecation" {
+  assert {
+    condition     = var.dspm_integration_role_unique_id == ""
+    error_message = "DEPRECATION WARNING: 'dspm_integration_role_unique_id' is deprecated. Please use 'agentless_scanning_integration_role_unique_id' instead."
+  }
+}
+
 variable "dspm_scanner_role_unique_id" {
   description = "DEPRECATED: Use agentless_scanning_scanner_role_unique_id instead. The unique ID of the DSPM scanner role"
   default     = ""
   type        = string
+}
+
+check "dspm_scanner_role_unique_id_deprecation" {
+  assert {
+    condition     = var.dspm_scanner_role_unique_id == ""
+    error_message = "DEPRECATION WARNING: 'dspm_scanner_role_unique_id' is deprecated. Please use 'agentless_scanning_scanner_role_unique_id' instead."
+  }
 }
 
 variable "resource_prefix" {

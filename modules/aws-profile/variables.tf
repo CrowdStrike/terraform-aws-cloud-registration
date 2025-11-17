@@ -147,11 +147,26 @@ variable "dspm_role_name" {
   default     = ""
 }
 
+check "dspm_role_name_deprecation" {
+  assert {
+    condition     = var.dspm_role_name == ""
+    error_message = "DEPRECATION WARNING: 'dspm_role_name' is deprecated. Please use 'agentless_scanning_role_name' instead."
+  }
+}
+
 variable "dspm_scanner_role_name" {
   description = "DEPRECATED: Use agentless_scanning_scanner_role_name instead. The unique name of the IAM role that CrowdStrike Scanner will be assuming"
   type        = string
   default     = ""
 }
+
+check "dspm_scanner_role_name_deprecation" {
+  assert {
+    condition     = var.dspm_scanner_role_name == ""
+    error_message = "DEPRECATION WARNING: 'dspm_scanner_role_name' is deprecated. Please use 'agentless_scanning_scanner_role_name' instead."
+  }
+}
+
 
 variable "dspm_regions" {
   description = "DEPRECATED: Use agentless_scanning_regions instead. List of regions where DSPM scanning will be deployed"
@@ -165,6 +180,13 @@ variable "dspm_regions" {
       can(regex("^us-gov-(?:east|west)-1$", region)))
     ])
     error_message = "Each element in the dspm_regions list must be a valid AWS region (e.g., 'us-east-1', 'eu-west-2', 'us-gov-east-1', 'us-gov-west-1') that is supported by DSPM."
+  }
+}
+
+check "dspm_regions_deprecation" {
+  assert {
+    condition     = length(var.dspm_regions) == 0
+    error_message = "DEPRECATION WARNING: 'dspm_regions' is deprecated. Please use 'agentless_scanning_regions' instead."
   }
 }
 
@@ -190,6 +212,13 @@ variable "dspm_create_nat_gateway" {
   description = "DEPRECATED: Use agentless_scanning_create_nat_gateway instead. Set to true to create a NAT Gateway for DSPM scanning environments"
   type        = bool
   default     = true
+}
+
+check "dspm_create_nat_gateway_deprecation" {
+  assert {
+    condition     = var.dspm_create_nat_gateway == true
+    error_message = "DEPRECATION WARNING: 'dspm_create_nat_gateway' is deprecated. Please use 'agentless_scanning_create_nat_gateway' instead."
+  }
 }
 
 variable "dspm_s3_access" {
