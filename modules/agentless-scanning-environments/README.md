@@ -13,7 +13,7 @@ This Terraform module deploys the regional AWS resources required for CrowdStrik
 
 ```hcl
 terraform {
-  required_version = ">= 0.15"
+  required_version = ">= 1.5.0"
   required_providers {
     aws = {
       source  = "hashicorp/aws"
