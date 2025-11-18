@@ -11,7 +11,7 @@ This Terraform module deploys AWS resources required for CrowdStrike's Real-time
 
 ```hcl
 terraform {
-  required_version = ">= 0.15"
+  required_version = ">= 1.5.0"
   required_providers {
     aws = {
       source  = "hashicorp/aws"
@@ -19,7 +19,7 @@ terraform {
     }
     crowdstrike = {
       source  = "CrowdStrike/crowdstrike"
-      version = ">= 0.0.19"
+      version = ">= 0.0.44"
     }
   }
 }
@@ -121,6 +121,7 @@ module "rules_us_east_2" {
 | [aws_region.current](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/region) | data source |
 ## Inputs
 
+<<<<<<< HEAD
 | Name | Description                                                                                                                                                                                                   | Type | Default | Required |
 |------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|------|---------|:--------:|
 | <a name="input_cloudtrail_bucket_name"></a> [cloudtrail\_bucket\_name](#input\_cloudtrail\_bucket\_name) | Name of the S3 bucket for CloudTrail logs                                                                                                                                                                     | `string` | n/a | yes |
@@ -146,6 +147,26 @@ module "rules_us_east_2" {
 | <a name="input_tags"></a> [tags](#input\_tags) | A map of tags to add to all resources that support tagging                                                                                                                                                    | `map(string)` | `{}` | no |
 | <a name="input_use_existing_cloudtrail"></a> [use\_existing\_cloudtrail](#input\_use\_existing\_cloudtrail) | Whether to use an existing CloudTrail or create a new one                                                                                                                                                     | `bool` | `false` | no |
 | <a name="input_external_id"></a> [external\_id](#input\_external\_id) | External ID for secure cross-account role assumption                                                                                                                                                          | `string` | n/a | yes |
+=======
+| Name | Description | Type | Default | Required |
+|------|-------------|------|---------|:--------:|
+| <a name="input_cloudtrail_bucket_name"></a> [cloudtrail\_bucket\_name](#input\_cloudtrail\_bucket\_name) | Name of the S3 bucket for CloudTrail logs | `string` | n/a | yes |
+| <a name="input_create_rules"></a> [create\_rules](#input\_create\_rules) | Set to false if you don't want to enable monitoring in this region | `bool` | `true` | no |
+| <a name="input_eventbridge_role_name"></a> [eventbridge\_role\_name](#input\_eventbridge\_role\_name) | The eventbridge role name | `string` | `"CrowdStrikeCSPMEventBridge"` | no |
+| <a name="input_eventbus_arn"></a> [eventbus\_arn](#input\_eventbus\_arn) | EventBus ARN(s) to send events to - single ARN for commercial, comma-separated for gov multi-region | `string` | n/a | yes |
+| <a name="input_falcon_client_id"></a> [falcon\_client\_id](#input\_falcon\_client\_id) | Falcon API Client ID | `string` | n/a | yes |
+| <a name="input_falcon_client_secret"></a> [falcon\_client\_secret](#input\_falcon\_client\_secret) | Falcon API Client Secret | `string` | n/a | yes |
+| <a name="input_is_gov"></a> [is\_gov](#input\_is\_gov) | Set to true if you are deploying in gov Falcon | `bool` | `false` | no |
+| <a name="input_is_gov_commercial"></a> [is\_gov\_commercial](#input\_is\_gov\_commercial) | Set to true if this is a commercial account in gov-cloud | `bool` | `false` | no |
+| <a name="input_is_organization_trail"></a> [is\_organization\_trail](#input\_is\_organization\_trail) | Whether the Cloudtrail to be created is an organization trail | `bool` | `false` | no |
+| <a name="input_is_primary_region"></a> [is\_primary\_region](#input\_is\_primary\_region) | Whether this is the primary region for deploying global AWS resources (IAM roles, policies, etc.) that are account-wide and only need to be created once. | `bool` | `false` | no |
+| <a name="input_permissions_boundary"></a> [permissions\_boundary](#input\_permissions\_boundary) | The name of the policy used to set the permissions boundary for IAM roles | `string` | `""` | no |
+| <a name="input_primary_region"></a> [primary\_region](#input\_primary\_region) | Region for deploying global AWS resources (IAM roles, policies, etc.) that are account-wide and only need to be created once. Distinct from agentless\_scanning\_regions which controls region-specific resource deployment. | `string` | n/a | yes |
+| <a name="input_resource_prefix"></a> [resource\_prefix](#input\_resource\_prefix) | The prefix to be added to all resource names | `string` | `""` | no |
+| <a name="input_resource_suffix"></a> [resource\_suffix](#input\_resource\_suffix) | The suffix to be added to all resource names | `string` | `""` | no |
+| <a name="input_tags"></a> [tags](#input\_tags) | A map of tags to add to all resources that support tagging | `map(string)` | `{}` | no |
+| <a name="input_use_existing_cloudtrail"></a> [use\_existing\_cloudtrail](#input\_use\_existing\_cloudtrail) | Whether to use an existing CloudTrail or create a new one | `bool` | `false` | no |
+>>>>>>> origin
 ## Outputs
 
 | Name | Description |

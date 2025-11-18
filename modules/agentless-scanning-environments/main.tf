@@ -133,7 +133,7 @@ resource "aws_redshift_subnet_group" "redshift_subnet_group" {
 }
 
 resource "aws_subnet" "public_subnet" {
-  count             = var.dspm_create_nat_gateway && local.create_scanning_infrastructure ? 1 : 0
+  count             = var.agentless_scanning_create_nat_gateway && local.create_scanning_infrastructure ? 1 : 0
   vpc_id            = aws_vpc.vpc[0].id
   cidr_block        = cidrsubnet(var.vpc_cidr_block, 8, 2)
   availability_zone = data.aws_availability_zones.available.names[0]
@@ -193,7 +193,7 @@ resource "aws_route_table" "public_route_table" {
 }
 
 resource "aws_eip" "elastic_ip_address" {
-  count  = var.dspm_create_nat_gateway && local.create_scanning_infrastructure ? 1 : 0
+  count  = var.agentless_scanning_create_nat_gateway && local.create_scanning_infrastructure ? 1 : 0
   domain = "vpc"
   tags = merge(
     var.tags,
@@ -206,7 +206,7 @@ resource "aws_eip" "elastic_ip_address" {
 }
 
 resource "aws_nat_gateway" "nat_gateway" {
-  count         = var.dspm_create_nat_gateway && local.create_scanning_infrastructure ? 1 : 0
+  count         = var.agentless_scanning_create_nat_gateway && local.create_scanning_infrastructure ? 1 : 0
   allocation_id = aws_eip.elastic_ip_address[0].id
   subnet_id     = aws_subnet.public_subnet[0].id
 
@@ -227,8 +227,8 @@ resource "aws_route_table" "private_route_table" {
   # PrivateRoute - conditionally use NAT Gateway or Internet Gateway
   route {
     cidr_block     = "0.0.0.0/0"
-    nat_gateway_id = var.dspm_create_nat_gateway ? aws_nat_gateway.nat_gateway[0].id : null
-    gateway_id     = var.dspm_create_nat_gateway ? null : aws_internet_gateway.internet_gateway[0].id
+    nat_gateway_id = var.agentless_scanning_create_nat_gateway ? aws_nat_gateway.nat_gateway[0].id : null
+    gateway_id     = var.agentless_scanning_create_nat_gateway ? null : aws_internet_gateway.internet_gateway[0].id
   }
 
   tags = merge(
@@ -241,7 +241,7 @@ resource "aws_route_table" "private_route_table" {
 }
 
 resource "aws_route_table_association" "public_subnet_route_table_association" {
-  count          = var.dspm_create_nat_gateway && local.create_scanning_infrastructure ? 1 : 0
+  count          = var.agentless_scanning_create_nat_gateway && local.create_scanning_infrastructure ? 1 : 0
   subnet_id      = aws_subnet.public_subnet[0].id
   route_table_id = aws_route_table.public_route_table[0].id
 }
@@ -296,7 +296,7 @@ resource "aws_network_acl_rule" "outbound" {
 }
 
 resource "aws_network_acl_association" "public_subnet_nacl_association" {
-  count          = var.dspm_create_nat_gateway && local.create_scanning_infrastructure ? 1 : 0
+  count          = var.agentless_scanning_create_nat_gateway && local.create_scanning_infrastructure ? 1 : 0
   subnet_id      = aws_subnet.public_subnet[0].id
   network_acl_id = aws_network_acl.network_acl[0].id
 }
@@ -535,7 +535,7 @@ resource "aws_ssm_parameter" "scan_environment_parameter" {
       DBSubnetB            = var.use_custom_vpc ? var.region_vpc_config.db_subnet_b : aws_subnet.db_subnet_b[0].id
       VpcId                = var.use_custom_vpc ? var.region_vpc_config.vpc : aws_vpc.vpc[0].id
       CreateVPC            = var.use_custom_vpc ? "false" : "true"
-      CreateNatGW          = var.dspm_create_nat_gateway ? "true" : "false"
+      CreateNatGW          = var.agentless_scanning_create_nat_gateway ? "true" : "false"
       PrivateSubnet        = var.use_custom_vpc ? var.region_vpc_config.scanner_subnet : aws_subnet.private_subnet[0].id
       ScannerSecurityGroup = var.use_custom_vpc ? var.region_vpc_config.scanner_sg : aws_security_group.ec2_security_group[0].id
       DBSubnetGroup        = aws_db_subnet_group.db_subnet_group[0].name

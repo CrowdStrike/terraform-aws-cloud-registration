@@ -11,7 +11,7 @@ This Terraform module deploys the AWS resources required for CrowdStrike's 1-Cli
 
 ```hcl
 terraform {
-  required_version = ">= 0.15"
+  required_version = ">= 1.5.0"
   required_providers {
     aws = {
       source  = "hashicorp/aws"
@@ -19,7 +19,7 @@ terraform {
     }
     crowdstrike = {
       source  = "CrowdStrike/crowdstrike"
-      version = ">= 0.0.19"
+      version = ">= 0.0.44"
     }
   }
 }

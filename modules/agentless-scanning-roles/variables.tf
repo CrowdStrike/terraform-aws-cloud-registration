@@ -1,13 +1,13 @@
-variable "dspm_role_name" {
-  description = "The unique name of the IAM role that CrowdStrike will be assuming"
+variable "agentless_scanning_role_name" {
+  description = "The unique name of the IAM role that Agentless scanning will be assuming"
   type        = string
-  default     = "CrowdStrikeDSPMIntegrationRole"
+  default     = "CrowdStrikeAgentlessScanningIntegrationRole"
 }
 
-variable "dspm_scanner_role_name" {
-  description = "The unique name of the IAM role that CrowdStrike Scanner will be assuming"
+variable "agentless_scanning_scanner_role_name" {
+  description = "The unique name of the IAM role that Agentless scanning scanner will be assuming"
   type        = string
-  default     = "CrowdStrikeDSPMScannerRole"
+  default     = "CrowdStrikeAgentlessScanningScannerRole"
 }
 
 variable "falcon_client_id" {
@@ -52,23 +52,22 @@ variable "external_id" {
   }
 }
 
-variable "dspm_regions" {
-  description = "The regions in which DSPM scanning environments will be created"
+variable "agentless_scanning_regions" {
+  description = "List of regions where agentless scanning will be deployed"
   type        = list(string)
   default     = ["us-east-1"]
 
   validation {
-    condition     = length(var.dspm_regions) > 0
-    error_message = "At least one DSPM region must be specified."
+    condition     = length(var.agentless_scanning_regions) > 0
+    error_message = "At least one agentless scanning region must be specified."
   }
 
   validation {
     condition = alltrue([
-      for region in var.dspm_regions :
+      for region in var.agentless_scanning_regions :
       (can(regex("^(?:us|eu|ap|sa|ca|af|me|il)-(?:north|south|east|west|central|northeast|southeast|southwest|northwest)-[1-4]$", region)) ||
-      can(regex("^us-gov-(?:east|west)-1$", region)))
-    ])
-    error_message = "Each element in the dspm_regions list must be a valid AWS region (e.g., 'us-east-1', 'eu-west-2', 'us-gov-east-1', 'us-gov-west-1') that is supported by DSPM."
+    can(regex("^us-gov-(?:east|west)-1$", region)))])
+    error_message = "Each element in the agentless_scanning_regions list must be a valid AWS region (e.g., 'us-east-1', 'eu-west-2', 'us-gov-east-1', 'us-gov-west-1')."
   }
 }
 
@@ -115,6 +114,18 @@ variable "dspm_redshift_access" {
   default     = true
 }
 
+variable "enable_dspm" {
+  description = "Enable DSPM scanning resources and permissions"
+  type        = bool
+  default     = false
+}
+
+variable "enable_vulnerability_scanning" {
+  description = "Enable vulnerability scanning resources and permissions"
+  type        = bool
+  default     = false
+}
+
 variable "tags" {
   description = "A map of tags to add to all resources that support tagging"
   type        = map(string)
@@ -124,7 +135,7 @@ variable "tags" {
 variable "agentless_scanning_host_account_id" {
   type        = string
   default     = ""
-  description = "The AWS account ID where DSPM host resources are deployed"
+  description = "The AWS account ID where agentless scanning host resources are deployed"
 
   validation {
     condition     = var.agentless_scanning_host_account_id == "" || can(regex("^\\d{12}$", var.agentless_scanning_host_account_id))
@@ -134,8 +145,8 @@ variable "agentless_scanning_host_account_id" {
 
 variable "agentless_scanning_host_scanner_role_name" {
   type        = string
-  default     = "CrowdStrikeDSPMScannerRole"
-  description = "Name of angentless scanning scanner role in host account"
+  default     = "CrowdStrikeAgentlessScanningScannerRole"
+  description = "Name of agentless scanning scanner role in host account"
 
   validation {
     condition     = can(regex("^$|^[a-zA-Z0-9+=,.@_-]{1,64}$", var.agentless_scanning_host_scanner_role_name))
