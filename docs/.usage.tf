@@ -119,7 +119,6 @@ module "fcs_account_onboarding" {
   }
 }
 
-<<<<<<< HEAD
 # for each region where you want to onboard DSPM features or Vulnerability Scanning features
 # - duplicate this module
 # - update the provider with region specific one
