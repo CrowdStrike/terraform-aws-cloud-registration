@@ -110,6 +110,8 @@ resource "aws_iam_role_policy" "this" {
           "cognito-idp:GetLogDeliveryConfiguration",
           "connect:DescribeInstance",
           "connect:ListTagsForResource",
+          "databrew:DescribeJob",
+          "databrew:ListTagsForResource",
           "detective:ListDatasourcePackages",
           "detective:ListTagsForResource",
           "ecr:BatchGetImage",
