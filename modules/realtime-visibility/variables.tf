@@ -90,3 +90,47 @@ variable "tags" {
   type        = map(string)
   default     = {}
 }
+
+# S3 Log Ingestion Variables
+variable "log_ingestion_method" {
+  type        = string
+  default     = "eventbridge"
+  description = "Choose the method for ingesting CloudTrail logs - EventBridge (default) or S3"
+}
+
+variable "log_ingestion_s3_bucket_name" {
+  type        = string
+  default     = ""
+  description = "S3 bucket name containing CloudTrail logs (required when log_ingestion_method=s3)"
+}
+
+variable "log_ingestion_sns_topic_arn" {
+  type        = string
+  default     = ""
+  description = "SNS topic ARN that publishes S3 object creation events (required when log_ingestion_method=s3)"
+}
+
+variable "log_ingestion_s3_bucket_prefix" {
+  type        = string
+  default     = ""
+  description = "Optional S3 bucket prefix/path for CloudTrail logs (when log_ingestion_method=s3)"
+}
+
+variable "log_ingestion_kms_key_arn" {
+  type        = string
+  default     = ""
+  description = "Optional KMS key ARN for decrypting S3 objects (when log_ingestion_method=s3)"
+}
+
+variable "external_id" {
+  type        = string
+  default     = ""
+  description = "External ID for secure cross-account role assumption"
+}
+
+
+variable "intermediate_role_arn" {
+  type        = string
+  default     = ""
+  description = "CrowdStrike Role ARN for cross-account access"
+}
