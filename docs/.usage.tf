@@ -43,7 +43,7 @@ locals {
   enable_vulnerability_scanning = true
   agentless_scanning_regions    = ["us-east-1", "us-east-2"]
   use_existing_cloudtrail       = true
-  log_ingestion_method               = "eventbridge"
+  log_ingestion_method          = "eventbridge"
 }
 
 provider "crowdstrike" {
