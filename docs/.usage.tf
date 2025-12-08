@@ -71,7 +71,7 @@ resource "crowdstrike_cloud_aws_account" "this" {
     enabled                 = local.enable_realtime_visibility
     cloudtrail_region       = local.primary_region
     use_existing_cloudtrail = local.use_existing_cloudtrail
-    log_ingestion_method               = local.log_ingestion_method
+    log_ingestion_method    = local.log_ingestion_method
   }
 
   idp = {
