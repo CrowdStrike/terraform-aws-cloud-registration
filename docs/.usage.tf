@@ -43,6 +43,7 @@ locals {
   enable_vulnerability_scanning = true
   agentless_scanning_regions    = ["us-east-1", "us-east-2"]
   use_existing_cloudtrail       = true
+  log_ingestion_method          = "eventbridge"
 }
 
 provider "crowdstrike" {
@@ -70,6 +71,7 @@ resource "crowdstrike_cloud_aws_account" "this" {
     enabled                 = local.enable_realtime_visibility
     cloudtrail_region       = local.primary_region
     use_existing_cloudtrail = local.use_existing_cloudtrail
+    log_ingestion_method    = local.log_ingestion_method
   }
 
   idp = {
@@ -102,6 +104,7 @@ module "fcs_account_onboarding" {
   enable_dspm                   = local.enable_dspm && contains(local.agentless_scanning_regions, "us-east-1")
   enable_vulnerability_scanning = local.enable_vulnerability_scanning && contains(local.agentless_scanning_regions, "us-east-1")
   agentless_scanning_regions    = local.agentless_scanning_regions
+  log_ingestion_method            = local.log_ingestion_method
 
   iam_role_name                = crowdstrike_cloud_aws_account.this.iam_role_name
   external_id                  = crowdstrike_cloud_aws_account.this.external_id
@@ -116,7 +119,13 @@ module "fcs_account_onboarding" {
   }
 }
 
-# for each region where you want to onboard Real-time Visibility, DSPM or Vulnerability Scanning features
+# for each region where you want to onboard DSPM features or Vulnerability Scanning features
+# - duplicate this module
+# - update the provider with region specific one
+# If you want to onboard Real-time Visibility with 'eventbridge' as the log_ingestion_method, for each region you want to onboard Real-Time Visibility features
+# - duplicate this module
+# - update the provider with region specific one
+# If you want to onboard Real-time Visibility with 's3' as the log_ingestion_method, for the region that the SNS topic is in
 # - duplicate this module
 # - update the provider with region specific one
 module "fcs_account_us_east_2" {
@@ -132,6 +141,7 @@ module "fcs_account_us_east_2" {
   enable_dspm                   = local.enable_dspm && contains(local.agentless_scanning_regions, "us-east-2")
   enable_vulnerability_scanning = local.enable_vulnerability_scanning && contains(local.agentless_scanning_regions, "us-east-2")
   agentless_scanning_regions    = local.agentless_scanning_regions
+  log_ingestion_method            = local.log_ingestion_method
 
   iam_role_name                                 = crowdstrike_cloud_aws_account.this.iam_role_name
   external_id                                   = crowdstrike_cloud_aws_account.this.external_id
