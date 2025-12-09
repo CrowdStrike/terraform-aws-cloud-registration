@@ -222,6 +222,12 @@ variable "dspm_redshift_access" {
   default     = true
 }
 
+variable "dspm_ebs_access" {
+  description = "Apply permissions for EBS volume scanning"
+  type        = bool
+  default     = true
+}
+
 variable "dspm_integration_role_unique_id" {
   description = "DEPRECATED: Use agentless_scanning_integration_role_unique_id instead. The unique ID of the DSPM integration role"
   default     = ""

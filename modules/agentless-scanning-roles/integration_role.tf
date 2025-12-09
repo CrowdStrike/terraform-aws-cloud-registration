@@ -241,7 +241,7 @@ resource "aws_iam_role_policy" "crowdstrike_rds_clone_target" {
 
 # Base RDS policy - common permissions for both host and target accounts
 data "aws_iam_policy_document" "crowdstrike_rds_clone_base" {
-  count = (var.dspm_rds_access && var.enable_dspm) ? 1 : 0
+  count = local.create_rds_policy ? 1 : 0
 
   # Grants permission to restore CMK encrypted instances
   statement {
@@ -288,7 +288,7 @@ data "aws_iam_policy_document" "crowdstrike_rds_clone_base" {
 
 # Host account RDS policy - full permissions for scanning infrastructure
 data "aws_iam_policy_document" "crowdstrike_rds_clone_host" {
-  count = (var.dspm_rds_access && var.enable_dspm && local.is_host_account) ? 1 : 0
+  count = (local.create_rds_policy && local.is_host_account) ? 1 : 0
 
   # Grants permission to add only requested tag mentioned in condition to RDS instance and snapshot
   statement {
@@ -456,7 +456,7 @@ data "aws_iam_policy_document" "crowdstrike_rds_clone_host" {
 
 # Target account RDS policy - limited permissions for sharing snapshots
 data "aws_iam_policy_document" "crowdstrike_rds_clone_target" {
-  count = (var.dspm_rds_access && var.enable_dspm && !local.is_host_account) ? 1 : 0
+  count = (local.create_rds_policy && !local.is_host_account) ? 1 : 0
 
   # Grants permission to add only requested tag mentioned in condition to RDS instance and snapshot
   statement {
@@ -550,7 +550,7 @@ resource "aws_iam_role_policy" "crowdstrike_redshift_clone_target" {
 
 # Host account Redshift policy - full permissions for scanning infrastructure
 data "aws_iam_policy_document" "crowdstrike_redshift_clone_host" {
-  count = (var.dspm_redshift_access && var.enable_dspm && local.is_host_account) ? 1 : 0
+  count = (local.create_redshift_policy && local.is_host_account) ? 1 : 0
 
   # Grants permission to create a cluster snapshot and restore cluster from snapshot
   statement {
@@ -691,16 +691,16 @@ data "aws_iam_policy_document" "run_data_scanner_custom_vpcs_data" {
   }
 }
 
-# Vulnerability Scanning Base Policy - Common EBS and KMS permissions
-resource "aws_iam_role_policy" "crowdstrike_vulnerability_scanning_base" {
-  count  = var.enable_vulnerability_scanning ? 1 : 0
-  name   = "CrowdStrikeVulnerabilityScanningPolicyBase"
+# EBS Scanning Base Policy - Common EBS and KMS permissions
+resource "aws_iam_role_policy" "crowdstrike_ebs_clone" {
+  count  = local.create_ebs_policy ? 1 : 0
+  name   = "CrowdStrikeEBSClone"
   role   = aws_iam_role.crowdstrike_aws_agentless_scanning_integration_role.id
-  policy = data.aws_iam_policy_document.crowdstrike_vulnerability_scanning_base[0].json
+  policy = data.aws_iam_policy_document.crowdstrike_ebs_clone[0].json
 }
 
-data "aws_iam_policy_document" "crowdstrike_vulnerability_scanning_base" {
-  count = var.enable_vulnerability_scanning ? 1 : 0
+data "aws_iam_policy_document" "crowdstrike_ebs_clone" {
+  count = local.create_ebs_policy ? 1 : 0
 
   # EBS Volume Access for Snapshot Creation
   statement {
@@ -790,16 +790,16 @@ data "aws_iam_policy_document" "crowdstrike_vulnerability_scanning_base" {
   }
 }
 
-# Vulnerability Scanning Host Account Policy - Volume operations in scanning environment
-resource "aws_iam_role_policy" "crowdstrike_vulnerability_scanning_host" {
-  count  = (var.enable_vulnerability_scanning && local.is_host_account) ? 1 : 0
-  name   = "CrowdStrikeVulnerabilityScanningPolicyHostAccount"
+# EBS Scanning Host Account Policy - Volume operations in scanning environment
+resource "aws_iam_role_policy" "crowdstrike_ebs_clone_host" {
+  count  = (local.create_ebs_policy && local.is_host_account) ? 1 : 0
+  name   = "CrowdStrikeEBSCloneHost"
   role   = aws_iam_role.crowdstrike_aws_agentless_scanning_integration_role.id
-  policy = data.aws_iam_policy_document.crowdstrike_vulnerability_scanning_host[0].json
+  policy = data.aws_iam_policy_document.crowdstrike_ebs_clone_host[0].json
 }
 
-data "aws_iam_policy_document" "crowdstrike_vulnerability_scanning_host" {
-  count = (var.enable_vulnerability_scanning && local.is_host_account) ? 1 : 0
+data "aws_iam_policy_document" "crowdstrike_ebs_clone_host" {
+  count = (local.create_ebs_policy && local.is_host_account) ? 1 : 0
 
   # EBS Snapshot Access for Volume Creation
   statement {
@@ -865,16 +865,16 @@ data "aws_iam_policy_document" "crowdstrike_vulnerability_scanning_host" {
   }
 }
 
-# Vulnerability Scanning Target Account Policy - Snapshot sharing with host account
-resource "aws_iam_role_policy" "crowdstrike_vulnerability_scanning_target" {
-  count  = (var.enable_vulnerability_scanning && !local.is_host_account) ? 1 : 0
-  name   = "CrowdStrikeVulnerabilityScanningPolicyTargetAccount"
+# EBS Scanning Target Account Policy - Snapshot sharing with host account
+resource "aws_iam_role_policy" "crowdstrike_ebs_clone_target" {
+  count  = (local.create_ebs_policy && !local.is_host_account) ? 1 : 0
+  name   = "CrowdStrikeEBSCloneTarget"
   role   = aws_iam_role.crowdstrike_aws_agentless_scanning_integration_role.id
-  policy = data.aws_iam_policy_document.crowdstrike_vulnerability_scanning_target[0].json
+  policy = data.aws_iam_policy_document.crowdstrike_ebs_clone_target[0].json
 }
 
-data "aws_iam_policy_document" "crowdstrike_vulnerability_scanning_target" {
-  count = (var.enable_vulnerability_scanning && !local.is_host_account) ? 1 : 0
+data "aws_iam_policy_document" "crowdstrike_ebs_clone_target" {
+  count = (local.create_ebs_policy && !local.is_host_account) ? 1 : 0
 
   # EBS Snapshot Share
   statement {

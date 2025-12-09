@@ -12,4 +12,11 @@ locals {
 
   # Condition to determine if this is the host account
   is_host_account = var.agentless_scanning_host_account_id == var.account_id || var.agentless_scanning_host_account_id == ""
+
+  # DSPM policy conditions
+  create_s3_policy       = var.enable_dspm && var.dspm_s3_access
+  create_rds_policy      = var.enable_dspm && var.dspm_rds_access
+  create_dynamodb_policy = var.enable_dspm && var.dspm_dynamodb_access
+  create_redshift_policy = var.enable_dspm && var.dspm_redshift_access
+  create_ebs_policy      = (var.enable_dspm && var.dspm_ebs_access) || var.enable_vulnerability_scanning
 }

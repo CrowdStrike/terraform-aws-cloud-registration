@@ -12,6 +12,7 @@ locals {
   dspm_dynamodb_access                  = var.dspm_dynamodb_access
   dspm_rds_access                       = var.dspm_rds_access
   dspm_redshift_access                  = var.dspm_redshift_access
+  dspm_ebs_access                       = var.dspm_ebs_access
 }
 
 provider "crowdstrike" {
@@ -81,6 +82,7 @@ module "fcs_management_account" {
   dspm_dynamodb_access                  = local.dspm_dynamodb_access
   dspm_rds_access                       = local.dspm_rds_access
   dspm_redshift_access                  = local.dspm_redshift_access
+  dspm_ebs_access                       = local.dspm_ebs_access
 }
 
 # for each child account you want to onboard
@@ -114,6 +116,7 @@ module "fcs_child_account_1" {
   dspm_dynamodb_access                  = local.dspm_dynamodb_access
   dspm_rds_access                       = local.dspm_rds_access
   dspm_redshift_access                  = local.dspm_redshift_access
+  dspm_ebs_access                       = local.dspm_ebs_access
   agentless_scanning_host_account_id    = var.account_id                                                         # sets the management account as the agentless scanning host account
   agentless_scanning_host_role_name     = module.fcs_management_account.agentless_scanning_integration_role_name # creates dependency on agentless scanning host module
 }

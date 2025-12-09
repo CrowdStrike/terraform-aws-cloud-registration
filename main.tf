@@ -147,6 +147,7 @@ module "agentless_scanning_roles" {
   dspm_dynamodb_access                        = var.dspm_dynamodb_access
   dspm_rds_access                             = var.dspm_rds_access
   dspm_redshift_access                        = var.dspm_redshift_access
+  dspm_ebs_access                             = var.dspm_ebs_access
   enable_dspm                                 = var.enable_dspm
   enable_vulnerability_scanning               = var.enable_vulnerability_scanning
   tags                                        = var.tags

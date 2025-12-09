@@ -60,6 +60,12 @@ variable "dspm_redshift_access" {
   default     = true
 }
 
+variable "dspm_ebs_access" {
+  description = "Apply permissions for EBS scanning"
+  type        = bool
+  default     = true
+}
+
 variable "vpc_cidr_block" {
   description = "VPC CIDR block"
   type        = string

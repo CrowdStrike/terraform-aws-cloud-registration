@@ -114,6 +114,17 @@ variable "dspm_redshift_access" {
   default     = true
 }
 
+variable "dspm_ebs_access" {
+  description = "Apply permissions for EBS scanning"
+  type        = bool
+  default     = true
+
+  validation {
+    condition = (var.enable_vulnerability_scanning && var.enable_dspm) ? var.dspm_ebs_access : true
+    error_message = "DSPM EBS Access must be enabled when both Vulnerability Scanning and DSPM are enabled because they share the same permissions."
+  }
+}
+
 variable "enable_dspm" {
   description = "Enable DSPM scanning resources and permissions"
   type        = bool
