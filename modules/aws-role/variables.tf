@@ -245,7 +245,7 @@ variable "dspm_redshift_access" {
 }
 
 variable "dspm_ebs_access" {
-  description = "Apply permissions for EBS volume scanning"
+  description = "Apply permissions for EBS scanning"
   type        = bool
   default     = true
 }
