@@ -263,6 +263,7 @@ module "fcs_account_us_east_2" {
 | <a name="input_create_rtvd_rules"></a> [create\_rtvd\_rules](#input\_create\_rtvd\_rules) | Set to false if you don't want to enable monitoring in this region | `bool` | `true` | no |
 | <a name="input_dspm_create_nat_gateway"></a> [dspm\_create\_nat\_gateway](#input\_dspm\_create\_nat\_gateway) | DEPRECATED: Use agentless\_scanning\_create\_nat\_gateway instead. Set to true to create a NAT Gateway for DSPM scanning environments | `bool` | `true` | no |
 | <a name="input_dspm_dynamodb_access"></a> [dspm\_dynamodb\_access](#input\_dspm\_dynamodb\_access) | Apply permissions for DynamoDB table scanning | `bool` | `true` | no |
+| <a name="input_dspm_ebs_access"></a> [dspm\_ebs\_access](#input\_dspm\_ebs\_access) | Apply permissions for EBS volume scanning | `bool` | `true` | no |
 | <a name="input_dspm_integration_role_unique_id"></a> [dspm\_integration\_role\_unique\_id](#input\_dspm\_integration\_role\_unique\_id) | DEPRECATED: Use agentless\_scanning\_integration\_role\_unique\_id instead. The unique ID of the DSPM integration role | `string` | `""` | no |
 | <a name="input_dspm_rds_access"></a> [dspm\_rds\_access](#input\_dspm\_rds\_access) | Apply permissions for RDS instance scanning | `bool` | `true` | no |
 | <a name="input_dspm_redshift_access"></a> [dspm\_redshift\_access](#input\_dspm\_redshift\_access) | Apply permissions for Redshift cluster scanning | `bool` | `true` | no |

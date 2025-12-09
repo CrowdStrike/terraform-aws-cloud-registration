@@ -69,6 +69,9 @@ module "agentless_scanning_environments" {
 | [aws_iam_role_policy.crowdstrike_bucket_reader](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role_policy) | resource |
 | [aws_iam_role_policy.crowdstrike_cloud_scan_supplemental](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role_policy) | resource |
 | [aws_iam_role_policy.crowdstrike_dynamodb_reader](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role_policy) | resource |
+| [aws_iam_role_policy.crowdstrike_ebs_clone](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role_policy) | resource |
+| [aws_iam_role_policy.crowdstrike_ebs_clone_host](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role_policy) | resource |
+| [aws_iam_role_policy.crowdstrike_ebs_clone_target](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role_policy) | resource |
 | [aws_iam_role_policy.crowdstrike_ebs_volume_reader](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role_policy) | resource |
 | [aws_iam_role_policy.crowdstrike_logs_reader](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role_policy) | resource |
 | [aws_iam_role_policy.crowdstrike_rds_clone](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role_policy) | resource |
@@ -80,9 +83,6 @@ module "agentless_scanning_environments" {
 | [aws_iam_role_policy.crowdstrike_run_data_scanner_restricted](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role_policy) | resource |
 | [aws_iam_role_policy.crowdstrike_secret_reader](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role_policy) | resource |
 | [aws_iam_role_policy.crowdstrike_ssm_reader](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role_policy) | resource |
-| [aws_iam_role_policy.crowdstrike_vulnerability_scanning_base](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role_policy) | resource |
-| [aws_iam_role_policy.crowdstrike_vulnerability_scanning_host](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role_policy) | resource |
-| [aws_iam_role_policy.crowdstrike_vulnerability_scanning_target](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role_policy) | resource |
 | [aws_iam_role_policy.run_data_scanner_custom_vpcs](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role_policy) | resource |
 | [aws_iam_role_policy_attachment.cloud_watch_logs_read_only_access](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role_policy_attachment) | resource |
 | [aws_iam_role_policy_attachment.security_audit](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role_policy_attachment) | resource |
@@ -92,6 +92,9 @@ module "agentless_scanning_environments" {
 | [aws_caller_identity.current](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/caller_identity) | data source |
 | [aws_iam_policy_document.assume_role](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/iam_policy_document) | data source |
 | [aws_iam_policy_document.crowdstrike_cloud_scan_supplemental_data](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/iam_policy_document) | data source |
+| [aws_iam_policy_document.crowdstrike_ebs_clone](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/iam_policy_document) | data source |
+| [aws_iam_policy_document.crowdstrike_ebs_clone_host](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/iam_policy_document) | data source |
+| [aws_iam_policy_document.crowdstrike_ebs_clone_target](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/iam_policy_document) | data source |
 | [aws_iam_policy_document.crowdstrike_rds_clone_base](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/iam_policy_document) | data source |
 | [aws_iam_policy_document.crowdstrike_rds_clone_host](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/iam_policy_document) | data source |
 | [aws_iam_policy_document.crowdstrike_rds_clone_target](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/iam_policy_document) | data source |
@@ -99,9 +102,6 @@ module "agentless_scanning_environments" {
 | [aws_iam_policy_document.crowdstrike_redshift_clone_target](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/iam_policy_document) | data source |
 | [aws_iam_policy_document.crowdstrike_run_data_scanner_restricted_data](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/iam_policy_document) | data source |
 | [aws_iam_policy_document.crowdstrike_ssm_reader_data](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/iam_policy_document) | data source |
-| [aws_iam_policy_document.crowdstrike_vulnerability_scanning_base](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/iam_policy_document) | data source |
-| [aws_iam_policy_document.crowdstrike_vulnerability_scanning_host](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/iam_policy_document) | data source |
-| [aws_iam_policy_document.crowdstrike_vulnerability_scanning_target](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/iam_policy_document) | data source |
 | [aws_iam_policy_document.run_data_scanner_custom_vpcs_data](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/iam_policy_document) | data source |
 | [aws_region.current](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/region) | data source |
 ## Inputs
@@ -117,6 +117,7 @@ module "agentless_scanning_environments" {
 | <a name="input_agentless_scanning_scanner_role_name"></a> [agentless\_scanning\_scanner\_role\_name](#input\_agentless\_scanning\_scanner\_role\_name) | The unique name of the IAM role that Agentless scanning scanner will be assuming | `string` | `"CrowdStrikeAgentlessScanningScannerRole"` | no |
 | <a name="input_agentless_scanning_use_custom_vpc"></a> [agentless\_scanning\_use\_custom\_vpc](#input\_agentless\_scanning\_use\_custom\_vpc) | Whether to use existing custom VPC resources for ALL deployment regions (requires agentless\_scanning\_custom\_vpc\_resources\_map with all regions) | `bool` | `false` | no |
 | <a name="input_dspm_dynamodb_access"></a> [dspm\_dynamodb\_access](#input\_dspm\_dynamodb\_access) | Apply permissions for DynamoDB table scanning | `bool` | `true` | no |
+| <a name="input_dspm_ebs_access"></a> [dspm\_ebs\_access](#input\_dspm\_ebs\_access) | Apply permissions for EBS scanning | `bool` | `true` | no |
 | <a name="input_dspm_rds_access"></a> [dspm\_rds\_access](#input\_dspm\_rds\_access) | Apply permissions for RDS instance scanning | `bool` | `true` | no |
 | <a name="input_dspm_redshift_access"></a> [dspm\_redshift\_access](#input\_dspm\_redshift\_access) | Apply permissions for Redshift cluster scanning | `bool` | `true` | no |
 | <a name="input_dspm_s3_access"></a> [dspm\_s3\_access](#input\_dspm\_s3\_access) | Apply permissions for S3 bucket scanning | `bool` | `true` | no |
