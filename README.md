@@ -232,7 +232,7 @@ module "fcs_account_us_east_2" {
 ## Providers
 
 | Name | Version |
-|------|----|
+|------|---------|
 | <a name="provider_aws"></a> [aws](#provider\_aws) | >= 5.0.0 |
 | <a name="provider_crowdstrike"></a> [crowdstrike](#provider\_crowdstrike) | >= 0.0.44 |
 ## Resources
