@@ -225,13 +225,13 @@ module "fcs_child_account_1" {
 | <a name="input_aws_role_name"></a> [aws\_role\_name](#input\_aws\_role\_name) | The AWS profile to be used for this registration | `string` | n/a | yes |
 | <a name="input_cloudtrail_bucket_name"></a> [cloudtrail\_bucket\_name](#input\_cloudtrail\_bucket\_name) | Name of the S3 bucket for CloudTrail logs | `string` | `""` | no |
 | <a name="input_dspm_create_nat_gateway"></a> [dspm\_create\_nat\_gateway](#input\_dspm\_create\_nat\_gateway) | DEPRECATED: Use agentless\_scanning\_create\_nat\_gateway instead. Set to true to create a NAT Gateway for DSPM scanning environments | `bool` | `true` | no |
-| <a name="input_dspm_dynamodb_access"></a> [dspm\_dynamodb\_access](#input\_dspm\_dynamodb\_access) | Apply permissions for DynamoDB table scanning | `bool` | `true` | no |
-| <a name="input_dspm_ebs_access"></a> [dspm\_ebs\_access](#input\_dspm\_ebs\_access) | Apply permissions for EBS scanning | `bool` | `true` | no |
+| <a name="input_dspm_dynamodb_access"></a> [dspm\_dynamodb\_access](#input\_dspm\_dynamodb\_access) | Apply permissions for DSPM DynamoDB table scanning | `bool` | `true` | no |
+| <a name="input_dspm_ebs_access"></a> [dspm\_ebs\_access](#input\_dspm\_ebs\_access) | Apply permissions for DSPM VM scanning | `bool` | `true` | no |
 | <a name="input_dspm_rds_access"></a> [dspm\_rds\_access](#input\_dspm\_rds\_access) | Apply permissions for RDS instance scanning | `bool` | `true` | no |
-| <a name="input_dspm_redshift_access"></a> [dspm\_redshift\_access](#input\_dspm\_redshift\_access) | Apply permissions for Redshift cluster scanning | `bool` | `true` | no |
+| <a name="input_dspm_redshift_access"></a> [dspm\_redshift\_access](#input\_dspm\_redshift\_access) | Apply permissions for DSPM Redshift cluster scanning | `bool` | `true` | no |
 | <a name="input_dspm_regions"></a> [dspm\_regions](#input\_dspm\_regions) | DEPRECATED: Use agentless\_scanning\_regions instead. List of regions where DSPM scanning will be deployed | `list(string)` | `[]` | no |
 | <a name="input_dspm_role_name"></a> [dspm\_role\_name](#input\_dspm\_role\_name) | DEPRECATED: Use agentless\_scanning\_role\_name instead. The unique name of the IAM role that DSPM will be assuming | `string` | `""` | no |
-| <a name="input_dspm_s3_access"></a> [dspm\_s3\_access](#input\_dspm\_s3\_access) | Apply permissions for S3 bucket scanning | `bool` | `true` | no |
+| <a name="input_dspm_s3_access"></a> [dspm\_s3\_access](#input\_dspm\_s3\_access) | Apply permissions for DSPM S3 bucket scanning | `bool` | `true` | no |
 | <a name="input_dspm_scanner_role_name"></a> [dspm\_scanner\_role\_name](#input\_dspm\_scanner\_role\_name) | DEPRECATED: Use agentless\_scanning\_scanner\_role\_name instead. The unique name of the IAM role that CrowdStrike Scanner will be assuming | `string` | `""` | no |
 | <a name="input_enable_dspm"></a> [enable\_dspm](#input\_enable\_dspm) | Set to true to enable Data Security Posture Managment | `bool` | `false` | no |
 | <a name="input_enable_idp"></a> [enable\_idp](#input\_enable\_idp) | Set to true to install Identity Protection resources | `bool` | `false` | no |

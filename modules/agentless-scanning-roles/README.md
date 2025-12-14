@@ -116,11 +116,11 @@ module "agentless_scanning_environments" {
 | <a name="input_agentless_scanning_role_name"></a> [agentless\_scanning\_role\_name](#input\_agentless\_scanning\_role\_name) | The unique name of the IAM role that Agentless scanning will be assuming | `string` | `"CrowdStrikeAgentlessScanningIntegrationRole"` | no |
 | <a name="input_agentless_scanning_scanner_role_name"></a> [agentless\_scanning\_scanner\_role\_name](#input\_agentless\_scanning\_scanner\_role\_name) | The unique name of the IAM role that Agentless scanning scanner will be assuming | `string` | `"CrowdStrikeAgentlessScanningScannerRole"` | no |
 | <a name="input_agentless_scanning_use_custom_vpc"></a> [agentless\_scanning\_use\_custom\_vpc](#input\_agentless\_scanning\_use\_custom\_vpc) | Whether to use existing custom VPC resources for ALL deployment regions (requires agentless\_scanning\_custom\_vpc\_resources\_map with all regions) | `bool` | `false` | no |
-| <a name="input_dspm_dynamodb_access"></a> [dspm\_dynamodb\_access](#input\_dspm\_dynamodb\_access) | Apply permissions for DynamoDB table scanning | `bool` | `true` | no |
-| <a name="input_dspm_ebs_access"></a> [dspm\_ebs\_access](#input\_dspm\_ebs\_access) | Apply permissions for EBS scanning | `bool` | `true` | no |
+| <a name="input_dspm_dynamodb_access"></a> [dspm\_dynamodb\_access](#input\_dspm\_dynamodb\_access) | Apply permissions for DSPM DynamoDB table scanning | `bool` | `true` | no |
+| <a name="input_dspm_ebs_access"></a> [dspm\_ebs\_access](#input\_dspm\_ebs\_access) | Apply permissions for DSPM VM scanning | `bool` | `true` | no |
 | <a name="input_dspm_rds_access"></a> [dspm\_rds\_access](#input\_dspm\_rds\_access) | Apply permissions for RDS instance scanning | `bool` | `true` | no |
-| <a name="input_dspm_redshift_access"></a> [dspm\_redshift\_access](#input\_dspm\_redshift\_access) | Apply permissions for Redshift cluster scanning | `bool` | `true` | no |
-| <a name="input_dspm_s3_access"></a> [dspm\_s3\_access](#input\_dspm\_s3\_access) | Apply permissions for S3 bucket scanning | `bool` | `true` | no |
+| <a name="input_dspm_redshift_access"></a> [dspm\_redshift\_access](#input\_dspm\_redshift\_access) | Apply permissions for DSPM Redshift cluster scanning | `bool` | `true` | no |
+| <a name="input_dspm_s3_access"></a> [dspm\_s3\_access](#input\_dspm\_s3\_access) | Apply permissions for DSPM S3 bucket scanning | `bool` | `true` | no |
 | <a name="input_enable_dspm"></a> [enable\_dspm](#input\_enable\_dspm) | Enable DSPM scanning resources and permissions | `bool` | `false` | no |
 | <a name="input_enable_vulnerability_scanning"></a> [enable\_vulnerability\_scanning](#input\_enable\_vulnerability\_scanning) | Enable vulnerability scanning resources and permissions | `bool` | `false` | no |
 | <a name="input_external_id"></a> [external\_id](#input\_external\_id) | Unique ID for customer | `string` | n/a | yes |
