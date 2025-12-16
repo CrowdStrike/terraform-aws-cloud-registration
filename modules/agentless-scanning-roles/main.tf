@@ -17,7 +17,7 @@ resource "aws_ssm_parameter" "agentless_scanning_root_parameter" {
   type = "String"
   tier = "Intelligent-Tiering"
   value = jsonencode({
-    version            = "1.0.0+tf.2"
+    version            = "1.1.0+tf.0"
     deployment_regions = var.agentless_scanning_regions
     scan_products = {
       dspm_scanning_enabled          = var.enable_dspm
