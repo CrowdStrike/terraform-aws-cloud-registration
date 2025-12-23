@@ -62,7 +62,7 @@ resource "aws_iam_role" "crowdstrike_aws_agentless_scanning_scanner_role" {
       {
         Effect = "Allow"
         Principal = {
-          AWS = "arn:aws:iam::${var.agentless_scanning_host_account_id}:role/${var.agentless_scanning_host_scanner_role_name}"
+          AWS = "arn:${local.aws_partition}:iam::${var.agentless_scanning_host_account_id}:role/${var.agentless_scanning_host_scanner_role_name}"
         }
         Action = "sts:AssumeRole"
       }
@@ -83,7 +83,7 @@ moved {
 
 resource "aws_iam_role_policy_attachment" "cloud_watch_logs_read_only_access" {
   role       = aws_iam_role.crowdstrike_aws_agentless_scanning_scanner_role.name
-  policy_arn = "arn:aws:iam::aws:policy/CloudWatchLogsReadOnlyAccess"
+  policy_arn = "arn:${local.aws_partition}:iam::${local.aws_partition}:policy/CloudWatchLogsReadOnlyAccess"
 }
 
 
@@ -223,7 +223,7 @@ resource "aws_iam_role_policy" "crowdstrike_secret_reader" {
           "secretsmanager:DescribeSecret",
         ]
         Effect   = "Allow"
-        Resource = ["arn:aws:secretsmanager:*:*:secret:CrowdStrikeDSPMClientSecret-*"]
+        Resource = ["arn:${local.aws_partition}:secretsmanager:*:*:secret:CrowdStrikeDSPMClientSecret-*"]
       },
       {
         Sid      = "SecretsManagerListSecrets",
@@ -248,7 +248,7 @@ resource "aws_iam_role_policy" "crowdstrike_assume_target_scanner_role" {
         Action = [
           "sts:AssumeRole"
         ]
-        Resource = "arn:aws:iam::*:role/*"
+        Resource = "arn:${local.aws_partition}:iam::*:role/*"
       }
     ]
   })
@@ -270,8 +270,8 @@ resource "aws_iam_role_policy" "crowdstrike_ebs_volume_reader" {
           "ec2:DetachVolume"
         ]
         Resource = [
-          "arn:aws:ec2:*:${data.aws_caller_identity.current.account_id}:volume/*",
-          "arn:aws:ec2:*:${data.aws_caller_identity.current.account_id}:instance/*"
+          "arn:${local.aws_partition}:ec2:*:${data.aws_caller_identity.current.account_id}:volume/*",
+          "arn:${local.aws_partition}:ec2:*:${data.aws_caller_identity.current.account_id}:instance/*"
         ]
         Condition = {
           StringEquals = {
@@ -295,7 +295,7 @@ resource "aws_iam_role_policy" "crowdstrike_ebs_volume_reader" {
           "kms:Decrypt",
           "kms:CreateGrant"
         ]
-        Resource = "arn:aws:kms:*:${data.aws_caller_identity.current.account_id}:key/*"
+        Resource = "arn:${local.aws_partition}:kms:*:${data.aws_caller_identity.current.account_id}:key/*"
         Condition = {
           StringLike = {
             "kms:ViaService" = "ec2.*.amazonaws.com"

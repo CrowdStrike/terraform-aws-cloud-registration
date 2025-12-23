@@ -7,7 +7,7 @@ data "aws_iam_policy_document" "policy_kms_key_host" {
     effect = "Allow"
     principals {
       type        = "AWS"
-      identifiers = [join("", ["arn:aws:iam::", local.account_id, ":root"])]
+      identifiers = [join("", ["arn:${local.aws_partition}:iam::", local.account_id, ":root"])]
     }
     actions = [
       "kms:*"
@@ -83,7 +83,7 @@ data "aws_iam_policy_document" "policy_kms_key_target" {
     effect = "Allow"
     principals {
       type        = "AWS"
-      identifiers = [join("", ["arn:aws:iam::", local.account_id, ":root"])]
+      identifiers = [join("", ["arn:${local.aws_partition}:iam::", local.account_id, ":root"])]
     }
     actions = [
       "kms:*"
@@ -157,7 +157,7 @@ data "aws_iam_policy_document" "policy_kms_key_target" {
     principals {
       type = "AWS"
       identifiers = [
-        "arn:aws:iam::${var.agentless_scanning_host_account_id}:role/${var.agentless_scanning_host_role_name}"
+        "arn:${local.aws_partition}:iam::${var.agentless_scanning_host_account_id}:role/${var.agentless_scanning_host_role_name}"
       ]
     }
     principals {
@@ -182,7 +182,7 @@ data "aws_iam_policy_document" "policy_kms_key_target" {
     principals {
       type = "AWS"
       identifiers = [
-        "arn:aws:iam::${var.agentless_scanning_host_account_id}:role/${var.agentless_scanning_host_role_name}"
+        "arn:${local.aws_partition}:iam::${var.agentless_scanning_host_account_id}:role/${var.agentless_scanning_host_role_name}"
       ]
     }
     actions = [

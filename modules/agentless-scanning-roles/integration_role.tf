@@ -1,5 +1,6 @@
 data "aws_caller_identity" "current" {}
 data "aws_region" "current" {}
+data "aws_partition" "current" {}
 
 data "aws_iam_policy_document" "assume_role" {
   statement {
@@ -41,7 +42,7 @@ moved {
 
 resource "aws_iam_role_policy_attachment" "security_audit" {
   role       = aws_iam_role.crowdstrike_aws_agentless_scanning_integration_role.name
-  policy_arn = "arn:aws:iam::aws:policy/SecurityAudit"
+  policy_arn = "arn:${local.aws_partition}:iam::${local.aws_partition}:policy/SecurityAudit"
 }
 
 resource "aws_iam_role_policy" "crowdstrike_cloud_scan_supplemental" {
@@ -99,8 +100,8 @@ data "aws_iam_policy_document" "crowdstrike_run_data_scanner_restricted_data" {
     ]
     effect = "Allow"
     resources = [
-      "arn:aws:ec2:*:${data.aws_caller_identity.current.account_id}:instance/*",
-      "arn:aws:ec2:*:${data.aws_caller_identity.current.account_id}:volume/*"
+      "arn:${local.aws_partition}:ec2:*:${data.aws_caller_identity.current.account_id}:instance/*",
+      "arn:${local.aws_partition}:ec2:*:${data.aws_caller_identity.current.account_id}:volume/*"
     ]
     condition {
       test     = "StringEquals"
@@ -118,11 +119,11 @@ data "aws_iam_policy_document" "crowdstrike_run_data_scanner_restricted_data" {
     ]
     effect = "Allow"
     resources = [
-      "arn:aws:ec2:*::image/*",
-      "arn:aws:ec2:*::snapshot/*",
-      "arn:aws:ec2:*:${data.aws_caller_identity.current.account_id}:volume/*",
-      "arn:aws:ec2:*:${data.aws_caller_identity.current.account_id}:network-interface/*",
-      "arn:aws:ec2:*:${data.aws_caller_identity.current.account_id}:security-group/*"
+      "arn:${local.aws_partition}:ec2:*::image/*",
+      "arn:${local.aws_partition}:ec2:*::snapshot/*",
+      "arn:${local.aws_partition}:ec2:*:${data.aws_caller_identity.current.account_id}:volume/*",
+      "arn:${local.aws_partition}:ec2:*:${data.aws_caller_identity.current.account_id}:network-interface/*",
+      "arn:${local.aws_partition}:ec2:*:${data.aws_caller_identity.current.account_id}:security-group/*"
     ]
   }
 
@@ -135,8 +136,8 @@ data "aws_iam_policy_document" "crowdstrike_run_data_scanner_restricted_data" {
     ]
     effect = "Allow"
     resources = [
-      "arn:aws:ec2:*:${data.aws_caller_identity.current.account_id}:instance/*",
-      "arn:aws:ec2:*:${data.aws_caller_identity.current.account_id}:volume/*"
+      "arn:${local.aws_partition}:ec2:*:${data.aws_caller_identity.current.account_id}:instance/*",
+      "arn:${local.aws_partition}:ec2:*:${data.aws_caller_identity.current.account_id}:volume/*"
     ]
     condition {
       test     = "StringEquals"
@@ -156,8 +157,8 @@ data "aws_iam_policy_document" "crowdstrike_run_data_scanner_restricted_data" {
     ]
 
     resources = [
-      "arn:aws:ec2:*:${data.aws_caller_identity.current.account_id}:security-group/*",
-      "arn:aws:ec2:*:${data.aws_caller_identity.current.account_id}:subnet/*"
+      "arn:${local.aws_partition}:ec2:*:${data.aws_caller_identity.current.account_id}:security-group/*",
+      "arn:${local.aws_partition}:ec2:*:${data.aws_caller_identity.current.account_id}:subnet/*"
     ]
 
     condition {
@@ -176,8 +177,8 @@ data "aws_iam_policy_document" "crowdstrike_run_data_scanner_restricted_data" {
     ]
     effect = "Allow"
     resources = [
-      "arn:aws:ec2:*:${data.aws_caller_identity.current.account_id}:instance/*",
-      "arn:aws:ec2:*:${data.aws_caller_identity.current.account_id}:volume/*"
+      "arn:${local.aws_partition}:ec2:*:${data.aws_caller_identity.current.account_id}:instance/*",
+      "arn:${local.aws_partition}:ec2:*:${data.aws_caller_identity.current.account_id}:volume/*"
     ]
     condition {
       test     = "StringEquals"
@@ -199,7 +200,7 @@ data "aws_iam_policy_document" "crowdstrike_run_data_scanner_restricted_data" {
     ]
     effect = "Allow"
     resources = [
-      "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/${var.agentless_scanning_scanner_role_name}"
+      "arn:${local.aws_partition}:iam::${data.aws_caller_identity.current.account_id}:role/${var.agentless_scanning_scanner_role_name}"
     ]
     condition {
       test     = "StringEquals"
@@ -214,7 +215,7 @@ data "aws_iam_policy_document" "crowdstrike_run_data_scanner_restricted_data" {
       "ssm:GetParameters"
     ]
     effect    = "Allow"
-    resources = ["arn:aws:ssm:*:*:parameter/*"]
+    resources = ["arn:${local.aws_partition}:ssm:*:*:parameter/*"]
   }
 }
 
@@ -273,10 +274,10 @@ data "aws_iam_policy_document" "crowdstrike_rds_clone_base" {
     ]
     effect = "Allow"
     resources = [
-      "arn:aws:rds:*:${data.aws_caller_identity.current.account_id}:db:*",
-      "arn:aws:rds:*:${data.aws_caller_identity.current.account_id}:snapshot:crowdstrike-*",
-      "arn:aws:rds:*:${data.aws_caller_identity.current.account_id}:cluster:*",
-      "arn:aws:rds:*:${data.aws_caller_identity.current.account_id}:cluster-snapshot:crowdstrike-*"
+      "arn:${local.aws_partition}:rds:*:${data.aws_caller_identity.current.account_id}:db:*",
+      "arn:${local.aws_partition}:rds:*:${data.aws_caller_identity.current.account_id}:snapshot:crowdstrike-*",
+      "arn:${local.aws_partition}:rds:*:${data.aws_caller_identity.current.account_id}:cluster:*",
+      "arn:${local.aws_partition}:rds:*:${data.aws_caller_identity.current.account_id}:cluster-snapshot:crowdstrike-*"
     ]
     condition {
       test     = "StringEquals"
@@ -298,10 +299,10 @@ data "aws_iam_policy_document" "crowdstrike_rds_clone_host" {
     ]
     effect = "Allow"
     resources = [
-      "arn:aws:rds:*:${data.aws_caller_identity.current.account_id}:db:crowdstrike-*",
-      "arn:aws:rds:*:${data.aws_caller_identity.current.account_id}:snapshot:crowdstrike-*",
-      "arn:aws:rds:*:${data.aws_caller_identity.current.account_id}:cluster:crowdstrike-*",
-      "arn:aws:rds:*:${data.aws_caller_identity.current.account_id}:cluster-snapshot:crowdstrike-*"
+      "arn:${local.aws_partition}:rds:*:${data.aws_caller_identity.current.account_id}:db:crowdstrike-*",
+      "arn:${local.aws_partition}:rds:*:${data.aws_caller_identity.current.account_id}:snapshot:crowdstrike-*",
+      "arn:${local.aws_partition}:rds:*:${data.aws_caller_identity.current.account_id}:cluster:crowdstrike-*",
+      "arn:${local.aws_partition}:rds:*:${data.aws_caller_identity.current.account_id}:cluster-snapshot:crowdstrike-*"
     ]
     condition {
       test     = "StringEquals"
@@ -320,9 +321,9 @@ data "aws_iam_policy_document" "crowdstrike_rds_clone_host" {
     ]
     effect = "Allow"
     resources = [
-      "arn:aws:rds:*:${data.aws_caller_identity.current.account_id}:snapshot:*",
-      "arn:aws:rds:*:${data.aws_caller_identity.current.account_id}:cluster-snapshot:*",
-      "arn:aws:kms:*:${data.aws_caller_identity.current.account_id}:key/*"
+      "arn:${local.aws_partition}:rds:*:${data.aws_caller_identity.current.account_id}:snapshot:*",
+      "arn:${local.aws_partition}:rds:*:${data.aws_caller_identity.current.account_id}:cluster-snapshot:*",
+      "arn:${local.aws_partition}:kms:*:${data.aws_caller_identity.current.account_id}:key/*"
     ]
   }
 
@@ -335,7 +336,7 @@ data "aws_iam_policy_document" "crowdstrike_rds_clone_host" {
     ]
     effect = "Allow"
     resources = [
-      "arn:aws:rds:*:${data.aws_caller_identity.current.account_id}:subgrp:*"
+      "arn:${local.aws_partition}:rds:*:${data.aws_caller_identity.current.account_id}:subgrp:*"
     ]
     condition {
       test     = "StringEquals"
@@ -353,13 +354,13 @@ data "aws_iam_policy_document" "crowdstrike_rds_clone_host" {
     ]
     effect = "Allow"
     resources = [
-      "arn:aws:rds:*:${data.aws_caller_identity.current.account_id}:db:*",
-      "arn:aws:rds:*:${data.aws_caller_identity.current.account_id}:cluster:*",
-      "arn:aws:ec2:*:${data.aws_caller_identity.current.account_id}:security-group/*",
-      "arn:aws:rds:*:${data.aws_caller_identity.current.account_id}:og:*",
-      "arn:aws:rds:*:${data.aws_caller_identity.current.account_id}:pg:*",
-      "arn:aws:rds:*:${data.aws_caller_identity.current.account_id}:cluster-og:*",
-      "arn:aws:rds:*:${data.aws_caller_identity.current.account_id}:cluster-pg:*"
+      "arn:${local.aws_partition}:rds:*:${data.aws_caller_identity.current.account_id}:db:*",
+      "arn:${local.aws_partition}:rds:*:${data.aws_caller_identity.current.account_id}:cluster:*",
+      "arn:${local.aws_partition}:ec2:*:${data.aws_caller_identity.current.account_id}:security-group/*",
+      "arn:${local.aws_partition}:rds:*:${data.aws_caller_identity.current.account_id}:og:*",
+      "arn:${local.aws_partition}:rds:*:${data.aws_caller_identity.current.account_id}:pg:*",
+      "arn:${local.aws_partition}:rds:*:${data.aws_caller_identity.current.account_id}:cluster-og:*",
+      "arn:${local.aws_partition}:rds:*:${data.aws_caller_identity.current.account_id}:cluster-pg:*"
     ]
     condition {
       test     = "StringEquals"
@@ -377,8 +378,8 @@ data "aws_iam_policy_document" "crowdstrike_rds_clone_host" {
     ]
     effect = "Allow"
     resources = [
-      "arn:aws:rds:*:*:snapshot:*",
-      "arn:aws:rds:*:*:cluster-snapshot:*"
+      "arn:${local.aws_partition}:rds:*:*:snapshot:*",
+      "arn:${local.aws_partition}:rds:*:*:cluster-snapshot:*"
     ]
     condition {
       test     = "StringEquals"
@@ -395,9 +396,9 @@ data "aws_iam_policy_document" "crowdstrike_rds_clone_host" {
     ]
     effect = "Allow"
     resources = [
-      "arn:aws:rds:*:${data.aws_caller_identity.current.account_id}:db:*",
-      "arn:aws:rds:*:${data.aws_caller_identity.current.account_id}:cluster:*",
-      "arn:aws:rds:*:${data.aws_caller_identity.current.account_id}:cluster-snapshot:*"
+      "arn:${local.aws_partition}:rds:*:${data.aws_caller_identity.current.account_id}:db:*",
+      "arn:${local.aws_partition}:rds:*:${data.aws_caller_identity.current.account_id}:cluster:*",
+      "arn:${local.aws_partition}:rds:*:${data.aws_caller_identity.current.account_id}:cluster-snapshot:*"
     ]
     condition {
       test     = "StringEquals"
@@ -414,7 +415,7 @@ data "aws_iam_policy_document" "crowdstrike_rds_clone_host" {
     ]
     effect = "Allow"
     resources = [
-      "arn:aws:rds:*:${data.aws_caller_identity.current.account_id}:subgrp:*"
+      "arn:${local.aws_partition}:rds:*:${data.aws_caller_identity.current.account_id}:subgrp:*"
     ]
     condition {
       test     = "StringEquals"
@@ -437,14 +438,14 @@ data "aws_iam_policy_document" "crowdstrike_rds_clone_host" {
     ]
     effect = "Allow"
     resources = [
-      "arn:aws:rds:*:${data.aws_caller_identity.current.account_id}:db:*",
-      "arn:aws:rds:*:${data.aws_caller_identity.current.account_id}:snapshot:*",
-      "arn:aws:rds:*:${data.aws_caller_identity.current.account_id}:cluster:*",
-      "arn:aws:rds:*:${data.aws_caller_identity.current.account_id}:cluster-snapshot:*",
-      "arn:aws:rds:*:${data.aws_caller_identity.current.account_id}:og:*",
-      "arn:aws:rds:*:${data.aws_caller_identity.current.account_id}:pg:*",
-      "arn:aws:rds:*:${data.aws_caller_identity.current.account_id}:cluster-og:*",
-      "arn:aws:rds:*:${data.aws_caller_identity.current.account_id}:cluster-pg:*"
+      "arn:${local.aws_partition}:rds:*:${data.aws_caller_identity.current.account_id}:db:*",
+      "arn:${local.aws_partition}:rds:*:${data.aws_caller_identity.current.account_id}:snapshot:*",
+      "arn:${local.aws_partition}:rds:*:${data.aws_caller_identity.current.account_id}:cluster:*",
+      "arn:${local.aws_partition}:rds:*:${data.aws_caller_identity.current.account_id}:cluster-snapshot:*",
+      "arn:${local.aws_partition}:rds:*:${data.aws_caller_identity.current.account_id}:og:*",
+      "arn:${local.aws_partition}:rds:*:${data.aws_caller_identity.current.account_id}:pg:*",
+      "arn:${local.aws_partition}:rds:*:${data.aws_caller_identity.current.account_id}:cluster-og:*",
+      "arn:${local.aws_partition}:rds:*:${data.aws_caller_identity.current.account_id}:cluster-pg:*"
     ]
     condition {
       test     = "StringEquals"
@@ -466,8 +467,8 @@ data "aws_iam_policy_document" "crowdstrike_rds_clone_target" {
     ]
     effect = "Allow"
     resources = [
-      "arn:aws:rds:*:${data.aws_caller_identity.current.account_id}:snapshot:crowdstrike-*",
-      "arn:aws:rds:*:${data.aws_caller_identity.current.account_id}:cluster-snapshot:crowdstrike-*"
+      "arn:${local.aws_partition}:rds:*:${data.aws_caller_identity.current.account_id}:snapshot:crowdstrike-*",
+      "arn:${local.aws_partition}:rds:*:${data.aws_caller_identity.current.account_id}:cluster-snapshot:crowdstrike-*"
     ]
     condition {
       test     = "StringEquals"
@@ -485,8 +486,8 @@ data "aws_iam_policy_document" "crowdstrike_rds_clone_target" {
     ]
     effect = "Allow"
     resources = [
-      "arn:aws:rds:*:${data.aws_caller_identity.current.account_id}:snapshot:*",
-      "arn:aws:rds:*:${data.aws_caller_identity.current.account_id}:cluster-snapshot:*"
+      "arn:${local.aws_partition}:rds:*:${data.aws_caller_identity.current.account_id}:snapshot:*",
+      "arn:${local.aws_partition}:rds:*:${data.aws_caller_identity.current.account_id}:cluster-snapshot:*"
     ]
     condition {
       test     = "StringEquals"
@@ -504,8 +505,8 @@ data "aws_iam_policy_document" "crowdstrike_rds_clone_target" {
     ]
     effect = "Allow"
     resources = [
-      "arn:aws:rds:*:${data.aws_caller_identity.current.account_id}:snapshot:*",
-      "arn:aws:rds:*:${data.aws_caller_identity.current.account_id}:cluster-snapshot:*"
+      "arn:${local.aws_partition}:rds:*:${data.aws_caller_identity.current.account_id}:snapshot:*",
+      "arn:${local.aws_partition}:rds:*:${data.aws_caller_identity.current.account_id}:cluster-snapshot:*"
     ]
     condition {
       test     = "StringEquals"
@@ -523,8 +524,8 @@ data "aws_iam_policy_document" "crowdstrike_rds_clone_target" {
     ]
     effect = "Allow"
     resources = [
-      "arn:aws:rds:*:${data.aws_caller_identity.current.account_id}:snapshot:crowdstrike-*",
-      "arn:aws:rds:*:${data.aws_caller_identity.current.account_id}:cluster-snapshot:crowdstrike-*"
+      "arn:${local.aws_partition}:rds:*:${data.aws_caller_identity.current.account_id}:snapshot:crowdstrike-*",
+      "arn:${local.aws_partition}:rds:*:${data.aws_caller_identity.current.account_id}:cluster-snapshot:crowdstrike-*"
     ]
     condition {
       test     = "StringEquals"
@@ -561,8 +562,8 @@ data "aws_iam_policy_document" "crowdstrike_redshift_clone_host" {
     ]
     effect = "Allow"
     resources = [
-      "arn:aws:redshift:*:${data.aws_caller_identity.current.account_id}:cluster:*",
-      "arn:aws:redshift:*:*:snapshot:*"
+      "arn:${local.aws_partition}:redshift:*:${data.aws_caller_identity.current.account_id}:cluster:*",
+      "arn:${local.aws_partition}:redshift:*:*:snapshot:*"
     ]
   }
 
@@ -577,8 +578,8 @@ data "aws_iam_policy_document" "crowdstrike_redshift_clone_host" {
     ]
     effect = "Allow"
     resources = [
-      "arn:aws:redshift:*:${data.aws_caller_identity.current.account_id}:cluster:crowdstrike-*",
-      "arn:aws:redshift:*:${data.aws_caller_identity.current.account_id}:snapshot:*/crowdstrike-snapshot-*"
+      "arn:${local.aws_partition}:redshift:*:${data.aws_caller_identity.current.account_id}:cluster:crowdstrike-*",
+      "arn:${local.aws_partition}:redshift:*:${data.aws_caller_identity.current.account_id}:snapshot:*/crowdstrike-snapshot-*"
     ]
   }
 
@@ -592,7 +593,7 @@ data "aws_iam_policy_document" "crowdstrike_redshift_clone_host" {
     ]
     effect = "Allow"
     resources = [
-      "arn:aws:secretsmanager:*:${data.aws_caller_identity.current.account_id}:secret:*"
+      "arn:${local.aws_partition}:secretsmanager:*:${data.aws_caller_identity.current.account_id}:secret:*"
     ]
   }
 }
@@ -609,8 +610,8 @@ data "aws_iam_policy_document" "crowdstrike_redshift_clone_target" {
     ]
     effect = "Allow"
     resources = [
-      "arn:aws:redshift:*:${data.aws_caller_identity.current.account_id}:cluster:*",
-      "arn:aws:redshift:*:${data.aws_caller_identity.current.account_id}:snapshot:*"
+      "arn:${local.aws_partition}:redshift:*:${data.aws_caller_identity.current.account_id}:cluster:*",
+      "arn:${local.aws_partition}:redshift:*:${data.aws_caller_identity.current.account_id}:snapshot:*"
     ]
   }
 
@@ -623,8 +624,8 @@ data "aws_iam_policy_document" "crowdstrike_redshift_clone_target" {
     ]
     effect = "Allow"
     resources = [
-      "arn:aws:redshift:*:${data.aws_caller_identity.current.account_id}:cluster:crowdstrike-*",
-      "arn:aws:redshift:*:${data.aws_caller_identity.current.account_id}:snapshot:*/crowdstrike-snapshot-*"
+      "arn:${local.aws_partition}:redshift:*:${data.aws_caller_identity.current.account_id}:cluster:crowdstrike-*",
+      "arn:${local.aws_partition}:redshift:*:${data.aws_caller_identity.current.account_id}:snapshot:*/crowdstrike-snapshot-*"
     ]
   }
 
@@ -637,7 +638,7 @@ data "aws_iam_policy_document" "crowdstrike_redshift_clone_target" {
     ]
     effect = "Allow"
     resources = [
-      "arn:aws:redshift:*:${data.aws_caller_identity.current.account_id}:snapshot:*"
+      "arn:${local.aws_partition}:redshift:*:${data.aws_caller_identity.current.account_id}:snapshot:*"
     ]
   }
 }
@@ -655,7 +656,7 @@ data "aws_iam_policy_document" "crowdstrike_ssm_reader_data" {
     ]
     effect = "Allow"
     resources = [
-      "arn:aws:ssm:*:${data.aws_caller_identity.current.account_id}:parameter/CrowdStrike/*"
+      "arn:${local.aws_partition}:ssm:*:${data.aws_caller_identity.current.account_id}:parameter/CrowdStrike/*"
     ]
   }
 }
@@ -680,8 +681,8 @@ data "aws_iam_policy_document" "run_data_scanner_custom_vpcs_data" {
     ]
     effect = "Allow"
     resources = [
-      "arn:aws:ec2:*:${data.aws_caller_identity.current.account_id}:security-group/*",
-      "arn:aws:ec2:*:${data.aws_caller_identity.current.account_id}:subnet/*"
+      "arn:${local.aws_partition}:ec2:*:${data.aws_caller_identity.current.account_id}:security-group/*",
+      "arn:${local.aws_partition}:ec2:*:${data.aws_caller_identity.current.account_id}:subnet/*"
     ]
     condition {
       test     = "ForAnyValue:StringEquals"
@@ -710,7 +711,7 @@ data "aws_iam_policy_document" "crowdstrike_vulnerability_scanning_base" {
     ]
     effect = "Allow"
     resources = [
-      "arn:aws:ec2:*:${data.aws_caller_identity.current.account_id}:volume/*"
+      "arn:${local.aws_partition}:ec2:*:${data.aws_caller_identity.current.account_id}:volume/*"
     ]
   }
 
@@ -723,7 +724,7 @@ data "aws_iam_policy_document" "crowdstrike_vulnerability_scanning_base" {
     ]
     effect = "Allow"
     resources = [
-      "arn:aws:ec2:*::snapshot/*"
+      "arn:${local.aws_partition}:ec2:*::snapshot/*"
     ]
     condition {
       test     = "StringEquals"
@@ -741,7 +742,7 @@ data "aws_iam_policy_document" "crowdstrike_vulnerability_scanning_base" {
     ]
     effect = "Allow"
     resources = [
-      "arn:aws:ec2:*::snapshot/*"
+      "arn:${local.aws_partition}:ec2:*::snapshot/*"
     ]
     condition {
       test     = "StringEquals"
@@ -758,7 +759,7 @@ data "aws_iam_policy_document" "crowdstrike_vulnerability_scanning_base" {
     ]
     effect = "Allow"
     resources = [
-      "arn:aws:ec2:*::snapshot/*"
+      "arn:${local.aws_partition}:ec2:*::snapshot/*"
     ]
     condition {
       test     = "ForAnyValue:StringEquals"
@@ -780,7 +781,7 @@ data "aws_iam_policy_document" "crowdstrike_vulnerability_scanning_base" {
     ]
     effect = "Allow"
     resources = [
-      "arn:aws:kms:*:*:key/*"
+      "arn:${local.aws_partition}:kms:*:*:key/*"
     ]
     condition {
       test     = "StringLike"
@@ -809,7 +810,7 @@ data "aws_iam_policy_document" "crowdstrike_vulnerability_scanning_host" {
     ]
     effect = "Allow"
     resources = [
-      "arn:aws:ec2:*::snapshot/*"
+      "arn:${local.aws_partition}:ec2:*::snapshot/*"
     ]
   }
 
@@ -821,7 +822,7 @@ data "aws_iam_policy_document" "crowdstrike_vulnerability_scanning_host" {
     ]
     effect = "Allow"
     resources = [
-      "arn:aws:ec2:*:${data.aws_caller_identity.current.account_id}:volume/*"
+      "arn:${local.aws_partition}:ec2:*:${data.aws_caller_identity.current.account_id}:volume/*"
     ]
     condition {
       test     = "StringEquals"
@@ -838,7 +839,7 @@ data "aws_iam_policy_document" "crowdstrike_vulnerability_scanning_host" {
     ]
     effect = "Allow"
     resources = [
-      "arn:aws:ec2:*:${data.aws_caller_identity.current.account_id}:volume/*"
+      "arn:${local.aws_partition}:ec2:*:${data.aws_caller_identity.current.account_id}:volume/*"
     ]
     condition {
       test     = "StringEquals"
@@ -855,7 +856,7 @@ data "aws_iam_policy_document" "crowdstrike_vulnerability_scanning_host" {
     ]
     effect = "Allow"
     resources = [
-      "arn:aws:ec2:*:${data.aws_caller_identity.current.account_id}:volume/*"
+      "arn:${local.aws_partition}:ec2:*:${data.aws_caller_identity.current.account_id}:volume/*"
     ]
     condition {
       test     = "ForAnyValue:StringEquals"
@@ -884,7 +885,7 @@ data "aws_iam_policy_document" "crowdstrike_vulnerability_scanning_target" {
     ]
     effect = "Allow"
     resources = [
-      "arn:aws:ec2:*::snapshot/*"
+      "arn:${local.aws_partition}:ec2:*::snapshot/*"
     ]
     condition {
       test     = "StringEquals"
@@ -906,7 +907,7 @@ data "aws_iam_policy_document" "crowdstrike_vulnerability_scanning_target" {
     ]
     effect = "Allow"
     resources = [
-      "arn:aws:ec2:*::snapshot/*"
+      "arn:${local.aws_partition}:ec2:*::snapshot/*"
     ]
     condition {
       test     = "StringEquals"
