@@ -3,6 +3,7 @@ locals {
   crowdstrike_tag_value      = "CrowdStrike"
   logical_tag_key            = "CrowdStrikeLogicalId"
   deployment_regions_tag_key = "CrowdStrikeDeploymentRegions"
+
   aws_partition = data.aws_partition.current.partition
 
   # Extract VPC ARNs from custom VPC resources map for IAM policy conditions

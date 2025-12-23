@@ -12,6 +12,7 @@ locals {
   logical_kms_key               = "KMSKey"
   aws_region                    = data.aws_region.current.id
   account_id                    = data.aws_caller_identity.current.account_id
+  aws_partition                 = data.aws_partition.current.partition
 
   # Condition to determine if this is the host account
   is_host_account = var.agentless_scanning_host_account_id == var.account_id || var.agentless_scanning_host_account_id == ""
