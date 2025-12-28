@@ -42,7 +42,7 @@ moved {
 
 resource "aws_iam_role_policy_attachment" "security_audit" {
   role       = aws_iam_role.crowdstrike_aws_agentless_scanning_integration_role.name
-  policy_arn = "arn:${local.aws_partition}:iam::${local.aws_partition}:policy/SecurityAudit"
+  policy_arn = "arn:${local.aws_partition}:iam::aws:policy/SecurityAudit"
 }
 
 resource "aws_iam_role_policy" "crowdstrike_cloud_scan_supplemental" {

@@ -83,7 +83,7 @@ moved {
 
 resource "aws_iam_role_policy_attachment" "cloud_watch_logs_read_only_access" {
   role       = aws_iam_role.crowdstrike_aws_agentless_scanning_scanner_role.name
-  policy_arn = "arn:${local.aws_partition}:iam::${local.aws_partition}:policy/CloudWatchLogsReadOnlyAccess"
+  policy_arn = "arn:${local.aws_partition}:iam::aws:policy/CloudWatchLogsReadOnlyAccess"
 }
 
 
