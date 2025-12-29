@@ -32,7 +32,7 @@ variable "intermediate_role_arn" {
   nullable    = false
 
   validation {
-    condition     = can(regex("^arn:aws:iam::[0-9]{12}:role/[a-zA-Z0-9+=,.@\\-_/]+$", var.intermediate_role_arn))
+    condition     = can(regex("^arn:(aws|aws-us-gov):iam::[0-9]{12}:role/[a-zA-Z0-9+=,.@\\-_/]+$", var.intermediate_role_arn))
     error_message = "The provided value for cs_role_arn must be a valid AWS IAM role ARN."
   }
 }
