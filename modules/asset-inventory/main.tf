@@ -177,6 +177,7 @@ resource "aws_iam_role_policy" "this" {
           "memorydb:DescribeSubnetGroups",
           "memorydb:DescribeUsers",
           "memorydb:ListTags",
+          "redshift-serverless:ListNamespaces",
           "sns:GetSubscriptionAttributes",
           "ssm:GetParameter",
           "ssm:GetParameters",
