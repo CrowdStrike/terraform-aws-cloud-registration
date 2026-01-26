@@ -91,27 +91,38 @@ variable "agentless_scanning_custom_vpc_resources_map" {
 }
 
 variable "dspm_s3_access" {
-  description = "Apply permissions for S3 bucket scanning"
+  description = "Apply permissions for DSPM S3 bucket scanning"
   type        = bool
   default     = true
 }
 
 variable "dspm_dynamodb_access" {
-  description = "Apply permissions for DynamoDB table scanning"
+  description = "Apply permissions for DSPM DynamoDB table scanning"
   type        = bool
   default     = true
 }
 
 variable "dspm_rds_access" {
-  description = "Apply permissions for RDS instance scanning"
+  description = "Apply permissions for DSPM RDS instance scanning"
   type        = bool
   default     = true
 }
 
 variable "dspm_redshift_access" {
-  description = "Apply permissions for Redshift cluster scanning"
+  description = "Apply permissions for DSPM Redshift cluster scanning"
   type        = bool
   default     = true
+}
+
+variable "dspm_ebs_access" {
+  description = "Apply permissions for DSPM VM scanning"
+  type        = bool
+  default     = true
+
+  validation {
+    condition = (var.enable_vulnerability_scanning && var.enable_dspm) ? var.dspm_ebs_access : true
+    error_message = "DSPM EBS Access must be enabled when both Vulnerability Scanning and DSPM are enabled because they share the same permissions."
+  }
 }
 
 variable "enable_dspm" {

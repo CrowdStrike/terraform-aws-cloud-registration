@@ -12,6 +12,7 @@ locals {
   dspm_dynamodb_access                        = var.dspm_dynamodb_access
   dspm_rds_access                             = var.dspm_rds_access
   dspm_redshift_access                        = var.dspm_redshift_access
+  dspm_ebs_access                             = var.dspm_ebs_access
   agentless_scanning_use_custom_vpc           = var.agentless_scanning_use_custom_vpc
   agentless_scanning_custom_vpc_resources_map = var.agentless_scanning_custom_vpc_resources_map
 
@@ -103,6 +104,7 @@ module "fcs_account" {
   dspm_dynamodb_access                        = local.dspm_dynamodb_access
   dspm_rds_access                             = local.dspm_rds_access
   dspm_redshift_access                        = local.dspm_redshift_access
+  dspm_ebs_access                             = local.dspm_ebs_access
   agentless_scanning_use_custom_vpc           = local.agentless_scanning_use_custom_vpc
   agentless_scanning_custom_vpc_resources_map = local.agentless_scanning_custom_vpc_resources_map
   agentless_scanning_host_account_id          = var.agentless_scanning_host_account_id
