@@ -63,9 +63,14 @@ resource "aws_iam_role" "crowdstrike_aws_agentless_scanning_scanner_role" {
       {
         Effect = "Allow"
         Principal = {
-          AWS = "arn:${local.aws_partition}:iam::${var.agentless_scanning_host_account_id}:role/${var.agentless_scanning_host_scanner_role_name}"
+          AWS = "arn:${local.aws_partition}:iam::${var.agentless_scanning_host_account_id}:root"
         }
         Action = "sts:AssumeRole"
+        Condition = {
+          StringEquals = {
+            "aws:PrincipalArn" = "arn:${local.aws_partition}:iam::${var.agentless_scanning_host_account_id}:role/${var.agentless_scanning_host_scanner_role_name}"
+          }
+        }
       }
     ]
   })
