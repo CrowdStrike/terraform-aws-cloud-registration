@@ -188,19 +188,19 @@ resource "aws_iam_role_policy" "crowdstrike_secret_reader" {
     Version = "2012-10-17"
     Statement = [
       {
-        Sid = "FindClientSecret"
+        Sid = "SecretsManagerReadClientSecret"
         Action = [
-          "secretsmanager:ListSecrets",
+          "secretsmanager:GetSecretValue",
           "secretsmanager:DescribeSecret",
         ]
         Effect   = "Allow"
-        Resource = "*"
+        Resource = aws_secretsmanager_secret.client_secrets.arn
       },
       {
-        Sid      = "ReadClientSecret"
-        Action   = "secretsmanager:GetSecretValue"
-        Effect   = "Allow"
-        Resource = aws_secretsmanager_secret.client_secrets.arn
+        Sid      = "SecretsManagerListSecrets",
+        Action   = "secretsmanager:ListSecrets",
+        Effect   = "Allow",
+        Resource = "*"
       }
     ]
   })
