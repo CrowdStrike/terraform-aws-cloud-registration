@@ -55,6 +55,11 @@ resource "aws_iam_role" "crowdstrike_aws_agentless_scanning_scanner_role" {
         Principal = {
           Service = "ec2.amazonaws.com"
         }
+        Condition = {
+          StringEquals = {
+            "aws:ResourceTag/${local.crowdstrike_tag_key}" = local.crowdstrike_tag_value
+          }
+        }
       }
     ]
     }) : jsonencode({
@@ -92,46 +97,6 @@ resource "aws_iam_role_policy_attachment" "cloud_watch_logs_read_only_access" {
   policy_arn = "arn:${local.aws_partition}:iam::aws:policy/CloudWatchLogsReadOnlyAccess"
 }
 
-
-resource "aws_iam_role_policy" "crowdstrike_logs_reader" {
-  #checkov:skip=CKV_AWS_355:DSPM data scanner requires read access to logs for all scannable assets
-  name = "CrowdStrikeLogsReader"
-  role = aws_iam_role.crowdstrike_aws_agentless_scanning_scanner_role.id
-  policy = jsonencode({
-    Version = "2012-10-17"
-    Statement = [
-      {
-        Action = [
-          "rds:DownloadDBLogFilePortion",
-          "rds:DownloadCompleteDBLogFile",
-          "rds:DescribeDBLogFiles",
-          "logs:ListTagsLogGroup",
-          "logs:DescribeQueries",
-          "logs:GetLogRecord",
-          "logs:DescribeLogGroups",
-          "logs:DescribeLogStreams",
-          "logs:DescribeSubscriptionFilters",
-          "logs:StartQuery",
-          "logs:DescribeMetricFilters",
-          "logs:StopQuery",
-          "logs:TestMetricFilter",
-          "logs:GetLogDelivery",
-          "logs:ListLogDeliveries",
-          "logs:DescribeExportTasks",
-          "logs:GetQueryResults",
-          "logs:GetLogEvents",
-          "logs:FilterLogEvents",
-          "logs:DescribeQueryDefinitions",
-          "logs:GetLogGroupFields",
-          "logs:DescribeResourcePolicies",
-          "logs:DescribeDestinations"
-        ]
-        Effect   = "Allow"
-        Resource = ["*"]
-      }
-    ]
-  })
-}
 
 resource "aws_iam_role_policy" "crowdstrike_bucket_reader" {
   count = local.create_s3_policy ? 1 : 0
@@ -223,19 +188,19 @@ resource "aws_iam_role_policy" "crowdstrike_secret_reader" {
     Version = "2012-10-17"
     Statement = [
       {
-        Sid = "SecretsManagerReadClientSecret"
+        Sid = "FindClientSecret"
         Action = [
-          "secretsmanager:GetSecretValue",
+          "secretsmanager:ListSecrets",
           "secretsmanager:DescribeSecret",
         ]
         Effect   = "Allow"
-        Resource = ["arn:${local.aws_partition}:secretsmanager:*:*:secret:CrowdStrikeDSPMClientSecret-*"]
+        Resource = "*"
       },
       {
-        Sid      = "SecretsManagerListSecrets",
-        Action   = "secretsmanager:ListSecrets",
-        Effect   = "Allow",
-        Resource = "*"
+        Sid      = "ReadClientSecret"
+        Action   = "secretsmanager:GetSecretValue"
+        Effect   = "Allow"
+        Resource = aws_secretsmanager_secret.client_secrets.arn
       }
     ]
   })
