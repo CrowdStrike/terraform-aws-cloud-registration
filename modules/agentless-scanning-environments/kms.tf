@@ -152,17 +152,13 @@ data "aws_iam_policy_document" "policy_kms_key_target" {
   }
 
   statement {
-    sid    = "Allow use of the key to host account"
+    sid    = "Allow use of the key from host account"
     effect = "Allow"
     principals {
       type = "AWS"
       identifiers = [
-        "arn:${local.aws_partition}:iam::${var.agentless_scanning_host_account_id}:role/${var.agentless_scanning_host_role_name}"
+        "arn:${local.aws_partition}:iam::${var.agentless_scanning_host_account_id}:root"
       ]
-    }
-    principals {
-      type        = "AWS"
-      identifiers = ["*"]
     }
     actions = [
       "kms:DescribeKey",
@@ -173,8 +169,12 @@ data "aws_iam_policy_document" "policy_kms_key_target" {
       "kms:GenerateDataKeyWithoutPlaintext"
     ]
     resources = ["*"]
+    condition {
+      test     = "StringEquals"
+      variable = "aws:PrincipalArn"
+      values   = ["arn:${local.aws_partition}:iam::${var.agentless_scanning_host_account_id}:role/${var.agentless_scanning_host_role_name}"]
+    }
   }
-
 
   statement {
     sid    = "Allow attachment of persistent resources"
@@ -182,7 +182,7 @@ data "aws_iam_policy_document" "policy_kms_key_target" {
     principals {
       type = "AWS"
       identifiers = [
-        "arn:${local.aws_partition}:iam::${var.agentless_scanning_host_account_id}:role/${var.agentless_scanning_host_role_name}"
+        "arn:${local.aws_partition}:iam::${var.agentless_scanning_host_account_id}:root"
       ]
     }
     actions = [
@@ -191,6 +191,11 @@ data "aws_iam_policy_document" "policy_kms_key_target" {
       "kms:RevokeGrant"
     ]
     resources = ["*"]
+    condition {
+      test     = "StringEquals"
+      variable = "aws:PrincipalArn"
+      values   = ["arn:${local.aws_partition}:iam::${var.agentless_scanning_host_account_id}:role/${var.agentless_scanning_host_role_name}"]
+    }
     condition {
       test     = "Bool"
       variable = "kms:GrantIsForAWSResource"
