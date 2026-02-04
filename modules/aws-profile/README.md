@@ -232,7 +232,7 @@ module "fcs_child_account_1" {
 | <a name="input_dspm_create_nat_gateway"></a> [dspm\_create\_nat\_gateway](#input\_dspm\_create\_nat\_gateway) | DEPRECATED: Use agentless\_scanning\_create\_nat\_gateway instead. Set to true to create a NAT Gateway for DSPM scanning environments | `bool` | `true` | no |
 | <a name="input_dspm_dynamodb_access"></a> [dspm\_dynamodb\_access](#input\_dspm\_dynamodb\_access) | Apply permissions for DSPM DynamoDB table scanning | `bool` | `true` | no |
 | <a name="input_dspm_ebs_access"></a> [dspm\_ebs\_access](#input\_dspm\_ebs\_access) | Apply permissions for DSPM VM scanning | `bool` | `true` | no |
-| <a name="input_dspm_rds_access"></a> [dspm\_rds\_access](#input\_dspm\_rds\_access) | Apply permissions for RDS instance scanning | `bool` | `true` | no |
+| <a name="input_dspm_rds_access"></a> [dspm\_rds\_access](#input\_dspm\_rds\_access) | Apply permissions for DSPM RDS instance scanning | `bool` | `true` | no |
 | <a name="input_dspm_redshift_access"></a> [dspm\_redshift\_access](#input\_dspm\_redshift\_access) | Apply permissions for DSPM Redshift cluster scanning | `bool` | `true` | no |
 | <a name="input_dspm_regions"></a> [dspm\_regions](#input\_dspm\_regions) | DEPRECATED: Use agentless\_scanning\_regions instead. List of regions where DSPM scanning will be deployed | `list(string)` | `[]` | no |
 | <a name="input_dspm_role_name"></a> [dspm\_role\_name](#input\_dspm\_role\_name) | DEPRECATED: Use agentless\_scanning\_role\_name instead. The unique name of the IAM role that DSPM will be assuming | `string` | `""` | no |

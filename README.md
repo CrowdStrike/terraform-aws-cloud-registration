@@ -123,6 +123,7 @@ locals {
   enable_vulnerability_scanning = true
   agentless_scanning_regions    = ["us-east-1", "us-east-2"]
   use_existing_cloudtrail       = true
+  log_ingestion_method          = "eventbridge"
 }
 
 provider "crowdstrike" {
@@ -150,6 +151,7 @@ resource "crowdstrike_cloud_aws_account" "this" {
     enabled                 = local.enable_realtime_visibility
     cloudtrail_region       = local.primary_region
     use_existing_cloudtrail = local.use_existing_cloudtrail
+    log_ingestion_method    = local.log_ingestion_method
   }
 
   idp = {
@@ -182,6 +184,7 @@ module "fcs_account_onboarding" {
   enable_dspm                   = local.enable_dspm && contains(local.agentless_scanning_regions, "us-east-1")
   enable_vulnerability_scanning = local.enable_vulnerability_scanning && contains(local.agentless_scanning_regions, "us-east-1")
   agentless_scanning_regions    = local.agentless_scanning_regions
+  log_ingestion_method            = local.log_ingestion_method
 
   iam_role_name                = crowdstrike_cloud_aws_account.this.iam_role_name
   external_id                  = crowdstrike_cloud_aws_account.this.external_id
@@ -196,13 +199,13 @@ module "fcs_account_onboarding" {
   }
 }
 
-# For each region where you want to onboard DSPM features or Vulnerability Scanning features
+# for each region where you want to onboard DSPM features or Vulnerability Scanning features
 # - duplicate this module
 # - update the provider with region specific one
 # If you want to onboard Real-time Visibility with 'eventbridge' as the log_ingestion_method, for each region you want to onboard Real-Time Visibility features
 # - duplicate this module
 # - update the provider with region specific one
-# If you want to onboard Real-time Visibility with 's3' as the log_ingestion_method, for the region that your SNS topic is in
+# If you want to onboard Real-time Visibility with 's3' as the log_ingestion_method, for the region that the SNS topic is in
 # - duplicate this module
 # - update the provider with region specific one
 module "fcs_account_us_east_2" {
@@ -218,6 +221,7 @@ module "fcs_account_us_east_2" {
   enable_dspm                   = local.enable_dspm && contains(local.agentless_scanning_regions, "us-east-2")
   enable_vulnerability_scanning = local.enable_vulnerability_scanning && contains(local.agentless_scanning_regions, "us-east-2")
   agentless_scanning_regions    = local.agentless_scanning_regions
+  log_ingestion_method            = local.log_ingestion_method
 
   iam_role_name                                 = crowdstrike_cloud_aws_account.this.iam_role_name
   external_id                                   = crowdstrike_cloud_aws_account.this.external_id
@@ -240,7 +244,7 @@ module "fcs_account_us_east_2" {
 | Name | Version |
 |------|---------|
 | <a name="provider_aws"></a> [aws](#provider\_aws) | >= 5.0.0 |
-| <a name="provider_crowdstrike"></a> [crowdstrike](#provider\_crowdstrike) | >= 0.0.44 |
+| <a name="provider_crowdstrike"></a> [crowdstrike](#provider\_crowdstrike) | >= 0.0.51 |
 ## Resources
 
 | Name | Type |
@@ -271,7 +275,7 @@ module "fcs_account_us_east_2" {
 | <a name="input_dspm_dynamodb_access"></a> [dspm\_dynamodb\_access](#input\_dspm\_dynamodb\_access) | Apply permissions for DSPM DynamoDB table scanning | `bool` | `true` | no |
 | <a name="input_dspm_ebs_access"></a> [dspm\_ebs\_access](#input\_dspm\_ebs\_access) | Apply permissions for DSPM VM scanning | `bool` | `true` | no |
 | <a name="input_dspm_integration_role_unique_id"></a> [dspm\_integration\_role\_unique\_id](#input\_dspm\_integration\_role\_unique\_id) | DEPRECATED: Use agentless\_scanning\_integration\_role\_unique\_id instead. The unique ID of the DSPM integration role | `string` | `""` | no |
-| <a name="input_dspm_rds_access"></a> [dspm\_rds\_access](#input\_dspm\_rds\_access) | Apply permissions for RDS instance scanning | `bool` | `true` | no |
+| <a name="input_dspm_rds_access"></a> [dspm\_rds\_access](#input\_dspm\_rds\_access) | Apply permissions for DSPM RDS instance scanning | `bool` | `true` | no |
 | <a name="input_dspm_redshift_access"></a> [dspm\_redshift\_access](#input\_dspm\_redshift\_access) | Apply permissions for DSPM Redshift cluster scanning | `bool` | `true` | no |
 | <a name="input_dspm_regions"></a> [dspm\_regions](#input\_dspm\_regions) | DEPRECATED: Use agentless\_scanning\_regions instead. List of regions where DSPM scanning will be deployed | `list(string)` | `[]` | no |
 | <a name="input_dspm_role_name"></a> [dspm\_role\_name](#input\_dspm\_role\_name) | DEPRECATED: Use agentless\_scanning\_role\_name instead. The unique name of the IAM role that DSPM will be assuming | `string` | `""` | no |
@@ -291,12 +295,12 @@ module "fcs_account_us_east_2" {
 | <a name="input_iam_role_name"></a> [iam\_role\_name](#input\_iam\_role\_name) | The name of the reader role | `string` | `""` | no |
 | <a name="input_intermediate_role_arn"></a> [intermediate\_role\_arn](#input\_intermediate\_role\_arn) | The intermediate role that is allowed to assume the reader role | `string` | `""` | no |
 | <a name="input_is_gov"></a> [is\_gov](#input\_is\_gov) | Set to true if you are deploying in gov Falcon | `bool` | `false` | no |
-| <a name="input_log_ingestion_kms_key_arn"></a> [log\_ingestion\_kms\_key\_arn](#input\_log\_ingestion\_kms\_key\_arn) | Optional KMS key ARN for decrypting S3 objects (when log\_ingestion\_method=s3)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 | `string` | `""` | no |
-| <a name="input_log_ingestion_method"></a> [log\_ingestion\_method](#input\_log\_ingestion\_method) | Choose the method for ingesting CloudTrail logs - eventbridge (default) or s3                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   | `string` | `"eventbridge"` | no |
-| <a name="input_log_ingestion_s3_bucket_name"></a> [log\_ingestion\_s3\_bucket\_name](#input\_log\_ingestion\_s3\_bucket\_name) | S3 bucket name containing CloudTrail logs (required when log\_ingestion\_method=s3)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             | `string` | `""` | no |
-| <a name="input_log_ingestion_s3_bucket_prefix"></a> [log\_ingestion\_s3\_bucket\_prefix](#input\_log\_ingestion\_s3\_bucket\_prefix) | Optional S3 bucket prefix/path for CloudTrail logs (when log\_ingestion\_method=s3)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             | `string` | `""` | no |
-| <a name="input_log_ingestion_sns_topic_arn"></a> [log\_ingestion\_sns\_topic\_arn](#input\_log\_ingestion\_sns\_topic\_arn) | SNS topic ARN that publishes S3 object creation events (required when log\_ingestion\_method=s3)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                | `string` | `""` | no |
-|<a name="input_organization_id"></a> [organization\_id](#input\_organization\_id) | The AWS Organization ID. Leave blank if when onboarding single account | `string` | `""` | no |
+| <a name="input_log_ingestion_kms_key_arn"></a> [log\_ingestion\_kms\_key\_arn](#input\_log\_ingestion\_kms\_key\_arn) | Optional KMS key ARN for decrypting S3 objects (when log\_ingestion\_method=s3) | `string` | `""` | no |
+| <a name="input_log_ingestion_method"></a> [log\_ingestion\_method](#input\_log\_ingestion\_method) | Choose the method for ingesting CloudTrail logs - eventbridge (default) or s3. If s3 is selected, be sure to deploy to the region associated with the SNS topic connected to your CloudTrail instance. | `string` | `"eventbridge"` | no |
+| <a name="input_log_ingestion_s3_bucket_name"></a> [log\_ingestion\_s3\_bucket\_name](#input\_log\_ingestion\_s3\_bucket\_name) | S3 bucket name containing CloudTrail logs (required when log\_ingestion\_method=s3) | `string` | `""` | no |
+| <a name="input_log_ingestion_s3_bucket_prefix"></a> [log\_ingestion\_s3\_bucket\_prefix](#input\_log\_ingestion\_s3\_bucket\_prefix) | Optional S3 bucket prefix/path for CloudTrail logs (when log\_ingestion\_method=s3) | `string` | `""` | no |
+| <a name="input_log_ingestion_sns_topic_arn"></a> [log\_ingestion\_sns\_topic\_arn](#input\_log\_ingestion\_sns\_topic\_arn) | SNS topic ARN that publishes S3 object creation events (required when log\_ingestion\_method=s3) | `string` | `""` | no |
+| <a name="input_organization_id"></a> [organization\_id](#input\_organization\_id) | The AWS Organization ID. Leave blank if when onboarding single account | `string` | `""` | no |
 | <a name="input_permissions_boundary"></a> [permissions\_boundary](#input\_permissions\_boundary) | The name of the policy used to set the permissions boundary for IAM roles | `string` | `""` | no |
 | <a name="input_primary_region"></a> [primary\_region](#input\_primary\_region) | Region for deploying global AWS resources (IAM roles, policies, etc.) that are account-wide and only need to be created once. Distinct from agentless\_scanning\_regions which controls region-specific resource deployment. | `string` | n/a | yes |
 | <a name="input_resource_prefix"></a> [resource\_prefix](#input\_resource\_prefix) | The prefix to be added to all resource names | `string` | `"CrowdStrike"` | no |
