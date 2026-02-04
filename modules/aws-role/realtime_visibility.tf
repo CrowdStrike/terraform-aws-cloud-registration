@@ -12,7 +12,7 @@ module "rtvd_us_east_1" {
   use_existing_cloudtrail = var.use_existing_cloudtrail
   cloudtrail_bucket_name  = local.cloudtrail_bucket_name
   eventbus_arn            = local.eventbus_arn
-  eventbridge_role_name   = var.eventbridge_role_name
+  eventbridge_role_name   = local.eventbridge_role_name
   is_organization_trail   = length(var.organization_id) > 0
   is_gov_commercial       = local.is_gov_commercial
   is_primary_region       = var.primary_region == "us-east-1"
@@ -40,7 +40,7 @@ module "rtvd_us_east_2" {
   use_existing_cloudtrail = var.use_existing_cloudtrail
   cloudtrail_bucket_name  = local.cloudtrail_bucket_name
   eventbus_arn            = local.eventbus_arn
-  eventbridge_role_name   = var.eventbridge_role_name
+  eventbridge_role_name   = local.eventbridge_role_name
   is_organization_trail   = length(var.organization_id) > 0
   is_gov_commercial       = local.is_gov_commercial
   is_primary_region       = var.primary_region == "us-east-2"
@@ -68,7 +68,7 @@ module "rtvd_us_west_1" {
   use_existing_cloudtrail = var.use_existing_cloudtrail
   cloudtrail_bucket_name  = local.cloudtrail_bucket_name
   eventbus_arn            = local.eventbus_arn
-  eventbridge_role_name   = var.eventbridge_role_name
+  eventbridge_role_name   = local.eventbridge_role_name
   is_organization_trail   = length(var.organization_id) > 0
   is_gov_commercial       = local.is_gov_commercial
   is_primary_region       = var.primary_region == "us-west-1"
@@ -96,7 +96,7 @@ module "rtvd_us_west_2" {
   use_existing_cloudtrail = var.use_existing_cloudtrail
   cloudtrail_bucket_name  = local.cloudtrail_bucket_name
   eventbus_arn            = local.eventbus_arn
-  eventbridge_role_name   = var.eventbridge_role_name
+  eventbridge_role_name   = local.eventbridge_role_name
   is_organization_trail   = length(var.organization_id) > 0
   is_gov_commercial       = local.is_gov_commercial
   is_primary_region       = var.primary_region == "us-west-2"
@@ -124,7 +124,7 @@ module "rtvd_af_south_1" {
   use_existing_cloudtrail = var.use_existing_cloudtrail
   cloudtrail_bucket_name  = local.cloudtrail_bucket_name
   eventbus_arn            = local.eventbus_arn
-  eventbridge_role_name   = var.eventbridge_role_name
+  eventbridge_role_name   = local.eventbridge_role_name
   is_organization_trail   = length(var.organization_id) > 0
   is_gov_commercial       = local.is_gov_commercial
   is_primary_region       = var.primary_region == "af-south-1"
@@ -152,7 +152,7 @@ module "rtvd_ap_east_1" {
   use_existing_cloudtrail = var.use_existing_cloudtrail
   cloudtrail_bucket_name  = local.cloudtrail_bucket_name
   eventbus_arn            = local.eventbus_arn
-  eventbridge_role_name   = var.eventbridge_role_name
+  eventbridge_role_name   = local.eventbridge_role_name
   is_organization_trail   = length(var.organization_id) > 0
   is_gov_commercial       = local.is_gov_commercial
   is_primary_region       = var.primary_region == "ap-east-1"
@@ -180,7 +180,7 @@ module "rtvd_ap_south_1" {
   use_existing_cloudtrail = var.use_existing_cloudtrail
   cloudtrail_bucket_name  = local.cloudtrail_bucket_name
   eventbus_arn            = local.eventbus_arn
-  eventbridge_role_name   = var.eventbridge_role_name
+  eventbridge_role_name   = local.eventbridge_role_name
   is_organization_trail   = length(var.organization_id) > 0
   is_gov_commercial       = local.is_gov_commercial
   is_primary_region       = var.primary_region == "ap-south-1"
@@ -208,7 +208,7 @@ module "rtvd_ap_south_2" {
   use_existing_cloudtrail = var.use_existing_cloudtrail
   cloudtrail_bucket_name  = local.cloudtrail_bucket_name
   eventbus_arn            = local.eventbus_arn
-  eventbridge_role_name   = var.eventbridge_role_name
+  eventbridge_role_name   = local.eventbridge_role_name
   is_organization_trail   = length(var.organization_id) > 0
   is_gov_commercial       = local.is_gov_commercial
   is_primary_region       = var.primary_region == "ap-south-2"
@@ -236,7 +236,7 @@ module "rtvd_ap_southeast_1" {
   use_existing_cloudtrail = var.use_existing_cloudtrail
   cloudtrail_bucket_name  = local.cloudtrail_bucket_name
   eventbus_arn            = local.eventbus_arn
-  eventbridge_role_name   = var.eventbridge_role_name
+  eventbridge_role_name   = local.eventbridge_role_name
   is_organization_trail   = length(var.organization_id) > 0
   is_gov_commercial       = local.is_gov_commercial
   is_primary_region       = var.primary_region == "ap-southeast-1"
@@ -264,7 +264,7 @@ module "rtvd_ap_southeast_2" {
   use_existing_cloudtrail = var.use_existing_cloudtrail
   cloudtrail_bucket_name  = local.cloudtrail_bucket_name
   eventbus_arn            = local.eventbus_arn
-  eventbridge_role_name   = var.eventbridge_role_name
+  eventbridge_role_name   = local.eventbridge_role_name
   is_organization_trail   = length(var.organization_id) > 0
   is_gov_commercial       = local.is_gov_commercial
   is_primary_region       = var.primary_region == "ap-southeast-2"
@@ -292,7 +292,7 @@ module "rtvd_ap_southeast_3" {
   use_existing_cloudtrail = var.use_existing_cloudtrail
   cloudtrail_bucket_name  = local.cloudtrail_bucket_name
   eventbus_arn            = local.eventbus_arn
-  eventbridge_role_name   = var.eventbridge_role_name
+  eventbridge_role_name   = local.eventbridge_role_name
   is_organization_trail   = length(var.organization_id) > 0
   is_gov_commercial       = local.is_gov_commercial
   is_primary_region       = var.primary_region == "ap-southeast-3"
@@ -320,7 +320,7 @@ module "rtvd_ap_southeast_4" {
   use_existing_cloudtrail = var.use_existing_cloudtrail
   cloudtrail_bucket_name  = local.cloudtrail_bucket_name
   eventbus_arn            = local.eventbus_arn
-  eventbridge_role_name   = var.eventbridge_role_name
+  eventbridge_role_name   = local.eventbridge_role_name
   is_organization_trail   = length(var.organization_id) > 0
   is_gov_commercial       = local.is_gov_commercial
   is_primary_region       = var.primary_region == "ap-southeast-4"
@@ -348,7 +348,7 @@ module "rtvd_ap_northeast_1" {
   use_existing_cloudtrail = var.use_existing_cloudtrail
   cloudtrail_bucket_name  = local.cloudtrail_bucket_name
   eventbus_arn            = local.eventbus_arn
-  eventbridge_role_name   = var.eventbridge_role_name
+  eventbridge_role_name   = local.eventbridge_role_name
   is_organization_trail   = length(var.organization_id) > 0
   is_gov_commercial       = local.is_gov_commercial
   is_primary_region       = var.primary_region == "ap-northeast-1"
@@ -376,7 +376,7 @@ module "rtvd_ap_northeast_2" {
   use_existing_cloudtrail = var.use_existing_cloudtrail
   cloudtrail_bucket_name  = local.cloudtrail_bucket_name
   eventbus_arn            = local.eventbus_arn
-  eventbridge_role_name   = var.eventbridge_role_name
+  eventbridge_role_name   = local.eventbridge_role_name
   is_organization_trail   = length(var.organization_id) > 0
   is_gov_commercial       = local.is_gov_commercial
   is_primary_region       = var.primary_region == "ap-northeast-2"
@@ -404,7 +404,7 @@ module "rtvd_ap_northeast_3" {
   use_existing_cloudtrail = var.use_existing_cloudtrail
   cloudtrail_bucket_name  = local.cloudtrail_bucket_name
   eventbus_arn            = local.eventbus_arn
-  eventbridge_role_name   = var.eventbridge_role_name
+  eventbridge_role_name   = local.eventbridge_role_name
   is_organization_trail   = length(var.organization_id) > 0
   is_gov_commercial       = local.is_gov_commercial
   is_primary_region       = var.primary_region == "ap-northeast-3"
@@ -432,7 +432,7 @@ module "rtvd_ca_central_1" {
   use_existing_cloudtrail = var.use_existing_cloudtrail
   cloudtrail_bucket_name  = local.cloudtrail_bucket_name
   eventbus_arn            = local.eventbus_arn
-  eventbridge_role_name   = var.eventbridge_role_name
+  eventbridge_role_name   = local.eventbridge_role_name
   is_organization_trail   = length(var.organization_id) > 0
   is_gov_commercial       = local.is_gov_commercial
   is_primary_region       = var.primary_region == "ca-central-1"
@@ -460,7 +460,7 @@ module "rtvd_eu_central_1" {
   use_existing_cloudtrail = var.use_existing_cloudtrail
   cloudtrail_bucket_name  = local.cloudtrail_bucket_name
   eventbus_arn            = local.eventbus_arn
-  eventbridge_role_name   = var.eventbridge_role_name
+  eventbridge_role_name   = local.eventbridge_role_name
   is_organization_trail   = length(var.organization_id) > 0
   is_gov_commercial       = local.is_gov_commercial
   is_primary_region       = var.primary_region == "eu-central-1"
@@ -488,7 +488,7 @@ module "rtvd_eu_west_1" {
   use_existing_cloudtrail = var.use_existing_cloudtrail
   cloudtrail_bucket_name  = local.cloudtrail_bucket_name
   eventbus_arn            = local.eventbus_arn
-  eventbridge_role_name   = var.eventbridge_role_name
+  eventbridge_role_name   = local.eventbridge_role_name
   is_organization_trail   = length(var.organization_id) > 0
   is_gov_commercial       = local.is_gov_commercial
   is_primary_region       = var.primary_region == "eu-west-1"
@@ -516,7 +516,7 @@ module "rtvd_eu_west_2" {
   use_existing_cloudtrail = var.use_existing_cloudtrail
   cloudtrail_bucket_name  = local.cloudtrail_bucket_name
   eventbus_arn            = local.eventbus_arn
-  eventbridge_role_name   = var.eventbridge_role_name
+  eventbridge_role_name   = local.eventbridge_role_name
   is_organization_trail   = length(var.organization_id) > 0
   is_gov_commercial       = local.is_gov_commercial
   is_primary_region       = var.primary_region == "eu-west-2"
@@ -544,7 +544,7 @@ module "rtvd_eu_west_3" {
   use_existing_cloudtrail = var.use_existing_cloudtrail
   cloudtrail_bucket_name  = local.cloudtrail_bucket_name
   eventbus_arn            = local.eventbus_arn
-  eventbridge_role_name   = var.eventbridge_role_name
+  eventbridge_role_name   = local.eventbridge_role_name
   is_organization_trail   = length(var.organization_id) > 0
   is_gov_commercial       = local.is_gov_commercial
   is_primary_region       = var.primary_region == "eu-west-3"
@@ -572,7 +572,7 @@ module "rtvd_eu_south_1" {
   use_existing_cloudtrail = var.use_existing_cloudtrail
   cloudtrail_bucket_name  = local.cloudtrail_bucket_name
   eventbus_arn            = local.eventbus_arn
-  eventbridge_role_name   = var.eventbridge_role_name
+  eventbridge_role_name   = local.eventbridge_role_name
   is_organization_trail   = length(var.organization_id) > 0
   is_gov_commercial       = local.is_gov_commercial
   is_primary_region       = var.primary_region == "eu-south-1"
@@ -600,7 +600,7 @@ module "rtvd_eu_south_2" {
   use_existing_cloudtrail = var.use_existing_cloudtrail
   cloudtrail_bucket_name  = local.cloudtrail_bucket_name
   eventbus_arn            = local.eventbus_arn
-  eventbridge_role_name   = var.eventbridge_role_name
+  eventbridge_role_name   = local.eventbridge_role_name
   is_organization_trail   = length(var.organization_id) > 0
   is_gov_commercial       = local.is_gov_commercial
   is_primary_region       = var.primary_region == "eu-south-2"
@@ -628,7 +628,7 @@ module "rtvd_eu_north_1" {
   use_existing_cloudtrail = var.use_existing_cloudtrail
   cloudtrail_bucket_name  = local.cloudtrail_bucket_name
   eventbus_arn            = local.eventbus_arn
-  eventbridge_role_name   = var.eventbridge_role_name
+  eventbridge_role_name   = local.eventbridge_role_name
   is_organization_trail   = length(var.organization_id) > 0
   is_gov_commercial       = local.is_gov_commercial
   is_primary_region       = var.primary_region == "eu-north-1"
@@ -656,7 +656,7 @@ module "rtvd_eu_central_2" {
   use_existing_cloudtrail = var.use_existing_cloudtrail
   cloudtrail_bucket_name  = local.cloudtrail_bucket_name
   eventbus_arn            = local.eventbus_arn
-  eventbridge_role_name   = var.eventbridge_role_name
+  eventbridge_role_name   = local.eventbridge_role_name
   is_organization_trail   = length(var.organization_id) > 0
   is_gov_commercial       = local.is_gov_commercial
   is_primary_region       = var.primary_region == "eu-central-2"
@@ -684,7 +684,7 @@ module "rtvd_me_south_1" {
   use_existing_cloudtrail = var.use_existing_cloudtrail
   cloudtrail_bucket_name  = local.cloudtrail_bucket_name
   eventbus_arn            = local.eventbus_arn
-  eventbridge_role_name   = var.eventbridge_role_name
+  eventbridge_role_name   = local.eventbridge_role_name
   is_organization_trail   = length(var.organization_id) > 0
   is_gov_commercial       = local.is_gov_commercial
   is_primary_region       = var.primary_region == "me-south-1"
@@ -712,7 +712,7 @@ module "rtvd_me_central_1" {
   use_existing_cloudtrail = var.use_existing_cloudtrail
   cloudtrail_bucket_name  = local.cloudtrail_bucket_name
   eventbus_arn            = local.eventbus_arn
-  eventbridge_role_name   = var.eventbridge_role_name
+  eventbridge_role_name   = local.eventbridge_role_name
   is_organization_trail   = length(var.organization_id) > 0
   is_gov_commercial       = local.is_gov_commercial
   is_primary_region       = var.primary_region == "me-central-1"
@@ -740,7 +740,7 @@ module "rtvd_sa_east_1" {
   use_existing_cloudtrail = var.use_existing_cloudtrail
   cloudtrail_bucket_name  = local.cloudtrail_bucket_name
   eventbus_arn            = local.eventbus_arn
-  eventbridge_role_name   = var.eventbridge_role_name
+  eventbridge_role_name   = local.eventbridge_role_name
   is_organization_trail   = length(var.organization_id) > 0
   is_gov_commercial       = local.is_gov_commercial
   is_primary_region       = var.primary_region == "sa-east-1"
@@ -768,7 +768,7 @@ module "rtvd_us_gov_east_1" {
   use_existing_cloudtrail = var.use_existing_cloudtrail
   cloudtrail_bucket_name  = local.cloudtrail_bucket_name
   eventbus_arn            = local.eventbus_arn
-  eventbridge_role_name   = var.eventbridge_role_name
+  eventbridge_role_name   = local.eventbridge_role_name
   is_organization_trail   = length(var.organization_id) > 0
   is_gov_commercial       = local.is_gov_commercial
   is_primary_region       = var.primary_region == "us-gov-east-1"
@@ -796,7 +796,7 @@ module "rtvd_us_gov_west_1" {
   use_existing_cloudtrail = var.use_existing_cloudtrail
   cloudtrail_bucket_name  = local.cloudtrail_bucket_name
   eventbus_arn            = local.eventbus_arn
-  eventbridge_role_name   = var.eventbridge_role_name
+  eventbridge_role_name   = local.eventbridge_role_name
   is_organization_trail   = length(var.organization_id) > 0
   is_gov_commercial       = local.is_gov_commercial
   is_primary_region       = var.primary_region == "us-gov-west-1"
