@@ -13,6 +13,8 @@ locals {
   dspm_rds_access                       = var.dspm_rds_access
   dspm_redshift_access                  = var.dspm_redshift_access
   dspm_ebs_access                       = var.dspm_ebs_access
+  resource_prefix                       = "cs-"
+  resource_suffix                       = "-cspm"
 }
 
 provider "crowdstrike" {
@@ -22,9 +24,10 @@ provider "crowdstrike" {
 
 # Provision AWS account in Falcon.
 resource "crowdstrike_cloud_aws_account" "this" {
-  account_id      = var.account_id
-  organization_id = var.organization_id
-
+  account_id           = var.account_id
+  organization_id      = var.organization_id
+  resource_name_prefix = local.resource_prefix
+  resource_name_suffix = local.resource_suffix
   asset_inventory = {
     enabled = true
   }

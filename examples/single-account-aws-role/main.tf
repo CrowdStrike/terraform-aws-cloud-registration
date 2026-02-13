@@ -36,8 +36,9 @@ provider "crowdstrike" {
 
 # Provision AWS account in Falcon.
 resource "crowdstrike_cloud_aws_account" "this" {
-  account_id = var.account_id
-
+  account_id           = var.account_id
+  resource_name_prefix = local.resource_prefix
+  resource_name_suffix = local.resource_suffix
   asset_inventory = {
     enabled   = true
     role_name = local.custom_role_name
