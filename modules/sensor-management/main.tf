@@ -8,6 +8,12 @@ locals {
   aws_partition = data.aws_partition.current.partition
 }
 
+module "region_map" {
+  source          = "../region-map/"
+  aws_region      = local.aws_region
+  fallback_bucket = "cs-horizon-sensormgmt-lambda-${local.aws_region}"
+}
+
 
 # Data resource to be used as the assume role policy below.
 data "aws_iam_policy_document" "management" {
@@ -148,7 +154,7 @@ resource "aws_lambda_function" "this" {
   timeout       = 900
   package_type  = "Zip"
 
-  s3_bucket = "cs-horizon-sensormgmt-lambda-${local.aws_region}"
+  s3_bucket = module.region_map.lambda_s3_bucket
   s3_key    = "aws/horizon-sensor-installation-orchestrator.zip"
 
   environment {

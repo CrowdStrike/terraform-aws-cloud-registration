@@ -79,7 +79,7 @@ resource "aws_lambda_function" "eventbridge" {
   timeout       = 15
   package_type  = "Zip"
 
-  s3_bucket = "cs-horizon-ioa-lambda-${local.aws_region}"
+  s3_bucket = module.region_map.lambda_s3_bucket
   s3_key    = "aws/aws-lambda-eventbridge.zip"
   tags      = var.tags
 
@@ -129,7 +129,7 @@ resource "aws_lambda_function" "s3" {
   timeout       = 15
   package_type  = "Zip"
 
-  s3_bucket = "cs-horizon-ioa-lambda-${local.aws_region}"
+  s3_bucket = module.region_map.lambda_s3_bucket
   s3_key    = "aws/aws-lambda-s3.zip"
   tags      = var.tags
 
