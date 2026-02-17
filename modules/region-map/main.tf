@@ -42,5 +42,6 @@ locals {
 
   # Construct the regional Lambda S3 bucket name.
   # Falls back to the caller-provided fallback bucket name for unknown regions.
-  lambda_s3_bucket = local.region_info != null ? "cs-prod-cloudconnect-templates-${local.region_info.prefix}-${local.region_info.bucket_region_id}" : var.fallback_bucket
+  lambda_s3_bucket     = local.region_info != null ? "cs-prod-cloudconnect-templates-${local.region_info.prefix}-${local.region_info.bucket_region_id}" : var.fallback_bucket
+  lambda_s3_key_prefix = local.region_info != null ? "aws/lambda" : "aws"
 }

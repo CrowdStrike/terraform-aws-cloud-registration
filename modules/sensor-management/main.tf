@@ -155,7 +155,7 @@ resource "aws_lambda_function" "this" {
   package_type  = "Zip"
 
   s3_bucket = module.region_map.lambda_s3_bucket
-  s3_key    = "aws/horizon-sensor-installation-orchestrator.zip"
+  s3_key    = "${module.region_map.lambda_s3_key_prefix}/horizon-sensor-installation-orchestrator.zip"
 
   environment {
     variables = {
