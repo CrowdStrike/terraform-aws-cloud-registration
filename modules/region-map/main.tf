@@ -37,11 +37,9 @@ locals {
     "ap-southeast-7" = { prefix = "apse7", bucket_region_id = "25b2cfcf" }
   }
 
-  # Look up the current region's info. Returns null for unknown regions.
-  region_info = lookup(local.region_bucket_map, var.aws_region, null)
+  # Look up the current region's info.
+  region_info = local.region_bucket_map[var.aws_region]
 
   # Construct the regional Lambda S3 bucket name.
-  # Falls back to the caller-provided fallback bucket name for unknown regions.
-  lambda_s3_bucket     = local.region_info != null ? "cs-prod-cloudconnect-templates-${local.region_info.prefix}-${local.region_info.bucket_region_id}" : var.fallback_bucket
-  lambda_s3_key_prefix = local.region_info != null ? "aws/lambda" : "aws"
+  lambda_s3_bucket = "cs-prod-cloudconnect-templates-${local.region_info.prefix}-${local.region_info.bucket_region_id}"
 }

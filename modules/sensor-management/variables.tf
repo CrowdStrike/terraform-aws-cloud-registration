@@ -43,3 +43,13 @@ variable "tags" {
   type        = map(string)
   default     = {}
 }
+
+variable "account_type" {
+  type        = string
+  default     = "commercial"
+  description = "Account type can be either 'commercial' or 'gov'"
+  validation {
+    condition     = var.account_type == "commercial" || var.account_type == "gov"
+    error_message = "must be either 'commercial' or 'gov'"
+  }
+}

@@ -26,9 +26,8 @@ locals {
 }
 
 module "region_map" {
-  source          = "../region-map/"
-  aws_region      = local.aws_region
-  fallback_bucket = "cs-horizon-ioa-lambda-${local.aws_region}"
+  source     = "../region-map/"
+  aws_region = local.aws_region
 }
 
 resource "aws_iam_role" "eventbridge" {

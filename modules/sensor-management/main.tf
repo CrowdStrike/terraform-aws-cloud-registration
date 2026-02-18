@@ -3,15 +3,18 @@ data "aws_region" "current" {}
 data "aws_partition" "current" {}
 
 locals {
-  account_id    = data.aws_caller_identity.current.account_id
-  aws_region    = data.aws_region.current.id
-  aws_partition = data.aws_partition.current.partition
+  account_id       = data.aws_caller_identity.current.account_id
+  aws_region       = data.aws_region.current.id
+  aws_partition    = data.aws_partition.current.partition
+  is_gov_account   = var.account_type == "gov"
+  lambda_s3_bucket = local.is_gov_account ? "cs-horizon-sensormgmt-lambda-${local.aws_region}" : module.region_map[0].lambda_s3_bucket
+  lambda_s3_key    = local.is_gov_account ? "aws/horizon-sensor-installation-orchestrator.zip" : "aws/lambda/horizon-sensor-installation-orchestrator.zip"
 }
 
 module "region_map" {
-  source          = "../region-map/"
-  aws_region      = local.aws_region
-  fallback_bucket = "cs-horizon-sensormgmt-lambda-${local.aws_region}"
+  count      = local.is_gov_account ? 0 : 1
+  source     = "../region-map/"
+  aws_region = local.aws_region
 }
 
 
@@ -154,8 +157,8 @@ resource "aws_lambda_function" "this" {
   timeout       = 900
   package_type  = "Zip"
 
-  s3_bucket = module.region_map.lambda_s3_bucket
-  s3_key    = "${module.region_map.lambda_s3_key_prefix}/horizon-sensor-installation-orchestrator.zip"
+  s3_bucket = local.lambda_s3_bucket
+  s3_key    = local.lambda_s3_key
 
   environment {
     variables = {

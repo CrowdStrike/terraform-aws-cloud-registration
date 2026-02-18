@@ -80,7 +80,7 @@ resource "aws_lambda_function" "eventbridge" {
   package_type  = "Zip"
 
   s3_bucket = module.region_map.lambda_s3_bucket
-  s3_key    = "${module.region_map.lambda_s3_key_prefix}/aws-lambda-eventbridge.zip"
+  s3_key    = "aws/lambda/aws-lambda-eventbridge.zip"
   tags      = var.tags
 
   environment {
@@ -130,7 +130,7 @@ resource "aws_lambda_function" "s3" {
   package_type  = "Zip"
 
   s3_bucket = module.region_map.lambda_s3_bucket
-  s3_key    = "${module.region_map.lambda_s3_key_prefix}/aws-lambda-s3.zip"
+  s3_key    = "aws/lambda/aws-lambda-s3.zip"
   tags      = var.tags
 
   environment {
