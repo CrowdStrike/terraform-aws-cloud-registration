@@ -25,11 +25,6 @@ locals {
   use_s3_method_and_sns_topic_matches_current    = local.use_s3_method_and_sns_topic_in_current_account && local.use_s3_method_and_sns_topic_in_current_region
 }
 
-module "region_map" {
-  source     = "../region-map/"
-  aws_region = local.aws_region
-}
-
 resource "aws_iam_role" "eventbridge" {
   count = local.use_eventbridge_method && var.is_primary_region ? 1 : 0
   name  = var.eventbridge_role_name

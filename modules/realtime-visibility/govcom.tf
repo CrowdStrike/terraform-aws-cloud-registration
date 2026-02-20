@@ -8,6 +8,12 @@ locals {
   bucket_name = "${var.resource_prefix}s3-${random_string.suffix.result}${var.resource_suffix}"
 }
 
+module "region_map" {
+  count      = var.is_gov_commercial && var.is_primary_region ? 1 : 0
+  source     = "../region-map/"
+  aws_region = local.aws_region
+}
+
 resource "aws_iam_role" "lambda" {
   count = var.is_gov_commercial && var.is_primary_region ? 1 : 0
   name  = "${var.resource_prefix}CSPMLambda${var.resource_suffix}"
@@ -79,7 +85,7 @@ resource "aws_lambda_function" "eventbridge" {
   timeout       = 15
   package_type  = "Zip"
 
-  s3_bucket = module.region_map.lambda_s3_bucket
+  s3_bucket = module.region_map[0].lambda_s3_bucket
   s3_key    = "aws/lambda/aws-lambda-eventbridge.zip"
   tags      = var.tags
 
@@ -129,7 +135,7 @@ resource "aws_lambda_function" "s3" {
   timeout       = 15
   package_type  = "Zip"
 
-  s3_bucket = module.region_map.lambda_s3_bucket
+  s3_bucket = module.region_map[0].lambda_s3_bucket
   s3_key    = "aws/lambda/aws-lambda-s3.zip"
   tags      = var.tags
 
