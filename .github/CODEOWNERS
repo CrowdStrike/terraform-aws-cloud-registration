@@ -1,6 +1,6 @@
 # Global code owners
 * @CrowdStrike/fcs-engineering
 
-# DSPM specific files
-*DSPM* @CrowdStrike/fcs-dspm
-*dspm* @CrowdStrike/fcs-dspm
+# DSPM agentless scanning
+/modules/agentless-scanning-roles/ @CrowdStrike/fcs-dspm
+/modules/agentless-scanning-environments/ @CrowdStrike/fcs-dspm
