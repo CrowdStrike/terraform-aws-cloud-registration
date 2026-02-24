@@ -97,6 +97,7 @@ module "sensor_management" {
   permissions_boundary  = var.permissions_boundary
   resource_prefix       = var.resource_prefix
   resource_suffix       = var.resource_suffix
+  account_type          = var.account_type
   tags                  = var.tags
 
   providers = {
