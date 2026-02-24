@@ -38,8 +38,8 @@ locals {
   }
 
   # Look up the current region's info.
-  region_info = local.region_bucket_map[var.aws_region]
+  region_info = lookup(local.region_bucket_map, var.aws_region, null)
 
   # Construct the regional Lambda S3 bucket name.
-  lambda_s3_bucket = "cs-prod-cloudconnect-templates-${local.region_info.prefix}-${local.region_info.bucket_region_id}"
+  lambda_s3_bucket = local.region_info != null ? "cs-prod-cloudconnect-templates-${local.region_info.prefix}-${local.region_info.bucket_region_id}" : ""
 }
