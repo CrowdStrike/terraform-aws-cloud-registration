@@ -90,6 +90,7 @@ module "sensor_management" {
   external_id           = local.external_id
   intermediate_role_arn = local.intermediate_role_arn
   permissions_boundary  = var.permissions_boundary
+  account_type          = var.account_type
   resource_prefix       = var.resource_prefix
   resource_suffix       = var.resource_suffix
   tags                  = var.tags
