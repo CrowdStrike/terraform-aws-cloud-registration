@@ -276,4 +276,3 @@ resource "aws_iam_role_policy" "crowdstrike_ebs_volume_reader" {
     ]
   })
 }
-

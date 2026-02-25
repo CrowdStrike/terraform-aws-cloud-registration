@@ -71,6 +71,9 @@ locals {
   iam_role_name          = coalesce(var.iam_role_name, local.account.iam_role_name)
   eventbus_arn           = coalesce(var.eventbus_arn, local.account.eventbus_arn)
   cloudtrail_bucket_name = var.use_existing_cloudtrail ? "" : coalesce(var.cloudtrail_bucket_name, local.account.cloudtrail_bucket_name)
+
+  # Apply prefix/suffix to default EventBridge role name, but preserve custom names as-is
+  eventbridge_role_name = var.eventbridge_role_name == "CrowdStrikeCSPMEventBridge" ? "${var.resource_prefix}${var.eventbridge_role_name}${var.resource_suffix}" : var.eventbridge_role_name
 }
 
 module "asset_inventory" {
