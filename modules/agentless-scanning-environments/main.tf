@@ -462,8 +462,8 @@ resource "aws_vpc_endpoint" "s3_endpoint" {
         ]
         Resource = "*"
         Condition = {
-          StringEquals = {
-            "aws:SourceVpc" = aws_vpc.vpc[0].id
+          ArnEquals = {
+            "aws:SourceVpcArn" = aws_vpc.vpc[0].arn
           }
         }
       }
@@ -504,8 +504,8 @@ resource "aws_vpc_endpoint" "dynamodb_endpoint" {
         ]
         Resource = "*"
         Condition = {
-          StringEquals = {
-            "aws:SourceVpc" = aws_vpc.vpc[0].id
+          ArnEquals = {
+            "aws:SourceVpcArn" = aws_vpc.vpc[0].arn
           }
         }
       }
