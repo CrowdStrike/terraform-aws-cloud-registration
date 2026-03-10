@@ -74,7 +74,7 @@ data "aws_iam_policy_document" "policy_kms_key_host" {
   }
 }
 
-# Policy document for target account  
+# Policy document for target account
 data "aws_iam_policy_document" "policy_kms_key_target" {
   #checkov:skip=CKV_AWS_356:Root user requires unrestricted KMS access according to AWS documentation https://docs.aws.amazon.com/kms/latest/developerguide/key-policy-default.html
   #checkov:skip=CKV_AWS_109,CKV_AWS_111:DSPM roles require permissions to write and modify KMS resources
