@@ -79,7 +79,7 @@ resource "aws_lambda_function" "eventbridge" {
   function_name = "${var.resource_prefix}lambda-eventbridge${var.resource_suffix}"
   role          = aws_iam_role.lambda[0].arn
   handler       = "bootstrap"
-  runtime       = "provided.al2"
+  runtime       = "provided.al2023"
   architectures = ["x86_64"]
   memory_size   = 128
   timeout       = 15
@@ -129,7 +129,7 @@ resource "aws_lambda_function" "s3" {
   function_name = "${var.resource_prefix}lambda-s3${var.resource_suffix}"
   role          = aws_iam_role.lambda[0].arn
   handler       = "bootstrap"
-  runtime       = "provided.al2"
+  runtime       = "provided.al2023"
   architectures = ["x86_64"]
   memory_size   = 128
   timeout       = 15
