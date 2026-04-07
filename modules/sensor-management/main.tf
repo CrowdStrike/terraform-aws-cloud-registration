@@ -151,7 +151,7 @@ resource "aws_lambda_function" "this" {
   function_name = "${var.resource_prefix}cs-horizon-sensor-installation-orchestrator${var.resource_suffix}"
   role          = aws_iam_role.orchestrator.arn
   handler       = "bootstrap"
-  runtime       = "provided.al2"
+  runtime       = "provided.al2023"
   architectures = ["x86_64"]
   memory_size   = 128
   timeout       = 900
