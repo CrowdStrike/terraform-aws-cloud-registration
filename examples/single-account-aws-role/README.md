@@ -64,7 +64,7 @@ For detailed network requirements and validation steps, see the CrowdStrike Falc
 ```hcl
   # Enable custom VPC
   agentless_scanning_use_custom_vpc = true
-  
+
   # Provide existing resources for each region
   agentless_scanning_custom_vpc_resources_map = {
     "us-east-1" = {
