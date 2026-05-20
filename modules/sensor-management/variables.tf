@@ -53,3 +53,15 @@ variable "account_type" {
     error_message = "must be either 'commercial' or 'gov'"
   }
 }
+
+variable "is_gov" {
+  type        = bool
+  default     = false
+  description = "Set to true if deploying in a gov Falcon environment (eagle, merlin)"
+}
+
+variable "cs_address" {
+  type        = string
+  default     = ""
+  description = "CrowdStrike Falcon address for the Lambda to authenticate against (e.g. az.laggar.gcw.crowdstrike.com:443)"
+}

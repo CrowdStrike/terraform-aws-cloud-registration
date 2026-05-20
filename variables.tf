@@ -16,6 +16,12 @@ variable "is_gov" {
   description = "Set to true if you are deploying in gov Falcon"
 }
 
+variable "cs_address" {
+  type        = string
+  default     = ""
+  description = "CrowdStrike Falcon address for sensor management Lambda (e.g. az.laggar.gcw.crowdstrike.com:443). Required when is_gov = true."
+}
+
 variable "primary_region" {
   description = "Region for deploying global AWS resources (IAM roles, policies, etc.) that are account-wide and only need to be created once. Distinct from agentless_scanning_regions which controls region-specific resource deployment."
   type        = string
