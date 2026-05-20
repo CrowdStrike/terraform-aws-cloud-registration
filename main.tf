@@ -91,6 +91,8 @@ module "sensor_management" {
   intermediate_role_arn = local.intermediate_role_arn
   permissions_boundary  = var.permissions_boundary
   account_type          = var.account_type
+  is_gov                = var.is_gov
+  cs_address            = var.cs_address
   resource_prefix       = var.resource_prefix
   resource_suffix       = var.resource_suffix
   tags                  = var.tags

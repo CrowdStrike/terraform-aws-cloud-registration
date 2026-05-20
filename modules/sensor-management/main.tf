@@ -161,11 +161,17 @@ resource "aws_lambda_function" "this" {
   s3_key    = local.lambda_s3_key
 
   environment {
-    variables = {
-      CS_CLIENT_ID                  = var.falcon_client_id
-      CS_API_CREDENTIALS_AWS_SECRET = aws_secretsmanager_secret.this.name
-      CS_MODE                       = "force_auth"
-    }
+    variables = merge(
+      {
+        CS_CLIENT_ID                  = var.falcon_client_id
+        CS_API_CREDENTIALS_AWS_SECRET = aws_secretsmanager_secret.this.name
+        CS_MODE                       = "force_auth"
+      },
+      var.is_gov ? {
+        CS_GOV_CLOUD = "true"
+        CS_ADDRESS   = var.cs_address
+      } : {}
+    )
   }
 
   depends_on = [aws_cloudwatch_log_group.crowdstrike_sensor_management]
