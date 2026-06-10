@@ -119,6 +119,7 @@ module "realtime_visibility" {
   is_primary_region       = local.is_primary_region
   create_rules            = var.create_rtvd_rules
   primary_region          = var.primary_region
+  permissions_boundary    = var.permissions_boundary
   falcon_client_id        = var.falcon_client_id
   falcon_client_secret    = var.falcon_client_secret
   resource_prefix         = var.resource_prefix
