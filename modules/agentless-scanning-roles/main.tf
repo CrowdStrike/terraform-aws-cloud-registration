@@ -79,7 +79,7 @@ resource "aws_iam_role" "crowdstrike_aws_agentless_scanning_scanner_role" {
       }
     ]
   })
-  permissions_boundary = local.permissions_boundary_arn
+  permissions_boundary = var.permissions_boundary != "" ? "arn:${local.aws_partition}:iam::${data.aws_caller_identity.current.account_id}:policy/${var.permissions_boundary}" : null
   tags = merge(
     var.tags,
     {
