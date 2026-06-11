@@ -79,6 +79,7 @@ resource "aws_iam_role" "crowdstrike_aws_agentless_scanning_scanner_role" {
       }
     ]
   })
+  permissions_boundary = local.permissions_boundary_arn
   tags = merge(
     var.tags,
     {

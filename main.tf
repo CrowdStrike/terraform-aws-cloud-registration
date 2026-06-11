@@ -166,6 +166,7 @@ module "agentless_scanning_roles" {
   account_id                                  = local.aws_account
   agentless_scanning_host_account_id          = var.agentless_scanning_host_account_id
   agentless_scanning_host_scanner_role_name   = var.agentless_scanning_host_scanner_role_name
+  permissions_boundary                        = var.permissions_boundary
 }
 
 module "agentless_scanning_environments" {

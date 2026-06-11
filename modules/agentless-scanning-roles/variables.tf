@@ -138,6 +138,12 @@ variable "tags" {
   default     = {}
 }
 
+variable "permissions_boundary" {
+  description = "The name of the policy used to set the permissions boundary for IAM roles"
+  type        = string
+  default     = ""
+}
+
 variable "agentless_scanning_host_account_id" {
   type        = string
   default     = ""
