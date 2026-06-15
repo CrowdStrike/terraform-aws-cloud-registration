@@ -26,6 +26,7 @@ resource "aws_iam_role" "crowdstrike_aws_agentless_scanning_integration_role" {
   path                 = "/"
   max_session_duration = 43200
   assume_role_policy   = data.aws_iam_policy_document.assume_role.json
+  permissions_boundary = var.permissions_boundary != "" ? "arn:${local.aws_partition}:iam::${data.aws_caller_identity.current.account_id}:policy/${var.permissions_boundary}" : null
   tags = merge(
     var.tags,
     {

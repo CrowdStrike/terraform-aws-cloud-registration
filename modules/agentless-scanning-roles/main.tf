@@ -17,7 +17,7 @@ resource "aws_ssm_parameter" "agentless_scanning_root_parameter" {
   type = "String"
   tier = "Intelligent-Tiering"
   value = jsonencode({
-    version            = "1.1.0+tf.0"
+    version            = "1.1.1+tf.0"
     deployment_regions = var.agentless_scanning_regions
     scan_products = {
       dspm_scanning_enabled          = var.enable_dspm
@@ -79,6 +79,7 @@ resource "aws_iam_role" "crowdstrike_aws_agentless_scanning_scanner_role" {
       }
     ]
   })
+  permissions_boundary = var.permissions_boundary != "" ? "arn:${local.aws_partition}:iam::${data.aws_caller_identity.current.account_id}:policy/${var.permissions_boundary}" : null
   tags = merge(
     var.tags,
     {
