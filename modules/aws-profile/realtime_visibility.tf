@@ -12,7 +12,7 @@ module "rtvd_us_east_1" {
   use_existing_cloudtrail = var.use_existing_cloudtrail
   cloudtrail_bucket_name  = local.cloudtrail_bucket_name
   eventbus_arn            = local.eventbus_arn
-  eventbridge_role_name   = var.eventbridge_role_name
+  eventbridge_role_name   = local.eventbridge_role_name
   is_organization_trail   = length(var.organization_id) > 0
   is_gov                  = var.is_gov
   is_gov_commercial       = local.is_gov_commercial
@@ -41,7 +41,7 @@ module "rtvd_us_east_2" {
   use_existing_cloudtrail = var.use_existing_cloudtrail
   cloudtrail_bucket_name  = local.cloudtrail_bucket_name
   eventbus_arn            = local.eventbus_arn
-  eventbridge_role_name   = var.eventbridge_role_name
+  eventbridge_role_name   = local.eventbridge_role_name
   is_organization_trail   = length(var.organization_id) > 0
   is_gov                  = var.is_gov
   is_gov_commercial       = local.is_gov_commercial
@@ -70,7 +70,7 @@ module "rtvd_us_west_1" {
   use_existing_cloudtrail = var.use_existing_cloudtrail
   cloudtrail_bucket_name  = local.cloudtrail_bucket_name
   eventbus_arn            = local.eventbus_arn
-  eventbridge_role_name   = var.eventbridge_role_name
+  eventbridge_role_name   = local.eventbridge_role_name
   is_organization_trail   = length(var.organization_id) > 0
   is_gov                  = var.is_gov
   is_gov_commercial       = local.is_gov_commercial
@@ -99,7 +99,7 @@ module "rtvd_us_west_2" {
   use_existing_cloudtrail = var.use_existing_cloudtrail
   cloudtrail_bucket_name  = local.cloudtrail_bucket_name
   eventbus_arn            = local.eventbus_arn
-  eventbridge_role_name   = var.eventbridge_role_name
+  eventbridge_role_name   = local.eventbridge_role_name
   is_organization_trail   = length(var.organization_id) > 0
   is_gov                  = var.is_gov
   is_gov_commercial       = local.is_gov_commercial
@@ -128,7 +128,7 @@ module "rtvd_af_south_1" {
   use_existing_cloudtrail = var.use_existing_cloudtrail
   cloudtrail_bucket_name  = local.cloudtrail_bucket_name
   eventbus_arn            = local.eventbus_arn
-  eventbridge_role_name   = var.eventbridge_role_name
+  eventbridge_role_name   = local.eventbridge_role_name
   is_organization_trail   = length(var.organization_id) > 0
   is_gov                  = var.is_gov
   is_gov_commercial       = local.is_gov_commercial
@@ -157,7 +157,7 @@ module "rtvd_ap_east_1" {
   use_existing_cloudtrail = var.use_existing_cloudtrail
   cloudtrail_bucket_name  = local.cloudtrail_bucket_name
   eventbus_arn            = local.eventbus_arn
-  eventbridge_role_name   = var.eventbridge_role_name
+  eventbridge_role_name   = local.eventbridge_role_name
   is_organization_trail   = length(var.organization_id) > 0
   is_gov                  = var.is_gov
   is_gov_commercial       = local.is_gov_commercial
@@ -186,7 +186,7 @@ module "rtvd_ap_south_1" {
   use_existing_cloudtrail = var.use_existing_cloudtrail
   cloudtrail_bucket_name  = local.cloudtrail_bucket_name
   eventbus_arn            = local.eventbus_arn
-  eventbridge_role_name   = var.eventbridge_role_name
+  eventbridge_role_name   = local.eventbridge_role_name
   is_organization_trail   = length(var.organization_id) > 0
   is_gov                  = var.is_gov
   is_gov_commercial       = local.is_gov_commercial
@@ -215,7 +215,7 @@ module "rtvd_ap_south_2" {
   use_existing_cloudtrail = var.use_existing_cloudtrail
   cloudtrail_bucket_name  = local.cloudtrail_bucket_name
   eventbus_arn            = local.eventbus_arn
-  eventbridge_role_name   = var.eventbridge_role_name
+  eventbridge_role_name   = local.eventbridge_role_name
   is_organization_trail   = length(var.organization_id) > 0
   is_gov                  = var.is_gov
   is_gov_commercial       = local.is_gov_commercial
@@ -244,7 +244,7 @@ module "rtvd_ap_southeast_1" {
   use_existing_cloudtrail = var.use_existing_cloudtrail
   cloudtrail_bucket_name  = local.cloudtrail_bucket_name
   eventbus_arn            = local.eventbus_arn
-  eventbridge_role_name   = var.eventbridge_role_name
+  eventbridge_role_name   = local.eventbridge_role_name
   is_organization_trail   = length(var.organization_id) > 0
   is_gov                  = var.is_gov
   is_gov_commercial       = local.is_gov_commercial
@@ -273,7 +273,7 @@ module "rtvd_ap_southeast_2" {
   use_existing_cloudtrail = var.use_existing_cloudtrail
   cloudtrail_bucket_name  = local.cloudtrail_bucket_name
   eventbus_arn            = local.eventbus_arn
-  eventbridge_role_name   = var.eventbridge_role_name
+  eventbridge_role_name   = local.eventbridge_role_name
   is_organization_trail   = length(var.organization_id) > 0
   is_gov                  = var.is_gov
   is_gov_commercial       = local.is_gov_commercial
@@ -302,7 +302,7 @@ module "rtvd_ap_southeast_3" {
   use_existing_cloudtrail = var.use_existing_cloudtrail
   cloudtrail_bucket_name  = local.cloudtrail_bucket_name
   eventbus_arn            = local.eventbus_arn
-  eventbridge_role_name   = var.eventbridge_role_name
+  eventbridge_role_name   = local.eventbridge_role_name
   is_organization_trail   = length(var.organization_id) > 0
   is_gov                  = var.is_gov
   is_gov_commercial       = local.is_gov_commercial
@@ -331,7 +331,7 @@ module "rtvd_ap_southeast_4" {
   use_existing_cloudtrail = var.use_existing_cloudtrail
   cloudtrail_bucket_name  = local.cloudtrail_bucket_name
   eventbus_arn            = local.eventbus_arn
-  eventbridge_role_name   = var.eventbridge_role_name
+  eventbridge_role_name   = local.eventbridge_role_name
   is_organization_trail   = length(var.organization_id) > 0
   is_gov                  = var.is_gov
   is_gov_commercial       = local.is_gov_commercial
@@ -360,7 +360,7 @@ module "rtvd_ap_northeast_1" {
   use_existing_cloudtrail = var.use_existing_cloudtrail
   cloudtrail_bucket_name  = local.cloudtrail_bucket_name
   eventbus_arn            = local.eventbus_arn
-  eventbridge_role_name   = var.eventbridge_role_name
+  eventbridge_role_name   = local.eventbridge_role_name
   is_organization_trail   = length(var.organization_id) > 0
   is_gov                  = var.is_gov
   is_gov_commercial       = local.is_gov_commercial
@@ -389,7 +389,7 @@ module "rtvd_ap_northeast_2" {
   use_existing_cloudtrail = var.use_existing_cloudtrail
   cloudtrail_bucket_name  = local.cloudtrail_bucket_name
   eventbus_arn            = local.eventbus_arn
-  eventbridge_role_name   = var.eventbridge_role_name
+  eventbridge_role_name   = local.eventbridge_role_name
   is_organization_trail   = length(var.organization_id) > 0
   is_gov                  = var.is_gov
   is_gov_commercial       = local.is_gov_commercial
@@ -418,7 +418,7 @@ module "rtvd_ap_northeast_3" {
   use_existing_cloudtrail = var.use_existing_cloudtrail
   cloudtrail_bucket_name  = local.cloudtrail_bucket_name
   eventbus_arn            = local.eventbus_arn
-  eventbridge_role_name   = var.eventbridge_role_name
+  eventbridge_role_name   = local.eventbridge_role_name
   is_organization_trail   = length(var.organization_id) > 0
   is_gov                  = var.is_gov
   is_gov_commercial       = local.is_gov_commercial
@@ -447,7 +447,7 @@ module "rtvd_ca_central_1" {
   use_existing_cloudtrail = var.use_existing_cloudtrail
   cloudtrail_bucket_name  = local.cloudtrail_bucket_name
   eventbus_arn            = local.eventbus_arn
-  eventbridge_role_name   = var.eventbridge_role_name
+  eventbridge_role_name   = local.eventbridge_role_name
   is_organization_trail   = length(var.organization_id) > 0
   is_gov                  = var.is_gov
   is_gov_commercial       = local.is_gov_commercial
@@ -476,7 +476,7 @@ module "rtvd_eu_central_1" {
   use_existing_cloudtrail = var.use_existing_cloudtrail
   cloudtrail_bucket_name  = local.cloudtrail_bucket_name
   eventbus_arn            = local.eventbus_arn
-  eventbridge_role_name   = var.eventbridge_role_name
+  eventbridge_role_name   = local.eventbridge_role_name
   is_organization_trail   = length(var.organization_id) > 0
   is_gov                  = var.is_gov
   is_gov_commercial       = local.is_gov_commercial
@@ -505,7 +505,7 @@ module "rtvd_eu_west_1" {
   use_existing_cloudtrail = var.use_existing_cloudtrail
   cloudtrail_bucket_name  = local.cloudtrail_bucket_name
   eventbus_arn            = local.eventbus_arn
-  eventbridge_role_name   = var.eventbridge_role_name
+  eventbridge_role_name   = local.eventbridge_role_name
   is_organization_trail   = length(var.organization_id) > 0
   is_gov                  = var.is_gov
   is_gov_commercial       = local.is_gov_commercial
@@ -534,7 +534,7 @@ module "rtvd_eu_west_2" {
   use_existing_cloudtrail = var.use_existing_cloudtrail
   cloudtrail_bucket_name  = local.cloudtrail_bucket_name
   eventbus_arn            = local.eventbus_arn
-  eventbridge_role_name   = var.eventbridge_role_name
+  eventbridge_role_name   = local.eventbridge_role_name
   is_organization_trail   = length(var.organization_id) > 0
   is_gov                  = var.is_gov
   is_gov_commercial       = local.is_gov_commercial
@@ -563,7 +563,7 @@ module "rtvd_eu_west_3" {
   use_existing_cloudtrail = var.use_existing_cloudtrail
   cloudtrail_bucket_name  = local.cloudtrail_bucket_name
   eventbus_arn            = local.eventbus_arn
-  eventbridge_role_name   = var.eventbridge_role_name
+  eventbridge_role_name   = local.eventbridge_role_name
   is_organization_trail   = length(var.organization_id) > 0
   is_gov                  = var.is_gov
   is_gov_commercial       = local.is_gov_commercial
@@ -592,7 +592,7 @@ module "rtvd_eu_south_1" {
   use_existing_cloudtrail = var.use_existing_cloudtrail
   cloudtrail_bucket_name  = local.cloudtrail_bucket_name
   eventbus_arn            = local.eventbus_arn
-  eventbridge_role_name   = var.eventbridge_role_name
+  eventbridge_role_name   = local.eventbridge_role_name
   is_organization_trail   = length(var.organization_id) > 0
   is_gov                  = var.is_gov
   is_gov_commercial       = local.is_gov_commercial
@@ -621,7 +621,7 @@ module "rtvd_eu_south_2" {
   use_existing_cloudtrail = var.use_existing_cloudtrail
   cloudtrail_bucket_name  = local.cloudtrail_bucket_name
   eventbus_arn            = local.eventbus_arn
-  eventbridge_role_name   = var.eventbridge_role_name
+  eventbridge_role_name   = local.eventbridge_role_name
   is_organization_trail   = length(var.organization_id) > 0
   is_gov                  = var.is_gov
   is_gov_commercial       = local.is_gov_commercial
@@ -650,7 +650,7 @@ module "rtvd_eu_north_1" {
   use_existing_cloudtrail = var.use_existing_cloudtrail
   cloudtrail_bucket_name  = local.cloudtrail_bucket_name
   eventbus_arn            = local.eventbus_arn
-  eventbridge_role_name   = var.eventbridge_role_name
+  eventbridge_role_name   = local.eventbridge_role_name
   is_organization_trail   = length(var.organization_id) > 0
   is_gov                  = var.is_gov
   is_gov_commercial       = local.is_gov_commercial
@@ -679,7 +679,7 @@ module "rtvd_eu_central_2" {
   use_existing_cloudtrail = var.use_existing_cloudtrail
   cloudtrail_bucket_name  = local.cloudtrail_bucket_name
   eventbus_arn            = local.eventbus_arn
-  eventbridge_role_name   = var.eventbridge_role_name
+  eventbridge_role_name   = local.eventbridge_role_name
   is_organization_trail   = length(var.organization_id) > 0
   is_gov                  = var.is_gov
   is_gov_commercial       = local.is_gov_commercial
@@ -708,7 +708,7 @@ module "rtvd_me_south_1" {
   use_existing_cloudtrail = var.use_existing_cloudtrail
   cloudtrail_bucket_name  = local.cloudtrail_bucket_name
   eventbus_arn            = local.eventbus_arn
-  eventbridge_role_name   = var.eventbridge_role_name
+  eventbridge_role_name   = local.eventbridge_role_name
   is_organization_trail   = length(var.organization_id) > 0
   is_gov                  = var.is_gov
   is_gov_commercial       = local.is_gov_commercial
@@ -737,7 +737,7 @@ module "rtvd_me_central_1" {
   use_existing_cloudtrail = var.use_existing_cloudtrail
   cloudtrail_bucket_name  = local.cloudtrail_bucket_name
   eventbus_arn            = local.eventbus_arn
-  eventbridge_role_name   = var.eventbridge_role_name
+  eventbridge_role_name   = local.eventbridge_role_name
   is_organization_trail   = length(var.organization_id) > 0
   is_gov                  = var.is_gov
   is_gov_commercial       = local.is_gov_commercial
@@ -766,7 +766,7 @@ module "rtvd_sa_east_1" {
   use_existing_cloudtrail = var.use_existing_cloudtrail
   cloudtrail_bucket_name  = local.cloudtrail_bucket_name
   eventbus_arn            = local.eventbus_arn
-  eventbridge_role_name   = var.eventbridge_role_name
+  eventbridge_role_name   = local.eventbridge_role_name
   is_organization_trail   = length(var.organization_id) > 0
   is_gov                  = var.is_gov
   is_gov_commercial       = local.is_gov_commercial
@@ -795,7 +795,7 @@ module "rtvd_us_gov_east_1" {
   use_existing_cloudtrail = var.use_existing_cloudtrail
   cloudtrail_bucket_name  = local.cloudtrail_bucket_name
   eventbus_arn            = local.eventbus_arn
-  eventbridge_role_name   = var.eventbridge_role_name
+  eventbridge_role_name   = local.eventbridge_role_name
   is_organization_trail   = length(var.organization_id) > 0
   is_gov                  = var.is_gov
   is_gov_commercial       = local.is_gov_commercial
@@ -824,7 +824,7 @@ module "rtvd_us_gov_west_1" {
   use_existing_cloudtrail = var.use_existing_cloudtrail
   cloudtrail_bucket_name  = local.cloudtrail_bucket_name
   eventbus_arn            = local.eventbus_arn
-  eventbridge_role_name   = var.eventbridge_role_name
+  eventbridge_role_name   = local.eventbridge_role_name
   is_organization_trail   = length(var.organization_id) > 0
   is_gov                  = var.is_gov
   is_gov_commercial       = local.is_gov_commercial

@@ -58,7 +58,7 @@ To onboard additional child accounts:
 
 ### Cross Account Scanning
 
-In this example, Agentless scanning is configured to scan assets in the entire organization from a single account that will host data scanners. 
+In this example, Agentless scanning is configured to scan assets in the entire organization from a single account that will host data scanners.
 It is important that the deployment complete in the host account before it begins in the target accounts. In order to create this dependency, the target modules utilize the output of the host module.
 
 Alternate configuration options:
