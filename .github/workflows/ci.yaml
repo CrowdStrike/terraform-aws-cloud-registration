@@ -12,10 +12,10 @@ jobs:
 
     steps:
       - name: Checkout source code
-        uses: actions/checkout@v5
+        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
 
       - name: Terraform format check
-        uses: dflook/terraform-fmt-check@v2
+        uses: dflook/terraform-fmt-check@59168426e242f665bf7b70644d706224e665056a # v2
         with:
           path: .
 
@@ -41,10 +41,10 @@ jobs:
 
     steps:
       - name: Checkout source code
-        uses: actions/checkout@v5
+        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
 
       - name: Terraform validate
-        uses: dflook/terraform-validate@v2
+        uses: dflook/terraform-validate@4cef5d8a4b92bcd88486e41e22a42942a382c9d6 # v2
         with:
           path: ${{ matrix.path }}
 
@@ -54,8 +54,8 @@ jobs:
 
     steps:
       - name: Checkout source code
-        uses: actions/checkout@v5
-      - uses: terraform-docs/gh-actions@v1.4.1
+        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+      - uses: terraform-docs/gh-actions@6de6da0cefcc6b4b7a5cbea4d79d97060733093c # v1.4.1
         with:
           working-dir: .
           config-file: .terraform-docs.yml
@@ -67,16 +67,16 @@ jobs:
 
     steps:
       - name: Checkout source code
-        uses: actions/checkout@v5
+        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
 
       - name: Cache plugin dir
-        uses: actions/cache@v4.2.4
+        uses: actions/cache@0400d5f644dc74513175e3cd8d07132dd4860809 # v4.2.4
         with:
           path: ~/.tflint.d/plugins
           key: tflint-${{ hashFiles('.tflint.hcl') }}
 
       - name: Setup TFLint
-        uses: terraform-linters/setup-tflint@v5
+        uses: terraform-linters/setup-tflint@ae78205cfffec9e8d93fd2b3115c7e9d3166d4b6 # v5
 
       - name: Init TFLint
         run: tflint --init
