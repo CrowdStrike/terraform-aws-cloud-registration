@@ -15,7 +15,7 @@ jobs:
         uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
 
       - name: Terraform format check
-        uses: dflook/terraform-fmt-check@59168426e242f665bf7b70644d706224e665056a # v2
+        uses: dflook/terraform-fmt-check@ff37545fa0e818467e88bc8456cc8a7b202b1b60
         with:
           path: .
 
@@ -44,7 +44,7 @@ jobs:
         uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
 
       - name: Terraform validate
-        uses: dflook/terraform-validate@4cef5d8a4b92bcd88486e41e22a42942a382c9d6 # v2
+        uses: dflook/terraform-validate@ff93d08a956c97fbc5f5e8c5778705baf7ae3108
         with:
           path: ${{ matrix.path }}
 
@@ -70,13 +70,13 @@ jobs:
         uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
 
       - name: Cache plugin dir
-        uses: actions/cache@0400d5f644dc74513175e3cd8d07132dd4860809 # v4.2.4
+        uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4.3.0
         with:
           path: ~/.tflint.d/plugins
           key: tflint-${{ hashFiles('.tflint.hcl') }}
 
       - name: Setup TFLint
-        uses: terraform-linters/setup-tflint@ae78205cfffec9e8d93fd2b3115c7e9d3166d4b6 # v5
+        uses: terraform-linters/setup-tflint@4cb9feea73331a35b422df102992a03a44a3bb33 # v6.2.1
 
       - name: Init TFLint
         run: tflint --init
