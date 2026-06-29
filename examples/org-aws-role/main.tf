@@ -6,7 +6,6 @@ locals {
   enable_dspm                           = true
   enable_vulnerability_scanning         = true
   agentless_scanning_regions            = ["us-east-1", "us-east-2"]
-  use_existing_cloudtrail               = true
   agentless_scanning_create_nat_gateway = var.agentless_scanning_create_nat_gateway
   dspm_s3_access                        = var.dspm_s3_access
   dspm_dynamodb_access                  = var.dspm_dynamodb_access
@@ -33,9 +32,10 @@ resource "crowdstrike_cloud_aws_account" "this" {
   }
 
   realtime_visibility = {
-    enabled                 = local.enable_realtime_visibility
+    enabled = local.enable_realtime_visibility
+    # DEPRECATED: cloudtrail_region and use_existing_cloudtrail are ignored by the service
     cloudtrail_region       = local.primary_region
-    use_existing_cloudtrail = local.use_existing_cloudtrail
+    use_existing_cloudtrail = true
   }
 
   idp = {
@@ -67,7 +67,6 @@ module "fcs_management_account" {
   enable_realtime_visibility    = local.enable_realtime_visibility
   enable_idp                    = local.enable_idp
   realtime_visibility_regions   = ["all"]
-  use_existing_cloudtrail       = local.use_existing_cloudtrail
   enable_dspm                   = local.enable_dspm
   enable_vulnerability_scanning = local.enable_vulnerability_scanning
   agentless_scanning_regions    = local.agentless_scanning_regions
@@ -77,7 +76,6 @@ module "fcs_management_account" {
   external_id                           = crowdstrike_cloud_aws_account.this.external_id
   intermediate_role_arn                 = crowdstrike_cloud_aws_account.this.intermediate_role_arn
   eventbus_arn                          = crowdstrike_cloud_aws_account.this.eventbus_arn
-  cloudtrail_bucket_name                = crowdstrike_cloud_aws_account.this.cloudtrail_bucket_name
   agentless_scanning_role_name          = crowdstrike_cloud_aws_account.this.agentless_scanning_role_name
   agentless_scanning_create_nat_gateway = local.agentless_scanning_create_nat_gateway
   dspm_s3_access                        = local.dspm_s3_access
@@ -102,7 +100,6 @@ module "fcs_child_account_1" {
   enable_realtime_visibility    = local.enable_realtime_visibility
   enable_idp                    = local.enable_idp
   realtime_visibility_regions   = ["all"]
-  use_existing_cloudtrail       = true # use the cloudtrail at the org level
   enable_dspm                   = local.enable_dspm
   enable_vulnerability_scanning = local.enable_vulnerability_scanning
   agentless_scanning_regions    = local.agentless_scanning_regions
@@ -112,7 +109,6 @@ module "fcs_child_account_1" {
   external_id                           = crowdstrike_cloud_aws_account.this.external_id
   intermediate_role_arn                 = crowdstrike_cloud_aws_account.this.intermediate_role_arn
   eventbus_arn                          = crowdstrike_cloud_aws_account.this.eventbus_arn
-  cloudtrail_bucket_name                = "" # not needed for child accounts
   agentless_scanning_role_name          = crowdstrike_cloud_aws_account.this.agentless_scanning_role_name
   agentless_scanning_create_nat_gateway = local.agentless_scanning_create_nat_gateway
   dspm_s3_access                        = local.dspm_s3_access

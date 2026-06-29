@@ -71,6 +71,8 @@ resource "aws_iam_role_policy" "inline_policy" {
   })
 }
 
+# DEPRECATED: CloudTrail provisioning is no longer supported.
+# With use_existing_cloudtrail defaulting to true, this resource will never be created.
 resource "aws_cloudtrail" "this" {
   count                         = !var.use_existing_cloudtrail && var.is_primary_region ? 1 : 0
   name                          = "${var.resource_prefix}CSPMCloudtrail${var.resource_suffix}"

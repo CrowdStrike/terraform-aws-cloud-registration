@@ -71,8 +71,8 @@ variable "enable_realtime_visibility" {
 
 variable "use_existing_cloudtrail" {
   type        = bool
-  default     = false
-  description = "Set to true if you already have a cloudtrail"
+  default     = true
+  description = "DEPRECATED: This variable is no longer used. CrowdStrike no longer provisions CloudTrail resources. All deployments now behave as if use_existing_cloudtrail=true."
 }
 
 variable "realtime_visibility_regions" {
@@ -126,7 +126,7 @@ variable "eventbridge_role_name" {
 variable "cloudtrail_bucket_name" {
   type        = string
   default     = ""
-  description = "Name of the S3 bucket for CloudTrail logs"
+  description = "DEPRECATED: This variable is no longer used. CrowdStrike no longer provisions or references a CloudTrail S3 bucket."
 }
 
 variable "enable_dspm" {

@@ -117,6 +117,10 @@ resource "aws_lambda_permission" "eventbridge" {
   source_arn    = "arn:${local.aws_partition}:events:${local.aws_region}:${local.account_id}:rule/${var.resource_prefix}cs-*"
 }
 
+# DEPRECATED: The following gov-commercial S3/Lambda resources for CloudTrail provisioning
+# are no longer created. With use_existing_cloudtrail defaulting to true, all resources
+# gated on !var.use_existing_cloudtrail will have count=0.
+
 resource "aws_cloudwatch_log_group" "s3_logs" {
   count             = var.is_gov_commercial && !var.use_existing_cloudtrail && var.is_primary_region ? 1 : 0
   name              = "/aws/lambda/${var.resource_prefix}lambda-s3${var.resource_suffix}"

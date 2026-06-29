@@ -17,13 +17,14 @@ variable "create_rules" {
 
 variable "cloudtrail_bucket_name" {
   type        = string
-  description = "Name of the S3 bucket for CloudTrail logs"
+  default     = ""
+  description = "DEPRECATED: This variable is no longer used. CrowdStrike no longer provisions or references a CloudTrail S3 bucket."
 }
 
 variable "use_existing_cloudtrail" {
   type        = bool
-  default     = false
-  description = "Whether to use an existing CloudTrail or create a new one"
+  default     = true
+  description = "DEPRECATED: This variable is no longer used. CrowdStrike no longer provisions CloudTrail resources. All deployments now behave as if use_existing_cloudtrail=true."
 }
 
 variable "is_organization_trail" {
