@@ -123,6 +123,7 @@ variable "eventbridge_role_name" {
   description = "The eventbridge role name"
 }
 
+# tflint-ignore: terraform_unused_declarations
 variable "cloudtrail_bucket_name" {
   type        = string
   default     = ""

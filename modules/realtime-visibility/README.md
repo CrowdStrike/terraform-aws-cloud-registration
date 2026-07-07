@@ -124,7 +124,7 @@ module "rules_us_east_2" {
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
-| <a name="input_cloudtrail_bucket_name"></a> [cloudtrail\_bucket\_name](#input\_cloudtrail\_bucket\_name) | Name of the S3 bucket for CloudTrail logs | `string` | n/a | yes |
+| <a name="input_cloudtrail_bucket_name"></a> [cloudtrail\_bucket\_name](#input\_cloudtrail\_bucket\_name) | DEPRECATED: This variable is no longer used. CrowdStrike no longer provisions or references a CloudTrail S3 bucket. | `string` | `""` | no |
 | <a name="input_create_rules"></a> [create\_rules](#input\_create\_rules) | Set to false if you don't want to enable monitoring in this region | `bool` | `true` | no |
 | <a name="input_eventbridge_role_name"></a> [eventbridge\_role\_name](#input\_eventbridge\_role\_name) | The eventbridge role name | `string` | `"CrowdStrikeCSPMEventBridge"` | no |
 | <a name="input_eventbus_arn"></a> [eventbus\_arn](#input\_eventbus\_arn) | EventBus ARN(s) to send events to - single ARN for commercial, comma-separated for gov multi-region | `string` | n/a | yes |
@@ -146,7 +146,7 @@ module "rules_us_east_2" {
 | <a name="input_resource_prefix"></a> [resource\_prefix](#input\_resource\_prefix) | The prefix to be added to all resource names | `string` | `""` | no |
 | <a name="input_resource_suffix"></a> [resource\_suffix](#input\_resource\_suffix) | The suffix to be added to all resource names | `string` | `""` | no |
 | <a name="input_tags"></a> [tags](#input\_tags) | A map of tags to add to all resources that support tagging | `map(string)` | `{}` | no |
-| <a name="input_use_existing_cloudtrail"></a> [use\_existing\_cloudtrail](#input\_use\_existing\_cloudtrail) | Whether to use an existing CloudTrail or create a new one | `bool` | `false` | no |
+| <a name="input_use_existing_cloudtrail"></a> [use\_existing\_cloudtrail](#input\_use\_existing\_cloudtrail) | DEPRECATED: This variable is no longer used. CrowdStrike no longer provisions CloudTrail resources. All deployments now behave as if use\_existing\_cloudtrail=true. | `bool` | `true` | no |
 ## Outputs
 
 | Name | Description |

@@ -62,10 +62,8 @@ resource "crowdstrike_cloud_aws_account" "this" {
   }
 
   realtime_visibility = {
-    enabled = local.enable_realtime_visibility
-    # DEPRECATED: cloudtrail_region and use_existing_cloudtrail are ignored by the service
-    cloudtrail_region       = local.primary_region
-    use_existing_cloudtrail = true
+    enabled           = local.enable_realtime_visibility
+    cloudtrail_region = local.primary_region
   }
 
   idp = {

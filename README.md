@@ -269,7 +269,7 @@ module "fcs_account_us_east_2" {
 | <a name="input_agentless_scanning_scanner_role_name"></a> [agentless\_scanning\_scanner\_role\_name](#input\_agentless\_scanning\_scanner\_role\_name) | The unique name of the IAM role that Agentless scanning scanner will be assuming | `string` | `"CrowdStrikeAgentlessScanningScannerRole"` | no |
 | <a name="input_agentless_scanning_scanner_role_unique_id"></a> [agentless\_scanning\_scanner\_role\_unique\_id](#input\_agentless\_scanning\_scanner\_role\_unique\_id) | The unique ID of the Agentless scanning scanner role | `string` | `""` | no |
 | <a name="input_agentless_scanning_use_custom_vpc"></a> [agentless\_scanning\_use\_custom\_vpc](#input\_agentless\_scanning\_use\_custom\_vpc) | Use existing custom VPC resources for ALL deployment regions (requires agentless\_scanning\_custom\_vpc\_resources\_map with all regions) | `bool` | `false` | no |
-| <a name="input_cloudtrail_bucket_name"></a> [cloudtrail\_bucket\_name](#input\_cloudtrail\_bucket\_name) | Name of the S3 bucket for CloudTrail logs | `string` | `""` | no |
+| <a name="input_cloudtrail_bucket_name"></a> [cloudtrail\_bucket\_name](#input\_cloudtrail\_bucket\_name) | DEPRECATED: This variable is no longer used. CrowdStrike no longer provisions or references a CloudTrail S3 bucket. | `string` | `""` | no |
 | <a name="input_create_rtvd_rules"></a> [create\_rtvd\_rules](#input\_create\_rtvd\_rules) | Set to false if you don't want to enable monitoring in this region | `bool` | `true` | no |
 | <a name="input_cs_address"></a> [cs\_address](#input\_cs\_address) | CrowdStrike Falcon address for sensor management Lambda (e.g. az.laggar.gcw.crowdstrike.com:443). Required when is\_gov = true. | `string` | `""` | no |
 | <a name="input_dspm_create_nat_gateway"></a> [dspm\_create\_nat\_gateway](#input\_dspm\_create\_nat\_gateway) | DEPRECATED: Use agentless\_scanning\_create\_nat\_gateway instead. Set to true to create a NAT Gateway for DSPM scanning environments | `bool` | `true` | no |
@@ -307,7 +307,7 @@ module "fcs_account_us_east_2" {
 | <a name="input_resource_prefix"></a> [resource\_prefix](#input\_resource\_prefix) | The prefix to be added to all resource names | `string` | `"CrowdStrike"` | no |
 | <a name="input_resource_suffix"></a> [resource\_suffix](#input\_resource\_suffix) | The suffix to be added to all resource names | `string` | `""` | no |
 | <a name="input_tags"></a> [tags](#input\_tags) | A map of tags to add to all resources that support tagging | `map(string)` | `{}` | no |
-| <a name="input_use_existing_cloudtrail"></a> [use\_existing\_cloudtrail](#input\_use\_existing\_cloudtrail) | Set to true if you already have a cloudtrail | `bool` | `false` | no |
+| <a name="input_use_existing_cloudtrail"></a> [use\_existing\_cloudtrail](#input\_use\_existing\_cloudtrail) | DEPRECATED: This variable is no longer used. CrowdStrike no longer provisions CloudTrail resources. All deployments now behave as if use\_existing\_cloudtrail=true. | `bool` | `true` | no |
 | <a name="input_use_existing_iam_reader_role"></a> [use\_existing\_iam\_reader\_role](#input\_use\_existing\_iam\_reader\_role) | Set to true if you want to use an existing IAM role for asset inventory | `bool` | `false` | no |
 | <a name="input_vpc_cidr_block"></a> [vpc\_cidr\_block](#input\_vpc\_cidr\_block) | VPC CIDR block | `string` | `"10.0.0.0/16"` | no |
 ## Outputs
