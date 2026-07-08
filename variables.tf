@@ -72,8 +72,15 @@ variable "enable_realtime_visibility" {
 
 variable "use_existing_cloudtrail" {
   type        = bool
-  default     = false
-  description = "Set to true if you already have a cloudtrail"
+  default     = true
+  description = "DEPRECATED: This variable is no longer used. CrowdStrike no longer provisions CloudTrail resources. All deployments now behave as if use_existing_cloudtrail=true."
+}
+
+check "use_existing_cloudtrail_deprecation" {
+  assert {
+    condition     = var.use_existing_cloudtrail == true
+    error_message = "DEPRECATION WARNING: 'use_existing_cloudtrail' is deprecated and must remain true. CrowdStrike no longer provisions CloudTrail resources."
+  }
 }
 
 variable "create_rtvd_rules" {
@@ -127,7 +134,14 @@ variable "eventbus_arn" {
 variable "cloudtrail_bucket_name" {
   type        = string
   default     = ""
-  description = "Name of the S3 bucket for CloudTrail logs"
+  description = "DEPRECATED: This variable is no longer used. CrowdStrike no longer provisions or references a CloudTrail S3 bucket."
+}
+
+check "cloudtrail_bucket_name_deprecation" {
+  assert {
+    condition     = var.cloudtrail_bucket_name == ""
+    error_message = "DEPRECATION WARNING: 'cloudtrail_bucket_name' is deprecated. CrowdStrike no longer provisions or references a CloudTrail S3 bucket."
+  }
 }
 
 variable "enable_dspm" {
