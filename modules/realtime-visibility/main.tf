@@ -81,6 +81,7 @@ resource "aws_cloudtrail" "this" {
   include_global_service_events = true
   is_multi_region_trail         = true
   enable_logging                = true
+  enable_log_file_validation    = true
   is_organization_trail         = var.is_organization_trail
   tags                          = var.tags
 }
