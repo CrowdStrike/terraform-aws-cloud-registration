@@ -10,7 +10,7 @@ data "crowdstrike_cloud_aws_account" "target" {
 locals {
   aws_region        = data.aws_region.current.id
   aws_account       = data.aws_caller_identity.current.account_id
-  is_primary_region = local.aws_region == var.primary_region
+  is_primary_region = var.is_primary_region != null ? var.is_primary_region : (local.aws_region == var.primary_region)
   is_gov_commercial = var.is_gov && var.account_type == "commercial"
 
   agentless_scanning_enabled = (var.enable_dspm || var.enable_vulnerability_scanning)
