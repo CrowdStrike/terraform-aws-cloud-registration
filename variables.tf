@@ -454,3 +454,9 @@ variable "agentless_scanning_integration_role_unique_id" {
   type        = string
   default     = ""
 }
+
+variable "is_primary_region" {
+  type        = bool
+  default     = null
+  description = "Explicit override for primary-region detection. Set to true for the primary region and false for all others when calling this module via a provider alias across two or more module boundaries. When null (the default), the module derives the value from data.aws_region.current, which is the existing behaviour."
+}

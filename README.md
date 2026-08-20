@@ -242,20 +242,20 @@ module "fcs_account_us_east_2" {
 ## Providers
 
 | Name | Version |
-|------|---------|
+| ---- | ------- |
 | <a name="provider_aws"></a> [aws](#provider\_aws) | >= 5.0.0 |
 | <a name="provider_crowdstrike"></a> [crowdstrike](#provider\_crowdstrike) | >= 0.0.58 |
 ## Resources
 
 | Name | Type |
-|------|------|
+| ---- | ---- |
 | [aws_caller_identity.current](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/caller_identity) | data source |
 | [aws_region.current](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/region) | data source |
 | [crowdstrike_cloud_aws_account.target](https://registry.terraform.io/providers/CrowdStrike/crowdstrike/latest/docs/data-sources/cloud_aws_account) | data source |
 ## Inputs
 
 | Name | Description | Type | Default | Required |
-|------|-------------|------|---------|:--------:|
+| ---- | ----------- | ---- | ------- | :------: |
 | <a name="input_account_id"></a> [account\_id](#input\_account\_id) | The AWS 12 digit account ID | `string` | `""` | no |
 | <a name="input_account_type"></a> [account\_type](#input\_account\_type) | Account type can be either 'commercial' or 'gov' | `string` | `"commercial"` | no |
 | <a name="input_agentless_scanning_create_nat_gateway"></a> [agentless\_scanning\_create\_nat\_gateway](#input\_agentless\_scanning\_create\_nat\_gateway) | Set to true to create a NAT Gateway for agentless scanning environments | `bool` | `true` | no |
@@ -296,6 +296,7 @@ module "fcs_account_us_east_2" {
 | <a name="input_iam_role_name"></a> [iam\_role\_name](#input\_iam\_role\_name) | The name of the reader role | `string` | `""` | no |
 | <a name="input_intermediate_role_arn"></a> [intermediate\_role\_arn](#input\_intermediate\_role\_arn) | The intermediate role that is allowed to assume the reader role | `string` | `""` | no |
 | <a name="input_is_gov"></a> [is\_gov](#input\_is\_gov) | Set to true if you are deploying in gov Falcon | `bool` | `false` | no |
+| <a name="input_is_primary_region"></a> [is\_primary\_region](#input\_is\_primary\_region) | Explicit override for primary-region detection. Set to true for the primary region and false for all others when calling this module via a provider alias across two or more module boundaries. When null (the default), the module derives the value from data.aws\_region.current, which is the existing behaviour. | `bool` | `null` | no |
 | <a name="input_log_ingestion_kms_key_arn"></a> [log\_ingestion\_kms\_key\_arn](#input\_log\_ingestion\_kms\_key\_arn) | Optional KMS key ARN for decrypting S3 objects (when log\_ingestion\_method=s3) | `string` | `""` | no |
 | <a name="input_log_ingestion_method"></a> [log\_ingestion\_method](#input\_log\_ingestion\_method) | Choose the method for ingesting CloudTrail logs - eventbridge (default) or s3. If s3 is selected, be sure to deploy to the region associated with the SNS topic connected to your CloudTrail instance. | `string` | `"eventbridge"` | no |
 | <a name="input_log_ingestion_s3_bucket_name"></a> [log\_ingestion\_s3\_bucket\_name](#input\_log\_ingestion\_s3\_bucket\_name) | S3 bucket name containing CloudTrail logs (required when log\_ingestion\_method=s3) | `string` | `""` | no |
@@ -313,7 +314,7 @@ module "fcs_account_us_east_2" {
 ## Outputs
 
 | Name | Description |
-|------|-------------|
+| ---- | ----------- |
 | <a name="output_integration_role_unique_id"></a> [integration\_role\_unique\_id](#output\_integration\_role\_unique\_id) | The unique ID of the DSPM integration role |
 | <a name="output_scanner_role_unique_id"></a> [scanner\_role\_unique\_id](#output\_scanner\_role\_unique\_id) | The unique ID of the DSPM scanner role |
 <!-- END_TF_DOCS -->
