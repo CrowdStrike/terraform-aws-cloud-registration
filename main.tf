@@ -62,7 +62,7 @@ locals {
   external_id            = coalesce(var.external_id, local.account.external_id)
   intermediate_role_arn  = coalesce(var.intermediate_role_arn, local.account.intermediate_role_arn)
   iam_role_name          = coalesce(var.iam_role_name, local.account.iam_role_name)
-  eventbus_arn           = local.is_gov_commercial ? "" : coalesce(var.eventbus_arn, local.account.eventbus_arn)
+  eventbus_arn           = local.is_gov_commercial || var.log_ingestion_method == "s3" ? "" : coalesce(var.eventbus_arn, local.account.eventbus_arn)
   cloudtrail_bucket_name = "" # DEPRECATED: CrowdStrike no longer provisions CloudTrail resources
 }
 
