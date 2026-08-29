@@ -1,14 +1,14 @@
 data "aws_caller_identity" "current" {}
 data "aws_region" "current" {}
 data "aws_partition" "current" {}
-data "aws_arn" "sns_topic" {
-  count = var.log_ingestion_sns_topic_arn != "" ? 1 : 0
-  arn   = var.log_ingestion_sns_topic_arn
-}
 
 locals {
-  account_id    = data.aws_caller_identity.current.account_id
-  aws_region    = data.aws_region.current.id
+  # Prefer the caller-supplied account ID and region over the data source reads: Terraform
+  # defers data source reads to apply when this module has pending-change dependencies, and
+  # the counts further down need to be resolvable at plan time. The root module always passes
+  # both, resolving them from configuration where it can. See CSPG-102208.
+  account_id    = var.account_id != "" ? var.account_id : data.aws_caller_identity.current.account_id
+  aws_region    = var.region != null ? var.region : data.aws_region.current.id
   aws_partition = data.aws_partition.current.partition
 
   # Conditional logic for log ingestion methods
@@ -17,9 +17,16 @@ locals {
   has_kms_key            = var.log_ingestion_kms_key_arn != ""
   has_s3_prefix          = var.log_ingestion_s3_bucket_prefix != ""
 
-  # Parse SNS topic ARN to extract account ID and region, only create S3 resources if both match current account and region
-  sns_topic_account_id                           = var.log_ingestion_sns_topic_arn != "" ? data.aws_arn.sns_topic[0].account : ""
-  sns_topic_region                               = var.log_ingestion_sns_topic_arn != "" ? data.aws_arn.sns_topic[0].region : ""
+  # Parse the SNS topic ARN to extract account ID and region; S3 resources are only
+  # created when both match the current account and region.
+  #
+  # Parsed with split() rather than the aws_arn data source on purpose. aws_arn makes
+  # no API call, but Terraform still defers it to apply alongside every other read in
+  # this module, which left these counts unresolvable at plan time. ARNs are
+  # arn:partition:service:region:account-id:resource, so region is [3], account is [4].
+  sns_topic_arn_parts                            = var.log_ingestion_sns_topic_arn != "" ? split(":", var.log_ingestion_sns_topic_arn) : []
+  sns_topic_account_id                           = length(local.sns_topic_arn_parts) > 4 ? local.sns_topic_arn_parts[4] : ""
+  sns_topic_region                               = length(local.sns_topic_arn_parts) > 4 ? local.sns_topic_arn_parts[3] : ""
   use_s3_method_and_sns_topic_in_current_account = local.use_s3_method && var.log_ingestion_sns_topic_arn != "" && local.sns_topic_account_id == local.account_id
   use_s3_method_and_sns_topic_in_current_region  = local.use_s3_method && var.log_ingestion_sns_topic_arn != "" && local.sns_topic_region == local.aws_region
   use_s3_method_and_sns_topic_matches_current    = local.use_s3_method_and_sns_topic_in_current_account && local.use_s3_method_and_sns_topic_in_current_region
