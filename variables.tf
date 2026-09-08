@@ -454,3 +454,26 @@ variable "agentless_scanning_integration_role_unique_id" {
   type        = string
   default     = ""
 }
+
+variable "region" {
+  description = "The region this module instance deploys into. Set this explicitly when the module is called with depends_on, or in any topology where Terraform defers data source reads to apply time - otherwise the count expressions gated on region cannot be resolved at plan time. When null, the region is read from data.aws_region.current."
+  type        = string
+  default     = null
+}
+
+variable "is_primary_region" {
+  description = "Explicit override for primary-region detection. Prefer setting 'region' instead, which lets the module derive this. Provided for callers that want to gate global resources directly. When null, derived by comparing the region against primary_region."
+  type        = bool
+  default     = null
+}
+
+variable "current_account_id" {
+  description = "The AWS 12 digit account ID this module instance is deploying into. Distinct from 'account_id', which selects the Falcon registration to look up and is intentionally empty for organization registrations. Set this when the module is called with depends_on, or in any topology where Terraform defers data source reads to apply time - otherwise the count expressions gated on the account ID cannot be resolved at plan time. When null, falls back to 'account_id' and then to data.aws_caller_identity.current."
+  type        = string
+  default     = null
+
+  validation {
+    condition     = var.current_account_id == null || can(regex("^[0-9]{12}$", var.current_account_id))
+    error_message = "current_account_id must be either null or the 12-digit AWS account ID"
+  }
+}

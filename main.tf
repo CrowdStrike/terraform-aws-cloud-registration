@@ -8,9 +8,18 @@ data "crowdstrike_cloud_aws_account" "target" {
 }
 
 locals {
-  aws_region        = data.aws_region.current.id
-  aws_account       = data.aws_caller_identity.current.account_id
-  is_primary_region = local.aws_region == var.primary_region
+  # Prefer caller-supplied values over the data source reads. Terraform requires count to be
+  # known at plan time, and it defers data source reads to apply whenever this module has
+  # pending-change dependencies (for example, a depends_on on the module call). Reading the
+  # region and account ID from configuration keeps the count expressions below resolvable.
+  # See CSPG-102208.
+  #
+  # account_id is intentionally empty for organization registrations, so current_account_id
+  # exists as a separate override for that case - account_id also selects which Falcon
+  # registration to look up above, and overloading it would change that lookup.
+  aws_region        = var.region != null ? var.region : data.aws_region.current.id
+  aws_account       = coalesce(var.current_account_id, var.account_id != "" ? var.account_id : null, data.aws_caller_identity.current.account_id)
+  is_primary_region = var.is_primary_region != null ? var.is_primary_region : local.aws_region == var.primary_region
   is_gov_commercial = var.is_gov && var.account_type == "commercial"
 
   agentless_scanning_enabled = (var.enable_dspm || var.enable_vulnerability_scanning)
@@ -66,6 +75,27 @@ locals {
   cloudtrail_bucket_name = "" # DEPRECATED: CrowdStrike no longer provisions CloudTrail resources
 }
 
+# The region and account overrides above exist so count expressions resolve at plan time, which
+# means nothing compares them against the provider they are supposed to describe. A caller that
+# supplies the wrong value would build resources with the wrong region or account baked into
+# names, ARNs and IAM policy conditions, and the plan would look correct.
+#
+# These run at apply, once the data source reads have happened, so they catch a mismatch without
+# reintroducing the plan-time dependency the overrides were added to remove.
+check "region_override_matches_provider" {
+  assert {
+    condition     = var.region == null || var.region == data.aws_region.current.id
+    error_message = "var.region does not match the region of the aws provider passed to this module. Resources will be created with the wrong region in their names and policies."
+  }
+}
+
+check "current_account_id_matches_provider" {
+  assert {
+    condition     = var.current_account_id == null || var.current_account_id == data.aws_caller_identity.current.account_id
+    error_message = "var.current_account_id does not match the account of the aws provider passed to this module. Resources will be created with the wrong account ID in their policies."
+  }
+}
+
 module "asset_inventory" {
   count                        = local.is_primary_region ? 1 : 0
   source                       = "./modules/asset-inventory/"
@@ -117,6 +147,8 @@ module "realtime_visibility" {
   is_gov                  = var.is_gov
   is_gov_commercial       = local.is_gov_commercial
   is_primary_region       = local.is_primary_region
+  region                  = local.aws_region
+  account_id              = local.aws_account
   create_rules            = var.create_rtvd_rules
   primary_region          = var.primary_region
   permissions_boundary    = var.permissions_boundary

@@ -116,7 +116,6 @@ module "rules_us_east_2" {
 | [aws_sqs_queue.cloudtrail_logs_sqs](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/sqs_queue) | resource |
 | [aws_sqs_queue_policy.cloudtrail_logs_sqs_policy](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/sqs_queue_policy) | resource |
 | [random_string.suffix](https://registry.terraform.io/providers/hashicorp/random/latest/docs/resources/string) | resource |
-| [aws_arn.sns_topic](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/arn) | data source |
 | [aws_caller_identity.current](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/caller_identity) | data source |
 | [aws_partition.current](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/partition) | data source |
 | [aws_region.current](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/region) | data source |
@@ -124,6 +123,7 @@ module "rules_us_east_2" {
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
+| <a name="input_account_id"></a> [account\_id](#input\_account\_id) | The AWS 12 digit account ID, passed down from the root module. When empty, the account ID is read from data.aws\_caller\_identity.current. See CSPG-102208. | `string` | `""` | no |
 | <a name="input_cloudtrail_bucket_name"></a> [cloudtrail\_bucket\_name](#input\_cloudtrail\_bucket\_name) | DEPRECATED: This variable is no longer used. CrowdStrike no longer provisions or references a CloudTrail S3 bucket. | `string` | `""` | no |
 | <a name="input_create_rules"></a> [create\_rules](#input\_create\_rules) | Set to false if you don't want to enable monitoring in this region | `bool` | `true` | no |
 | <a name="input_eventbridge_role_name"></a> [eventbridge\_role\_name](#input\_eventbridge\_role\_name) | The eventbridge role name | `string` | `"CrowdStrikeCSPMEventBridge"` | no |
@@ -143,6 +143,7 @@ module "rules_us_east_2" {
 | <a name="input_log_ingestion_sns_topic_arn"></a> [log\_ingestion\_sns\_topic\_arn](#input\_log\_ingestion\_sns\_topic\_arn) | SNS topic ARN that publishes S3 object creation events (required when log\_ingestion\_method=s3) | `string` | `""` | no |
 | <a name="input_permissions_boundary"></a> [permissions\_boundary](#input\_permissions\_boundary) | The name of the policy used to set the permissions boundary for IAM roles | `string` | `""` | no |
 | <a name="input_primary_region"></a> [primary\_region](#input\_primary\_region) | Region for deploying global AWS resources (IAM roles, policies, etc.) that are account-wide and only need to be created once. Distinct from agentless\_scanning\_regions which controls region-specific resource deployment. | `string` | n/a | yes |
+| <a name="input_region"></a> [region](#input\_region) | The region this module instance deploys into, passed down from the root module. When null, the region is read from data.aws\_region.current. See CSPG-102208. | `string` | `null` | no |
 | <a name="input_resource_prefix"></a> [resource\_prefix](#input\_resource\_prefix) | The prefix to be added to all resource names | `string` | `""` | no |
 | <a name="input_resource_suffix"></a> [resource\_suffix](#input\_resource\_suffix) | The suffix to be added to all resource names | `string` | `""` | no |
 | <a name="input_tags"></a> [tags](#input\_tags) | A map of tags to add to all resources that support tagging | `map(string)` | `{}` | no |

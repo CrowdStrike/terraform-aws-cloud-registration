@@ -4,6 +4,18 @@ variable "is_primary_region" {
   description = "Whether this is the primary region for deploying global AWS resources (IAM roles, policies, etc.) that are account-wide and only need to be created once."
 }
 
+variable "region" {
+  type        = string
+  default     = null
+  description = "The region this module instance deploys into, passed down from the root module. When null, the region is read from data.aws_region.current. See CSPG-102208."
+}
+
+variable "account_id" {
+  type        = string
+  default     = ""
+  description = "The AWS 12 digit account ID, passed down from the root module. When empty, the account ID is read from data.aws_caller_identity.current. See CSPG-102208."
+}
+
 variable "primary_region" {
   description = "Region for deploying global AWS resources (IAM roles, policies, etc.) that are account-wide and only need to be created once. Distinct from agentless_scanning_regions which controls region-specific resource deployment."
   type        = string
