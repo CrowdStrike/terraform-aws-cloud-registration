@@ -34,7 +34,7 @@ locals {
 
 resource "aws_iam_role" "eventbridge" {
   count = local.use_eventbridge_method && var.is_primary_region ? 1 : 0
-  name  = var.eventbridge_role_name
+  name  = "${var.resource_prefix}${var.eventbridge_role_name}${var.resource_suffix}"
   assume_role_policy = jsonencode({
     "Version" : "2012-10-17",
     "Statement" : [
