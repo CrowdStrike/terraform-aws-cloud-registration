@@ -7,6 +7,8 @@
 
 This Terraform module deploys AWS resources required for CrowdStrike's Real-time Visibility and Detection feature, which identifies indicators of attack (IOAs) and monitors cloud asset behavior in real-time. Note: This module must be deployed separately in each AWS region you wish to monitor, as it manages region-specific resources.
 
+For EventBridge ingestion, the read-only rule explicitly enables CloudTrail read-only management events. A logging trail that includes those events is still required. Upgrading an existing deployment updates the rule in place and may increase forwarded-event volume; the existing event filters and exclusions remain unchanged. This requires AWS provider 5.27.0 or later.
+
 ## Usage
 
 ```hcl
@@ -79,7 +81,7 @@ module "rules_us_east_2" {
 
 | Name | Version |
 |------|---------|
-| <a name="provider_aws"></a> [aws](#provider\_aws) | >= 5.0.0 |
+| <a name="provider_aws"></a> [aws](#provider\_aws) | >= 5.27.0 |
 | <a name="provider_random"></a> [random](#provider\_random) | >= 3.7.1 |
 ## Resources
 
