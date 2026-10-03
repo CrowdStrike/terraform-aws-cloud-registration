@@ -138,6 +138,8 @@ resource "aws_cloudwatch_event_rule" "ro" {
   count         = local.use_eventbridge_method && var.create_rules ? 1 : 0
   name          = local.ro_rule_name
   event_pattern = local.ro_event_pattern
+  # ENABLED excludes read-only CloudTrail management events, even when the pattern matches.
+  state = "ENABLED_WITH_ALL_CLOUDTRAIL_MANAGEMENT_EVENTS"
 }
 
 resource "aws_cloudwatch_event_target" "ro" {
