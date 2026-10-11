@@ -199,6 +199,7 @@ resource "aws_iam_role_policy" "this" {
           "waf-regional:ListIPSets",
           "waf-regional:ListRuleGroups",
           "waf-regional:ListRules",
+          "wafv2:GetIPSet",
           "wafv2:GetRuleGroup",
           "wisdom:ListAssistants",
           "wisdom:ListTagsForResource"
