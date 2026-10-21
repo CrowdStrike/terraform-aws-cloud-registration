@@ -58,6 +58,10 @@ resource "aws_iam_role" "eventbridge" {
   })
   permissions_boundary = var.permissions_boundary != "" ? "arn:${local.aws_partition}:iam::${local.account_id}:policy/${var.permissions_boundary}" : null
   tags                 = var.tags
+
+  lifecycle {
+    create_before_destroy = true
+  }
 }
 
 resource "aws_iam_role_policy" "inline_policy" {
