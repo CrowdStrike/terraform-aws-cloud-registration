@@ -83,7 +83,7 @@ terraform {
   required_providers {
     aws = {
       source  = "hashicorp/aws"
-      version = ">= 5.0.0"
+      version = ">= 6.0.0"
     }
     crowdstrike = {
       source  = "CrowdStrike/crowdstrike"
@@ -243,7 +243,7 @@ module "fcs_account_us_east_2" {
 
 | Name | Version |
 |------|---------|
-| <a name="provider_aws"></a> [aws](#provider\_aws) | >= 5.0.0 |
+| <a name="provider_aws"></a> [aws](#provider\_aws) | >= 6.0.0 |
 | <a name="provider_crowdstrike"></a> [crowdstrike](#provider\_crowdstrike) | >= 0.0.58 |
 ## Resources
 
