@@ -129,7 +129,8 @@ resource "aws_cloudwatch_event_target" "rw" {
   role_arn  = local.eventbridge_role_arn
 
   depends_on = [
-    aws_lambda_alias.eventbridge
+    aws_lambda_alias.eventbridge,
+    aws_iam_role_policy.inline_policy,
   ]
 }
 
@@ -148,6 +149,7 @@ resource "aws_cloudwatch_event_target" "ro" {
   role_arn  = local.eventbridge_role_arn
 
   depends_on = [
-    aws_lambda_alias.eventbridge
+    aws_lambda_alias.eventbridge,
+    aws_iam_role_policy.inline_policy,
   ]
 }

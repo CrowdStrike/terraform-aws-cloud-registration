@@ -95,6 +95,7 @@ resource "aws_lambda_function" "eventbridge" {
       CS_CLIENT_SECRET = var.falcon_client_secret
       CS_GOV_CLOUD     = "true"
       CS_ADDRESS       = "az.laggar.gcw.crowdstrike.com:443"
+      CS_EB_ROLENAME   = "${var.resource_prefix}${var.eventbridge_role_name}${var.resource_suffix}"
     }
   }
 

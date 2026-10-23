@@ -21,7 +21,7 @@ locals {
   custom_role_name                     = "${local.resource_prefix}reader-role${local.resource_suffix}"
   agentless_scanning_role_name         = "${local.resource_prefix}agentless-scanning-integration${local.resource_suffix}"
   agentless_scanning_scanner_role_name = "${local.resource_prefix}agentless-scanning-scanner${local.resource_suffix}"
-  eventbridge_role_name                = "${local.resource_prefix}eventbridge-role${local.resource_suffix}"
+  eventbridge_role_name                = "eventbridge-role"
   tags = {
     DeployedBy = var.me
     Product    = "FalconCloudSecurity"
