@@ -31,7 +31,7 @@ resource "aws_iam_role" "crowdstrike_aws_agentless_scanning_integration_role" {
     var.tags,
     {
       (local.crowdstrike_tag_key) = local.crowdstrike_tag_value
-      RootRegion                  = data.aws_region.current.id
+      RootRegion                  = data.aws_region.current.region
     }
   )
 }

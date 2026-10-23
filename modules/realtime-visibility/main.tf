@@ -8,7 +8,7 @@ locals {
   # the counts further down need to be resolvable at plan time. The root module always passes
   # both, resolving them from configuration where it can. See CSPG-102208.
   account_id    = var.account_id != "" ? var.account_id : data.aws_caller_identity.current.account_id
-  aws_region    = var.region != null ? var.region : data.aws_region.current.id
+  aws_region    = var.region != null ? var.region : data.aws_region.current.region
   aws_partition = data.aws_partition.current.partition
 
   # Conditional logic for log ingestion methods

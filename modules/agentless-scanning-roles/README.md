@@ -15,7 +15,7 @@ terraform {
   required_providers {
     aws = {
       source  = "hashicorp/aws"
-      version = ">= 5.0.0"
+      version = ">= 6.0.0"
     }
     crowdstrike = {
       source  = "CrowdStrike/crowdstrike"
@@ -57,7 +57,7 @@ module "agentless_scanning_environments" {
 
 | Name | Version |
 |------|---------|
-| <a name="provider_aws"></a> [aws](#provider\_aws) | >= 5.0.0 |
+| <a name="provider_aws"></a> [aws](#provider\_aws) | >= 6.0.0 |
 ## Resources
 
 | Name | Type |

@@ -4,7 +4,7 @@ data "aws_partition" "current" {}
 
 locals {
   account_id       = data.aws_caller_identity.current.account_id
-  aws_region       = data.aws_region.current.id
+  aws_region       = data.aws_region.current.region
   aws_partition    = data.aws_partition.current.partition
   is_gov_account   = var.account_type == "gov"
   lambda_s3_bucket = local.is_gov_account ? "cs-horizon-sensormgmt-lambda-${local.aws_region}" : module.region_map[0].lambda_s3_bucket

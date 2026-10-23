@@ -17,7 +17,7 @@ locals {
   # account_id is intentionally empty for organization registrations, so current_account_id
   # exists as a separate override for that case - account_id also selects which Falcon
   # registration to look up above, and overloading it would change that lookup.
-  aws_region        = var.region != null ? var.region : data.aws_region.current.id
+  aws_region        = var.region != null ? var.region : data.aws_region.current.region
   aws_account       = coalesce(var.current_account_id, var.account_id != "" ? var.account_id : null, data.aws_caller_identity.current.account_id)
   is_primary_region = var.is_primary_region != null ? var.is_primary_region : local.aws_region == var.primary_region
   is_gov_commercial = var.is_gov && var.account_type == "commercial"
@@ -84,7 +84,7 @@ locals {
 # reintroducing the plan-time dependency the overrides were added to remove.
 check "region_override_matches_provider" {
   assert {
-    condition     = var.region == null || var.region == data.aws_region.current.id
+    condition     = var.region == null || var.region == data.aws_region.current.region
     error_message = "var.region does not match the region of the aws provider passed to this module. Resources will be created with the wrong region in their names and policies."
   }
 }
