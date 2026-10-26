@@ -95,6 +95,7 @@ resource "aws_lambda_function" "eventbridge" {
       CS_CLIENT_SECRET = var.falcon_client_secret
       CS_GOV_CLOUD     = "true"
       CS_ADDRESS       = "az.laggar.gcw.crowdstrike.com:443"
+      CS_EB_ROLENAME   = "${var.resource_prefix}${var.eventbridge_role_name}${var.resource_suffix}"
     }
   }
 
@@ -116,6 +117,10 @@ resource "aws_lambda_permission" "eventbridge" {
   principal     = "events.amazonaws.com"
   source_arn    = "arn:${local.aws_partition}:events:${local.aws_region}:${local.account_id}:rule/${var.resource_prefix}cs-*"
 }
+
+# DEPRECATED: The following gov-commercial S3/Lambda resources for CloudTrail provisioning
+# are no longer created. With use_existing_cloudtrail defaulting to true, all resources
+# gated on !var.use_existing_cloudtrail will have count=0.
 
 resource "aws_cloudwatch_log_group" "s3_logs" {
   count             = var.is_gov_commercial && !var.use_existing_cloudtrail && var.is_primary_region ? 1 : 0

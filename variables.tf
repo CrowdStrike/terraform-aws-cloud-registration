@@ -72,8 +72,15 @@ variable "enable_realtime_visibility" {
 
 variable "use_existing_cloudtrail" {
   type        = bool
-  default     = false
-  description = "Set to true if you already have a cloudtrail"
+  default     = true
+  description = "DEPRECATED: This variable is no longer used. CrowdStrike no longer provisions CloudTrail resources. All deployments now behave as if use_existing_cloudtrail=true."
+}
+
+check "use_existing_cloudtrail_deprecation" {
+  assert {
+    condition     = var.use_existing_cloudtrail == true
+    error_message = "DEPRECATION WARNING: 'use_existing_cloudtrail' is deprecated and must remain true. CrowdStrike no longer provisions CloudTrail resources."
+  }
 }
 
 variable "create_rtvd_rules" {
@@ -127,7 +134,14 @@ variable "eventbus_arn" {
 variable "cloudtrail_bucket_name" {
   type        = string
   default     = ""
-  description = "Name of the S3 bucket for CloudTrail logs"
+  description = "DEPRECATED: This variable is no longer used. CrowdStrike no longer provisions or references a CloudTrail S3 bucket."
+}
+
+check "cloudtrail_bucket_name_deprecation" {
+  assert {
+    condition     = var.cloudtrail_bucket_name == ""
+    error_message = "DEPRECATION WARNING: 'cloudtrail_bucket_name' is deprecated. CrowdStrike no longer provisions or references a CloudTrail S3 bucket."
+  }
 }
 
 variable "enable_dspm" {
@@ -440,6 +454,7 @@ variable "agentless_scanning_integration_role_unique_id" {
   type        = string
   default     = ""
 }
+
 # EARNIN FORK
 variable "manage_sensor_management_secret_value" {
   type        = bool
@@ -459,4 +474,27 @@ variable "sensor_management_secret_owner_tag" {
   type        = string
   default     = ""
   description = "EARNIN FORK: passed to the sensor-management submodule. Value for the `Owner` tag on the FalconAPICredentials secret (L3 team) to satisfy EarnIn's secrets guardrail SCP. Empty = no tag (upstream behavior)."
+}
+
+variable "region" {
+  description = "The region this module instance deploys into. Set this explicitly when the module is called with depends_on, or in any topology where Terraform defers data source reads to apply time - otherwise the count expressions gated on region cannot be resolved at plan time. When null, the region is read from data.aws_region.current."
+  type        = string
+  default     = null
+}
+
+variable "is_primary_region" {
+  description = "Explicit override for primary-region detection. Prefer setting 'region' instead, which lets the module derive this. Provided for callers that want to gate global resources directly. When null, derived by comparing the region against primary_region."
+  type        = bool
+  default     = null
+}
+
+variable "current_account_id" {
+  description = "The AWS 12 digit account ID this module instance is deploying into. Distinct from 'account_id', which selects the Falcon registration to look up and is intentionally empty for organization registrations. Set this when the module is called with depends_on, or in any topology where Terraform defers data source reads to apply time - otherwise the count expressions gated on the account ID cannot be resolved at plan time. When null, falls back to 'account_id' and then to data.aws_caller_identity.current."
+  type        = string
+  default     = null
+
+  validation {
+    condition     = var.current_account_id == null || can(regex("^[0-9]{12}$", var.current_account_id))
+    error_message = "current_account_id must be either null or the 12-digit AWS account ID"
+  }
 }

@@ -4,6 +4,18 @@ variable "is_primary_region" {
   description = "Whether this is the primary region for deploying global AWS resources (IAM roles, policies, etc.) that are account-wide and only need to be created once."
 }
 
+variable "region" {
+  type        = string
+  default     = null
+  description = "The region this module instance deploys into, passed down from the root module. When null, the region is read from data.aws_region.current. See CSPG-102208."
+}
+
+variable "account_id" {
+  type        = string
+  default     = ""
+  description = "The AWS 12 digit account ID, passed down from the root module. When empty, the account ID is read from data.aws_caller_identity.current. See CSPG-102208."
+}
+
 variable "primary_region" {
   description = "Region for deploying global AWS resources (IAM roles, policies, etc.) that are account-wide and only need to be created once. Distinct from agentless_scanning_regions which controls region-specific resource deployment."
   type        = string
@@ -17,13 +29,14 @@ variable "create_rules" {
 
 variable "cloudtrail_bucket_name" {
   type        = string
-  description = "Name of the S3 bucket for CloudTrail logs"
+  default     = ""
+  description = "DEPRECATED: This variable is no longer used. CrowdStrike no longer provisions or references a CloudTrail S3 bucket."
 }
 
 variable "use_existing_cloudtrail" {
   type        = bool
-  default     = false
-  description = "Whether to use an existing CloudTrail or create a new one"
+  default     = true
+  description = "DEPRECATED: This variable is no longer used. CrowdStrike no longer provisions CloudTrail resources. All deployments now behave as if use_existing_cloudtrail=true."
 }
 
 variable "is_organization_trail" {
