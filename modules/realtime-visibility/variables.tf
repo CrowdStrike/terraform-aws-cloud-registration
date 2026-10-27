@@ -7,13 +7,13 @@ variable "is_primary_region" {
 variable "region" {
   type        = string
   default     = null
-  description = "The region this module instance deploys into, passed down from the root module. When null, the region is read from data.aws_region.current. See CSPG-102208."
+  description = "The region this module instance deploys into, passed down from the root module. When null, the region is read from data.aws_region.current."
 }
 
 variable "account_id" {
   type        = string
   default     = ""
-  description = "The AWS 12 digit account ID, passed down from the root module. When empty, the account ID is read from data.aws_caller_identity.current. See CSPG-102208."
+  description = "The AWS 12 digit account ID, passed down from the root module. When empty, the account ID is read from data.aws_caller_identity.current."
 }
 
 variable "primary_region" {

@@ -468,7 +468,7 @@ variable "is_primary_region" {
 }
 
 variable "current_account_id" {
-  description = "The AWS 12 digit account ID this module instance is deploying into. Distinct from 'account_id', which selects the Falcon registration to look up and is intentionally empty for organization registrations. Set this when the module is called with depends_on, or in any topology where Terraform defers data source reads to apply time - otherwise the count expressions gated on the account ID cannot be resolved at plan time. When null, falls back to 'account_id' and then to data.aws_caller_identity.current."
+  description = "The AWS 12 digit account ID this module instance is deploying into. Distinct from 'account_id', which only selects which Falcon registration to look up and is commonly the SAME value across every per-account module call in an organization registration - it must never be used as this account's identity. Set this when the module is called with depends_on, or in any topology where Terraform defers data source reads to apply time - otherwise the count expressions gated on the account ID cannot be resolved at plan time. When null, falls back to data.aws_caller_identity.current."
   type        = string
   default     = null
 

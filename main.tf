@@ -12,13 +12,12 @@ locals {
   # known at plan time, and it defers data source reads to apply whenever this module has
   # pending-change dependencies (for example, a depends_on on the module call). Reading the
   # region and account ID from configuration keeps the count expressions below resolvable.
-  # See CSPG-102208.
   #
-  # account_id is intentionally empty for organization registrations, so current_account_id
-  # exists as a separate override for that case - account_id also selects which Falcon
-  # registration to look up above, and overloading it would change that lookup.
+  # account_id selects which Falcon registration to look up above - it is not this instance's
+  # AWS identity. Organization registrations pass the same account_id to every per-account
+  # module call, so it must never be a fallback for aws_account.
   aws_region        = var.region != null ? var.region : data.aws_region.current.id
-  aws_account       = coalesce(var.current_account_id, var.account_id != "" ? var.account_id : null, data.aws_caller_identity.current.account_id)
+  aws_account       = coalesce(var.current_account_id, data.aws_caller_identity.current.account_id)
   is_primary_region = var.is_primary_region != null ? var.is_primary_region : local.aws_region == var.primary_region
   is_gov_commercial = var.is_gov && var.account_type == "commercial"
 
