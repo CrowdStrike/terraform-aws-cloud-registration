@@ -4,9 +4,8 @@ data "aws_partition" "current" {}
 
 locals {
   # Prefer the caller-supplied account ID and region over the data source reads: Terraform
-  # defers data source reads to apply when this module has pending-change dependencies, and
-  # the counts further down need to be resolvable at plan time. The root module always passes
-  # both, resolving them from configuration where it can. See CSPG-102208.
+  # defers those reads to apply when this module has pending-change dependencies, and the
+  # counts below must resolve at plan time. The root module always passes both.
   account_id    = var.account_id != "" ? var.account_id : data.aws_caller_identity.current.account_id
   aws_region    = var.region != null ? var.region : data.aws_region.current.id
   aws_partition = data.aws_partition.current.partition
