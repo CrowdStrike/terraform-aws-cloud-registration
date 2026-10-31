@@ -122,7 +122,7 @@ resource "aws_iam_role_policy" "orchestrator" {
           "secretsmanager:GetSecretValue"
         ]
         Effect   = "Allow"
-        Resource = "arn:${local.aws_partition}:secretsmanager:${local.aws_region}:${local.account_id}:secret:/CrowdStrike/CSPM/SensorManagement/FalconAPICredentials-??????"
+        Resource = "arn:${local.aws_partition}:secretsmanager:${local.aws_region}:${local.account_id}:secret:/CrowdStrike/CSPM/SensorManagement/${var.resource_prefix}FalconAPICredentials${var.resource_suffix}-??????"
         Sid      = "GetFalconCredentials"
       }
     ]
@@ -135,7 +135,7 @@ resource "aws_cloudwatch_log_group" "crowdstrike_sensor_management" {
 }
 
 resource "aws_secretsmanager_secret" "this" {
-  name                    = "/CrowdStrike/CSPM/SensorManagement/FalconAPICredentials"
+  name                    = "/CrowdStrike/CSPM/SensorManagement/${var.resource_prefix}FalconAPICredentials${var.resource_suffix}"
   description             = "Falcon API credentials. Used by the 1-Click sensor management orchestrator"
   recovery_window_in_days = 0
 }
