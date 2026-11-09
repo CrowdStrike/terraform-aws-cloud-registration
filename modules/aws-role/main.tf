@@ -22,13 +22,20 @@ locals {
     local.dspm_role_name_is_set ? var.dspm_role_name : var.agentless_scanning_role_name
   )
 
-  # Scanner role follows same precedence pattern
-  dspm_scanner_role_is_set          = var.dspm_scanner_role_name != ""
-  agentless_scanner_role_is_default = var.agentless_scanning_scanner_role_name == "CrowdStrikeAgentlessScanningScannerRole"
+  # Scanner role follows same precedence pattern. CrowdStrike stores a generated scanner role for new
+  # registrations, but old ones only get it after the first health check, so the provider can return
+  # an empty name. Treat empty as the default, which is the name those registrations deploy
+  agentless_scanning_scanner_role_name_input = coalesce(var.agentless_scanning_scanner_role_name, "CrowdStrikeAgentlessScanningScannerRole")
+  dspm_scanner_role_is_set                   = var.dspm_scanner_role_name != ""
+  agentless_scanner_role_is_default          = local.agentless_scanning_scanner_role_name_input == "CrowdStrikeAgentlessScanningScannerRole"
 
-  agentless_scanning_scanner_role_name = !local.agentless_scanner_role_is_default ? var.agentless_scanning_scanner_role_name : (
-    local.dspm_scanner_role_is_set ? var.dspm_scanner_role_name : var.agentless_scanning_scanner_role_name
+  agentless_scanning_scanner_role_name = !local.agentless_scanner_role_is_default ? local.agentless_scanning_scanner_role_name_input : (
+    local.dspm_scanner_role_is_set ? var.dspm_scanner_role_name : local.agentless_scanning_scanner_role_name_input
   )
+
+  # Organization templates pass the provider scanner role name as the host scanner, which is also empty
+  # until the first health check for registrations without resource affixes
+  agentless_scanning_host_scanner_role_name = coalesce(var.agentless_scanning_host_scanner_role_name, "CrowdStrikeAgentlessScanningScannerRole")
 
   # Boolean AND logic for create_nat_gateway:
   # If either variable is false, result is false
@@ -119,7 +126,7 @@ module "agentless_scanning_roles" {
   agentless_scanning_use_custom_vpc           = var.agentless_scanning_use_custom_vpc
   agentless_scanning_custom_vpc_resources_map = var.agentless_scanning_custom_vpc_resources_map
   agentless_scanning_host_account_id          = var.agentless_scanning_host_account_id
-  agentless_scanning_host_scanner_role_name   = var.agentless_scanning_host_scanner_role_name
+  agentless_scanning_host_scanner_role_name   = local.agentless_scanning_host_scanner_role_name
   dspm_s3_access                              = var.dspm_s3_access
   dspm_dynamodb_access                        = var.dspm_dynamodb_access
   dspm_rds_access                             = var.dspm_rds_access
@@ -128,6 +135,9 @@ module "agentless_scanning_roles" {
   enable_dspm                                 = var.enable_dspm
   enable_vulnerability_scanning               = var.enable_vulnerability_scanning
   tags                                        = var.tags
+  agentless_use_resource_affixes              = var.agentless_use_resource_affixes
+  resource_prefix                             = var.resource_prefix
+  resource_suffix                             = var.resource_suffix
 }
 
 moved {

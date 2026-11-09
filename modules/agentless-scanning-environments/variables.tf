@@ -94,3 +94,22 @@ variable "account_id" {
     error_message = "account_id must be either empty or the 12-digit AWS account ID"
   }
 }
+
+variable "agentless_use_resource_affixes" {
+  description = "Add resource_prefix and resource_suffix to the agentless scanning resource names and SSM parameter paths. Set by CrowdStrike for new registrations; changing it replaces the named resources"
+  type        = bool
+  default     = false
+  nullable    = false
+}
+
+variable "resource_prefix" {
+  description = "The prefix added to the agentless scanning resource names when agentless_use_resource_affixes is true"
+  type        = string
+  default     = ""
+}
+
+variable "resource_suffix" {
+  description = "The suffix added to the agentless scanning resource names when agentless_use_resource_affixes is true"
+  type        = string
+  default     = ""
+}
