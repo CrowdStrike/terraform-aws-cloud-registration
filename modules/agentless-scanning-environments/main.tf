@@ -524,7 +524,7 @@ resource "aws_vpc_endpoint" "dynamodb_endpoint" {
 
 # Regional SSM parameter containing environment configuration
 resource "aws_ssm_parameter" "scan_environment_parameter" {
-  name = "/CrowdStrike/AgentlessScanning/Environment"
+  name = local.environment_parameter_name
   type = "String"
   tier = "Intelligent-Tiering"
   value = jsonencode(merge(

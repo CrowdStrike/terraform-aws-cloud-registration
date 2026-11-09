@@ -75,6 +75,10 @@ module "fcs_management_account" {
   intermediate_role_arn                 = crowdstrike_cloud_aws_account.this.intermediate_role_arn
   eventbus_arn                          = crowdstrike_cloud_aws_account.this.eventbus_arn
   agentless_scanning_role_name          = crowdstrike_cloud_aws_account.this.agentless_scanning_role_name
+  agentless_scanning_scanner_role_name  = crowdstrike_cloud_aws_account.this.agentless_scanning_scanner_role_name
+  agentless_use_resource_affixes        = crowdstrike_cloud_aws_account.this.agentless_use_resource_affixes
+  resource_prefix                       = local.resource_prefix
+  resource_suffix                       = local.resource_suffix
   agentless_scanning_create_nat_gateway = local.agentless_scanning_create_nat_gateway
   dspm_s3_access                        = local.dspm_s3_access
   dspm_dynamodb_access                  = local.dspm_dynamodb_access
@@ -103,17 +107,22 @@ module "fcs_child_account_1" {
   agentless_scanning_regions    = local.agentless_scanning_regions
   vpc_cidr_block                = var.vpc_cidr_block
 
-  iam_role_name                         = crowdstrike_cloud_aws_account.this.iam_role_name
-  external_id                           = crowdstrike_cloud_aws_account.this.external_id
-  intermediate_role_arn                 = crowdstrike_cloud_aws_account.this.intermediate_role_arn
-  eventbus_arn                          = crowdstrike_cloud_aws_account.this.eventbus_arn
-  agentless_scanning_role_name          = crowdstrike_cloud_aws_account.this.agentless_scanning_role_name
-  agentless_scanning_create_nat_gateway = local.agentless_scanning_create_nat_gateway
-  dspm_s3_access                        = local.dspm_s3_access
-  dspm_dynamodb_access                  = local.dspm_dynamodb_access
-  dspm_rds_access                       = local.dspm_rds_access
-  dspm_redshift_access                  = local.dspm_redshift_access
-  dspm_ebs_access                       = local.dspm_ebs_access
-  agentless_scanning_host_account_id    = var.account_id                                                         # sets the management account as the DSPM host account
-  agentless_scanning_host_role_name     = module.fcs_management_account.agentless_scanning_integration_role_name # creates dependency on agentless scanning host module
+  iam_role_name                             = crowdstrike_cloud_aws_account.this.iam_role_name
+  external_id                               = crowdstrike_cloud_aws_account.this.external_id
+  intermediate_role_arn                     = crowdstrike_cloud_aws_account.this.intermediate_role_arn
+  eventbus_arn                              = crowdstrike_cloud_aws_account.this.eventbus_arn
+  agentless_scanning_role_name              = crowdstrike_cloud_aws_account.this.agentless_scanning_role_name
+  agentless_scanning_scanner_role_name      = crowdstrike_cloud_aws_account.this.agentless_scanning_scanner_role_name
+  agentless_use_resource_affixes            = crowdstrike_cloud_aws_account.this.agentless_use_resource_affixes
+  resource_prefix                           = local.resource_prefix
+  resource_suffix                           = local.resource_suffix
+  agentless_scanning_create_nat_gateway     = local.agentless_scanning_create_nat_gateway
+  dspm_s3_access                            = local.dspm_s3_access
+  dspm_dynamodb_access                      = local.dspm_dynamodb_access
+  dspm_rds_access                           = local.dspm_rds_access
+  dspm_redshift_access                      = local.dspm_redshift_access
+  dspm_ebs_access                           = local.dspm_ebs_access
+  agentless_scanning_host_account_id        = var.account_id                                                          # sets the management account as the DSPM host account
+  agentless_scanning_host_role_name         = module.fcs_management_account.agentless_scanning_integration_role_name  # creates dependency on agentless scanning host module
+  agentless_scanning_host_scanner_role_name = crowdstrike_cloud_aws_account.this.agentless_scanning_scanner_role_name # same registration as the management account, so the same scanner role name
 }

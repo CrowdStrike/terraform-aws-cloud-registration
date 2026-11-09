@@ -1,7 +1,7 @@
 # Creates instance profile. Attached as IAM role to EC2 instance, used for data scan
 resource "aws_iam_instance_profile" "instance_profile" {
   count = local.is_host_account ? 1 : 0
-  name  = "CrowdStrikeScannerRoleProfile"
+  name  = local.instance_profile_name
   path  = "/"
   role  = var.agentless_scanning_scanner_role_name
   tags = merge(
@@ -13,7 +13,7 @@ resource "aws_iam_instance_profile" "instance_profile" {
 }
 
 resource "aws_ssm_parameter" "agentless_scanning_root_parameter" {
-  name = "/CrowdStrike/AgentlessScanning/Root"
+  name = local.root_parameter_name
   type = "String"
   tier = "Intelligent-Tiering"
   value = jsonencode({
@@ -23,9 +23,11 @@ resource "aws_ssm_parameter" "agentless_scanning_root_parameter" {
       dspm_scanning_enabled          = var.enable_dspm
       vulnerability_scanning_enabled = var.enable_vulnerability_scanning
     }
-    scanner_role_arn = aws_iam_role.crowdstrike_aws_agentless_scanning_scanner_role.arn
-    instance_profile = local.is_host_account ? aws_iam_instance_profile.instance_profile[0].name : ""
-    host_account_id  = local.is_host_account ? data.aws_caller_identity.current.account_id : var.agentless_scanning_host_account_id
+    scanner_role_arn     = aws_iam_role.crowdstrike_aws_agentless_scanning_scanner_role.arn
+    client_secret_arn    = aws_secretsmanager_secret.client_secrets.arn
+    integration_role_arn = aws_iam_role.crowdstrike_aws_agentless_scanning_integration_role.arn
+    instance_profile     = local.is_host_account ? aws_iam_instance_profile.instance_profile[0].name : ""
+    host_account_id      = local.is_host_account ? data.aws_caller_identity.current.account_id : var.agentless_scanning_host_account_id
     permissions = {
       s3_policy       = local.create_s3_policy ? "${var.agentless_scanning_scanner_role_name}/CrowdStrikeBucketReader" : ""
       rds_policy      = local.create_rds_policy ? "${var.agentless_scanning_role_name}/CrowdStrikeRDSClone" : ""
