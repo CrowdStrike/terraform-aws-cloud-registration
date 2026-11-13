@@ -147,6 +147,12 @@ resource "aws_secretsmanager_secret_version" "this" {
   })
 }
 
+# Used for source_code_hash so an updated package is deployed on apply.
+data "aws_s3_object" "lambda" {
+  bucket = local.lambda_s3_bucket
+  key    = local.lambda_s3_key
+}
+
 resource "aws_lambda_function" "this" {
   function_name = "${var.resource_prefix}cs-horizon-sensor-installation-orchestrator${var.resource_suffix}"
   role          = aws_iam_role.orchestrator.arn
@@ -157,8 +163,9 @@ resource "aws_lambda_function" "this" {
   timeout       = 900
   package_type  = "Zip"
 
-  s3_bucket = local.lambda_s3_bucket
-  s3_key    = local.lambda_s3_key
+  s3_bucket        = local.lambda_s3_bucket
+  s3_key           = local.lambda_s3_key
+  source_code_hash = data.aws_s3_object.lambda.etag
 
   environment {
     variables = merge(

@@ -75,6 +75,22 @@ CrowdStrike API keys are required to use this module. It is highly recommended t
 > [!NOTE]
 > This page is only shown once. Make sure you copy **CLIENT ID**, **SECRET**, and **BASE URL** to a secure location.
 
+### AWS permissions
+
+The module reads the metadata of the Lambda packages that CrowdStrike publishes, so an updated package is deployed on the next `terraform apply`. The identity running Terraform needs read access to those objects. Roles with broad S3 permissions, such as administrator or power-user roles, already have it. Scoped roles need the following statement:
+
+```json
+{
+  "Effect": "Allow",
+  "Action": ["s3:GetObject", "s3:GetObjectTagging"],
+  "Resource": "arn:aws:s3:::cs-prod-cloudconnect-templates-*/aws/lambda/*"
+}
+```
+
+In GovCloud accounts, use `arn:aws-us-gov:s3:::cs-horizon-sensormgmt-lambda-*/aws/horizon-sensor-installation-orchestrator.zip` as the resource.
+
+When upgrading from an earlier version of the module, run `terraform init -upgrade`.
+
 ## Usage
 
 ```hcl
@@ -83,7 +99,7 @@ terraform {
   required_providers {
     aws = {
       source  = "hashicorp/aws"
-      version = ">= 5.0.0"
+      version = ">= 5.51.0"
     }
     crowdstrike = {
       source  = "CrowdStrike/crowdstrike"
@@ -243,7 +259,7 @@ module "fcs_account_us_east_2" {
 
 | Name | Version |
 |------|---------|
-| <a name="provider_aws"></a> [aws](#provider\_aws) | >= 5.0.0 |
+| <a name="provider_aws"></a> [aws](#provider\_aws) | >= 5.51.0 |
 | <a name="provider_crowdstrike"></a> [crowdstrike](#provider\_crowdstrike) | >= 0.0.58 |
 ## Resources
 
