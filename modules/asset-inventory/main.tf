@@ -193,6 +193,7 @@ resource "aws_iam_role_policy" "this" {
           "memorydb:DescribeUsers",
           "memorydb:ListTags",
           "redshift-serverless:ListNamespaces",
+          "redshift:GetResourcePolicy",
           "sns:GetSubscriptionAttributes",
           "ssm:GetParameter",
           "ssm:GetParameters",
