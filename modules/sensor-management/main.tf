@@ -9,6 +9,7 @@ locals {
   is_gov_account   = var.account_type == "gov"
   lambda_s3_bucket = local.is_gov_account ? "cs-horizon-sensormgmt-lambda-${local.aws_region}" : module.region_map[0].lambda_s3_bucket
   lambda_s3_key    = local.is_gov_account ? "aws/horizon-sensor-installation-orchestrator.zip" : "aws/lambda/horizon-sensor-installation-orchestrator.zip"
+  lambda_name      = "${var.resource_prefix}cs-sensor-installation-orchestrator${var.resource_suffix}"
 }
 
 module "region_map" {
@@ -54,7 +55,7 @@ resource "aws_iam_role_policy" "invoke_lambda" {
           "lambda:InvokeAsync"
         ]
         Effect   = "Allow"
-        Resource = "arn:${local.aws_partition}:lambda:*:${local.account_id}:function:${var.resource_prefix}cs-*"
+        Resource = "arn:${local.aws_partition}:lambda:*:${local.account_id}:function:${local.lambda_name}"
         Sid      = "InvokeLambda"
       },
       {
@@ -112,8 +113,8 @@ resource "aws_iam_role_policy" "orchestrator" {
         ]
         Effect = "Allow"
         Resource = [
-          "arn:${local.aws_partition}:logs:*:*:log-group:/aws/lambda/${var.resource_prefix}cs-*",
-          "arn:${local.aws_partition}:logs:*:*:log-group:/aws/lambda/${var.resource_prefix}cs-*:log-stream:*"
+          "arn:${local.aws_partition}:logs:*:*:log-group:/aws/lambda/${local.lambda_name}",
+          "arn:${local.aws_partition}:logs:*:*:log-group:/aws/lambda/${local.lambda_name}:log-stream:*"
         ]
         Sid = "Logging"
       },
@@ -130,7 +131,7 @@ resource "aws_iam_role_policy" "orchestrator" {
 }
 
 resource "aws_cloudwatch_log_group" "crowdstrike_sensor_management" {
-  name              = "/aws/lambda/${var.resource_prefix}cs-horizon-sensor-installation-orchestrator${var.resource_suffix}"
+  name              = "/aws/lambda/${local.lambda_name}"
   retention_in_days = 1
 }
 
@@ -154,7 +155,7 @@ data "aws_s3_object" "lambda" {
 }
 
 resource "aws_lambda_function" "this" {
-  function_name = "${var.resource_prefix}cs-horizon-sensor-installation-orchestrator${var.resource_suffix}"
+  function_name = local.lambda_name
   role          = aws_iam_role.orchestrator.arn
   handler       = "bootstrap"
   runtime       = "provided.al2023"
