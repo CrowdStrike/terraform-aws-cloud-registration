@@ -13,18 +13,9 @@ locals {
       }
     ],
     detail = {
-      "eventName" : [
-        {
-          "anything-but" : [
-            "InvokeExecution",
-            "Invoke",
-            "UploadPart",
-            "PutObject",
-            "InitiateReplication",
-            "Publish"
-          ]
-        }
-      ],
+      "eventCategory" : [
+        "Management"
+      ]
       "readOnly" : [
         false
       ]
@@ -119,6 +110,7 @@ resource "aws_cloudwatch_event_rule" "rw" {
   count         = local.use_eventbridge_method && var.create_rules ? 1 : 0
   name          = local.rule_name
   event_pattern = local.event_pattern
+  state         = "ENABLED_WITH_ALL_CLOUDTRAIL_MANAGEMENT_EVENTS"
 }
 
 resource "aws_cloudwatch_event_target" "rw" {
