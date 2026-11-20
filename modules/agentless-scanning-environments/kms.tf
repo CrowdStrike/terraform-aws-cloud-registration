@@ -222,6 +222,6 @@ resource "aws_kms_key" "crowdstrike_kms_key" {
 }
 
 resource "aws_kms_alias" "crowdstrike_key_alias" {
-  name          = "alias/CrowdStrikeAgentlessScanningKey"
+  name          = local.kms_alias_name
   target_key_id = aws_kms_key.crowdstrike_kms_key.arn
 }
