@@ -116,6 +116,7 @@ module "agentless_scanning_environments" {
 | <a name="input_agentless_scanning_role_name"></a> [agentless\_scanning\_role\_name](#input\_agentless\_scanning\_role\_name) | The unique name of the IAM role that Agentless scanning will be assuming | `string` | `"CrowdStrikeAgentlessScanningIntegrationRole"` | no |
 | <a name="input_agentless_scanning_scanner_role_name"></a> [agentless\_scanning\_scanner\_role\_name](#input\_agentless\_scanning\_scanner\_role\_name) | The unique name of the IAM role that Agentless scanning scanner will be assuming | `string` | `"CrowdStrikeAgentlessScanningScannerRole"` | no |
 | <a name="input_agentless_scanning_use_custom_vpc"></a> [agentless\_scanning\_use\_custom\_vpc](#input\_agentless\_scanning\_use\_custom\_vpc) | Whether to use existing custom VPC resources for ALL deployment regions (requires agentless\_scanning\_custom\_vpc\_resources\_map with all regions) | `bool` | `false` | no |
+| <a name="input_agentless_use_resource_affixes"></a> [agentless\_use\_resource\_affixes](#input\_agentless\_use\_resource\_affixes) | Add resource\_prefix and resource\_suffix to the agentless scanning resource names and SSM parameter paths. Set by CrowdStrike for new registrations; changing it replaces the named resources | `bool` | `false` | no |
 | <a name="input_dspm_dynamodb_access"></a> [dspm\_dynamodb\_access](#input\_dspm\_dynamodb\_access) | Apply permissions for DSPM DynamoDB table scanning | `bool` | `true` | no |
 | <a name="input_dspm_ebs_access"></a> [dspm\_ebs\_access](#input\_dspm\_ebs\_access) | Apply permissions for DSPM VM scanning | `bool` | `true` | no |
 | <a name="input_dspm_rds_access"></a> [dspm\_rds\_access](#input\_dspm\_rds\_access) | Apply permissions for DSPM RDS instance scanning | `bool` | `true` | no |
@@ -128,6 +129,8 @@ module "agentless_scanning_environments" {
 | <a name="input_falcon_client_secret"></a> [falcon\_client\_secret](#input\_falcon\_client\_secret) | CrowdStrike client secret | `string` | n/a | yes |
 | <a name="input_intermediate_role_arn"></a> [intermediate\_role\_arn](#input\_intermediate\_role\_arn) | ARN of the CrowdStrike assuming role | `string` | n/a | yes |
 | <a name="input_permissions_boundary"></a> [permissions\_boundary](#input\_permissions\_boundary) | The name of the policy used to set the permissions boundary for IAM roles | `string` | `""` | no |
+| <a name="input_resource_prefix"></a> [resource\_prefix](#input\_resource\_prefix) | The prefix added to the agentless scanning resource names when agentless\_use\_resource\_affixes is true | `string` | `""` | no |
+| <a name="input_resource_suffix"></a> [resource\_suffix](#input\_resource\_suffix) | The suffix added to the agentless scanning resource names when agentless\_use\_resource\_affixes is true | `string` | `""` | no |
 | <a name="input_tags"></a> [tags](#input\_tags) | A map of tags to add to all resources that support tagging | `map(string)` | `{}` | no |
 ## Outputs
 

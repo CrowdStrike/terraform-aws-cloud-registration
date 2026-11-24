@@ -416,6 +416,13 @@ variable "agentless_scanning_scanner_role_name" {
   default     = "CrowdStrikeAgentlessScanningScannerRole"
 }
 
+variable "agentless_use_resource_affixes" {
+  description = "Set by CrowdStrike for new registrations; do not change after the first apply: it replaces the named agentless resources. When true, resource_prefix and resource_suffix are added to the agentless scanning resource names and SSM parameter paths. Empty affixes keep the legacy names"
+  type        = bool
+  default     = false
+  nullable    = false
+}
+
 variable "agentless_scanning_regions" {
   description = "List of regions where agentless scanning will be deployed"
   type        = list(string)
