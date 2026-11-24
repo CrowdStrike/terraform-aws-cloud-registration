@@ -74,6 +74,13 @@ resource "aws_cloudwatch_log_group" "eventbridge_logs" {
   tags              = var.tags
 }
 
+# Used for source_code_hash so an updated package is deployed on apply.
+data "aws_s3_object" "eventbridge" {
+  count  = var.is_gov_commercial && var.is_primary_region ? 1 : 0
+  bucket = module.region_map[0].lambda_s3_bucket
+  key    = "aws/lambda/aws-lambda-eventbridge.zip"
+}
+
 resource "aws_lambda_function" "eventbridge" {
   count         = var.is_gov_commercial && var.is_primary_region ? 1 : 0
   function_name = "${var.resource_prefix}lambda-eventbridge${var.resource_suffix}"
@@ -85,9 +92,10 @@ resource "aws_lambda_function" "eventbridge" {
   timeout       = 15
   package_type  = "Zip"
 
-  s3_bucket = module.region_map[0].lambda_s3_bucket
-  s3_key    = "aws/lambda/aws-lambda-eventbridge.zip"
-  tags      = var.tags
+  s3_bucket        = module.region_map[0].lambda_s3_bucket
+  s3_key           = "aws/lambda/aws-lambda-eventbridge.zip"
+  source_code_hash = data.aws_s3_object.eventbridge[0].etag
+  tags             = var.tags
 
   environment {
     variables = {
@@ -129,6 +137,13 @@ resource "aws_cloudwatch_log_group" "s3_logs" {
   tags              = var.tags
 }
 
+# Used for source_code_hash so an updated package is deployed on apply.
+data "aws_s3_object" "s3" {
+  count  = var.is_gov_commercial && !var.use_existing_cloudtrail && var.is_primary_region ? 1 : 0
+  bucket = module.region_map[0].lambda_s3_bucket
+  key    = "aws/lambda/aws-lambda-s3.zip"
+}
+
 resource "aws_lambda_function" "s3" {
   count         = var.is_gov_commercial && !var.use_existing_cloudtrail && var.is_primary_region ? 1 : 0
   function_name = "${var.resource_prefix}lambda-s3${var.resource_suffix}"
@@ -140,9 +155,10 @@ resource "aws_lambda_function" "s3" {
   timeout       = 15
   package_type  = "Zip"
 
-  s3_bucket = module.region_map[0].lambda_s3_bucket
-  s3_key    = "aws/lambda/aws-lambda-s3.zip"
-  tags      = var.tags
+  s3_bucket        = module.region_map[0].lambda_s3_bucket
+  s3_key           = "aws/lambda/aws-lambda-s3.zip"
+  source_code_hash = data.aws_s3_object.s3[0].etag
+  tags             = var.tags
 
   environment {
     variables = {

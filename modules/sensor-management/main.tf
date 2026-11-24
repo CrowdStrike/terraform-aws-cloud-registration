@@ -122,7 +122,7 @@ resource "aws_iam_role_policy" "orchestrator" {
           "secretsmanager:GetSecretValue"
         ]
         Effect   = "Allow"
-        Resource = "arn:${local.aws_partition}:secretsmanager:${local.aws_region}:${local.account_id}:secret:/CrowdStrike/CSPM/SensorManagement/FalconAPICredentials-??????"
+        Resource = "arn:${local.aws_partition}:secretsmanager:${local.aws_region}:${local.account_id}:secret:/CrowdStrike/CSPM/SensorManagement/${var.resource_prefix}FalconAPICredentials${var.resource_suffix}-??????"
         Sid      = "GetFalconCredentials"
       }
     ]
@@ -135,7 +135,7 @@ resource "aws_cloudwatch_log_group" "crowdstrike_sensor_management" {
 }
 
 resource "aws_secretsmanager_secret" "this" {
-  name                    = "/CrowdStrike/CSPM/SensorManagement/FalconAPICredentials"
+  name                    = "/CrowdStrike/CSPM/SensorManagement/${var.resource_prefix}FalconAPICredentials${var.resource_suffix}"
   description             = "Falcon API credentials. Used by the 1-Click sensor management orchestrator"
   recovery_window_in_days = 0
 }
@@ -145,6 +145,12 @@ resource "aws_secretsmanager_secret_version" "this" {
   secret_string = jsonencode({
     ClientSecret = var.falcon_client_secret
   })
+}
+
+# Used for source_code_hash so an updated package is deployed on apply.
+data "aws_s3_object" "lambda" {
+  bucket = local.lambda_s3_bucket
+  key    = local.lambda_s3_key
 }
 
 resource "aws_lambda_function" "this" {
@@ -157,8 +163,9 @@ resource "aws_lambda_function" "this" {
   timeout       = 900
   package_type  = "Zip"
 
-  s3_bucket = local.lambda_s3_bucket
-  s3_key    = local.lambda_s3_key
+  s3_bucket        = local.lambda_s3_bucket
+  s3_key           = local.lambda_s3_key
+  source_code_hash = data.aws_s3_object.lambda.etag
 
   environment {
     variables = merge(
