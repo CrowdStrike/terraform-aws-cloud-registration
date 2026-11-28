@@ -49,7 +49,7 @@ module "sensor_management" {
 
 | Name | Version |
 |------|---------|
-| <a name="provider_aws"></a> [aws](#provider\_aws) | >= 5.51.0 |
+| <a name="provider_aws"></a> [aws](#provider\_aws) | >= 6.50.0 |
 ## Resources
 
 | Name | Type |
@@ -77,6 +77,8 @@ module "sensor_management" {
 | <a name="input_external_id"></a> [external\_id](#input\_external\_id) | Unique identifier provided by CrowdStrike for secure cross-account access | `string` | n/a | yes |
 | <a name="input_falcon_client_id"></a> [falcon\_client\_id](#input\_falcon\_client\_id) | Falcon API Client ID | `string` | n/a | yes |
 | <a name="input_falcon_client_secret"></a> [falcon\_client\_secret](#input\_falcon\_client\_secret) | Falcon API Client Secret | `string` | n/a | yes |
+| <a name="input_falcon_client_secret_wo"></a> [falcon\_client\_secret\_wo](#input\_falcon\_client\_secret\_wo) | Write-only alternative to falcon\_client\_secret for the copies stored in AWS Secrets Manager: never saved in Terraform state or a plan file. Use with falcon\_client\_secret\_wo\_version. | `string` | `null` | no |
+| <a name="input_falcon_client_secret_wo_version"></a> [falcon\_client\_secret\_wo\_version](#input\_falcon\_client\_secret\_wo\_version) | Set to use falcon\_client\_secret\_wo, and change it whenever that secret changes, so the copies in AWS Secrets Manager are updated. | `number` | `null` | no |
 | <a name="input_intermediate_role_arn"></a> [intermediate\_role\_arn](#input\_intermediate\_role\_arn) | ARN of CrowdStrike's intermediate role | `string` | n/a | yes |
 | <a name="input_is_gov"></a> [is\_gov](#input\_is\_gov) | Set to true if deploying in a gov Falcon environment (eagle, merlin) | `bool` | `false` | no |
 | <a name="input_permissions_boundary"></a> [permissions\_boundary](#input\_permissions\_boundary) | The name of the policy used to set the permissions boundary for IAM roles | `string` | `""` | no |

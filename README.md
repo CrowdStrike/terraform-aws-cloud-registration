@@ -259,7 +259,7 @@ module "fcs_account_us_east_2" {
 
 | Name | Version |
 |------|---------|
-| <a name="provider_aws"></a> [aws](#provider\_aws) | >= 5.51.0 |
+| <a name="provider_aws"></a> [aws](#provider\_aws) | >= 6.50.0 |
 | <a name="provider_crowdstrike"></a> [crowdstrike](#provider\_crowdstrike) | >= 0.0.58 |
 ## Resources
 
@@ -310,6 +310,8 @@ module "fcs_account_us_east_2" {
 | <a name="input_external_id"></a> [external\_id](#input\_external\_id) | The external ID used to assume the AWS reader role | `string` | `""` | no |
 | <a name="input_falcon_client_id"></a> [falcon\_client\_id](#input\_falcon\_client\_id) | Falcon API Client ID | `string` | n/a | yes |
 | <a name="input_falcon_client_secret"></a> [falcon\_client\_secret](#input\_falcon\_client\_secret) | Falcon API Client Secret | `string` | n/a | yes |
+| <a name="input_falcon_client_secret_wo"></a> [falcon\_client\_secret\_wo](#input\_falcon\_client\_secret\_wo) | Write-only alternative to falcon\_client\_secret for the copies stored in AWS Secrets Manager: never saved in Terraform state or a plan file. Use with falcon\_client\_secret\_wo\_version. | `string` | `null` | no |
+| <a name="input_falcon_client_secret_wo_version"></a> [falcon\_client\_secret\_wo\_version](#input\_falcon\_client\_secret\_wo\_version) | Set to use falcon\_client\_secret\_wo, and change it whenever that secret changes, so the copies in AWS Secrets Manager are updated. | `number` | `null` | no |
 | <a name="input_iam_role_name"></a> [iam\_role\_name](#input\_iam\_role\_name) | The name of the reader role | `string` | `""` | no |
 | <a name="input_intermediate_role_arn"></a> [intermediate\_role\_arn](#input\_intermediate\_role\_arn) | The intermediate role that is allowed to assume the reader role | `string` | `""` | no |
 | <a name="input_is_gov"></a> [is\_gov](#input\_is\_gov) | Set to true if you are deploying in gov Falcon | `bool` | `false` | no |

@@ -112,19 +112,21 @@ module "asset_inventory" {
 }
 
 module "sensor_management" {
-  count                 = (local.is_primary_region && var.enable_sensor_management) ? 1 : 0
-  source                = "./modules/sensor-management/"
-  falcon_client_id      = var.falcon_client_id
-  falcon_client_secret  = var.falcon_client_secret
-  external_id           = local.external_id
-  intermediate_role_arn = local.intermediate_role_arn
-  permissions_boundary  = var.permissions_boundary
-  account_type          = var.account_type
-  is_gov                = var.is_gov
-  cs_address            = var.cs_address
-  resource_prefix       = var.resource_prefix
-  resource_suffix       = var.resource_suffix
-  tags                  = var.tags
+  count                           = (local.is_primary_region && var.enable_sensor_management) ? 1 : 0
+  source                          = "./modules/sensor-management/"
+  falcon_client_id                = var.falcon_client_id
+  falcon_client_secret            = var.falcon_client_secret
+  falcon_client_secret_wo         = var.falcon_client_secret_wo
+  falcon_client_secret_wo_version = var.falcon_client_secret_wo_version
+  external_id                     = local.external_id
+  intermediate_role_arn           = local.intermediate_role_arn
+  permissions_boundary            = var.permissions_boundary
+  account_type                    = var.account_type
+  is_gov                          = var.is_gov
+  cs_address                      = var.cs_address
+  resource_prefix                 = var.resource_prefix
+  resource_suffix                 = var.resource_suffix
+  tags                            = var.tags
 
   depends_on = [
     data.crowdstrike_cloud_aws_account.target
@@ -179,6 +181,8 @@ module "agentless_scanning_roles" {
   source                                      = "./modules/agentless-scanning-roles/"
   falcon_client_id                            = var.falcon_client_id
   falcon_client_secret                        = var.falcon_client_secret
+  falcon_client_secret_wo                     = var.falcon_client_secret_wo
+  falcon_client_secret_wo_version             = var.falcon_client_secret_wo_version
   agentless_scanning_role_name                = local.agentless_scanning_role_name
   agentless_scanning_scanner_role_name        = local.agentless_scanning_scanner_role_name
   intermediate_role_arn                       = local.intermediate_role_arn

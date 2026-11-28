@@ -175,3 +175,17 @@ variable "account_id" {
     error_message = "account_id must be either empty or the 12-digit AWS account ID"
   }
 }
+
+variable "falcon_client_secret_wo" {
+  type        = string
+  default     = null
+  sensitive   = true
+  ephemeral   = true
+  description = "Write-only alternative to falcon_client_secret for the copies stored in AWS Secrets Manager: never saved in Terraform state or a plan file. Use with falcon_client_secret_wo_version."
+}
+
+variable "falcon_client_secret_wo_version" {
+  type        = number
+  default     = null
+  description = "Set to use falcon_client_secret_wo, and change it whenever that secret changes, so the copies in AWS Secrets Manager are updated."
+}
