@@ -142,9 +142,14 @@ resource "aws_secretsmanager_secret" "this" {
 
 resource "aws_secretsmanager_secret_version" "this" {
   secret_id = aws_secretsmanager_secret.this.id
-  secret_string = jsonencode({
+  # The write-only input, when set, keeps the secret out of state and plan files.
+  secret_string = var.falcon_client_secret_wo_version == null ? jsonencode({
     ClientSecret = var.falcon_client_secret
+  }) : null
+  secret_string_wo = var.falcon_client_secret_wo_version == null ? null : jsonencode({
+    ClientSecret = var.falcon_client_secret_wo
   })
+  secret_string_wo_version = var.falcon_client_secret_wo_version
 }
 
 # Used for source_code_hash so an updated package is deployed on apply.

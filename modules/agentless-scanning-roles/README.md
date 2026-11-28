@@ -57,7 +57,7 @@ module "agentless_scanning_environments" {
 
 | Name | Version |
 |------|---------|
-| <a name="provider_aws"></a> [aws](#provider\_aws) | >= 5.0.0 |
+| <a name="provider_aws"></a> [aws](#provider\_aws) | >= 6.50.0 |
 ## Resources
 
 | Name | Type |
@@ -126,6 +126,8 @@ module "agentless_scanning_environments" {
 | <a name="input_external_id"></a> [external\_id](#input\_external\_id) | Unique ID for customer | `string` | n/a | yes |
 | <a name="input_falcon_client_id"></a> [falcon\_client\_id](#input\_falcon\_client\_id) | CrowdStrike client ID | `string` | n/a | yes |
 | <a name="input_falcon_client_secret"></a> [falcon\_client\_secret](#input\_falcon\_client\_secret) | CrowdStrike client secret | `string` | n/a | yes |
+| <a name="input_falcon_client_secret_wo"></a> [falcon\_client\_secret\_wo](#input\_falcon\_client\_secret\_wo) | Write-only alternative to falcon\_client\_secret for the copies stored in AWS Secrets Manager: never saved in Terraform state or a plan file. Use with falcon\_client\_secret\_wo\_version. | `string` | `null` | no |
+| <a name="input_falcon_client_secret_wo_version"></a> [falcon\_client\_secret\_wo\_version](#input\_falcon\_client\_secret\_wo\_version) | Set to use falcon\_client\_secret\_wo, and change it whenever that secret changes, so the copies in AWS Secrets Manager are updated. | `number` | `null` | no |
 | <a name="input_intermediate_role_arn"></a> [intermediate\_role\_arn](#input\_intermediate\_role\_arn) | ARN of the CrowdStrike assuming role | `string` | n/a | yes |
 | <a name="input_permissions_boundary"></a> [permissions\_boundary](#input\_permissions\_boundary) | The name of the policy used to set the permissions boundary for IAM roles | `string` | `""` | no |
 | <a name="input_tags"></a> [tags](#input\_tags) | A map of tags to add to all resources that support tagging | `map(string)` | `{}` | no |
